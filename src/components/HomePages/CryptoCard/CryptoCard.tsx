@@ -17,21 +17,23 @@ interface TransparentCardProps {
 const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData }) => {
   const { coin, price, interval, icon } = cryptoData;
   return (
-    <div className="bg-transparent border border-gray-700 rounded-xl p-8 max-w-lg h-96 text-white shadow-lg backdrop-blur-md"> {/* Changed max-w-lg and added h-96 */}
-      <div className="flex items-center space-x-4">
+    <div className="bg-transparent border border-cyan-400 rounded-xl p-8 min-w-[400px] min-h-[300px] text-white shadow-lg backdrop-blur-md">
+      {" "}
+      {/* Changed max-w-lg and added h-96 */}
+      <div className="flex gap-4 items-center ">
         <Image
           src={icon} // Use dynamic image path
           alt={`${coin} logo`}
-          width={80} // Increased width of the image
-          height={80} // Increased height of the image
+          width={60} // Increased width of the image
+          height={60} // Increased height of the image
           className="rounded-full"
         />
-        <h2 className="text-2xl font-semibold">{coin}</h2> {/* Increased text size */}
-        <span className="ml-auto bg-gray-800 px-3 py-2 rounded text-lg">
-          {interval}
+        <h2 className="text-2xl font-semibold">{coin}</h2>{" "}
+        {/* Increased text size */}
+        <span className="ml-auto bg-gray-800 px-3 py-2  text rounded-3xl border border-cyan-400 bg-transparent ">
+          Interval-{interval}
         </span>
       </div>
-
       <div className="mt-6 space-y-3">
         <div className="flex justify-between">
           <span>Price:</span>
@@ -53,7 +55,6 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData }) => {
           <span>0</span>
         </div>
       </div>
-
       <div className="mt-4">
         <div className="relative pt-1">
           <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-700">
