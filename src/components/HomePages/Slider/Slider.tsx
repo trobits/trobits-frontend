@@ -1,15 +1,16 @@
 // components/Slider.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const sliderData = [
   {
-    title: 'Impact of Burning SHIB and LUNC on Their Value',
+    title: "Impact of Burning SHIB and LUNC on Their Value",
   },
   {
-    title: 'SHIB: From Meme to Mainstream – The Evolution of a Crypto Phenomenon',
+    title:
+      "SHIB: From Meme to Mainstream – The Evolution of a Crypto Phenomenon",
   },
   {
-    title: 'LUNC: Terra Classic - From the Ashes to a New Dawn',
+    title: "LUNC: Terra Classic - From the Ashes to a New Dawn",
   },
 ];
 
@@ -26,19 +27,21 @@ const Slider = () => {
   }, []);
 
   return (
-    <div className="flex justify-between items-center mt-40 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-[900px] mx-auto min-h-40 rounded-lg">
+    <div className="flex flex-col sm:flex-row justify-between items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
       {/* Left section */}
-      <div className="flex-1">
-        <h3 className="text-white text-md font-semibold">Trobits Articles</h3>
-        <h1 className="text-white text-3xl font-bold mt-1 max-w-80">
+      <div className="flex-1 text-center sm:text-left">
+        <h3 className="text-white text-sm sm:text-md font-semibold">
+          Trobits Articles
+        </h3>
+        <h1 className="text-white text-2xl sm:text-3xl font-bold mt-1 sm:max-w-80">
           Check out our latest trobits articles.
         </h1>
       </div>
 
       {/* Right section */}
-      <div className="flex-1 flex flex-col items-end">
-        <div className="bg-teal-500 p-3 rounded-md w-64 text-center">
-          <h3 className="text-white text-sm font-medium">
+      <div className="flex-1 flex flex-col items-center sm:items-end mt-4 sm:mt-0">
+        <div className="bg-teal-500 p-2 sm:p-3 rounded-md w-56 sm:w-64 text-center">
+          <h3 className="text-white text-xs sm:text-sm font-medium">
             {sliderData[currentSlide].title}
           </h3>
         </div>
@@ -48,7 +51,7 @@ const Slider = () => {
             <span
               key={index}
               className={`w-2 h-2 rounded-full cursor-pointer transition-colors duration-300 ${
-                index === currentSlide ? 'bg-teal-500' : 'bg-white'
+                index === currentSlide ? "bg-teal-500" : "bg-white"
               }`}
               onClick={() => setCurrentSlide(index)}
             />

@@ -5,7 +5,7 @@ interface NewsData {
   title: string;
   author: string;
   description: string;
-  image: string; // This can be a URL or local image path
+  image: string; //
 }
 
 interface NewsCardProps {

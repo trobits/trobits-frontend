@@ -1,14 +1,14 @@
 // components/Footer.js
-import { FaFacebookF, FaTwitter, FaReddit } from 'react-icons/fa';
-import Image from 'next/image';
+import { FaFacebookF, FaTwitter, FaReddit } from "react-icons/fa";
+import Image from "next/image";
 
 const Footer = () => {
   return (
     <footer className="bg-black py-8 mt-40 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo Section */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 col-span-1 lg:col-span-2">
             <Image
               src="/logo.svg" // Replace this with the path to your logo
               alt="Trobits Logo"
@@ -56,13 +56,25 @@ const Footer = () => {
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold mb-2">Socials</h2>
             <div className="flex space-x-4">
-              <a href="#" aria-label="Facebook" className="text-white hover:text-blue-500">
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="text-white hover:text-blue-500"
+              >
                 <FaFacebookF size={20} />
               </a>
-              <a href="#" aria-label="Twitter" className="text-white hover:text-blue-400">
+              <a
+                href="#"
+                aria-label="Twitter"
+                className="text-white hover:text-blue-400"
+              >
                 <FaTwitter size={20} />
               </a>
-              <a href="#" aria-label="Reddit" className="text-white hover:text-red-500">
+              <a
+                href="#"
+                aria-label="Reddit"
+                className="text-white hover:text-red-500"
+              >
                 <FaReddit size={20} />
               </a>
             </div>

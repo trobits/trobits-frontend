@@ -23,8 +23,9 @@ export default function CryptoNavbar() {
 
   return (
     <nav className="w-full bg-gray-900 text-white">
-      <div className="max-w-screen-2xl mx-auto flex items-center">
-        <div className="flex-1 border-r border-gray-700">
+      <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-6 items-center">
+        {/* Dropdown Menu */}
+        <div className="col-span-1 border-r border-gray-700">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -34,7 +35,7 @@ export default function CryptoNavbar() {
                 {selectedOption} <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-800 text-white">
+            <DropdownMenuContent className="bg-black text-white">
               <DropdownMenuItem onClick={() => setSelectedOption("Price")}>
                 Price
               </DropdownMenuItem>
@@ -54,10 +55,12 @@ export default function CryptoNavbar() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
+        {/* Crypto Prices */}
         {cryptoData.map((crypto) => (
           <div
             key={crypto.name}
-            className="flex-1 flex items-center justify-between px-4 py-2 border-r border-gray-700 last:border-r-0"
+            className="col-span-1 flex items-center justify-between px-4 py-2 border-r border-gray-700 last:border-r-0"
           >
             <span className="font-bold text-teal-400">{crypto.name}</span>
             <span>
