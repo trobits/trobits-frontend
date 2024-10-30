@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { MessageCircle, Heart, BadgeCheck, Flame } from "lucide-react"
+import { MessageCircle, Heart, BadgeCheck } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import RecommendedAccounts from "@/components/Cards/RecommendedAccounts"
 import VerifiedAccounts from "@/components/Cards/VerifiedAccounts"
@@ -39,7 +39,7 @@ export default function Component() {
             </Button>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-200">Let's take it to the moon</p>
+            <p className="text-gray-200">Let  take it to the moon</p>
           </CardContent>
           <CardFooter className="flex justify-between border-t border-white/5 mt-4 pt-4">
             <div className="flex gap-4">

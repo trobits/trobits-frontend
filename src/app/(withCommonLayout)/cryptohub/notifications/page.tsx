@@ -9,8 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BadgeCheck, Heart, MessageCircle, MoreVertical, UserPlus, Bell } from "lucide-react"
+import { BadgeCheck, Heart, MessageCircle, MoreVertical, Bell } from "lucide-react"
 
 export default function NotificationPage() {
   return (
@@ -55,7 +54,7 @@ export default function NotificationPage() {
                   <BadgeCheck className="h-4 w-4 fill-blue-400 text-white" />
                 </div>
                 <p className="text-gray-400">Liked your post</p>
-                <p className="text-gray-500 text-sm">"Trading strategies for beginners..."</p>
+                <p className="text-gray-500 text-sm">Trading strategies for beginners</p>
               </div>
               <div className="flex items-center gap-2">
                 <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
@@ -77,7 +76,7 @@ export default function NotificationPage() {
                   <BadgeCheck className="h-4 w-4 fill-blue-400 text-white" />
                 </div>
                 <p className="text-gray-400">Commented on your post</p>
-                <p className="text-gray-500 text-sm">"Great analysis! Would love to hear more about..."</p>
+                <p className="text-gray-500 text-sm">Great analysis! Would love to hear more about</p>
               </div>
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-5 w-5 text-cyan-400" />
@@ -125,7 +124,7 @@ export default function NotificationPage() {
                 </div>
                 <p className="text-gray-400">Mentioned you in a comment</p>
                 <p className="text-gray-500 text-sm">
-                  "<span className="text-cyan-400">@hgdhgxxc</span> What do you think about this market trend?"
+                  <span className="text-cyan-400">@hgdhgxxc</span> What do you think about this market trend?
                 </p>
               </div>
               <div className="flex items-center gap-2">

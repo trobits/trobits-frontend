@@ -18,11 +18,11 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
         <div className="h-[calc(100vh-130px)] w-full fixed flex flex-col lg:flex-row bg-transparent rounded-b-md">
             {/* Fixed Sidebar */}
             <aside
-                className={`lg:w-64 w-64 h-full bg-[#00000056] shadow-black text-gray-200 flex flex-col shadow-lg fixed lg:relative z-20 lg:translate-x-0 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                className={`lg:w-64 w-64 h-full bg-[#000000b9] shadow-black text-gray-200 flex flex-col shadow-lg fixed lg:relative z-20 lg:translate-x-0 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
                     }`}
             >
                 <div className="flex justify-between items-center p-6 border-b border-gray-700 rounded-t-lg">
-                    <h2 className="text-lg font-bold">Admin Dashboard</h2>
+
                     {/* Close button for mobile */}
                     <Button
                         className="lg:hidden text-white bg-red-500 px-4"
@@ -43,6 +43,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                         <li>
                             <Link href="/cryptohub/cryptochat" passHref>
                                 <Button
+                                    onClick={() => setIsSidebarOpen(false)}
                                     className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname === '/cryptohub/cryptochat' ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
@@ -54,6 +55,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                         <li>
                             <Link href="/cryptohub/feed" passHref>
                                 <Button
+                                    onClick={() => setIsSidebarOpen(false)}
                                     className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname === '/cryptohub/feed' ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
@@ -65,6 +67,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                         <li>
                             <Link href="/cryptohub/myspot" passHref>
                                 <Button
+                                    onClick={() => setIsSidebarOpen(false)}
                                     className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname === '/cryptohub/myspot' ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
@@ -76,6 +79,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                         <li>
                             <Link href="/cryptohub/notifications" passHref>
                                 <Button
+                                    onClick={() => setIsSidebarOpen(false)}
                                     className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname === '/cryptohub/notifications' ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
@@ -90,7 +94,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                                     className="w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400  text-white transition-colors"
                                 >
                                     <GrLogin className='mr-2' />
-                                    Login
+                                    Logout
                                 </Button>
                             </Link>
                         </li>
@@ -113,7 +117,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
             {/* Sidebar Toggle Button for Mobile */}
             <div className="lg:hidden flex justify-start p-4">
                 <Button
-                    className={`bg-teal-600 ${isSidebarOpen ? "hidden" : ""} text-white rounded-lg p-2`}
+                    className={`bg-teal-600 ${isSidebarOpen ? "hidden" : ""} text-white rounded-lg px-5`}
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 >
                     <FiMenu size={24} />

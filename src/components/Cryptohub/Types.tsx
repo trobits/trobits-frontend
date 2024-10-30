@@ -1,10 +1,10 @@
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { StaticImageData } from "next/image";
 
 // define user interface
 export interface IUser {
     id: string;
     name: string;
-    image: string;
+    image: string | StaticImageData;
     follower: string[];
 }
 
@@ -30,7 +30,7 @@ export interface IPost {
     content: string;
     createdAt: Date;
     author: IUser;
-    image?: string;
+    image?: string | StaticImageData;
     likes: ILike;
     comments: IComment[];
 }
@@ -40,7 +40,7 @@ export interface ITopic {
     id: string;
     title: string;
     description: string;
-    image: string;
+    image: string | StaticImageData;
     posts: IPost[];
 }
 
@@ -52,7 +52,7 @@ export interface ITopicPost {
     author: string;
     createdAt: Date;
     updatedAt: Date;
-    image?: "";
+    image?: string | StaticImageData;
 }
 
 // Define the type interface
@@ -61,5 +61,5 @@ export interface ITopicInfo {
     title: string;
     description: string;
     posts: ITopicPost[];
-    image?: string | StaticImport
+    image?: string | StaticImageData;
 }

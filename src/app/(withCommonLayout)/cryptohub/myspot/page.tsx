@@ -4,8 +4,7 @@ import VerifiedAccounts from "@/components/Cards/VerifiedAccounts"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Textarea } from "@/components/ui/textarea"
+
 import { BadgeCheck, Edit, Image as ImageIcon, LayoutGrid } from "lucide-react"
 import React from 'react'
 
