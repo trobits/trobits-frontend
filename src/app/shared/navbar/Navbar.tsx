@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-black">
+    <nav className="bg-black ">
       <div className="w-full px-8 sm:px-6 lg:px-20">
         <div className="flex items-center justify-evenly h-24">
           <div className="flex-shrink-0">
