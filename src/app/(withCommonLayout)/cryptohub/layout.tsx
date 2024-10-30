@@ -15,7 +15,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
     const pathname = usePathname();
 
     return (
-        <div className="h-[calc(100vh-130px)] fixed flex flex-col lg:flex-row bg-transparent">
+        <div className="h-[calc(100vh-130px)] w-full fixed flex flex-col lg:flex-row bg-transparent rounded-b-md">
             {/* Fixed Sidebar */}
             <aside
                 className={`lg:w-64 w-64 h-full bg-[#00000056] shadow-black text-gray-200 flex flex-col shadow-lg fixed lg:relative z-20 lg:translate-x-0 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -121,7 +121,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
             </div>
 
             {/* Main Content */}
-            <main className="flex-1 lg:ml-64 ml-2 h-full overflow-y-auto p-10">
+            <main className="flex-1 ml-2 h-full overflow-y-auto p-4">
                 {children}
             </main>
         </div>
