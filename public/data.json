@@ -1,0 +1,218 @@
+[
+    {
+        "id": "60e1a2b62e9dcd001f92d8f1",
+        "title": "Crypto Trends",
+        "description": "Latest trends in the cryptocurrency market.you will find all information here",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d8f2",
+                "content": "Bitcoin reaches new all-time highs!",
+                "author": "user123",
+                "createdAt": "2024-10-30T12:00:00Z",
+                "updatedAt": "2024-10-30T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d8f3",
+                "content": "Ethereum 2.0 is coming soon.",
+                "author": "user456",
+                "createdAt": "2024-10-29T12:00:00Z",
+                "updatedAt": "2024-10-29T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    },
+    {
+        "id": "60e1a2b62e9dcd001f92d8f4",
+        "title": "Blockchain Innovations",
+        "description": "Exploring new technologies and innovations in blockchain.",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d8f5",
+                "content": "Smart contracts are revolutionizing industries.",
+                "author": "user789",
+                "createdAt": "2024-10-28T12:00:00Z",
+                "updatedAt": "2024-10-28T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d8f6",
+                "content": "Decentralized finance (DeFi) explained.",
+                "author": "user321",
+                "createdAt": "2024-10-27T12:00:00Z",
+                "updatedAt": "2024-10-27T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    },
+    {
+        "id": "60e1a2b62e9dcd001f92d8f7",
+        "title": "Crypto Trading Strategies",
+        "description": "Discussing various strategies for trading cryptocurrencies.",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d8f8",
+                "content": "How to day trade cryptocurrencies effectively.",
+                "author": "user654",
+                "createdAt": "2024-10-26T12:00:00Z",
+                "updatedAt": "2024-10-26T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d8f9",
+                "content": "Long-term investment vs. short-term trading.",
+                "author": "user987",
+                "createdAt": "2024-10-25T12:00:00Z",
+                "updatedAt": "2024-10-25T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    },
+    {
+        "id": "60e1a2b62e9dcd001f92d8fa",
+        "title": "NFTs and Digital Art",
+        "description": "Exploring the world of NFTs and their impact on digital art.",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d8fb",
+                "content": "The rise of digital art in the NFT space.",
+                "author": "user234",
+                "createdAt": "2024-10-24T12:00:00Z",
+                "updatedAt": "2024-10-24T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d8fc",
+                "content": "How to create and sell your own NFTs.",
+                "author": "user567",
+                "createdAt": "2024-10-23T12:00:00Z",
+                "updatedAt": "2024-10-23T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    },
+    {
+        "id": "60e1a2b62e9dcd001f92d8fd",
+        "title": "Regulations and Compliance",
+        "description": "Understanding the regulatory landscape of cryptocurrencies.",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d8fe",
+                "content": "How different countries are regulating cryptocurrencies.",
+                "author": "user890",
+                "createdAt": "2024-10-22T12:00:00Z",
+                "updatedAt": "2024-10-22T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d8ff",
+                "content": "The impact of regulation on crypto markets.",
+                "author": "user456",
+                "createdAt": "2024-10-21T12:00:00Z",
+                "updatedAt": "2024-10-21T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    },
+    {
+        "id": "60e1a2b62e9dcd001f92d900",
+        "title": "Decentralized Applications (dApps)",
+        "description": "Exploring the rise of decentralized applications.",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d901",
+                "content": "What are dApps and how do they work?",
+                "author": "user135",
+                "createdAt": "2024-10-20T12:00:00Z",
+                "updatedAt": "2024-10-20T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d902",
+                "content": "The future of dApps in the blockchain ecosystem.",
+                "author": "user246",
+                "createdAt": "2024-10-19T12:00:00Z",
+                "updatedAt": "2024-10-19T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    },
+    {
+        "id": "60e1a2b62e9dcd001f92d903",
+        "title": "Crypto Security",
+        "description": "Best practices for securing your cryptocurrency assets.",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d904",
+                "content": "How to keep your crypto safe from hacks.",
+                "author": "user357",
+                "createdAt": "2024-10-18T12:00:00Z",
+                "updatedAt": "2024-10-18T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d905",
+                "content": "Using hardware wallets for added security.",
+                "author": "user468",
+                "createdAt": "2024-10-17T12:00:00Z",
+                "updatedAt": "2024-10-17T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    },
+    {
+        "id": "60e1a2b62e9dcd001f92d906",
+        "title": "Future of Finance",
+        "description": "How cryptocurrencies are shaping the future of finance.",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d907",
+                "content": "The shift towards digital currencies in global markets.",
+                "author": "user579",
+                "createdAt": "2024-10-16T12:00:00Z",
+                "updatedAt": "2024-10-16T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d908",
+                "content": "How blockchain is changing traditional banking.",
+                "author": "user680",
+                "createdAt": "2024-10-15T12:00:00Z",
+                "updatedAt": "2024-10-15T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    },
+    {
+        "id": "60e1a2b62e9dcd001f92d909",
+        "title": "Understanding Altcoins",
+        "description": "A deep dive into various altcoins and their use cases.",
+        "image":"https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM=",
+        "posts": [
+            {
+                "id": "60e1a2b62e9dcd001f92d90a",
+                "content": "The rise of altcoins and their significance.",
+                "author": "user791",
+                "createdAt": "2024-10-14T12:00:00Z",
+                "updatedAt": "2024-10-14T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            },
+            {
+                "id": "60e1a2b62e9dcd001f92d90b",
+                "content": "Top 5 altcoins to watch in 2024.",
+                "author": "user862",
+                "createdAt": "2024-10-13T12:00:00Z",
+                "updatedAt": "2024-10-13T12:00:00Z",
+                "image": "https://media.istockphoto.com/id/1329055819/photo/olsztyn-poland-13-july-2021-golden-bitcoin-coin-over-defocused-stock-chart.jpg?s=612x612&w=0&k=20&c=8SedFCFB5uIf4-I-j-ZFk3aJ2lhawtXZvY4dPjmNJpM="
+            }
+        ]
+    }
+]
