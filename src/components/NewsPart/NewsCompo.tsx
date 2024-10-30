@@ -79,11 +79,15 @@ const articlesData = [
 
 export default function NewsCompo() {
   return (
-    <div className="container mx-auto mt-10">
-      <div className="flex flex-wrap justify-center gap-2 max-w-[920px] mx-auto">
-        {articlesData.map((article, index) => (
-          <NewsCard key={index + 1} articleData={article} />
-        ))}
+    <div>
+      <div className="container mx-auto mt-10">
+        <h2 className=" text-gray-200 pl-10">Crypto News</h2>
+
+        <div className="flex flex-wrap justify-center gap-2 max-w-[920px] mx-auto">
+          {articlesData.map((article, index) => (
+            <NewsCard key={index + 1} articleData={article} />
+          ))}
+        </div>
       </div>
     </div>
   );
