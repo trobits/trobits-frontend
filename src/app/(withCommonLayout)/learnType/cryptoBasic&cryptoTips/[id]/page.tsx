@@ -49,7 +49,7 @@ const LearnDetailsPage = ({ params }: ParamsParams) => {
               Blur. Get browsing! Prices range from essentially free to hundreds
               of thousands of dollars or more for a rare item. Some items are
               sold via auction, while others can be snagged immediately via a
-              Buy now button. Even if the NFT is free or cheap, you'll still
+              Buy now button. Even if the NFT is free or cheap, you ll still
               have to pay fees to make the transaction happen. Gas prices rise
               and fall depending on how busy the network is. Choose an NFT you
               like and make sure you have extra ETH to cover fees. Once you buy
