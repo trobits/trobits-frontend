@@ -30,6 +30,48 @@ body::before {
   }
 }
 
+.animated-card {
+  opacity: 0; /* Start invisible */
+  transform: translateX(0); /* Default no horizontal movement */
+  animation-duration: 1s; /* Adjust animation duration as needed */
+  animation-fill-mode: forwards; /* Stay in the final position after animation */
+}
+
+.slide-left {
+  animation-name: slideInFromLeft;
+}
+
+.slide-right {
+  animation-name: slideInFromRight;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100px); /* Start from 100px left */
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0); /* End in original position */
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100px); /* Start from 100px right */
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0); /* End in original position */
+    opacity: 1;
+  }
+}
+
+.animated-card {
+  animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1); /* Modify the timing function for a quick start and slow end */
+}
+
+
 @layer base {
   :root {
     --radius: 0.5rem;
