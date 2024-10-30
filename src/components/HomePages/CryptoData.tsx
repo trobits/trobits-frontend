@@ -29,7 +29,7 @@ export default function CryptoData() {
   ];
 
   return (
-    <div className="flex justify-center flex-wrap items-center mt-20 space-x-24">
+    <div className="flex justify-center flex-wrap items-center mt-20 gap-24">
       {cardData.map((card, index) => (
         <TransparentCard key={index} cryptoData={card} index={index} />
       ))}
