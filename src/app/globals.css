@@ -4,7 +4,7 @@
 
 body {
   font-family: 'Roboto', Arial, Helvetica, sans-serif; 
-  background-image: url('../assets/Background\ 2\ \(1\).png');
+  background-image: url('../assets/newBg.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -20,7 +20,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(8, 12, 58, 0.5); /* Black overlay with 50% opacity */
+  /* background: rgba(3, 9, 75, 0.5); Black overlay with 50% opacity */
   z-index: -1; /* Place it behind the content of the body */
 }
 

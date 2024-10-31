@@ -58,7 +58,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
               height={60} // Height of the image
               className="rounded-full"
             />
-            <span className="ml-auto bg-gray-800 px-3 py-2 text rounded-3xl border border-cyan-400 bg-transparent ">
+            <span className="ml-auto px-3 py-2 text rounded-3xl border border-cyan-400 bg-black">
               Interval-{interval}
             </span>
           </div>
