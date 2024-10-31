@@ -8,7 +8,7 @@ import { BadgeCheck, Heart, MessageSquare } from "lucide-react"
 import { useEffect, useState } from "react"
 import { ITopic } from "./Types"
 import Image from "next/image"
-import { LoadingAnimation } from "../LoadingAnimation/LoadingAnimation"
+import Loading from "../Shared/Loading"
 
 export default function TopicDetailsPage({ topicId }: { topicId: string }) {
 
@@ -35,7 +35,7 @@ export default function TopicDetailsPage({ topicId }: { topicId: string }) {
     }, []);
     
     if (isLoading) {
-        return <LoadingAnimation />
+        return <Loading/>
     }
 
     return (

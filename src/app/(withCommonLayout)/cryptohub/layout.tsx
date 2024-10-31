@@ -44,7 +44,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                             <Link href="/cryptohub/cryptochat" passHref>
                                 <Button
                                     onClick={() => setIsSidebarOpen(false)}
-                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname === '/cryptohub/cryptochat' ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
+                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname.includes('/cryptohub/cryptochat') ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
                                     <FaHashtag className=' mr-2' />
@@ -56,7 +56,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                             <Link href="/cryptohub/feed" passHref>
                                 <Button
                                     onClick={() => setIsSidebarOpen(false)}
-                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname === '/cryptohub/feed' ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
+                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname.includes('/cryptohub/feed' )? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
                                     <MdOutlineDynamicFeed className=' mr-2' />
@@ -68,7 +68,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                             <Link href="/cryptohub/myspot" passHref>
                                 <Button
                                     onClick={() => setIsSidebarOpen(false)}
-                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname === '/cryptohub/myspot' ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
+                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname.includes('/cryptohub/myspot') ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
                                     <FaUser className=' mr-2' />
@@ -80,7 +80,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                             <Link href="/cryptohub/notifications" passHref>
                                 <Button
                                     onClick={() => setIsSidebarOpen(false)}
-                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname === '/cryptohub/notifications' ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
+                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname.includes('/cryptohub/notifications') ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
                                     <IoMdNotifications className='mr-2' />
