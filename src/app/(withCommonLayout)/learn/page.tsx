@@ -136,7 +136,7 @@ export default function LearnPage() {
                 </div> 
                 <div className=" flex items-center justify-center">
 
-                <Link href={"/learnType/cryptoBasic"} className=" bg-cyan-500 text-white px-3 py-2 rounded-md my-6 text-center">See More</Link>
+                <Link href={"/learnType/cryptoBasic"} className=" bg-cyan-500 text-white px-10 font-bold py-2 rounded-md mb-6 text-center">See More</Link>
                 </div>
             </div>
         </div>

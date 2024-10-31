@@ -23,8 +23,9 @@ const LearnComponent = ({ title, cryptoBasic }: TCryptoDataProps) => {
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
         {cryptoBasic.map((item, index) => (
-          <Link key={index} href={`cryptoBasic&cryptoTips/${item?.id}`}>
+          <Link key={index} href={`/learnType/cryptoBasic&cryptoTips/${item?.id}`}>
             <Card
+
               
               className="bg-n  border-none transition-all duration-300 overflow-hidden group"
             >
