@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { IoBookSharp } from "react-icons/io5";
 import Link from "next/link";
 

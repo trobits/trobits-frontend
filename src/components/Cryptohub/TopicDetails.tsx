@@ -33,12 +33,13 @@ export default function TopicDetailsPage({ topicId }: { topicId: string }) {
 
         fetchTopicsData();
     }, []);
-    
+
     if (isLoading) {
-        return <Loading/>
+        return <Loading />
     }
 
     return (
+
         <div className="min-h-screen bg-[#0a0a0f75]">
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
