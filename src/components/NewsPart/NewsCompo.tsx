@@ -83,7 +83,7 @@ export default function NewsCompo() {
   return (
     <div>
       <div className="container mx-auto mt-10">
-        <h2 className=" text-gray-200 pl-10">Crypto News</h2>
+        <h2 className=" text-2xl text-center mb-6 font-bold text-cyan-600">Crypto News</h2>
 
         <div className="flex flex-wrap justify-center gap-2 max-w-[920px] mx-auto">
           {articlesData.slice(0,8).map((article, index) => (
