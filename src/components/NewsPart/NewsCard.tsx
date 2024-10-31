@@ -1,8 +1,10 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface NewsData {
+  id:number;
   title: string;
   author: string;
   description: string;
@@ -14,7 +16,7 @@ interface NewsCardProps {
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({ articleData }) => {
-  const { title, author, description, image } = articleData;
+  const {id, title, author, description, image } = articleData;
 
   // State to manage when the card should appear
   const [isVisible, setIsVisible] = useState(false);
@@ -28,20 +30,22 @@ const NewsCard: React.FC<NewsCardProps> = ({ articleData }) => {
   }, []);
 
   return (
-    <div
-      className={`w-[300px] h-[360px] bg-gray-900 text-white rounded-lg shadow-md overflow-hidden transform transition-all duration-700 ease-in-out ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-      }`}
-    >
-      <div className="relative h-40">
-        <Image src={image} alt={title} layout="fill" objectFit="cover" />
+    <Link href={`/articles/${id}`}>
+      <div
+        className={`w-[300px] h-[360px] bg-gray-900 text-white rounded-lg shadow-md overflow-hidden transform transition-all duration-700 ease-in-out ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+        }`}
+      >
+        <div className="relative h-40">
+          <Image src={image} alt={title} layout="fill" objectFit="cover" />
+        </div>
+        <div className="p-4">
+          <h3 className="text-lg font-bold mb-2">{title}</h3>
+          <p className="text-sm text-gray-400">by: {author}</p>
+          <p className="mt-2 text-sm">{description}</p>
+        </div>
       </div>
-      <div className="p-4">
-        <h3 className="text-lg font-bold mb-2">{title}</h3>
-        <p className="text-sm text-gray-400">by: {author}</p>
-        <p className="mt-2 text-sm">{description}</p>
-      </div>
-    </div>
+    </Link>
   );
 };
 
