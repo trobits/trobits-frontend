@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 import { LoadingAnimation } from "@/components/LoadingAnimation/LoadingAnimation";
 
-
 // Define the CryptoData interface separately
 interface CryptoData {
   coin: string;
@@ -10,9 +9,9 @@ interface CryptoData {
   luncPrice: string;
   interval: string;
   icon: StaticImageData;
-  visits:number,
-  revenue:number,
-  burns:number
+  visits: number;
+  revenue: number;
+  burns: number;
 }
 
 // Now define the TransparentCard interface which accepts cryptoData prop
@@ -21,8 +20,12 @@ interface TransparentCardProps {
   index: number; // Add index as a prop
 }
 
-const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) => {
-  const { coin, shibPrice, luncPrice, interval, icon,visits,revenue,burns } = cryptoData;
+const TransparentCard: React.FC<TransparentCardProps> = ({
+  cryptoData,
+  index,
+}) => {
+  const { coin, shibPrice, luncPrice, interval, icon, visits, revenue, burns } =
+    cryptoData;
 
   // State to handle loading animation
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +45,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
   const coinName = isShib ? "SHIB" : "LUNC";
 
   return (
-    <div className="bg-transparent border border-cyan-400 rounded-xl p-8 min-w-[400px] min-h-[300px] text-white shadow-lg backdrop-blur-md">
+    <div className=" border border-cyan-400 rounded-xl bg-black p-8 min-w-[400px] min-h-[300px] text-white shadow-lg backdrop-blur-md">
       {/* Display loading animation while data is loading */}
       {isLoading ? (
         <div className="flex justify-center items-center h-full">
@@ -58,7 +61,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
               height={60} // Height of the image
               className="rounded-full"
             />
-            <span className="ml-auto px-3 py-2 text rounded-3xl border border-cyan-400 bg-black">
+            <span className="ml-auto px-3 py-2 text rounded-3xl border border-cyan-400 bg-black ">
               Interval-{interval}
             </span>
           </div>

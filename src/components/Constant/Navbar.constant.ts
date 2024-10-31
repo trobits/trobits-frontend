@@ -3,5 +3,5 @@ export const navItems = [
     { name: 'CryptoHub', href: '/cryptohub' },
     { name: 'Learn', href: '/learn' },
     { name: 'Basics', href: '/basics' },
-    { name: 'Price', href: '/price' },
+    { name: 'Price', href: '/leaderboard' },
   ]
