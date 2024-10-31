@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import { Source_Sans_3, Inter } from "next/font/google"; // Import both fonts
 import "./globals.css";
+import Providers from "@/provider/Provider";
 
 // Source Sans 3 Font
 const sourceSansPro = Source_Sans_3({
-  weight: ["300", "400", "600", "700"], // Choose the weights you need
-  subsets: ["latin"], // Choose subsets if needed
+  weight: [ "300", "400", "600", "700" ], // Choose the weights you need
+  subsets: [ "latin" ], // Choose subsets if needed
   display: "swap",
 });
 
 // Inter Font
 const inter = Inter({
-  weight: ["400", "500", "600", "700"], // Choose the weights you need
-  subsets: ["latin"], // Choose subsets if needed
+  weight: [ "400", "500", "600", "700" ], // Choose the weights you need
+  subsets: [ "latin" ], // Choose subsets if needed
   display: "swap",
 });
 
@@ -29,7 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${sourceSansPro.className} ${inter.className} antialiased`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

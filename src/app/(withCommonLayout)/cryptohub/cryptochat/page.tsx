@@ -1,7 +1,7 @@
 "use client"
 import TopicsCard from '@/components/Cryptohub/TopicsCard';
 import { ITopicInfo } from '@/components/Cryptohub/Types';
-import { LoadingAnimation } from '@/components/LoadingAnimation/LoadingAnimation';
+import Loading from '@/components/Shared/Loading';
 import React, { useEffect, useState } from 'react';
 
 const CryptoChatPage = () => {
@@ -25,7 +25,7 @@ const CryptoChatPage = () => {
   }, []); 
 
   if (loading) {
-    return <LoadingAnimation />; 
+    return <Loading/>
   }
 
   return (
