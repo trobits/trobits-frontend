@@ -1,7 +1,9 @@
 // pages/index.js
+import Link from "next/link";
+import { Button } from "../ui/button";
 import NewsCard from "./NewsCard";
 
-const articlesData = [
+export const articlesData = [
   {
     id: 1,
     title:
@@ -84,11 +86,16 @@ export default function NewsCompo() {
         <h2 className=" text-gray-200 pl-10">Crypto News</h2>
 
         <div className="flex flex-wrap justify-center gap-2 max-w-[920px] mx-auto">
-          {articlesData.map((article, index) => (
+          {articlesData.slice(0,8).map((article, index) => (
             <NewsCard key={index + 1} articleData={article} />
           ))}
         </div>
       </div>
+      <Link href="/articles">
+        <div className="text-center mt-20">
+          <Button className="mx-auto bg-[#F9960A] text-black">See More</Button>
+        </div>
+      </Link>
     </div>
   );
 }
