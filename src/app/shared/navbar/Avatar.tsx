@@ -17,11 +17,10 @@ const Avatar: React.FC = () => {
       ) {
         setIsOpen(false);
       }
-    };
+    }
 
     // Add event listener to the document
     document.addEventListener("mousedown", handleClickOutside);
-
     // Cleanup the event listener
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);

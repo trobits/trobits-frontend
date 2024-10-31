@@ -1,6 +1,6 @@
 // components/Footer.js
 import { FaFacebookF, FaTwitter, FaReddit } from "react-icons/fa";
-import Image from "next/image";
+import Logo from "@/components/Shared/Logo";
 
 const Footer = () => {
   return (
@@ -8,18 +8,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo Section */}
-          <div className="flex items-center space-x-2 col-span-1 lg:col-span-2">
-            <Image
-              src="/logo.svg" // Replace this with the path to your logo
-              alt="Trobits Logo"
-              width={50} // Set appropriate width
-              height={50} // Set appropriate height
-              priority
-            />
-            <div>
-              <h1 className="text-2xl font-bold">Trobits</h1>
-              <p className="text-sm">EARN 2 BURN</p>
-            </div>
+          <div className="flex items-center">
+            <Logo/>
           </div>
 
           {/* Leaderboard Section */}
