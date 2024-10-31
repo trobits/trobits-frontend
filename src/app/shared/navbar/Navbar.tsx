@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { navItems } from "@/components/Constant/Navbar.constant";
 import Logo from "@/components/Shared/Logo";
+import VideoModal from "@/components/VideoModal/VideoModal";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
