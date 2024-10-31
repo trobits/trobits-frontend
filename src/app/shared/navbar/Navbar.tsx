@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { navItems } from "@/components/Constant/Navbar.constant";
-import VideoModal from "@/components/VideoModal/VideoModal";
+import Logo from "@/components/Shared/Logo";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,14 +27,8 @@ export default function Navbar() {
     <nav className="bg-black">
       <div className="w-full px-8 sm:px-6 lg:px-20">
         <div className="flex items-center justify-evenly h-24">
-          <div className="flex-shrink-0">
-            <Link href="/" className="flex flex-col">
-              <div className="flex justify-center items-center">
-                <span className="text-orange-500 text-3xl font-bold">T</span>
-                <span className="text-white text-xl ml-2">Trobits</span>
-              </div>
-              <span className="text-white text-xs ml-2">EARN 2 BURN</span>
-            </Link>
+          <div className="flex-shrink-0 my-2">
+            <Logo/>
           </div>
           <div className="hidden md:flex flex-grow justify-around ml-10">
             {navItems.map((item) => {

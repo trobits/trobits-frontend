@@ -8,11 +8,24 @@ import { IoMdNotifications } from 'react-icons/io';
 import { MdOutlineDynamicFeed } from "react-icons/md";
 import { GrLogin } from "react-icons/gr";
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import Logo from '@/components/Shared/Logo';
+import { clearUser } from '@/redux/features/slices/authSlice';
+import { useAppDispatch } from '@/redux/hooks';
+import toast from 'react-hot-toast';
+
 
 const CryptoLayout = ({ children }: { children: ReactNode }) => {
+    const dispatch = useAppDispatch();
+    const router = useRouter();
     const [ isSidebarOpen, setIsSidebarOpen ] = useState<boolean>(false);
     const pathname = usePathname();
+
+    const handleLogOut = () => {
+        dispatch(clearUser())
+        toast.success("Successfully logged out")
+        // router.push('/');   
+    }
 
     return (
         <div className="h-[calc(100vh-130px)] w-full fixed flex flex-col lg:flex-row bg-transparent rounded-b-md">
@@ -56,7 +69,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                             <Link href="/cryptohub/feed" passHref>
                                 <Button
                                     onClick={() => setIsSidebarOpen(false)}
-                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname.includes('/cryptohub/feed' )? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
+                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname.includes('/cryptohub/feed') ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
                                         }`}
                                 >
                                     <MdOutlineDynamicFeed className=' mr-2' />
@@ -89,8 +102,9 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="/auth/login" passHref>
+                            <Link href="/" passHref>
                                 <Button
+                                    onClick={handleLogOut}
                                     className="w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400  text-white transition-colors"
                                 >
                                     <GrLogin className='mr-2' />
@@ -102,16 +116,9 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                 </nav>
 
                 {/* Footer/Logo Section */}
-                <div className="flex-grow flex flex-col justify-end p-4 border-t border-gray-700">
-                    <Link href="/" className="flex flex-col justify-center items-center">
-                        <div className="flex justify-center items-center">
-                            <span className="text-orange-500 text-3xl font-bold">T</span>
-                            <span className="text-white text-2xl ml-2">Trobits</span>
-                        </div>
-                        <span className="text-white text-xs ml-2">EARN 2 BURN</span>
-                    </Link>
+                <div className='flex flex-col flex-grow lg:justify-end mb-16'>
+                    <Logo />
                 </div>
-
             </aside>
 
             {/* Sidebar Toggle Button for Mobile */}

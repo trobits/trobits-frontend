@@ -1,6 +1,6 @@
 // components/Footer.js
 import { FaFacebookF, FaTwitter, FaReddit } from "react-icons/fa";
-import Link from "next/link";
+import Logo from "@/components/Shared/Logo";
 
 const Footer = () => {
   return (
@@ -8,13 +8,9 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo Section */}
-          <Link href="/" className="flex flex-col">
-              <div className="flex justify-center items-center">
-                <span className="text-orange-500 text-3xl font-bold">T</span>
-                <span className="text-white text-xl ml-2">Trobits</span>
-              </div>
-              <span className="text-white text-xs ml-2">EARN 2 BURN</span>
-            </Link>
+          <div className="flex items-center">
+            <Logo/>
+          </div>
 
           {/* Leaderboard Section */}
           <div className="flex flex-col">
