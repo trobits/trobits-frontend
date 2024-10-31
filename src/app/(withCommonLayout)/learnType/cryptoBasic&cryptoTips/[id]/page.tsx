@@ -85,7 +85,7 @@ const LearnDetailsPage = ({ params }: ParamsParams) => {
     <div className="bg-transparent mt-20">
       <h1 className=" font-bold text-white flex items-center gap-2 text-xl ">
         <IoBookSharp className=" text-cyan-500 size-9 ml-6" />
-        Learns /-<Link href={"/articles"} className="cursor-pointer hover:text-cyan-500 transition-all"> {currentItem?.type}</Link></h1>
+        <Link className="hover:text-cyan-600" href={"/learn"}> Learns</Link> /-<Link href={"/articles"} className="cursor-pointer hover:text-cyan-500 transition-all"> {currentItem?.type}</Link></h1>
       {" "}
       {/* Set background to transparent */}
       <Card className="max-w-4xl mx-auto bg-transparent border-none text-white">
