@@ -23,8 +23,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
 
     const handleLogOut = () => {
         dispatch(clearUser())
-        toast.success("Successfully logged out")
-        // router.push('/');   
+        router.push('/');   
     }
 
     return (

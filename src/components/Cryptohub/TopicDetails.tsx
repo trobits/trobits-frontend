@@ -5,64 +5,46 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BadgeCheck, Heart, MessageSquare } from "lucide-react"
-import { useEffect, useState } from "react"
-import { ITopic } from "./Types"
 import Image from "next/image"
-import Loading from "../Shared/Loading"
+import { useGetTopicByIdQuery } from "@/redux/features/api/topicApi"
+import { LoadingAnimation } from "../LoadingAnimation/LoadingAnimation"
 
 export default function TopicDetailsPage({ topicId }: { topicId: string }) {
+    const { data, isLoading: topicLoading } = useGetTopicByIdQuery(topicId);
 
-    const [ topic, setTopic ] = useState<ITopic | null>(null)
-    const [ isLoading, setIsLoading ] = useState(true);
-
-
-
-    useEffect(() => {
-        const fetchTopicsData = async () => {
-            try {
-                const response = await fetch("/data.json");
-                const allTopics: ITopic[] = await response.json();
-                const findTopic = allTopics.find((topic) => topic.id === topicId);
-                setTopic(findTopic as ITopic)
-            } catch (error) {
-                console.error("Error fetching topics data:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchTopicsData();
-    }, []);
-
-    if (isLoading) {
-        return <Loading />
+    if (topicLoading) {
+        return <LoadingAnimation />
     }
+    const topic = data?.data;
 
     return (
-
         <div className="min-h-screen bg-[#0a0a0f75]">
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="relative overflow-hidden">
-                    <div className="aspect-[3/1] overflow-hidden rounded-b-xl">
+                    <div className="aspect-[3/2] overflow-hidden rounded-b-xl">
                         <Image
                             width={600}
-                            height={600}
+                            height={800}
                             src={(topic?.image as string)}
                             alt="Profile banner"
                             className="w-full h-full mt-4 rounded-md object-cover"
                         />
                     </div>
-                    <Button
-                        className="absolute top-6 right-2 bg-indigo-600 hover:bg-indigo-700 text-white"
-                    >
-                        Post
-                    </Button>
-                    <div className="absolute p-4 rounded-md wfu  bottom-4 left-4 bg-[#00000096]">
-                        <h1 className="text-2xl font-bold text-white">{topic?.title}</h1>
-                        <p className="text-white">{topic?.description}</p>
-                    </div>
+                    
                 </div>
+                <div className="p-4 rounded-md  bg-[#00000096]">
+                    <h1 className="text-2xl font-bold text-white">{topic?.title}</h1>
+                    <p className="text-white">{topic?.description}</p>
+                </div>
+                <div className=" flex justify-end">
+                    <Button
+                        className=" bg-cyan-600 px-8 mt-4 hover:bg-cyan-700 text-white"
+                    >
+                       New Post
+                    </Button>
+                </div>
+                
 
                 {/* Tabs */}
                 <div className="px-4">

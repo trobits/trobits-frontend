@@ -1,14 +1,14 @@
 import React from 'react'
-import CryptoChatPage from './cryptochat/page'
+import Redirect from './Redirect'
 
 const CryptoHubPage
- = () => {
-  return (
-    <div>
-      <CryptoChatPage/>
-    </div>
-  )
-}
+  = () => {
+    return (
+      <div>
+        <Redirect />
+      </div>
+    )
+  }
 
 export default CryptoHubPage
 

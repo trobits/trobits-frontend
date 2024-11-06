@@ -9,6 +9,7 @@ export interface IUser {
 }
 
 // define Like interface
+
 export interface ILike {
     count: number;
     users: string[];
@@ -40,9 +41,12 @@ export interface ITopic {
     id: string;
     title: string;
     description: string;
-    image: string | StaticImageData;
-    posts: IPost[];
+    image: string;
+    topicAuthor: string;
+    createdAt: string;
+    updatedAt: string;
 }
+
 
 
 // Define the type interface for each post

@@ -52,7 +52,7 @@ export default function LoginPage() {
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gradient bg-[#15180685] p-4 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-gradient bg-[#161b1a] p-4 z-50">
             <Card className="w-full max-w-md bg-white text-gray-800 relative">
                 <Button
                     variant="ghost"

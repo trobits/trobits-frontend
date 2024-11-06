@@ -40,11 +40,12 @@ const TopicsCard: React.FC<TopicsCardProps> = ({ topicInfo }) => {
                     {topicInfo?.image && (
                         <div className="w-full mt-3">
                             <Image
-                                className="w-full rounded-lg object-cover"
-                                src={topicInfo?.image as string}
+                                className=" w-full h-64 rounded-lg object-cover"
+                                src={topicInfo?.image}
+                                // src={topicInfo?.image as string}
                                 alt="image"
-                                height={300}
-                                width={300}
+                                height={600}
+                                width={600}
                             />
                         </div>
                     )}
