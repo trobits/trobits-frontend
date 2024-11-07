@@ -23,7 +23,7 @@ const AnimatedButton: FC<ButtonProps> = ({
             onClick={onClick}
             disabled={disabled || loading}
             className={`relative flex items-center justify-center px-4 py-2 text-white font-semibold rounded-md 
-                  ${loading || disabled ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}
+                  ${loading || disabled ? 'bg-transparent cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}
                   ${className}`}
             {...props} // Spread additional props like aria-* or data-* attributes
         >

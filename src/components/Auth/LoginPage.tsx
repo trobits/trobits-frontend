@@ -18,8 +18,8 @@ interface ILoginInfo {
 }
 export default function LoginPage() {
     const initialState: ILoginInfo = {
-        email: '',
-        password: ''
+        email: 'nasir@gmail.com',
+        password: '11111111'
     }
     const [ isOpen, setIsOpen ] = useState(true)
     const [ showPassword, setShowPassword ] = useState(false)

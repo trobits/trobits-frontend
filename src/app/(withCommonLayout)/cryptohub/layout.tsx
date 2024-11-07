@@ -12,7 +12,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import Logo from '@/components/Shared/Logo';
 import { clearUser } from '@/redux/features/slices/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
-import toast from 'react-hot-toast';
 
 
 const CryptoLayout = ({ children }: { children: ReactNode }) => {
