@@ -1,11 +1,18 @@
+import PostDetailsPage from '@/components/Post/PostDetailsPage';
 import React from 'react'
 
-const PostDetailsPage = () => {
+interface PageProps {
+  params: {
+    postId: string;
+  }
+}
+
+const PostPage = ({ params: { postId } }: PageProps) => {
   return (
     <div>
-      PostDetails
+      <PostDetailsPage postId={postId} />
     </div>
   )
 }
 
-export default PostDetailsPage
+export default PostPage

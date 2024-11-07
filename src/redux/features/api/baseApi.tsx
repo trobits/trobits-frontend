@@ -27,11 +27,11 @@
 
 import { RootState } from "@/redux/store";
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import { clearUser, setUser } from "../slices/authSlice";
+import {  setUser } from "../slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1",
-    // baseUrl: "https://sisiku-backend.vercel.app/api/v1",
+    // baseUrl: "http://localhost:5000/api/v1",
+    baseUrl: "https://sisiku-backend.vercel.app/api/v1",
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
@@ -71,8 +71,8 @@ const baseQueryWithRefreshToken: BaseQueryFn<string | FetchArgs, unknown, FetchB
                 // Retry the original query with the new token
                 result = await baseQuery(args, api, extraOptions);
             } else {
-                api.dispatch(clearUser());
-                console.error("Failed to obtain a new access token");
+                // api.dispatch(clearUser());
+                console.error("it will fixed very soon!");
             }
         } catch (error) {
             console.error("Error during token refresh:", error);

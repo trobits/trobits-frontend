@@ -4,14 +4,14 @@
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Heart, MessageCircle } from "lucide-react"
 import Image from "next/image"
 import { useGetTopicByIdQuery } from "@/redux/features/api/topicApi"
 import Loading from "../Shared/Loading"
 import { useState } from "react"
 import PostModal from "../Shared/PostModal"
 import { useGetAllPostsByTopicQuery } from "@/redux/features/api/postApi"
-import CommentsModal from "../Post/CommentModal"
+
+import PostCard from "../Post/PostCard"
 
 interface Author {
     id: string;
@@ -45,23 +45,20 @@ export interface Post {
     comments: Comment[];
 }
 
+
+
 export default function TopicDetailsPage({ topicId }: { topicId: string }) {
     const { data, isLoading: topicLoading } = useGetTopicByIdQuery(topicId);
     const [ isOpenPostModal, setIsOpenPostModal ] = useState(false)
-    const [ isOpenCommentModal, setIsOpenCommentModal ] = useState(false)
-    const [ currentPost, setCurrentPost ] = useState<Post | null>(null);
     const { data: allPostsData, isLoading: allPostsLoading } = useGetAllPostsByTopicQuery(topicId)
+
     if (topicLoading || allPostsLoading) {
         return <Loading />
     }
 
     const topic = data?.data;
-    const allPosts = allPostsData?.data;
+    const allPosts = (allPostsData?.data || []) as Post[];
 
-    const handleOpenCommentModal = (post: Post) => {
-        setIsOpenCommentModal(true);
-        setCurrentPost(post)
-    }
 
     return (
         <div className="min-h-screen bg-[#0a0a0f75]">
@@ -122,77 +119,7 @@ export default function TopicDetailsPage({ topicId }: { topicId: string }) {
                 {/* Posts List */}
                 <div className="space-y-6">
                     {allPosts.map((post: Post) => (
-                        <div
-                            key={post.id}
-                            className={`bg-gray-800 max-w-3xl mx-auto rounded-lg overflow-hidden p-3 md:p-6 shadow-lg text-white
-                             ${post?.image ? "h-[25rem] md:h-[40rem]" : "pb-6"} flex flex-col`}
-                        >
-                            {/* Author Information */}
-                            <div className="flex justify-between w-full items-center mb-4">
-                                <div className=" flex">
-                                    {/* conditionally render user profile image */}
-                                    {
-                                        post?.author?.profileImage ? <div className=" w-8 h-8 md:w-12 md:h-12 rounded-full bg-gray-600 flex items-center justify-center mr-4">
-                                            <Image width={500} height={500} src={post?.author?.profileImage} alt="profile image" className=" w-full rounded-full">
-                                            </Image>
-                                        </div>
-                                            :
-                                            <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-gray-600 flex items-center justify-center mr-4">
-                                                <span className="text-lg font-bold">
-                                                    {post?.author?.firstName?.[ 0 ]}
-                                                </span>
-                                            </div>
-
-                                    }
-                                    <div className="flex flex-col">
-                                        <h3 className=" text-sm md:font-semibold">
-                                            {post?.author?.firstName} {post?.author?.lastName}
-                                        </h3>
-                                        <p className="text-sm text-gray-400">
-                                            @{post?.author?.firstName} {post?.author?.lastName}
-                                        </p>
-                                    </div>
-                                </div>
-                                <Button className=" px-1 py-1 md:px-3 mx:py-2 md:font-bold bg-cyan-600 text-white">
-                                    Details
-                                </Button>
-                            </div>
-
-                            {/* Post Content */}
-                            <p className="font-bold text-lg mb-4">{post?.content}</p>
-
-                            {/* Post Image (conditionally rendered) */}
-
-                            {post?.image && (
-                                <div className=" h-[20] md:h-[27rem] overflow-hidden rounded-md mb-2">
-                                    <Image
-                                        src={post?.image}
-                                        alt="Post Image"
-                                        width={600}
-                                        height={400}
-                                        className="w-full object-cover rounded-lg mb-4"
-                                    />
-                                </div>
-                            )}
-
-                            {/* Interaction Buttons */}
-                            <div className="flex items-center justify-between text-gray-400 mt-auto">
-                                <div
-                                    onClick={() => handleOpenCommentModal(post)}
-                                    className="flex items-center space-x-2 cursor-pointer"
-                                >
-                                    <MessageCircle className="w-5 h-5 " />
-                                    <span>{post?.comments?.length}</span>
-                                </div>
-                                <div
-                                onClick={handleLikeToggle}
-                                 className="flex items-center space-x-2 cursor-pointer">
-                                    <Heart className="w-5 h-5" />
-                                    <span>{post?.likeCount}</span>
-                                </div>
-                            </div>
-                            {isOpenCommentModal && <CommentsModal post={currentPost as Post} onClose={() => setIsOpenCommentModal(false)} />}
-                        </div>
+                        <PostCard key={post?.id} post={post} />
                     ))}
                 </div>
             </div>

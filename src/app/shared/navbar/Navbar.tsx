@@ -6,13 +6,20 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { navItems } from "@/components/Constant/Navbar.constant";
 import Logo from "@/components/Shared/Logo";
 import VideoModal from "@/components/VideoModal/VideoModal";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { Button } from "@/components/ui/button";
+import { clearUser } from "@/redux/features/slices/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isBasicsDropdownOpen, setIsBasicsDropdownOpen] = useState(false); // New state for "Basics" dropdown
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ isDropdownOpen, setIsDropdownOpen ] = useState(false);
+  const [ isBasicsDropdownOpen, setIsBasicsDropdownOpen ] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const user = useAppSelector((state) => state.auth.user)
+  const dispatch = useAppDispatch();
+  const router = useRouter()
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -24,12 +31,17 @@ export default function Navbar() {
     setIsBasicsDropdownOpen(!isBasicsDropdownOpen);
   };
 
+  const handleLogOut = () => {
+    dispatch(clearUser())
+    router.push('/');
+  }
+
   return (
     <nav className="bg-black">
       <div className="w-full px-8 sm:px-6 lg:px-20">
         <div className="flex items-center justify-evenly h-24">
           <div className="flex-shrink-0 my-2">
-            <Logo/>
+            <Logo />
           </div>
           <div className="hidden md:flex flex-grow justify-around ml-10">
             {navItems.map((item) => {
@@ -100,11 +112,10 @@ export default function Navbar() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${
-                      item.name === "Home"
-                        ? "text-teal-400"
-                        : "text-gray-300 hover:text-white"
-                    }`}
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${item.name === "Home"
+                      ? "text-teal-400"
+                      : "text-gray-300 hover:text-white"
+                      }`}
                   >
                     {item.name}
                   </Link>
@@ -125,6 +136,12 @@ export default function Navbar() {
               )}
             </button>
           </div>
+
+          {
+            user ? <Button onClick={handleLogOut} className=" bg-cyan-500 px-3 py-2 mr-1 rounded-md text-white">Logout</Button> :
+              <Link href={"/auth/login"} className=" bg-cyan-500 px-3 py-2 mr-1 rounded-md text-white">Login</Link>
+          }
+
         </div>
       </div>
 
@@ -194,11 +211,10 @@ export default function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`block px-3 py-2 rounded-md text-base font-medium ${
-                    item.name === "Home"
-                      ? "text-teal-400"
-                      : "text-gray-300 hover:text-white"
-                  }`}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${item.name === "Home"
+                    ? "text-teal-400"
+                    : "text-gray-300 hover:text-white"
+                    }`}
                 >
                   {item.name}
                 </Link>

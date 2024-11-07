@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { useLoginUserMutation } from '@/redux/features/api/authApi'
 import AnimatedButton from '@/components/Shared/AnimatedButton'
+import Link from 'next/link'
 
 interface ILoginInfo {
   email: string;
@@ -49,6 +50,7 @@ export default function Login() {
     const loginLoadingToast = toast.loading("Logging in user...")
     try {
       const response = await loginMutation(loginInfo)
+      console.log(response)
       // handle error
       if (response.error) {
         const errorMessage = (response?.error as { data?: { message?: string } }).data?.message
@@ -57,11 +59,10 @@ export default function Login() {
       // handle success
       dispatch(setUser((response?.data as { data?: any }).data))
       localStorage.setItem("accessToken", response?.data?.token?.accessToken)
-      router.back();
+      router.push("/")
       toast.success("Successfully logged in!")
     } catch (error: any) {
       console.log(error)
-      toast.error("error occured while logging user!")
     } finally {
       toast.dismiss(loginLoadingToast)
     }
@@ -73,7 +74,7 @@ export default function Login() {
   }
 
   if (user) {
-    router.back();
+    router.push("/");
     return;
   }
 
@@ -183,9 +184,9 @@ export default function Login() {
           </Button>
           <p className="text-center text-sm text-gray-600">
             Don&apos;t have an account?{' '}
-            <a href="#" className="text-indigo-600 hover:underline">
+            <Link href="/auth/signin" className="text-indigo-600 hover:underline">
               Sign Up here
-            </a>
+            </Link>
           </p>
         </CardFooter>
       </Card>
