@@ -27,18 +27,18 @@
 
 import { RootState } from "@/redux/store";
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import {  setUser } from "../slices/authSlice";
+import { setUser } from "../slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
     // baseUrl: "http://localhost:5000/api/v1",
     baseUrl: "https://sisiku-backend.vercel.app/api/v1",
     credentials: "include",
-    prepareHeaders: (headers, { getState }) => {
-        const token = (getState() as RootState).auth.token;
-        headers.set("accept", "application/json");
+    prepareHeaders: (headers, { }) => {
+        const token = localStorage.getItem("refreshToken");
         if (token) {
-            headers.set("authorization", `${token}`);
+            headers.set("authorization", `Bearer ${token}`);
         }
+
         return headers;
     },
 });

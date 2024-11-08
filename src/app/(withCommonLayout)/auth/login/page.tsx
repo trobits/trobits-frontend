@@ -58,7 +58,7 @@ export default function Login() {
       }
       // handle success
       dispatch(setUser((response?.data as { data?: any }).data))
-      localStorage.setItem("accessToken", response?.data?.token?.accessToken)
+      localStorage.setItem("refreshToken", response?.data?.token?.refreshToken)
       router.push("/")
       toast.success("Successfully logged in!")
     } catch (error: any) {

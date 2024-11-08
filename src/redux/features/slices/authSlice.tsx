@@ -86,6 +86,7 @@ const authSlice = createSlice({
         },
         clearUser: (state) => {
             state.user = null;
+            localStorage.removeItem("refreshToken")
         },
     },
 });

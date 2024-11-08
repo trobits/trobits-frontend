@@ -4,7 +4,7 @@
 
 body {
   font-family: 'Roboto', Arial, Helvetica, sans-serif; 
-  background-image: url('../assets/newBg.png');
+  background-image: url('../assets/background4.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -71,6 +71,72 @@ body::before {
   animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1); /* Modify the timing function for a quick start and slow end */
 }
 
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in {
+  animation: slideInRight 0.3s ease-in-out;
+}
+
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.content-container {
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide-in {
+  animation: slideInRight 0.3s ease-in-out;
+}
 
 @layer base {
   :root {

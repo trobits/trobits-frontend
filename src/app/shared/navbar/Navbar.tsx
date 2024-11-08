@@ -36,6 +36,8 @@ export default function Navbar() {
     router.push('/');
   }
 
+
+
   return (
     <nav className="bg-black">
       <div className="w-full px-8 sm:px-6 lg:px-20">
