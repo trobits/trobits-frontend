@@ -120,8 +120,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 import axios from "axios";
@@ -172,11 +170,12 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
   }, [ selectedInterval, coin ]);
 
   useEffect(() => {
+    // Set up TradingView widget based on the specific coin
     const script = document.createElement("script");
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
     script.async = true;
     script.innerHTML = JSON.stringify({
-      symbol: coin === "shib" ? "CRYPTO:SHIBUSD" : "CRYPTO:LUNCUSD",
+      symbol: coin.toUpperCase() === "SHIB" ? "CRYPTO:SHIBUSD" : "CRYPTO:LUNCUSD",
       width: 350,
       isTransparent: true,
       colorTheme: "dark",

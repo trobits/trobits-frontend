@@ -36,7 +36,7 @@ export default function CryptoData() {
             index === 0 ? "slide-left" : "slide-right"
           }`}
         >
-          <TransparentCard cryptoData={card} index={index} />
+          <TransparentCard  cryptoData={card} index={index} />
         </div>
       ))}
     </div>

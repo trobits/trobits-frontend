@@ -33,6 +33,7 @@ export default function RootLayout({
       <body
         className={`${sourceSansPro.className} ${lato.className} antialiased`}
       >
+        
         <Providers>{children}</Providers>
       </body>
     </html>
