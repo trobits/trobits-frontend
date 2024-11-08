@@ -49,7 +49,7 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
     const [ newComment, setNewComment ] = useState("")
     const [ createComment, { isLoading: createCommentLoading } ] = useCreateCommentMutation()
     const user: IUser = useAppSelector((state) => state.auth.user)
-    
+
 
     if (postLoading) {
         return <Loading />
@@ -87,15 +87,20 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
             <div className="max-w-5xl mx-auto px-4">
                 {/* Post Image and Content */}
                 <div className="relative overflow-hidden mb-6">
-                    <div className="aspect-[3/2] overflow-hidden rounded-xl">
-                        <Image
-                            width={600}
-                            height={800}
-                            src={post?.image as string}
-                            alt="Post banner"
-                            className="w-full h-full mt-4 rounded-xl object-cover"
-                        />
-                    </div>
+
+                    {
+                        post?.image &&
+                        <div className="aspect-[3/2] overflow-hidden rounded-xl">
+                            <Image
+                                width={600}
+                                height={800}
+                                src={post?.image as string}
+                                alt="Post banner"
+                                className="w-full h-full mt-4 rounded-xl object-cover"
+                            />
+                        </div>
+                    }
+
                     <div className="p-6 bg-[#00000096] rounded-xl mt-4 text-white text-center">
                         <h1 className="text-3xl font-bold mb-2">{post?.content.slice(0, 50)}{post?.content.length > 50 ? "..." : ""}</h1>
                         <p className="text-lg mt-2">{post?.content}</p>

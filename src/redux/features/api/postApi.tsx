@@ -77,11 +77,32 @@ const topicApi = baseApi.injectEndpoints({
             },
             invalidatesTags: [ "post" ]
         }),
+        getPostsByAuthorId: build.query({
+            query: (authorId) => {
+                return {
+                    url: `/post/author/${authorId}`,
+                    method: "GET",
+
+                    // 
+                }
+            },
+            providesTags: [ "post" ]
+        }),
+        getAllPosts: build.query({
+            query: () => {
+                return {
+                    url: `/post/all-posts`,
+                    method: "GET",
+
+                }
+            },
+            providesTags: [ "post" ]
+        }),
 
 
     })
 })
 
-export const { useCreatePostMutation,useToggleDisLikeOnCommentMutation,useToggleLikeOnCommentMutation,useGetPostsByIdQuery,useToggleLikeMutation, useCreateCommentMutation, useGetAllPostsByTopicQuery } = topicApi;
+export const { useCreatePostMutation, useGetAllPostsQuery,useGetPostsByAuthorIdQuery,useToggleDisLikeOnCommentMutation,useToggleLikeOnCommentMutation,useGetPostsByIdQuery,useToggleLikeMutation, useCreateCommentMutation, useGetAllPostsByTopicQuery } = topicApi;
 
 

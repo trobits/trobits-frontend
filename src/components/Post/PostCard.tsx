@@ -101,6 +101,7 @@ const PostCard = ({ post }: { post: Post }) => {
                 </div>
             )}
 
+
             {/* Interaction Buttons */}
             <div className="flex items-center justify-between text-gray-400 mt-auto">
                 {/* Comments Section */}

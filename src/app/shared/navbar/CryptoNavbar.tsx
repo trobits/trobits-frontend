@@ -259,7 +259,6 @@
 //   );
 // }
 
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -278,6 +277,38 @@ interface CryptoData {
   price: number;
 }
 
+// Default data for cache
+const defaultCache: Record<string, CryptoData[]> = {
+  Price: [
+    { name: "BTC", price: 75858 },
+    { name: "ETH", price: 2901.97 },
+    { name: "USDT", price: 1 },
+    { name: "SOL", price: 199.51 },
+    { name: "BNB", price: 596.14 },
+  ],
+  Trending: [
+    { name: "BTC", price: 75853 },
+    { name: "USDT", price: 1.001 },
+    { name: "ETH", price: 2901.92 },
+    { name: "FDUSD", price: 1 },
+    { name: "USDC", price: 0.999427 },
+  ],
+  "Recently Added": [
+    { name: "OME", price: 0.00004861 },
+    { name: "0DOG", price: 0.00672315 },
+    { name: "ZAD", price: 0.00000122 },
+    { name: "ZOC", price: 0.00019625 },
+    { name: "WOLF", price: 2.32771e-7 },
+  ],
+  "Most Visited": [
+    { name: "BTC", price: 75858 },
+    { name: "ETH", price: 2901.97 },
+    { name: "USDT", price: 1 },
+    { name: "SOL", price: 199.51 },
+    { name: "BNB", price: 596.14 },
+  ],
+};
+
 // Map of endpoint URLs by category
 const endpointMap: Record<string, string> = {
   Price:
@@ -294,9 +325,9 @@ export default function CryptoNavbar() {
   const [ selectedOption, setSelectedOption ] = useState<keyof typeof endpointMap>(
     "Price"
   );
-  const [ cryptoData, setCryptoData ] = useState<CryptoData[]>([]);
+  const [ cryptoData, setCryptoData ] = useState<CryptoData[]>(defaultCache[ selectedOption ]);
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
-  const [ cache, setCache ] = useState<Record<string, CryptoData[]>>({});
+  const [ cache, setCache ] = useState<Record<string, CryptoData[]>>(defaultCache);
 
   // Fetch crypto data based on selected option if not in cache
   useEffect(() => {
@@ -310,21 +341,22 @@ export default function CryptoNavbar() {
       setIsLoading(true);
       try {
         const response = await axios.get(endpointMap[ selectedOption ]);
-        const formattedData: CryptoData[] = response.data
+        const fetchedData: CryptoData[] = response.data
           .slice(0, 5)
           .map((item: any) => ({
             name: item?.symbol?.toUpperCase() ?? "N/A",
             price: item?.current_price ?? 0,
           }));
 
-        setCryptoData(formattedData);
+        // Update the cache with fetched data for the selected option only
         setCache((prevCache) => ({
           ...prevCache,
-          [ selectedOption ]: formattedData,
+          [ selectedOption ]: fetchedData,
         }));
+        setCryptoData(fetchedData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setCryptoData([]); // Set empty data if an error occurs
+        setCryptoData(cache[ selectedOption ]); // Fall back to default data if fetch fails
       } finally {
         setIsLoading(false);
       }
