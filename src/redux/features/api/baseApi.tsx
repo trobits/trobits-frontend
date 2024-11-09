@@ -30,8 +30,8 @@ import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError 
 import { setUser } from "../slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
-    // baseUrl: "http://localhost:5000/api/v1",
-    baseUrl: "https://sisiku-backend.vercel.app/api/v1",
+    baseUrl: "http://localhost:5000/api/v1",
+    // baseUrl: "https://sisiku-backend.vercel.app/api/v1",
     credentials: "include",
     prepareHeaders: (headers, { }) => {
         const token = localStorage.getItem("refreshToken");
@@ -87,6 +87,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<string | FetchArgs, unknown, FetchB
 export const baseApi = createApi({
     reducerPath: "baseApi",
     baseQuery: baseQueryWithRefreshToken,
-    tagTypes: [ "post" ],
+    tagTypes: [ "post","user" ],
     endpoints: () => ({}),
 });

@@ -65,15 +65,19 @@ export default function TopicDetailsPage({ topicId }: { topicId: string }) {
             <div className="max-w-5xl mx-auto px-4">
                 {/* Topic Header */}
                 <div className="relative overflow-hidden mb-6">
-                    <div className="aspect-[3/2] overflow-hidden rounded-xl">
-                        <Image
-                            width={600}
-                            height={800}
-                            src={topic?.image as string}
-                            alt="Profile banner"
-                            className="w-full h-full mt-4 rounded-xl object-cover"
-                        />
-                    </div>
+                    {
+                        topic?.image &&
+                        <div className="aspect-[3/2] overflow-hidden rounded-xl">
+                            <Image
+                                width={600}
+                                height={800}
+                                src={topic?.image as string}
+                                alt="Profile banner"
+                                className="w-full h-full mt-4 rounded-xl object-cover"
+                            />
+                        </div>
+
+                    }
                     <div className="p-6 bg-[#00000096] rounded-xl mt-4 text-white text-center">
                         <h1 className="text-3xl font-bold">{topic?.title}</h1>
                         <p className="text-lg mt-2">{topic?.description}</p>
@@ -118,9 +122,13 @@ export default function TopicDetailsPage({ topicId }: { topicId: string }) {
 
                 {/* Posts List */}
                 <div className="space-y-6">
-                    {allPosts.map((post: Post) => (
+                    {allPosts.length ? allPosts?.map((post: Post) => (
                         <PostCard key={post?.id} post={post} />
-                    ))}
+                    )):
+                    <div>
+                        <h2 className="text-gray-200 text-center font-bold text-2xl">No posts yet.</h2>
+                    </div>
+                    }
                 </div>
             </div>
         </div>

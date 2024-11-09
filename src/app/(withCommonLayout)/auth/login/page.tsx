@@ -143,7 +143,7 @@ export default function Login() {
             {/* <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white" type="submit">
               {loginLoading ?"Sign In":"signin.." }
             </Button> */}
-            <AnimatedButton type='submit' loading={loginLoading} className="w-full">
+            <AnimatedButton type='submit' loading={loginLoading} className="w-full bg-indigo-600 text-white">
               {loginLoading ? "Processing..." : "Submit"}
             </AnimatedButton>
           </form>

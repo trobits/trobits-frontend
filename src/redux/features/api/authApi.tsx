@@ -18,7 +18,8 @@ const authApi = baseApi.injectEndpoints({
                     method: "POST",
                     body: data
                 }
-            }
+            },
+            invalidatesTags: [ "user" ]
         }),
         logout: build.query({
             query: () => {
@@ -27,8 +28,36 @@ const authApi = baseApi.injectEndpoints({
                     method: "GET"
                 }
             }
+        }),
+        allUser: build.query({
+            query: () => {
+                return {
+                    url: "/user/all-users",
+                    method: "GET"
+                }
+            },
+            providesTags: [ "user" ]
+        }),
+        recommendedUser: build.query({
+            query: () => {
+                return {
+                    url: "/user/recommended-users",
+                    method: "GET"
+                }
+            },
+            // providesTags: [ "user" ]
+        }),
+        toggleFollow: build.mutation({
+            query: (data) => {
+                return {
+                    url: "/user/follow-user",
+                    method: "PATCH",
+                    body: data
+                }
+            },
+            invalidatesTags: [ "user" ]
         })
     })
 })
 
-export const { useLoginUserMutation, useCreateuserMutation,useLogoutQuery, useLazyLogoutQuery } = authApi;
+export const { useLoginUserMutation, useToggleFollowMutation, useRecommendedUserQuery, useAllUserQuery, useCreateuserMutation, useLogoutQuery, useLazyLogoutQuery } = authApi;

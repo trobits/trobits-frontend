@@ -4,13 +4,14 @@
 import Image from "next/image"
 import { useState, FormEvent } from "react"
 import Loading from "@/components/Shared/Loading"
-import { useGetPostsByIdQuery, useCreateCommentMutation } from "@/redux/features/api/postApi"
-import { Heart, ThumbsDown, ThumbsUp } from "lucide-react"
+import { useGetPostsByIdQuery, useCreateCommentMutation, useToggleLikeMutation } from "@/redux/features/api/postApi"
+import { Heart, HeartIcon, ThumbsDown, ThumbsUp } from "lucide-react"
 import toast from "react-hot-toast"
 import AnimatedButton from "@/components/Shared/AnimatedButton"
 import { useAppSelector } from "@/redux/hooks"
 import { IUser } from "../Cryptohub/Types"
 import PostCommentCard, { IComment } from "./PostCommentCard"
+import { Button } from "../ui/button"
 
 interface Author {
     id: string;
@@ -48,6 +49,7 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
     const { data, isLoading: postLoading } = useGetPostsByIdQuery(postId)
     const [ newComment, setNewComment ] = useState("")
     const [ createComment, { isLoading: createCommentLoading } ] = useCreateCommentMutation()
+    const [ toggleLike, { isLoading: toggleLikeLoading } ] = useToggleLikeMutation();
     const user: IUser = useAppSelector((state) => state.auth.user)
 
 
@@ -82,6 +84,20 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
         }
     }
 
+    const handleLikeToggle = async (post: Post) => {
+        if (!user) {
+            toast.error("Please Login first!")
+            return;
+        }
+        const authorId = user?.id;
+        const id = post?.id;
+        const response = await toggleLike({
+            authorId,
+            id
+        })
+        console.log(response);
+    }
+
     return (
         <div className="min-h-screen bg-[#0a0a0f75] py-8">
             <div className="max-w-5xl mx-auto px-4">
@@ -100,13 +116,30 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
                             />
                         </div>
                     }
+                   
 
                     <div className="p-6 bg-[#00000096] rounded-xl mt-4 text-white text-center">
                         <h1 className="text-3xl font-bold mb-2">{post?.content.slice(0, 50)}{post?.content.length > 50 ? "..." : ""}</h1>
                         <p className="text-lg mt-2">{post?.content}</p>
                     </div>
                 </div>
+                <div className=" flex justify-end mt-4">
 
+                    <Button className="bg-cyan-700 px-8"><div
+                        onClick={() => handleLikeToggle(post)}
+                        className="flex items-center space-x-2 cursor-pointer"
+                    >
+                        <h2 className=" mr-4">Like</h2>
+                        <HeartIcon
+                            scale={2}
+                            size={12}
+                            fill={post?.likers?.includes(user?.id) ? "red" : ""}
+                            className={`w-12 h-12 transform transition-transform duration-200 ${toggleLikeLoading ? "scale-125" : ""}`}
+                        />
+                        <span>{post?.likeCount}</span>
+                    </div>
+                    </Button>
+                </div>
                 {/* Comments Section */}
                 <div className="bg-gray-800 rounded-xl p-6 mt-8 text-white">
                     <h2 className="text-2xl font-bold mb-4">Comments</h2>
@@ -141,6 +174,6 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
