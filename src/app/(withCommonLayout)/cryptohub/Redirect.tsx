@@ -1,12 +1,15 @@
 "use client"
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const Redirect = () => {
     const router = useRouter();
-    router.push("/cryptohub/cryptochat")
-    return (
-        <></>
-    )
+
+    useEffect(() => {
+        router.push("/cryptohub/cryptochat");
+    }, [ router ]);
+
+    return null;
 }
 
-export default Redirect
+export default Redirect;

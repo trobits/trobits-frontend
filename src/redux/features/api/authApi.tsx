@@ -65,8 +65,19 @@ const authApi = baseApi.injectEndpoints({
 
                 }
             },
+            providesTags: [ "user" ]
         }),
+        updateProfileInfo: build.mutation({
+            query: ({ data, userId: userEmail }) => {
+                return {
+                    url: `/user/update-user/${userEmail}`,
+                    method: "PATCH",
+                    body: data
+                }
+            },
+            invalidatesTags: [ "user" ]
+        })
     })
 })
 
-export const { useLoginUserMutation,useGetUserByIdQuery, useToggleFollowMutation, useRecommendedUserQuery, useAllUserQuery, useCreateuserMutation, useLogoutQuery, useLazyLogoutQuery } = authApi;
+export const { useLoginUserMutation, useUpdateProfileInfoMutation, useGetUserByIdQuery, useToggleFollowMutation, useRecommendedUserQuery, useAllUserQuery, useCreateuserMutation, useLogoutQuery, useLazyLogoutQuery } = authApi;

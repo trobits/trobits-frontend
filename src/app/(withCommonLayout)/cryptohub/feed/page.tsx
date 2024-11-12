@@ -1,27 +1,28 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
+
 "use client"
-import { useState, useEffect, FormEvent, ChangeEvent } from "react";
+import { useState, useMemo, FormEvent, ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { useCreatePostMutation, useGetAllPostsByTopicQuery } from "@/redux/features/api/postApi";
 import Loading from "@/components/Shared/Loading";
 import PostCard from "@/components/Post/PostCard";
 import { Post } from "@/components/Cryptohub/TopicDetails";
 import { Search } from "lucide-react";
-import AuthGuard from "@/components/Auth/AuthGuard";
-import TrendingTopic from "@/components/Cards/TrendingTopic";
-import VerifiedAccounts from "@/components/Cards/VerifiedAccounts";
-import RecommendedAccounts from "@/components/Cards/RecommendedAccounts";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/hooks";
 import { Images } from 'lucide-react';
 import AnimatedButton from "@/components/Shared/AnimatedButton";
 import Image from "next/image";
+import TrendingTopic from "@/components/Cards/TrendingTopic";
+import VerifiedAccounts from "@/components/Cards/VerifiedAccounts";
+import RecommendedAccounts from "@/components/Cards/RecommendedAccounts";
+import AuthGuard from "@/components/Auth/AuthGuard";
 
 // Debounce function to delay the search execution
 function useDebounce(value: string, delay: number) {
   const [ debouncedValue, setDebouncedValue ] = useState(value);
 
-  useEffect(() => {
+  useMemo(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
@@ -37,32 +38,29 @@ function useDebounce(value: string, delay: number) {
 export default function Component() {
   const { data: postData, isLoading: allPostsDataLoading } = useGetAllPostsByTopicQuery("");
   const [ createPost, { isLoading: createPostLoading } ] = useCreatePostMutation();
-  const user = useAppSelector((state) => state.auth.user)
+  const user = useAppSelector((state) => state.auth.user);
   const allPosts: Post[] = postData?.data.length ? postData.data : [];
   const [ postContent, setPostContent ] = useState<string>('');
   const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
   const [ imagePreview, setImagePreview ] = useState<string | null>(null);
 
-  // State for search query and filtered posts
+  // State for search query
   const [ searchQuery, setSearchQuery ] = useState("");
-  const [ filteredPosts, setFilteredPosts ] = useState<Post[]>(allPosts);
 
   // Debounced search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  useEffect(() => {
-    // Filter posts based on the debounced search query
-    const filtered = allPosts.filter((post: Post) =>
+  // Memoized filtered posts
+  const filteredPosts = useMemo(() => {
+    return allPosts.filter((post: Post) =>
       post.author.firstName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
       post.content.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
-    setFilteredPosts(filtered);
   }, [ debouncedSearchQuery, allPosts ]);
 
   if (allPostsDataLoading) {
     return <Loading />;
   }
-
 
   // handle post image change
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +79,7 @@ export default function Component() {
     if (selectedFile) {
       formData.append("image", selectedFile);
     }
-    const createPostLoadingToast = toast.loading("new post creating ...")
+    const createPostLoadingToast = toast.loading("Creating new post...");
     try {
       const response = await createPost(formData);
       console.log(response)
@@ -89,16 +87,15 @@ export default function Component() {
         toast.error("Failed to create a new post!")
         return;
       }
-      toast.success("New post created successfully!")
+      toast.success("New post created successfully!");
       setPostContent("");
-      setSelectedFile(null)
-      setImagePreview(null)
+      setSelectedFile(null);
+      setImagePreview(null);
     } catch (error) {
-      console.log({ error })
+      console.log({ error });
     } finally {
-      toast.dismiss(createPostLoadingToast)
+      toast.dismiss(createPostLoadingToast);
     }
-
   };
 
   return (
@@ -118,7 +115,7 @@ export default function Component() {
 
           <div className="flex mt-4 items-center justify-between">
             <label htmlFor="fileInput" className="cursor-pointer text-gray-400 hover:text-white flex items-center">
-              <Images className="text-white"/>
+              <Images className="text-white" />
               <input
                 id="fileInput"
                 name='fileInput'
@@ -150,6 +147,7 @@ export default function Component() {
         </form>
       </div>
 
+      {/* Main Content */}
       <div className="flex gap-4 flex-1 p-4 flex-wrap justify-center min-h-screen bg-[#00000027]">
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-white mb-4">For You</h1>
@@ -172,7 +170,7 @@ export default function Component() {
             {filteredPosts.length > 0 ? (
               filteredPosts.map((post) => <PostCard key={post.id} post={post} />)
             ) : (
-              <p className="text-white">No posts found for &quot;{searchQuery}&quot;</p>
+              <div className="text-white font-bold text-center">No posts found</div>
             )}
           </div>
         </div>
@@ -187,5 +185,3 @@ export default function Component() {
     </AuthGuard>
   );
 }
-
-

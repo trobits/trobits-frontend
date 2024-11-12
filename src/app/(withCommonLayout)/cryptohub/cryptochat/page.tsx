@@ -15,9 +15,14 @@ const CryptoChatPage = () => {
 
   return (
     <div className='flex flex-wrap justify-center w-full gap-4'>
-      {allTopics?.map((topic: ITopicInfo) => (
+      {allTopics?.length?allTopics?.map((topic: ITopicInfo) => (
         <TopicsCard key={topic.id} topicInfo={topic} />
-      ))}
+      ))
+    :
+    <div className=' font-bold text-white'>
+      No Topics Found
+    </div>
+    }
     </div>
   );
 };
