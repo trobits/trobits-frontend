@@ -29,6 +29,10 @@ const PostModal: FC<ModalProps> = ({ topicId, isOpen, onClose }) => {
 
     const handlePostSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        if (!user) {
+            toast.error("Please Login first!")
+            return;
+        }
         const formData = new FormData();
         formData.append("authorId", user?.id);
         formData.append("topicId", topicId);
@@ -41,6 +45,7 @@ const PostModal: FC<ModalProps> = ({ topicId, isOpen, onClose }) => {
             const response = await createPost(formData);
             if(response.error){
                 toast.error("Failed to create a new post!")
+                return
             }
             toast.success("New post created successfully!")
         } catch (error) {

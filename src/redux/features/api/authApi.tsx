@@ -55,9 +55,18 @@ const authApi = baseApi.injectEndpoints({
                     body: data
                 }
             },
-            invalidatesTags: [ "user" ]
-        })
+            // invalidatesTags: [ "user" ]
+        }),
+        getUserById: build.query({
+            query: (userId) => {
+                return {
+                    url: `/user/singleUser/${userId}`,
+                    method: "GET",
+
+                }
+            },
+        }),
     })
 })
 
-export const { useLoginUserMutation, useToggleFollowMutation, useRecommendedUserQuery, useAllUserQuery, useCreateuserMutation, useLogoutQuery, useLazyLogoutQuery } = authApi;
+export const { useLoginUserMutation,useGetUserByIdQuery, useToggleFollowMutation, useRecommendedUserQuery, useAllUserQuery, useCreateuserMutation, useLogoutQuery, useLazyLogoutQuery } = authApi;

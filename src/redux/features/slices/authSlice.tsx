@@ -73,7 +73,7 @@ interface IInitialState {
 // Set initial state without using localStorage
 const initialState: IInitialState = {
     user: null,
-    token:null
+    token: null
 };
 
 // Create the slice
@@ -86,6 +86,7 @@ const authSlice = createSlice({
         },
         clearUser: (state) => {
             state.user = null;
+            state.token = null;
             localStorage.removeItem("refreshToken")
         },
     },

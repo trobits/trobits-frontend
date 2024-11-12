@@ -137,11 +137,11 @@ interface TransparentCardProps {
 const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) => {
   const { coin, icon } = cryptoData;
   const [ isLoading, setIsLoading ] = useState(true);
-  const [ selectedInterval, setSelectedInterval ] = useState("daily");
+  const [ selectedInterval, setSelectedInterval ] = useState("24 Hours");
   const [ animationClass, setAnimationClass ] = useState("");
   const [ data, setData ] = useState<{ price: string; visits?: number; revenue?: number; burns?: number } | null>(null);
 
-  const intervals = [ "daily", "weekly", "monthly" ];
+  const intervals = [ "24 Hours", "7 Day", "1 Month" ];
 
   // Fetch live data for the specific coin
   const fetchData = async (interval: string) => {
@@ -154,9 +154,9 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
       });
       setData({
         price: response.data?.price || "N/A",
-        visits: Math.floor(Math.random() * 100), // Placeholder data
-        revenue: Math.floor(Math.random() * 500), // Placeholder data
-        burns: Math.floor(Math.random() * 50), // Placeholder data
+        visits: Math.floor(Math.random() * 100), 
+        revenue: Math.floor(Math.random() * 500), 
+        burns: Math.floor(Math.random() * 50), 
       });
     } catch (error) {
       console.error("Error fetching data", error);

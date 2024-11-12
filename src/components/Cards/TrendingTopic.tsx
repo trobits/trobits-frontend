@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import { Card, CardContent, CardHeader } from '../ui/card'
 import { Flame } from 'lucide-react'

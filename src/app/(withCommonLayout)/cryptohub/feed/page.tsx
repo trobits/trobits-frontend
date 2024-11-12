@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
-import { useGetAllPostsByTopicQuery } from "@/redux/features/api/postApi";
+import { useCreatePostMutation, useGetAllPostsByTopicQuery } from "@/redux/features/api/postApi";
 import Loading from "@/components/Shared/Loading";
 import PostCard from "@/components/Post/PostCard";
 import { Post } from "@/components/Cryptohub/TopicDetails";
@@ -10,6 +11,11 @@ import AuthGuard from "@/components/Auth/AuthGuard";
 import TrendingTopic from "@/components/Cards/TrendingTopic";
 import VerifiedAccounts from "@/components/Cards/VerifiedAccounts";
 import RecommendedAccounts from "@/components/Cards/RecommendedAccounts";
+import toast from "react-hot-toast";
+import { useAppSelector } from "@/redux/hooks";
+import { Images } from 'lucide-react';
+import AnimatedButton from "@/components/Shared/AnimatedButton";
+import Image from "next/image";
 
 // Debounce function to delay the search execution
 function useDebounce(value: string, delay: number) {
@@ -30,7 +36,12 @@ function useDebounce(value: string, delay: number) {
 
 export default function Component() {
   const { data: postData, isLoading: allPostsDataLoading } = useGetAllPostsByTopicQuery("");
+  const [ createPost, { isLoading: createPostLoading } ] = useCreatePostMutation();
+  const user = useAppSelector((state) => state.auth.user)
   const allPosts: Post[] = postData?.data.length ? postData.data : [];
+  const [ postContent, setPostContent ] = useState<string>('');
+  const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
+  const [ imagePreview, setImagePreview ] = useState<string | null>(null);
 
   // State for search query and filtered posts
   const [ searchQuery, setSearchQuery ] = useState("");
@@ -41,7 +52,7 @@ export default function Component() {
 
   useEffect(() => {
     // Filter posts based on the debounced search query
-    const filtered = allPosts.filter((post:Post) =>
+    const filtered = allPosts.filter((post: Post) =>
       post.author.firstName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
       post.content.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
@@ -52,27 +63,91 @@ export default function Component() {
     return <Loading />;
   }
 
+
+  // handle post image change
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[ 0 ];
+    if (file) {
+      setSelectedFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handlePostSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("authorId", user?.id);
+    formData.append("content", postContent);
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+    const createPostLoadingToast = toast.loading("new post creating ...")
+    try {
+      const response = await createPost(formData);
+      console.log(response)
+      if (response.error) {
+        toast.error("Failed to create a new post!")
+        return;
+      }
+      toast.success("New post created successfully!")
+      setPostContent("");
+      setSelectedFile(null)
+      setImagePreview(null)
+    } catch (error) {
+      console.log({ error })
+    } finally {
+      toast.dismiss(createPostLoadingToast)
+    }
+
+  };
+
   return (
     <AuthGuard>
       {/* Post Option */}
       <div className="w-full mb-8 max-w-[75rem] mx-auto p-4 bg-[#00000088] rounded-lg shadow-lg flex flex-col space-y-4">
-        <div className="flex items-start space-x-3">
-          <textarea
-            className="w-full p-3 bg-[#00000060] text-white rounded-lg resize-none outline-none focus:ring focus:ring-blue-300"
-            rows={3}
-            placeholder="How do you feel about the markets today? Share your ideas here!"
-          ></textarea>
-        </div>
+        <form onSubmit={handlePostSubmit}>
+          <div className="flex items-start space-x-3">
+            <textarea
+              value={postContent}
+              onChange={(e) => setPostContent(e.target.value)}
+              className="w-full p-3 bg-[#00000060] text-white rounded-lg resize-none outline-none focus:ring focus:ring-blue-300"
+              rows={3}
+              placeholder="Share your ideas here!"
+            ></textarea>
+          </div>
 
-        <div className="flex items-center justify-between">
-          <label className="flex items-center space-x-2 cursor-pointer text-blue-500">
-            <input type="file" className="hidden" />
-            <span>Upload File</span>
-          </label>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
-            Post
-          </button>
-        </div>
+          <div className="flex mt-4 items-center justify-between">
+            <label htmlFor="fileInput" className="cursor-pointer text-gray-400 hover:text-white flex items-center">
+              <Images className="text-white"/>
+              <input
+                id="fileInput"
+                name='fileInput'
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </label>
+            <button
+              type='submit'
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg"
+            >
+              {createPostLoading ? <AnimatedButton className=' w-full px-10 py-5' loading={createPostLoading} /> : "Save"}
+            </button>
+          </div>
+          {imagePreview && (
+            <div className="mt-4 flex items-center">
+              <p className="text-sm text-gray-400 mr-4">Selected file:</p>
+              <Image
+                className="w-16 h-16 object-cover rounded-lg border border-gray-500"
+                src={imagePreview}
+                height={300}
+                width={300}
+                alt="Selected Preview"
+              />
+            </div>
+          )}
+        </form>
       </div>
 
       <div className="flex gap-4 flex-1 p-4 flex-wrap justify-center min-h-screen bg-[#00000027]">
@@ -80,12 +155,12 @@ export default function Component() {
           <h1 className="text-2xl font-bold text-white mb-4">For You</h1>
 
           {/* Search Box */}
-          <div className="relative mb-4">
+          <div className="relative mb-4 w-full max-w-[47rem] mx-auto">
             <Input
               placeholder="Search posts"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-12 py-2 bg-[#00000088] text-white placeholder:text-gray-400 rounded-lg focus:ring-primary/30 border border-gray-600"
+              className="w-full pl-4 pr-12 py-2 bg-[#00000088] text-white placeholder:text-gray-400 rounded-lg focus:ring-primary/30 border-4 p-2 border-cyan-600"
             />
             <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md">
               <Search className="h-5 w-5" />
@@ -97,7 +172,7 @@ export default function Component() {
             {filteredPosts.length > 0 ? (
               filteredPosts.map((post) => <PostCard key={post.id} post={post} />)
             ) : (
-                <p className="text-white">No posts found for &quot;{searchQuery}&quot;</p>
+              <p className="text-white">No posts found for &quot;{searchQuery}&quot;</p>
             )}
           </div>
         </div>
@@ -112,3 +187,5 @@ export default function Component() {
     </AuthGuard>
   );
 }
+
+

@@ -31,7 +31,7 @@ const topicApi = baseApi.injectEndpoints({
                     url: `/post/${postId}`,
                     method: "GET",
 
-// 
+                    // 
                 }
             },
             providesTags: [ "post" ]
@@ -98,11 +98,21 @@ const topicApi = baseApi.injectEndpoints({
             },
             providesTags: [ "post" ]
         }),
+        getPostsByUserId: build.query({
+            query: (userId) => {
+                return {
+                    url: `post/author/${userId}`,
+                    method: "GET",
+
+                }
+            },
+        }),
+        
 
 
     })
 })
 
-export const { useCreatePostMutation, useGetAllPostsQuery,useGetPostsByAuthorIdQuery,useToggleDisLikeOnCommentMutation,useToggleLikeOnCommentMutation,useGetPostsByIdQuery,useToggleLikeMutation, useCreateCommentMutation, useGetAllPostsByTopicQuery } = topicApi;
+export const { useCreatePostMutation,useGetPostsByUserIdQuery ,useGetAllPostsQuery, useGetPostsByAuthorIdQuery, useToggleDisLikeOnCommentMutation, useToggleLikeOnCommentMutation, useGetPostsByIdQuery, useToggleLikeMutation, useCreateCommentMutation, useGetAllPostsByTopicQuery } = topicApi;
 
 

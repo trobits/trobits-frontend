@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Button } from "@/components/ui/button";
 import { clearUser } from "@/redux/features/slices/authSlice";
 import { useRouter } from "next/navigation";
+import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 
 export default function Navbar() {
   const [ isOpen, setIsOpen ] = useState(false);
@@ -17,10 +18,13 @@ export default function Navbar() {
   const [ isBasicsDropdownOpen, setIsBasicsDropdownOpen ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const user = useAppSelector((state) => state.auth.user)
+  const { data: userFromDbData, isLoading: userFromDbLoading, refetch: refetchUserFromDb } = useGetUserByIdQuery(user?.id);
   const dispatch = useAppDispatch();
   const router = useRouter()
+  const userFromDb = userFromDbData?.data;
 
 
+  if (userFromDbLoading) return null;
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
   const toggleDropdown = () => {
@@ -31,33 +35,36 @@ export default function Navbar() {
     setIsBasicsDropdownOpen(!isBasicsDropdownOpen);
   };
 
-  const handleLogOut = () => {
+
+  const handleLogOut = async () => {
+    await refetchUserFromDb();
     dispatch(clearUser())
     router.push('/');
   }
 
 
-
   return (
-    <nav className="bg-black">
+    <nav className="bg-[#00000085]">
       <div className="w-full px-8 sm:px-6 lg:px-20">
         <div className="flex items-center justify-evenly h-24">
           <div className="flex-shrink-0 my-2">
             <Logo />
           </div>
+
           <div className="hidden md:flex flex-grow justify-around ml-10">
             {navItems.map((item) => {
               if (item.name === "Learn") {
                 return (
                   <div key={item.name} className="relative">
-                    <button
-                      onClick={toggleDropdown}
+                    <Link
+                      // onClick={toggleDropdown}
+                      href={"/learn"}
                       className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 flex items-center"
                     >
                       {item.name}
-                      <ChevronDown className="ml-1" />
-                    </button>
-                    {isDropdownOpen && (
+                      {/* <ChevronDown className="ml-1" /> */}
+                    </Link>
+                    {/* {isDropdownOpen && (
                       <div className="absolute left-0 mt-2 w-48 bg-black text-white rounded-md shadow-lg z-10">
                         <Link
                           href="/learnType/cryptoTips"
@@ -72,7 +79,7 @@ export default function Navbar() {
                           Crypto basics
                         </Link>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 );
               } else if (item.name === "Basics") {
@@ -125,6 +132,13 @@ export default function Navbar() {
               }
             })}
           </div>
+
+
+
+          {
+            (userFromDb && user) ? <Button onClick={handleLogOut} className=" bg-cyan-500 px-3 py-2 mr-1 rounded-md text-white">Logout</Button> :
+              <Link href={"/auth/login"} className=" bg-cyan-500 px-3 py-2 mr-1 rounded-md text-white">Login</Link>
+          }
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -138,11 +152,6 @@ export default function Navbar() {
               )}
             </button>
           </div>
-
-          {
-            user ? <Button onClick={handleLogOut} className=" bg-cyan-500 px-3 py-2 mr-1 rounded-md text-white">Logout</Button> :
-              <Link href={"/auth/login"} className=" bg-cyan-500 px-3 py-2 mr-1 rounded-md text-white">Login</Link>
-          }
 
         </div>
       </div>
