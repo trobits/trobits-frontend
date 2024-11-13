@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { baseApi } from "./baseApi";
+import socket from "./socketClient";
+
+
 
 const authApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
@@ -11,6 +15,7 @@ const authApi = baseApi.injectEndpoints({
                 }
             }
         }),
+
         createuser: build.mutation({
             query: (data) => {
                 return {
@@ -21,6 +26,7 @@ const authApi = baseApi.injectEndpoints({
             },
             invalidatesTags: [ "user" ]
         }),
+
         logout: build.query({
             query: () => {
                 return {
@@ -29,6 +35,7 @@ const authApi = baseApi.injectEndpoints({
                 }
             }
         }),
+
         allUser: build.query({
             query: () => {
                 return {
@@ -38,6 +45,7 @@ const authApi = baseApi.injectEndpoints({
             },
             providesTags: [ "user" ]
         }),
+
         recommendedUser: build.query({
             query: () => {
                 return {
@@ -47,16 +55,45 @@ const authApi = baseApi.injectEndpoints({
             },
             // providesTags: [ "user" ]
         }),
+
+
+        // toggleFollow: build.mutation({
+        //     query: (data) => {
+        //         return {
+        //             url: "/user/follow-user",
+        //             method: "PATCH",
+        //             body: data
+        //         }
+        //     },
+        //     invalidatesTags: [ "user" ]
+        // }),
+
         toggleFollow: build.mutation({
-            query: (data) => {
-                return {
-                    url: "/user/follow-user",
-                    method: "PATCH",
-                    body: data
+            query: (data) => ({
+                url: "/user/follow-user",
+                method: "PATCH",
+                body: data,
+            }),
+            async onQueryStarted({ followerId, followedId }, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+
+                    // Log to confirm that socket.emit is being called
+                    console.log("Emitting toggleFollow event:", { followerId, followedId });
+
+                    // Emit follow event to notify the backend for real-time updates
+                    socket.emit("toggleFollow", { followerId, followedId });
+
+                    // Log the data received from the query fulfillment
+                    console.log("Follow event data:", data);
+                } catch (error) {
+                    console.error("Error following/unfollowing:", error);
                 }
             },
-            // invalidatesTags: [ "user" ]
         }),
+
+
+
         getUserById: build.query({
             query: (userId) => {
                 return {
@@ -67,6 +104,7 @@ const authApi = baseApi.injectEndpoints({
             },
             providesTags: [ "user" ]
         }),
+
         updateProfileInfo: build.mutation({
             query: ({ data, userId: userEmail }) => {
                 return {

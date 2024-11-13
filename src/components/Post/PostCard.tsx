@@ -15,7 +15,7 @@ import { format } from 'date-fns';
 
 const PostCard = ({ post }: { post: Post }) => {
     const [ isOpenCommentModal, setIsOpenCommentModal ] = useState(false);
-    const [ currentPost, setCurrentPost ] = useState(post); // Using local state for immediate update
+    const [ currentPost, setCurrentPost ] = useState(post);
     const [ toggleLike, { isLoading: toggleLikeLoading } ] = useToggleLikeMutation();
     const user = useAppSelector((state) => state.auth.user);
 
@@ -47,7 +47,7 @@ const PostCard = ({ post }: { post: Post }) => {
         try {
             // Call the API to toggle the like
             const response = await toggleLike({ authorId, id: currentPost.id });
-
+            console.log("", response.data)
             // If the API call fails, revert the optimistic update
             if (response.error) {
                 setCurrentPost(post); // Revert back to the original state
@@ -61,7 +61,6 @@ const PostCard = ({ post }: { post: Post }) => {
     };
 
     const postCreatedDate = post?.createdAt ? format(new Date(post.createdAt), 'dd MMMM yyyy') : '';
-
     return (
         <div
             key={currentPost.id}
