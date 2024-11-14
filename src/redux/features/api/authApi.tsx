@@ -57,40 +57,40 @@ const authApi = baseApi.injectEndpoints({
         }),
 
 
-        // toggleFollow: build.mutation({
-        //     query: (data) => {
-        //         return {
-        //             url: "/user/follow-user",
-        //             method: "PATCH",
-        //             body: data
-        //         }
-        //     },
-        //     invalidatesTags: [ "user" ]
-        // }),
-
         toggleFollow: build.mutation({
-            query: (data) => ({
-                url: "/user/follow-user",
-                method: "PATCH",
-                body: data,
-            }),
-            async onQueryStarted({ followerId, followedId }, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-
-                    // Log to confirm that socket.emit is being called
-                    console.log("Emitting toggleFollow event:", { followerId, followedId });
-
-                    // Emit follow event to notify the backend for real-time updates
-                    socket.emit("toggleFollow", { followerId, followedId });
-
-                    // Log the data received from the query fulfillment
-                    console.log("Follow event data:", data);
-                } catch (error) {
-                    console.error("Error following/unfollowing:", error);
+            query: (data) => {
+                return {
+                    url: "/user/follow-user",
+                    method: "PATCH",
+                    body: data
                 }
             },
+            invalidatesTags: [ "user" ]
         }),
+
+        // toggleFollow: build.mutation({
+        //     query: (data) => ({
+        //         url: "/user/follow-user",
+        //         method: "PATCH",
+        //         body: data,
+        //     }),
+        //     async onQueryStarted({ followerId, followedId }, { dispatch, queryFulfilled }) {
+        //         try {
+        //             const { data } = await queryFulfilled;
+
+        //             // Log to confirm that socket.emit is being called
+        //             console.log("Emitting toggleFollow event:", { followerId, followedId });
+
+        //             // Emit follow event to notify the backend for real-time updates
+        //             socket.emit("toggleFollow", { followerId, followedId });
+
+        //             // Log the data received from the query fulfillment
+        //             console.log("Follow event data:", data);
+        //         } catch (error) {
+        //             console.error("Error following/unfollowing:", error);
+        //         }
+        //     },
+        // }),
 
 
 

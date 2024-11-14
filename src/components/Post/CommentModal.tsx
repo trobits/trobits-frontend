@@ -3,7 +3,7 @@ import { ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { Post } from "../Cryptohub/TopicDetails";
 import { useAppSelector } from "@/redux/hooks";
-import { useCreateCommentMutation, useToggleDisLikeOnCommentMutation, useToggleLikeOnCommentMutation } from "@/redux/features/api/postApi";
+import { useCreateCommentMutation, useGetAllPostsQuery, useToggleDisLikeOnCommentMutation, useToggleLikeOnCommentMutation } from "@/redux/features/api/postApi";
 import toast from "react-hot-toast";
 import AnimatedButton from "../Shared/AnimatedButton";
 import Image from "next/image";
@@ -50,11 +50,12 @@ export default function CommentsModal({ post, onClose }: { post: Partial<IPost>,
     const [ newComment, setNewComment ] = useState("");
     const [ createComment, { isLoading: createCommentLoading } ] = useCreateCommentMutation();
     const user: IUser = useAppSelector((state) => state.auth.user);
+    const { refetch } = useGetAllPostsQuery("");
     const comments = post?.comments as IComment[];
 
     const [ toggleCommentLike, { isLoading: toggleCommentLikeLoading } ] = useToggleLikeOnCommentMutation();
     const [ toggleCommentDisLike, { isLoading: toggleCommentDisLikeLoading } ] = useToggleDisLikeOnCommentMutation();
-    
+
 
 
 
@@ -109,6 +110,7 @@ export default function CommentsModal({ post, onClose }: { post: Partial<IPost>,
                     toast.error("Failed to create a new comment!Try again.")
                 }
                 onClose();
+                refetch();
                 toast.success("Comment added successfully.")
             }
         } catch (error) {

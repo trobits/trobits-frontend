@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AuthGuard from "@/components/Auth/AuthGuard";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -13,7 +13,7 @@ import { useAppSelector } from "@/redux/hooks";
 // Define types for notifications
 type Notification = {
   id: string;
-  senderName: string;
+  // senderName: string;
   senderAvatar: string;
   message: string;
   type: "LIKE" | "COMMENT" | "FOLLOW";
@@ -22,28 +22,34 @@ type Notification = {
 
 export default function NotificationPage() {
   const [ notifications, setNotifications ] = useState<Notification[]>([]);
+  console.log({notifications})
   const user = useAppSelector((state) => state.auth.user);
 
   // Handle real-time notifications
   useEffect(() => {
-    // Listen for incoming notifications
-    socket.on("notification", (notification: Notification) => {
-      console.log("Received notification:", notification); // Log received notifications
-      setNotifications((prevNotifications) => [ notification, ...prevNotifications ]);
+    // Check if socket is connected
+    socket.on('connect', () => {
+      console.log(`Socket connected on:`, socket.id);
     });
 
-    // Join the user's notification room for real-time updates
+    // Listen for incoming notifications from the server
+    socket.on("receiveNotification", (notification: Notification) => {
+      console.log("Received notification:", notification); // Log received notifications
+      setNotifications((prevNotifications) => [ notification, ...prevNotifications ]); // Add to the notification list
+    });
+
+    // Join the user's private notification room
     const userId = user?.id;
     if (userId) {
-      console.log("Joining notification room with userId:", userId); // Log room joining
-      socket.emit("joinNotificationRoom", userId);
+      console.log("Joining user's notification room with userId:", userId);
+      socket.emit("joinUserRoom", userId);
     } else {
       console.warn("User ID not found in localStorage");
     }
 
-    // Cleanup socket connection on component unmount
+    // Cleanup socket event listeners when the component unmounts
     return () => {
-      socket.off("notification");
+      socket.off("receiveNotification");
     };
   }, [ user?.id ]);
 
@@ -93,27 +99,26 @@ const NotificationCard = ({ notification }: { notification: Notification }) => {
       <div className="flex items-start gap-4">
         <Avatar>
           <AvatarImage src={notification.senderAvatar || "/placeholder.svg"} />
-          <AvatarFallback>{notification.senderName[ 0 ]}</AvatarFallback>
         </Avatar>
         <div className="flex-1 space-y-1">
           <div className="flex items-center gap-1">
-            <span className="font-semibold text-white">{notification.senderName}</span>
+            {/* <span className="font-semibold text-white">user name</span> */}
             {notification.type === "LIKE" && (
               <>
                 <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
-                <p className="text-gray-400">Liked your post</p>
+                <p className="text-gray-400">{notification?.message}</p>
               </>
             )}
             {notification.type === "COMMENT" && (
               <>
                 <MessageCircle className="h-5 w-5 text-cyan-400" />
-                <p className="text-gray-400">Commented on your post</p>
+                <p className="text-gray-400">{notification?.message}</p>
               </>
             )}
             {notification.type === "FOLLOW" && (
               <>
                 <BadgeCheck className="h-4 w-4 fill-blue-400 text-white" />
-                <p className="text-gray-400">Started following you</p>
+                <p className="text-gray-400">{notification?.message}</p>
               </>
             )}
           </div>
@@ -123,3 +128,5 @@ const NotificationCard = ({ notification }: { notification: Notification }) => {
     </Card>
   );
 };
+
+

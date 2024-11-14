@@ -99,7 +99,7 @@ const RecommendedAccounts = () => {
                 <CardHeader>
                     <h2 className="text-lg font-semibold flex items-center gap-2">
                         <BadgeCheck className="h-5 w-5 fill-blue-400 text-white" />
-                        Verified Accounts
+                        Recommended Accounts
                     </h2>
                 </CardHeader>
                 <CardContent className="space-y-3 h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:transparent [&::-webkit-scrollbar-thumb]:bg-gray-500">
