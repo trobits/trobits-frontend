@@ -22,8 +22,6 @@ const MySpotPage = () => {
 
           </div>
         </div>
-
-        {/* Right Sidebar */}
         <div className="w-80 space-y-4 ">
           <TrendingTopic />
           <VerifiedAccounts />

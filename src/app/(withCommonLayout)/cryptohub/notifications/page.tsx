@@ -1,20 +1,25 @@
+
+
 "use client";
 
 import { useEffect, useState } from "react";
 import AuthGuard from "@/components/Auth/AuthGuard";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { BadgeCheck, Heart, MessageCircle, MoreVertical, Bell } from "lucide-react";
 import socket from "@/redux/features/api/socketClient";
 import { useAppSelector } from "@/redux/hooks";
+import { IoNotificationsCircle } from "react-icons/io5";
+import { useGetNotificationByUseridQuery } from "@/redux/features/api/authApi";
+import Loading from "@/components/Shared/Loading";
+import Link from "next/link";
 
 // Define types for notifications
 type Notification = {
   id: string;
-  // senderName: string;
-  senderAvatar: string;
+  senderId: string;
   message: string;
   type: "LIKE" | "COMMENT" | "FOLLOW";
   timestamp: string;
@@ -22,36 +27,45 @@ type Notification = {
 
 export default function NotificationPage() {
   const [ notifications, setNotifications ] = useState<Notification[]>([]);
-  console.log({notifications})
+  const [ visibleCount, setVisibleCount ] = useState(20); // Initially show 20 notifications
   const user = useAppSelector((state) => state.auth.user);
+  const { data: allNotificationData, isLoading: allNotificationDataLoading } = useGetNotificationByUseridQuery(user?.id);
 
   // Handle real-time notifications
   useEffect(() => {
-    // Check if socket is connected
-    socket.on('connect', () => {
+    socket.on("connect", () => {
       console.log(`Socket connected on:`, socket.id);
     });
 
-    // Listen for incoming notifications from the server
     socket.on("receiveNotification", (notification: Notification) => {
-      console.log("Received notification:", notification); // Log received notifications
-      setNotifications((prevNotifications) => [ notification, ...prevNotifications ]); // Add to the notification list
+      setNotifications((prevNotifications) => [ notification, ...prevNotifications ]);
     });
 
-    // Join the user's private notification room
     const userId = user?.id;
     if (userId) {
-      console.log("Joining user's notification room with userId:", userId);
       socket.emit("joinUserRoom", userId);
-    } else {
-      console.warn("User ID not found in localStorage");
     }
 
-    // Cleanup socket event listeners when the component unmounts
     return () => {
       socket.off("receiveNotification");
     };
   }, [ user?.id ]);
+
+  useEffect(() => {
+    if (allNotificationData?.data?.length) {
+      setNotifications(allNotificationData.data);
+    }
+  }, [ allNotificationData ]);
+
+  if (allNotificationDataLoading) {
+    return <Loading />;
+  }
+
+  const handleShowMore = () => {
+    setVisibleCount((prevCount) => prevCount + 20);
+  };
+
+  const visibleNotifications = notifications.slice(0, visibleCount);
 
   return (
     <AuthGuard>
@@ -82,10 +96,21 @@ export default function NotificationPage() {
 
           {/* Notifications List */}
           <div className="space-y-4">
-            {notifications.map((notification) => (
-              <NotificationCard key={notification.id} notification={notification} />
-            ))}
+            {visibleNotifications.map((notification) => {
+              if (notification.senderId === user.id) return;
+              return <NotificationCard key={notification.id} notification={notification} />
+            }
+            )}
           </div>
+
+          {/* Show More Button */}
+          {visibleCount < notifications.length && (
+            <div className="flex justify-center mt-4">
+              <Button onClick={handleShowMore} variant="outline" className="text-cyan-400 border-cyan-400">
+                Show More
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </AuthGuard>
@@ -96,30 +121,40 @@ export default function NotificationPage() {
 const NotificationCard = ({ notification }: { notification: Notification }) => {
   return (
     <Card className="bg-transparent border-cyan-400/30 p-4">
-      <div className="flex items-start gap-4">
-        <Avatar>
-          <AvatarImage src={notification.senderAvatar || "/placeholder.svg"} />
-        </Avatar>
+      <div className="flex">
+        <Avatar />
         <div className="flex-1 space-y-1">
           <div className="flex items-center gap-1">
-            {/* <span className="font-semibold text-white">user name</span> */}
+            <h1 className="text-white"><IoNotificationsCircle className="size-10 mr-3" /></h1>
             {notification.type === "LIKE" && (
-              <>
-                <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
-                <p className="text-gray-400">{notification?.message}</p>
-              </>
+              <div className=" flex justify-between w-full items-center gap-3">
+                <div className=" flex gap-2 items-center">
+
+                  <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
+                  <p className="text-gray-400">{notification?.message}</p>
+                </div>
+                <Link href={`/cryptohub/userProfile/${notification?.senderId}`} className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white">Visit Profile</Link>
+              </div>
             )}
             {notification.type === "COMMENT" && (
-              <>
-                <MessageCircle className="h-5 w-5 text-cyan-400" />
-                <p className="text-gray-400">{notification?.message}</p>
-              </>
+              <div className=" flex justify-between w-full items-center gap-3">
+                <div className=" flex gap-2 items-center">
+
+                  <MessageCircle className="h-5 w-5 text-cyan-400" />
+                  <p className="text-gray-400">{notification?.message}</p>
+                </div>
+                <Link href={`/cryptohub/userProfile/${notification?.senderId}`} className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white">Visit Profile</Link>
+              </div>
             )}
             {notification.type === "FOLLOW" && (
-              <>
-                <BadgeCheck className="h-4 w-4 fill-blue-400 text-white" />
-                <p className="text-gray-400">{notification?.message}</p>
-              </>
+              <div className=" flex justify-between w-full items-center gap-3">
+                <div className=" flex gap-2 items-center">
+
+                  <BadgeCheck className="h-4 w-4 fill-blue-400 text-white" />
+                  <p className="text-gray-400">{notification?.message}</p>
+                </div>
+                <Link href={`/cryptohub/userProfile/${notification?.senderId}`} className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white">Visit Profile</Link>
+              </div>
             )}
           </div>
           <p className="text-xs text-gray-500">{notification.timestamp}</p>
@@ -128,5 +163,3 @@ const NotificationCard = ({ notification }: { notification: Notification }) => {
     </Card>
   );
 };
-
-

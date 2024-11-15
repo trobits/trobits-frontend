@@ -21,7 +21,7 @@ interface Author {
     profileImage: string;
 }
 
-interface Comment {
+export interface Comment {
     id: string;
     content: string;
     createdAt: string;
@@ -38,6 +38,8 @@ export interface Post {
     updatedAt: string;
     authorId: string;
     image: string;
+    video: string;
+    category: "IMAGE" | "VIDEO";
     likeCount: number;
     likers: string[];
     topicId: string;
@@ -124,10 +126,10 @@ export default function TopicDetailsPage({ topicId }: { topicId: string }) {
                 <div className="space-y-6">
                     {allPosts.length ? allPosts?.map((post: Post) => (
                         <PostCard key={post?.id} post={post} />
-                    )):
-                    <div>
-                        <h2 className="text-gray-200 text-center font-bold text-2xl">No posts yet.</h2>
-                    </div>
+                    )) :
+                        <div>
+                            <h2 className="text-gray-200 text-center font-bold text-2xl">No posts yet.</h2>
+                        </div>
                     }
                 </div>
             </div>

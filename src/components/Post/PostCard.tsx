@@ -2,16 +2,18 @@
 
 "use client";
 import Image from "next/image";
-import { Post } from "../Cryptohub/TopicDetails";
+// import { Post } from "../Cryptohub/TopicDetails";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { useGetAllPostsQuery, useToggleLikeMutation } from "@/redux/features/api/postApi";
 import { useAppSelector } from "@/redux/hooks";
 import { Heart, MessageCircle } from "lucide-react";
-import CommentsModal, { IPost } from "./CommentModal";
+// import CommentsModal, { IPost } from "./CommentModal";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { format } from 'date-fns';
+import { Post } from "../Cryptohub/TopicDetails";
+import CommentsModal from "./CommentModal";
 
 const PostCard = ({ post }: { post: Post }) => {
     const {refetch} = useGetAllPostsQuery("");
@@ -19,6 +21,7 @@ const PostCard = ({ post }: { post: Post }) => {
     const [ currentPost, setCurrentPost ] = useState(post);
     const [ toggleLike, { isLoading: toggleLikeLoading } ] = useToggleLikeMutation();
     const user = useAppSelector((state) => state.auth.user);
+    console.log(currentPost?.video)
 
     // Handle comment modal open
     const handleOpenCommentModal = () => {
@@ -127,6 +130,21 @@ const PostCard = ({ post }: { post: Post }) => {
                 </div>
             )}
 
+            {
+                currentPost?.video &&
+                <div className="h-[20] md:h-[27rem] overflow-hidden rounded-md mb-2">
+                    <Link href={`/cryptohub/cryptochat/${currentPost.topicId}/${currentPost.id}`} className="cursor-pointer">
+                        <video
+                                src={`https://${currentPost.video}`}
+                            width={600}
+                            height={400}
+                            className="w-full h-full object-cover rounded-lg mb-4"
+                            controls
+                        />
+                    </Link>
+                </div>
+            }
+
             {/* Interaction Buttons */}
             <div className="flex items-center justify-between text-gray-400 mt-auto">
                 <div onClick={handleOpenCommentModal} className="flex items-center space-x-2 cursor-pointer">
@@ -143,7 +161,7 @@ const PostCard = ({ post }: { post: Post }) => {
             </div>
 
             {isOpenCommentModal && (
-                <CommentsModal post={currentPost as Partial<IPost>} onClose={() => setIsOpenCommentModal(false)} />
+                <CommentsModal post={currentPost} onClose={() => setIsOpenCommentModal(false)} />
             )}
         </div>
     );

@@ -38,7 +38,10 @@ const TrendingTopic = () => {
               </div>
               <div className='w-full flex justify-between'>
                 <h3 className=''>{topic?.title}</h3>
-                <Link className=' bg-indigo-600 px-3 py-1  items-center rounded-md' href={`/cryptohub/cryptochat/${topic?.id}`}>Details</Link>
+                <div>
+
+                  <Link className=' bg-indigo-600 px-3 py-2 hover:bg-indigo-500 transition-all hover:scale-105  items-center rounded-md' href={`/cryptohub/cryptochat/${topic?.id}`}>Details</Link>
+                </div>
               </div>
             </div>
 

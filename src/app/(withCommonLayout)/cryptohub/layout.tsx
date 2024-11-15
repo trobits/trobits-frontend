@@ -76,6 +76,18 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                             </Link>
                         </li>
                         <li>
+                            <Link href="/cryptohub/videoPost" passHref>
+                                <Button
+                                    onClick={() => setIsSidebarOpen(false)}
+                                    className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${pathname.includes('/cryptohub/videoPost') ? 'bg-teal-700 text-white' : 'bg-gray-800 text-gray-300'
+                                        }`}
+                                >
+                                    <MdOutlineDynamicFeed className=' mr-2' />
+                                    Video Post
+                                </Button>
+                            </Link>
+                        </li>
+                        <li>
                             <Link href="/cryptohub/myspot" passHref>
                                 <Button
                                     onClick={() => setIsSidebarOpen(false)}

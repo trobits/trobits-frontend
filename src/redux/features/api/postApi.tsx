@@ -21,8 +21,6 @@ const topicApi = baseApi.injectEndpoints({
                 return {
                     url: `/post/all-posts/${topicId}`,
                     method: "GET",
-
-
                 }
             },
             providesTags: [ "post" ]
@@ -139,11 +137,33 @@ const topicApi = baseApi.injectEndpoints({
             providesTags: [ "post" ]
         }),
         getAllPosts: build.query({
-            query: () => {
+            query: (data: string) => {
+                console.log("called", data)
                 return {
-                    url: `/post/all-posts`,
+                    url: `/post/all-post`,
                     method: "GET",
 
+                }
+            },
+            providesTags: [ "post" ]
+        }),
+        getAllVideoPost: build.query({
+            query: (data: string) => {
+                console.log("called", data)
+                return {
+                    url: `/post/video-post`,
+                    method: "GET",
+
+                }
+            },
+            providesTags: [ "post" ]
+        }),
+        getAllImagePost: build.query({
+            query: (data: string) => {
+                console.log("called", data)
+                return {
+                    url: `/post/image-post`,
+                    method: "GET",
                 }
             },
             providesTags: [ "post" ]
@@ -163,6 +183,6 @@ const topicApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useCreatePostMutation, useGetPostsByUserIdQuery, useGetAllPostsQuery, useGetPostsByAuthorIdQuery, useToggleDisLikeOnCommentMutation, useToggleLikeOnCommentMutation, useGetPostsByIdQuery, useToggleLikeMutation, useCreateCommentMutation, useGetAllPostsByTopicQuery } = topicApi;
+export const { useCreatePostMutation,useGetAllImagePostQuery,useGetAllVideoPostQuery, useGetPostsByUserIdQuery, useGetAllPostsQuery, useGetPostsByAuthorIdQuery, useToggleDisLikeOnCommentMutation, useToggleLikeOnCommentMutation, useGetPostsByIdQuery, useToggleLikeMutation, useCreateCommentMutation, useGetAllPostsByTopicQuery } = topicApi;
 
 

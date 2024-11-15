@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 
 "use client"
 import { useState, useMemo, FormEvent, ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
-import { useCreatePostMutation, useGetAllPostsByTopicQuery } from "@/redux/features/api/postApi";
+import { useCreatePostMutation, useGetAllImagePostQuery } from "@/redux/features/api/postApi";
 import Loading from "@/components/Shared/Loading";
 import PostCard from "@/components/Post/PostCard";
 import { Post } from "@/components/Cryptohub/TopicDetails";
@@ -36,20 +37,21 @@ function useDebounce(value: string, delay: number) {
 }
 
 export default function Component() {
-  const { data: postData, isLoading: allPostsDataLoading } = useGetAllPostsByTopicQuery("");
+  // const { data: postData, isLoading: allPostsDataLoading } = useGetAllPostsByTopicQuery("");
   const [ createPost, { isLoading: createPostLoading } ] = useCreatePostMutation();
   const user = useAppSelector((state) => state.auth.user);
-  const allPosts: Post[] = postData?.data.length ? postData.data : [];
+  const { data: allImagePost, isLoading: allImagePostLoading } = useGetAllImagePostQuery("");
+  const allPosts: Post[] = allImagePost?.data.length ? allImagePost.data : [];
   const [ postContent, setPostContent ] = useState<string>('');
   const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
   const [ imagePreview, setImagePreview ] = useState<string | null>(null);
 
   // State for search query
   const [ searchQuery, setSearchQuery ] = useState("");
-
+  console.log({ allImagePost })
   // Debounced search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-
+  console.log()
   // Memoized filtered posts
   const filteredPosts = useMemo(() => {
     return allPosts.filter((post: Post) =>
@@ -58,7 +60,7 @@ export default function Component() {
     );
   }, [ debouncedSearchQuery, allPosts ]);
 
-  if (allPostsDataLoading) {
+  if (allImagePostLoading) {
     return <Loading />;
   }
 
@@ -76,6 +78,7 @@ export default function Component() {
     const formData = new FormData();
     formData.append("authorId", user?.id);
     formData.append("content", postContent);
+    formData.append("category", "IMAGE");
     if (selectedFile) {
       formData.append("image", selectedFile);
     }

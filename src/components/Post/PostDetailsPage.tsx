@@ -37,6 +37,8 @@ export interface Post {
     createdAt: string;
     updatedAt: string;
     authorId: string;
+    video: string;
+    category: "IMAGE" | "VIDEO";
     image: string;
     likeCount: number;
     likers: string[];
@@ -116,7 +118,20 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
                             />
                         </div>
                     }
-                   
+                    {
+                        post?.video &&
+                        <div className="aspect-[3/2] overflow-hidden rounded-xl">
+                            <video
+                                src={`https://${post.video}`}
+                                width={600}
+                                height={400}
+                                className="w-full h-full mt-4 rounded-xl object-cover"
+                                controls
+                            />
+                        </div>
+
+                    }
+
 
                     <div className="p-6 bg-[#00000096] rounded-xl mt-4 text-white text-center">
                         <h1 className="text-3xl font-bold mb-2">{post?.content.slice(0, 50)}{post?.content.length > 50 ? "..." : ""}</h1>

@@ -27,7 +27,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<string | FetchArgs, unknown, FetchB
     if (result.error?.status === 401) {
         try {
             const res = await fetch("http://localhost:5000/api/v1/user/access-token", {
-            // const res = await fetch("https://sisiku-backend.vercel.app/api/v1", {
+                // const res = await fetch("https://sisiku-backend.vercel.app/api/v1", {
                 method: "POST",
                 credentials: "include", // Sends cookies with the request
                 headers: {
@@ -62,8 +62,8 @@ const baseQueryWithRefreshToken: BaseQueryFn<string | FetchArgs, unknown, FetchB
 export const baseApi = createApi({
     reducerPath: "baseApi",
     baseQuery: baseQueryWithRefreshToken,
-    tagTypes: [ "post","user" ],
+    tagTypes: [ "post", "user" ],
     endpoints: () => ({}),
 
-    
+
 });

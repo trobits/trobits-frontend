@@ -46,7 +46,7 @@ export interface IPost {
 
 
 
-export default function CommentsModal({ post, onClose }: { post: Partial<IPost>, onClose: () => void }) {
+export default function CommentsModal({ post, onClose }: { post: Partial<Post>, onClose: () => void }) {
     const [ newComment, setNewComment ] = useState("");
     const [ createComment, { isLoading: createCommentLoading } ] = useCreateCommentMutation();
     const user: IUser = useAppSelector((state) => state.auth.user);

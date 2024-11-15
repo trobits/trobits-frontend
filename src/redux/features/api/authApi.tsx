@@ -15,6 +15,15 @@ const authApi = baseApi.injectEndpoints({
                 }
             }
         }),
+        verifyOtp: build.mutation({
+            query: (data) => {
+                return {
+                    url: `/user/verify-otp `,
+                    method: "POST",
+                    body: data
+                }
+            }
+        }),
 
         createuser: build.mutation({
             query: (data) => {
@@ -114,8 +123,19 @@ const authApi = baseApi.injectEndpoints({
                 }
             },
             invalidatesTags: [ "user" ]
-        })
+        }),
+
+        getNotificationByUserid: build.query({
+            query: (userId) => {
+                return {
+                    url: `/user/notifications/${userId}`,
+                    method: "GET",
+
+                }
+            },
+            providesTags: [ "user" ]
+        }),
     })
 })
 
-export const { useLoginUserMutation, useUpdateProfileInfoMutation, useGetUserByIdQuery, useToggleFollowMutation, useRecommendedUserQuery, useAllUserQuery, useCreateuserMutation, useLogoutQuery, useLazyLogoutQuery } = authApi;
+export const { useLoginUserMutation, useVerifyOtpMutation, useGetNotificationByUseridQuery, useUpdateProfileInfoMutation, useGetUserByIdQuery, useToggleFollowMutation, useRecommendedUserQuery, useAllUserQuery, useCreateuserMutation, useLogoutQuery, useLazyLogoutQuery } = authApi;
