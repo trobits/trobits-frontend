@@ -1,8 +1,22 @@
+"use client"
 import TransparentCard from "./CryptoCard/CryptoCard";
 import shibaInu from "../../assets/icons/shiba-inu.png";
 import Lunc from "../../assets/icons/lunc.png";
+import { useGetLuncInformationQuery, useGetShibaInformationQuery } from "@/redux/features/api/currencyApi";
+import Loading from "../Shared/Loading";
+
 
 export default function CryptoData() {
+  const { data: shibaInformation, isLoading: shibaDataLoading } = useGetShibaInformationQuery("");
+  const { data: luncInformation, isLoading: luncDataLoading } = useGetLuncInformationQuery("");
+
+  if (shibaDataLoading || luncDataLoading) {
+    return <Loading />
+  }
+
+  const shibaData = shibaInformation?.data;
+  const luncData = luncInformation?.data;
+
   // Data for the cards
   const cardData = [
     {
@@ -11,9 +25,9 @@ export default function CryptoData() {
       luncPrice: "0",
       interval: "1 Month",
       icon: shibaInu,
-      visits: 50,
-      revenue: 100,
-      burns: 45,
+      visits: shibaData.visits,
+      revenue: shibaData.revenue,
+      burns: shibaData.burns,
     },
     {
       coin: "LUNC",
@@ -21,9 +35,9 @@ export default function CryptoData() {
       luncPrice: "0.000090378",
       interval: "7 Days",
       icon: Lunc,
-      visits: 30,
-      revenue: 170,
-      burns: 80,
+      visits: luncData.visits,
+      revenue: luncData.revenue,
+      burns: luncData.burns,
     },
   ];
 
@@ -32,11 +46,10 @@ export default function CryptoData() {
       {cardData.map((card, index) => (
         <div
           key={index}
-          className={`animated-card ${
-            index === 0 ? "slide-left" : "slide-right"
-          }`}
+          className={`animated-card ${index === 0 ? "slide-left" : "slide-right"
+            }`}
         >
-          <TransparentCard  cryptoData={card} index={index} />
+          <TransparentCard cryptoData={card} index={index} />
         </div>
       ))}
     </div>

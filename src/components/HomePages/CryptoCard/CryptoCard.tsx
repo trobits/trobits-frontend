@@ -14,8 +14,9 @@ interface TransparentCardProps {
 }
 
 const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) => {
-  const { coin, icon } = cryptoData;
-  const [, setIsLoading ] = useState(true);
+
+  const { coin, icon, visits, burns, revenue } = cryptoData;
+  const [ , setIsLoading ] = useState(true);
   const [ selectedInterval, setSelectedInterval ] = useState("24 Hours");
   const [ animationClass, setAnimationClass ] = useState("");
   const [ data, setData ] = useState<{ price: string; visits?: number; revenue?: number; burns?: number } | null>(null);
@@ -24,9 +25,9 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
 
   // Fetch live data for the specific coin
   const fetchData = async () => {
-    
+
     setIsLoading(true);
-    
+
     try {
       const response = await axios.get(`https://api.binance.com/api/v3/ticker/price`, {
         params: {
@@ -35,9 +36,9 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
       });
       setData({
         price: response.data?.price || "N/A",
-        visits: Math.floor(Math.random() * 100),
-        revenue: Math.floor(Math.random() * 500),
-        burns: Math.floor(Math.random() * 50),
+        visits: visits,
+        revenue: revenue,
+        burns: burns,
       });
     } catch (error) {
       console.error("Error fetching data", error);
@@ -81,6 +82,9 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
       }, 300);
     }
   };
+
+
+
 
   return (
     <div className="border border-cyan-400 rounded-xl bg-black p-3 md:p-8 max-w-[290px] md:max-w-[450px] min-h-[450px] text-white shadow-lg backdrop-blur-md relative">
