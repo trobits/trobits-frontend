@@ -107,7 +107,9 @@ export default function CommentsModal({ post, onClose }: { post: Partial<Post>, 
                 const postId = post?.id;
                 const response = await createComment({ authorId, content, postId })
                 if (response?.error) {
-                    toast.error("Failed to create a new comment!Try again.")
+                    const errorMessage = (response as { error: { data: { message: string } } })?.error?.data?.message || "Failed to create a new post!"
+                    toast.error(errorMessage)
+                    return
                 }
                 onClose();
                 refetch();

@@ -96,8 +96,8 @@ export default function NotificationPage() {
 
           {/* Notifications List */}
           <div className="space-y-4">
-            {visibleNotifications.map((notification) => {
-              if (notification.senderId === user.id) return;
+            {visibleNotifications?.map((notification) => {
+              if (notification?.senderId === user?.id) return;
               return <NotificationCard key={notification.id} notification={notification} />
             }
             )}

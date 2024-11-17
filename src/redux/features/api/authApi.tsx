@@ -74,7 +74,7 @@ const authApi = baseApi.injectEndpoints({
                     body: data
                 }
             },
-            invalidatesTags: [ "user" ]
+            // invalidatesTags: [ "user" ]
         }),
 
         // toggleFollow: build.mutation({
@@ -135,7 +135,38 @@ const authApi = baseApi.injectEndpoints({
             },
             providesTags: [ "user" ]
         }),
+        getAllRecommendedUsers: build.query({
+            query: () => {
+                return {
+                    url: `/user/recommended-users`,
+                    method: "GET",
+                }
+            },
+            // providesTags: [ "recommended-user" ]
+        }),
+        getAllVerifiedUsers: build.query({
+            query: () => {
+                return {
+                    url: `/user/verified-users`,
+                    method: "GET",
+                }
+            },
+            // providesTags: [ "verified-user" ]
+        }),
     })
 })
 
-export const { useLoginUserMutation, useVerifyOtpMutation, useGetNotificationByUseridQuery, useUpdateProfileInfoMutation, useGetUserByIdQuery, useToggleFollowMutation, useRecommendedUserQuery, useAllUserQuery, useCreateuserMutation, useLogoutQuery, useLazyLogoutQuery } = authApi;
+export const {
+    useLoginUserMutation,
+    useGetAllVerifiedUsersQuery,
+    useGetAllRecommendedUsersQuery,
+    useVerifyOtpMutation,
+    useGetNotificationByUseridQuery,
+    useUpdateProfileInfoMutation,
+    useGetUserByIdQuery,
+    useToggleFollowMutation,
+    useRecommendedUserQuery,
+    useAllUserQuery,
+    useCreateuserMutation,
+    useLogoutQuery,
+    useLazyLogoutQuery } = authApi;

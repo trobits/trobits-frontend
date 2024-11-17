@@ -21,7 +21,6 @@ const PostCard = ({ post }: { post: Post }) => {
     const [ currentPost, setCurrentPost ] = useState(post);
     const [ toggleLike, { isLoading: toggleLikeLoading } ] = useToggleLikeMutation();
     const user = useAppSelector((state) => state.auth.user);
-    console.log(currentPost?.video)
 
     // Handle comment modal open
     const handleOpenCommentModal = () => {

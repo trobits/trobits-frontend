@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { BadgeCheck } from "lucide-react";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
-import { useRecommendedUserQuery, useToggleFollowMutation } from "@/redux/features/api/authApi";
+import { useGetAllVerifiedUsersQuery, useToggleFollowMutation } from "@/redux/features/api/authApi";
 import Loading from "../Shared/Loading";
 import Image from "next/image";
 import { useAppSelector } from "@/redux/hooks";
@@ -28,7 +28,7 @@ interface IUser {
 }
 
 const RecommendedAccounts = () => {
-    const { data: allUsersData, isLoading: allUsersDataLoading } = useRecommendedUserQuery("");
+    const { data: allUsersData, isLoading: allUsersDataLoading } = useGetAllVerifiedUsersQuery("");
     const [ toggleFollow, { isLoading: toggleFollowLoading } ] = useToggleFollowMutation();
     const currentUser = useAppSelector((state) => state.auth.user);
 
@@ -61,7 +61,7 @@ const RecommendedAccounts = () => {
                 followerId,
                 followedId,
             });
-            console.log(response);
+            console.log({response});
 
             if (response?.error) {
                 toast.error("Failed to follow user! Try again.");
@@ -92,6 +92,7 @@ const RecommendedAccounts = () => {
             setIsButtonDisabled(false); // Re-enable button in case of error
         }
     };
+    console.log(allUsersData)
 
     return (
         <div>

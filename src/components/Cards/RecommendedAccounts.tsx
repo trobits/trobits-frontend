@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { BadgeCheck } from "lucide-react";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
-import {  useRecommendedUserQuery, useToggleFollowMutation } from "@/redux/features/api/authApi";
+import { useGetAllRecommendedUsersQuery, useToggleFollowMutation } from "@/redux/features/api/authApi";
 import Loading from "../Shared/Loading";
 import Image from "next/image";
 import { useAppSelector } from "@/redux/hooks";
@@ -28,7 +28,7 @@ interface IUser {
 }
 
 const RecommendedAccounts = () => {
-    const { data: allUsersData, isLoading: allUsersDataLoading } = useRecommendedUserQuery("");
+    const { data: allUsersData, isLoading: allUsersDataLoading } = useGetAllRecommendedUsersQuery("");
     const [ toggleFollow, { isLoading: toggleFollowLoading } ] = useToggleFollowMutation();
     const currentUser = useAppSelector((state) => state.auth.user);
 

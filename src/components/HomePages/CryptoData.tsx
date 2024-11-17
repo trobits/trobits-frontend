@@ -9,6 +9,7 @@ import Loading from "../Shared/Loading";
 export default function CryptoData() {
   const { data: shibaInformation, isLoading: shibaDataLoading } = useGetShibaInformationQuery("");
   const { data: luncInformation, isLoading: luncDataLoading } = useGetLuncInformationQuery("");
+  console.log({shibaInformation,luncInformation})
 
   if (shibaDataLoading || luncDataLoading) {
     return <Loading />
@@ -25,9 +26,9 @@ export default function CryptoData() {
       luncPrice: "0",
       interval: "1 Month",
       icon: shibaInu,
-      visits: shibaData.visits,
-      revenue: shibaData.revenue,
-      burns: shibaData.burns,
+      visits: shibaData?.visits,
+      revenue: shibaData?.revenue,
+      burns: shibaData?.burns,
     },
     {
       coin: "LUNC",
@@ -35,9 +36,9 @@ export default function CryptoData() {
       luncPrice: "0.000090378",
       interval: "7 Days",
       icon: Lunc,
-      visits: luncData.visits,
-      revenue: luncData.revenue,
-      burns: luncData.burns,
+      visits: luncData?.visits,
+      revenue: luncData?.revenue,
+      burns: luncData?.burns,
     },
   ];
 

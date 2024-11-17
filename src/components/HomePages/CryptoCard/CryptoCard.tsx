@@ -6,6 +6,9 @@ import axios from "axios";
 interface CryptoData {
   coin: string;
   icon: StaticImageData;
+  visits: string;
+  burns: string;
+  revenue: string;
 }
 
 interface TransparentCardProps {
@@ -19,7 +22,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
   const [ , setIsLoading ] = useState(true);
   const [ selectedInterval, setSelectedInterval ] = useState("24 Hours");
   const [ animationClass, setAnimationClass ] = useState("");
-  const [ data, setData ] = useState<{ price: string; visits?: number; revenue?: number; burns?: number } | null>(null);
+  const [ data, setData ] = useState<{ price: string; visits?: string; revenue?: string; burns?: string } | null>(null);
 
   const intervals = [ "24 Hours", "7 Day", "1 Month" ];
 

@@ -85,9 +85,11 @@ export default function Component() {
     const createPostLoadingToast = toast.loading("Creating new post...");
     try {
       const response = await createPost(formData);
-      console.log(response)
+      console.log({ response })
       if (response.error) {
-        toast.error("Failed to create a new post!")
+        console.log(response.error)
+        const errorMessage = (response as { error: { data: { message: string } } })?.error?.data?.message || "Failed to create a new post!"
+        toast.error(errorMessage)
         return;
       }
       toast.success("New post created successfully!");
@@ -181,8 +183,8 @@ export default function Component() {
         {/* Right Sidebar */}
         <div className="w-80 space-y-4">
           <TrendingTopic />
-          <VerifiedAccounts />
           <RecommendedAccounts />
+          <VerifiedAccounts />
         </div>
       </div>
     </AuthGuard>
