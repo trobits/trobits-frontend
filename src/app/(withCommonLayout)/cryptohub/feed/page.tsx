@@ -18,6 +18,8 @@ import TrendingTopic from "@/components/Cards/TrendingTopic";
 import VerifiedAccounts from "@/components/Cards/VerifiedAccounts";
 import RecommendedAccounts from "@/components/Cards/RecommendedAccounts";
 import AuthGuard from "@/components/Auth/AuthGuard";
+import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
+import { User } from "../videoPost/page";
 
 // Debounce function to delay the search execution
 function useDebounce(value: string, delay: number) {
@@ -45,10 +47,10 @@ export default function Component() {
   const [ postContent, setPostContent ] = useState<string>('');
   const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
   const [ imagePreview, setImagePreview ] = useState<string | null>(null);
+  const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id);
 
   // State for search query
   const [ searchQuery, setSearchQuery ] = useState("");
-  console.log({ allImagePost })
   // Debounced search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   console.log()
@@ -56,6 +58,7 @@ export default function Component() {
   const filteredPosts = useMemo(() => {
     return allPosts.filter((post: Post) =>
       post.author.firstName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      post.author.lastName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
       post.content.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
   }, [ debouncedSearchQuery, allPosts ]);
@@ -103,54 +106,65 @@ export default function Component() {
     }
   };
 
+  if (userFromDbLoading) {
+    return <Loading />
+  }
+
+  const userFromDb: User = userFromDbData?.data;
+
   return (
     <AuthGuard>
       {/* Post Option */}
-      <div className="w-full mb-8 max-w-[75rem] mx-auto p-4 bg-[#00000088] rounded-lg shadow-lg flex flex-col space-y-4">
-        <form onSubmit={handlePostSubmit}>
-          <div className="flex items-start space-x-3">
-            <textarea
-              value={postContent}
-              onChange={(e) => setPostContent(e.target.value)}
-              className="w-full p-3 bg-[#00000060] text-white rounded-lg resize-none outline-none focus:ring focus:ring-blue-300"
-              rows={3}
-              placeholder="Share your ideas here!"
-            ></textarea>
-          </div>
 
-          <div className="flex mt-4 items-center justify-between">
-            <label htmlFor="fileInput" className="cursor-pointer text-gray-400 hover:text-white flex items-center">
-              <Images className="text-white" />
-              <input
-                id="fileInput"
-                name='fileInput'
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-            </label>
-            <button
-              type='submit'
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg"
-            >
-              {createPostLoading ? <AnimatedButton className=' w-full px-10 py-5' loading={createPostLoading} /> : "Save"}
-            </button>
-          </div>
-          {imagePreview && (
-            <div className="mt-4 flex items-center">
-              <p className="text-sm text-gray-400 mr-4">Selected file:</p>
-              <Image
-                className="w-16 h-16 object-cover rounded-lg border border-gray-500"
-                src={imagePreview}
-                height={300}
-                width={300}
-                alt="Selected Preview"
-              />
+      {
+        userFromDb?.recommended &&
+        <div className="w-full mb-8 max-w-[75rem] mx-auto p-4 bg-[#00000088] rounded-lg shadow-lg flex flex-col space-y-4">
+          <form onSubmit={handlePostSubmit}>
+            <div className="flex items-start space-x-3">
+              <textarea
+                value={postContent}
+                onChange={(e) => setPostContent(e.target.value)}
+                className="w-full p-3 bg-[#00000060] text-white rounded-lg resize-none outline-none focus:ring focus:ring-blue-300"
+                rows={3}
+                placeholder="Share your ideas here!"
+              ></textarea>
             </div>
-          )}
-        </form>
-      </div>
+
+            <div className="flex mt-4 items-center justify-between">
+              <label htmlFor="fileInput" className="cursor-pointer text-gray-400 hover:text-white flex items-center">
+                <Images className="text-white" />
+                <input
+                  id="fileInput"
+                  name='fileInput'
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
+              <button
+                type='submit'
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg"
+              >
+                {createPostLoading ? <AnimatedButton className=' w-full px-10 py-5' loading={createPostLoading} /> : "Save"}
+              </button>
+            </div>
+            {imagePreview && (
+              <div className="mt-4 flex items-center">
+                <p className="text-sm text-gray-400 mr-4">Selected file:</p>
+                <Image
+                  className="w-16 h-16 object-cover rounded-lg border border-gray-500"
+                  src={imagePreview}
+                  height={300}
+                  width={300}
+                  alt="Selected Preview"
+                />
+              </div>
+            )}
+          </form>
+        </div>
+      }
+
 
       {/* Main Content */}
       <div className="flex gap-4 flex-1 p-4 flex-wrap justify-center min-h-screen bg-[#00000027]">

@@ -41,14 +41,6 @@ const blogApi = baseApi.injectEndpoints({
             },
             invalidatesTags: [ 'blog' ]
         }),
-        // getAllSubscriber: build.query({
-        //     query: () => {
-        //         return {
-        //             url: "/subscriber/all-subscriber",
-        //             method: "GET"
-        //         }
-        //     },
-        // })
 
 
         getSingleArticle: build.query({
@@ -60,6 +52,16 @@ const blogApi = baseApi.injectEndpoints({
             },
             providesTags: [ 'blog' ],
         }),
+        toggleLike: build.mutation({
+            query: (data) => {
+                return {
+                    url: "/article/add-remove-like",
+                    method: "PATCH",
+                    body: data
+                }
+            },
+            invalidatesTags: [ "post","blog" ]
+        }),
 
     })
 })
@@ -67,6 +69,7 @@ const blogApi = baseApi.injectEndpoints({
 export const { useCreateBlogMutation,
     // useGetAllSubscriberQuery,
     useGetAllBlogsQuery,
+    useToggleLikeMutation,
     useUpdateBlogMutation,
     useDeleteBlogMutation,
     useGetSingleArticleQuery

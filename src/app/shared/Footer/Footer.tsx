@@ -1,6 +1,7 @@
 // components/Footer.js
 import { FaFacebookF, FaTwitter, FaReddit } from "react-icons/fa";
 import Logo from "@/components/Shared/Logo";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -12,7 +13,7 @@ const Footer = () => {
             <Logo/>
           </div>
 
-          {/* Leaderboard Section */}
+          {/* Leaderboard Section
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold mb-2">Leaderboard</h2>
             <ul className="space-y-1 text-sm">
@@ -21,7 +22,7 @@ const Footer = () => {
               <li>Recently Added</li>
               <li>Coins</li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Company Section */}
           <div className="flex flex-col">
@@ -38,7 +39,7 @@ const Footer = () => {
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold mb-2">Support</h2>
             <ul className="space-y-1 text-sm">
-              <li>Contact Us</li>
+              <Link href={"/contactUs"}>Contact Us</Link>
             </ul>
           </div>
 

@@ -1,93 +1,167 @@
+
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { useGetSingleArticleQuery } from "@/redux/features/api/articleApi";
+import { useGetSingleArticleQuery, useToggleLikeMutation } from "@/redux/features/api/articleApi";
 import Image from "next/image";
 import Link from "next/link";
 import Loading from "../Shared/Loading";
 import DummyImage from "@/assets/dummy-blog.png";
 import { Article } from "@/app/(withCommonLayout)/articles/page";
 
+// Import icons from Lucide (Make sure to install lucide-react if not already installed)
+import { Heart, MessageCircle, Eye, HeartIcon } from "lucide-react";
+import PostCommentCard, { IComment } from "../Post/PostCommentCard";
+import { FormEvent, useState } from "react";
+import { useAppSelector } from "@/redux/hooks";
+import { IUser } from "../Cryptohub/Types";
+import toast from "react-hot-toast";
+import { useCreateCommentMutation } from "@/redux/features/api/postApi";
+import { Button } from "../ui/button";
+
 function ArticleDetailsPage({ articleId }: { articleId: string }) {
     const { data: articleData, isLoading: articleLoading } = useGetSingleArticleQuery(articleId);
+    const user: IUser = useAppSelector((state) => state.auth.user)
+    const [ toggleLike, { } ] = useToggleLikeMutation();
 
-    if (articleLoading) {
-        return <Loading />;
-    }
+
 
     const article: Article = articleData?.data;
 
+    // State for new comment input
+    const [ newComment, setNewComment ] = useState("");
+    const [ createComment, { isLoading: createCommentLoading } ] = useCreateCommentMutation()
 
-    // const article = {
-    //     image: "/placeholder.svg?height=400&width=800",
-    //     title: "The Rise of Quantum Computing: A New Era in Technology",
-    //     content: `
-    //   <p>Quantum computing, once a concept confined to the realms of theoretical physics, is now emerging as a groundbreaking technology with the potential to revolutionize numerous fields. This article explores the current state of quantum computing and its implications for the future.</p>
+    const handleLikeToggle = async (article: Article) => {
+        if (!user) {
+            toast.error("Please Login first!")
+            return;
+        }
+        const authorId = user?.id;
+        const id = article?.id;
+        const response = await toggleLike({
+            authorId,
+            id
+        })
+        console.log(response);
+    }
 
-    //   <h2>What is Quantum Computing?</h2>
-    //   <p>At its core, quantum computing harnesses the principles of quantum mechanics to process information. Unlike classical computers that use bits (0s and 1s), quantum computers use quantum bits or qubits. These qubits can exist in multiple states simultaneously, a phenomenon known as superposition.</p>
+    const handleCommentSubmit = async (e: FormEvent) => {
+        e.preventDefault()
+        if (!user) {
+            toast.error("Please Login first!")
+            return;
+        }
+        try {
+            if (newComment.trim()) {
+                const authorId = user?.id
+                const content = newComment.trim()
+                const articleId = article?.id
+                const response = await createComment({ authorId, content, articleId })
 
-    //   <h2>Advantages of Quantum Computing</h2>
-    //   <ul>
-    //     <li><strong>Exponential Processing Power:</strong> Quantum computers can perform certain calculations exponentially faster than classical computers.</li>
-    //     <li><strong>Complex Problem Solving:</strong> They excel at solving complex problems in optimization, cryptography, and molecular simulation.</li>
-    //     <li><strong>Advancements in AI:</strong> Quantum computing could significantly enhance machine learning algorithms and AI capabilities.</li>
-    //   </ul>
+                if (response?.error) {
+                    toast.error("Failed to create a new comment! Try again.")
+                } else {
+                    toast.success("Comment added successfully.")
+                    setNewComment("") // Clear the input
+                }
+            }
+        } catch (error) {
+            toast.error("Something went wrong! Try again.")
+        }
+    }
 
-    //   <h2>Challenges and Limitations</h2>
-    //   <p>Despite its potential, quantum computing faces several challenges:</p>
-    //   <ol>
-    //     <li>Maintaining quantum coherence</li>
-    //     <li>Scaling up to more qubits</li>
-    //     <li>Error correction in quantum systems</li>
-    //   </ol>
 
-    //   <h2>The Future of Quantum Computing</h2>
-    //   <p>As research progresses, we can expect to see quantum computers tackling real-world problems in fields such as:</p>
-    //   <ul>
-    //     <li>Drug discovery and development</li>
-    //     <li>Financial modeling and risk assessment</li>
-    //     <li>Climate change prediction and mitigation</li>
-    //     <li>Cryptography and cybersecurity</li>
-    //   </ul>
-
-    //   <p>While we're still in the early stages of this quantum revolution, the potential impact on technology and society is immense. As we continue to overcome the challenges, we move closer to a future where quantum computing becomes an integral part of our technological landscape.</p>
-    // `
-    // }
 
     return (
-        <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
-            <article className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-                <div className="w-full flex justify-center bg-gray-200">
-                    <div className="relative w-full h-[20rem] md:h-[38rem] max-h-[38rem]">
-                        {
-                            article.image ?
-                                <Image
-                                    src={article.image}
-                                    alt="Quantum computing illustration"
-                                    className="rounded-md h-full w-full"
-                                    layout="fill"
-                                    objectFit="cover"
-                                    priority
-                                />
-                                :
-                                <Image
-                                    src={DummyImage}
-                                    alt="Quantum computing illustration"
-                                    layout="fill"
-                                    objectFit="cover"
-                                    priority
-                                />
-                        }
+        <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+            <article className="max-w-5xl mx-auto bg-[#b1adad1a] text-gray-200 tracking-wide leading-9 shadow-lg rounded-lg overflow-hidden">
+                <div className="w-full flex justify-center">
+                    <div className="relative w-[40rem] h-[20rem] md:h-[25rem] mt-2 max-h-[30rem]">
+                        {article?.image ? (
+                            <Image
+                                src={article?.image}
+                                alt="Quantum computing illustration"
+                                className="rounded-md "
+                                layout="fill"
+                                objectFit="cover"
+                                priority
+                            />
+                        ) : (
+                            <Image
+                                src={DummyImage}
+                                alt="Quantum computing illustration"
+                                className="rounded-md "
+                                layout="fill"
+                                objectFit="cover"
+                                priority
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="p-6 sm:p-8">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-                        {article.title}
-                    </h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-center mb-6">{article?.title}</h1>
+
+                    {/* Article Content */}
                     <div
                         className="prose max-w-none"
-                        dangerouslySetInnerHTML={{ __html: article.content }}
+                        dangerouslySetInnerHTML={{ __html: article?.content }}
                     />
+
+                    {/* Like Button */}
+                    <div className=" flex justify-end mt-4"
+                        onClick={() => handleLikeToggle(article)}
+                    >
+
+                        <Button className="bg-cyan-700 px-8"><div
+
+                            className="flex items-center space-x-2 cursor-pointer"
+                        >
+                            <h2 className=" mr-4">Like</h2>
+                            <HeartIcon
+                                scale={2}
+                                size={12}
+                                fill={article?.likers?.includes(user?.id) ? "red" : ""}
+                                className={`w-12 h-12 transform transition-transform duration-200`}
+                            />
+                            <span>{article?.likeCount}</span>
+                        </div>
+                        </Button>
+                    </div>
+
+                    {/* Comment Section */}
+                    <div className="bg-gray-800 rounded-xl p-6 mt-8 text-white">
+                        <h2 className="text-2xl font-bold mb-4">Comments</h2>
+
+                        {/* Comment Input Section */}
+                        <form onSubmit={handleCommentSubmit} className="flex items-center gap-2 mb-6">
+                            <input
+                                type="text"
+                                placeholder="Leave a comment..."
+                                value={newComment}
+                                required
+                                onChange={(e) => setNewComment(e.target.value)}
+                                className="flex-1 p-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none"
+                            />
+                            <button
+                                type="submit"
+                                className="bg-purple-600 px-4 py-2 rounded-lg hover:bg-purple-700 transition"
+                            >
+                                {createCommentLoading ? "Sending..." : "Send"}
+                            </button>
+                        </form>
+
+                        {/* Comments List */}
+                        <div className="space-y-4">
+                            {article?.comments?.length > 0 ? (
+                                article?.comments?.map((comment) => (
+                                    <PostCommentCard key={comment?.id} comment={comment} />
+                                ))
+                            ) : (
+                                <p className="text-gray-400">No comments yet.</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </article>
         </div>

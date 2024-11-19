@@ -3,6 +3,6 @@ export const navItems = [
   { name: "Articles", href: "/articles", value: "articles" },
   { name: "CryptoHub", href: "/cryptohub", value: "cryptohub" },
   { name: "Learn", href: "/learn", value: "learn" },
-  { name: "Basics", href: "/basics", value: "basics" },
+  { name: "Wellcome", href: "/basics", value: "basics" },
   { name: "Price", href: "/leaderboard", value: "leaderboard" },
 ];

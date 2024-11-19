@@ -21,7 +21,7 @@ interface Author {
     profileImage: string;
 }
 
-interface Comment {
+export interface Comment {
     id: string;
     content: string;
     createdAt: string;
@@ -138,6 +138,7 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
                         <p className="text-lg mt-2">{post?.content}</p>
                     </div>
                 </div>
+                {/* like section */}
                 <div className=" flex justify-end mt-4">
 
                     <Button className="bg-cyan-700 px-8"><div
@@ -188,6 +189,8 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
                         )}
                     </div>
                 </div>
+
+
             </div>
         </div >
     )

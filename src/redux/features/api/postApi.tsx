@@ -46,7 +46,7 @@ const topicApi = baseApi.injectEndpoints({
                     body: data
                 }
             },
-            invalidatesTags: [ "post" ]
+            invalidatesTags: [ "post" ,"blog"]
         }),
 
 
@@ -138,7 +138,7 @@ const topicApi = baseApi.injectEndpoints({
         }),
         getAllPosts: build.query({
             query: (data: string) => {
-                console.log("called", data)
+  
                 return {
                     url: `/post/all-post`,
                     method: "GET",
@@ -149,7 +149,7 @@ const topicApi = baseApi.injectEndpoints({
         }),
         getAllVideoPost: build.query({
             query: (data: string) => {
-                console.log("called", data)
+        
                 return {
                     url: `/post/video-post`,
                     method: "GET",
@@ -160,7 +160,6 @@ const topicApi = baseApi.injectEndpoints({
         }),
         getAllImagePost: build.query({
             query: (data: string) => {
-                console.log("called", data)
                 return {
                     url: `/post/image-post`,
                     method: "GET",

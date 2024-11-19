@@ -153,11 +153,41 @@ const authApi = baseApi.injectEndpoints({
             },
             // providesTags: [ "verified-user" ]
         }),
+        forgotPassword: build.mutation({
+            query: (data) => {
+                return {
+                    url: `/user/forgot-password`,
+                    method: "POST",
+                    body: data
+                }
+            }
+        }),
+        setNewPassword: build.mutation({
+            query: (data) => {
+                return {
+                    url: `/user/new-password`,
+                    method: "PATCH",
+                    body: data
+                }
+            }
+        }),
+        contactUs: build.mutation({
+            query: (data) => {
+                return {
+                    url: `/contactus/send-email`,
+                    method: "POST",
+                    body: data
+                }
+            }
+        }),
     })
 })
 
 export const {
     useLoginUserMutation,
+    useContactUsMutation,
+    useForgotPasswordMutation,
+    useSetNewPasswordMutation,
     useGetAllVerifiedUsersQuery,
     useGetAllRecommendedUsersQuery,
     useVerifyOtpMutation,

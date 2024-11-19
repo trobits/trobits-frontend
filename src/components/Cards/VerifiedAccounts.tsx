@@ -92,7 +92,6 @@ const RecommendedAccounts = () => {
             setIsButtonDisabled(false); // Re-enable button in case of error
         }
     };
-    console.log(allUsersData)
 
     return (
         <div>

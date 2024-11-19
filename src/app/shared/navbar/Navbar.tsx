@@ -221,7 +221,7 @@ export default function Navbar() {
                     </Link>
                   </div>
                 );
-              } else if (item.name === "Basics") {
+              } else if (item.name === "Wellcome") {
                 return (
                   <div key={item.name} className="relative">
                     <button

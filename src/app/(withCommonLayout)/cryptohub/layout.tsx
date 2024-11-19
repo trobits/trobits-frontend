@@ -83,7 +83,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                                         }`}
                                 >
                                     <MdOutlineDynamicFeed className=' mr-2' />
-                                    Video Post
+                                    Expert Videos
                                 </Button>
                             </Link>
                         </li>

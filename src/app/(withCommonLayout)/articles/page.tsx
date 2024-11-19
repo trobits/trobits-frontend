@@ -6,6 +6,7 @@ import { useState } from "react";
 import globalGlove from "../../../assets/pngGlobe.png";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "@/components/Shared/Loading";
+import { IComment } from "@/components/Post/PostCommentCard";
 
 export interface Article {
   id: string;
@@ -17,12 +18,12 @@ export interface Article {
   image?: string;
   likeCount: number;
   likers: string[];
-  comments: Comment[];
+  comments: IComment[];
 }
 
 const ArticlesPage = () => {
   const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
-  const [ visibleArticlesCount, setVisibleArticlesCount ] = useState(15); // Initial articles count to display
+  const [ visibleArticlesCount, setVisibleArticlesCount ] = useState(12); // Initial articles count to display
 
   if (allBlogsDataLoading) {
     return <Loading />;
@@ -32,7 +33,7 @@ const ArticlesPage = () => {
 
   // Function to handle "Show More" button click
   const handleShowMore = () => {
-    setVisibleArticlesCount((prevCount) => prevCount + 15);
+    setVisibleArticlesCount((prevCount) => prevCount + 12);
   };
 
   return (
@@ -54,7 +55,7 @@ const ArticlesPage = () => {
       </div>
 
       {/* Articles Section */}
-      <div className="flex flex-wrap justify-center gap-4 px-1 md:px-6">
+      <div className="flex flex-wrap justify-center gap-4 px-1 md:px-24">
         {allBlogs.slice(0, visibleArticlesCount).map((article, index) => (
           <NewsCard key={index + 1} articleData={article} />
         ))}
