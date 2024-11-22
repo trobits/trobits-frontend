@@ -185,7 +185,6 @@ export default function ProfileEditModal({ isOpen, onClose }: ProfileEditModalPr
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             className="w-full px-4 py-2 mt-1 bg-gray-800 text-white border border-gray-600 rounded-md"
-                            required
                         />
                     </div>
 

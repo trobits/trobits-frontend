@@ -9,7 +9,7 @@ export default function AboutUs() {
         {/* Header */}
         <Card className="bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-4xl font-bold text-center">About Us</CardTitle>
+            <CardTitle className="text-4xl font-bold text-center text-white">About Us</CardTitle>
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <h2 className="text-xl text-blue-400">
@@ -27,7 +27,7 @@ export default function AboutUs() {
         {/* Offerings */}
         <Card className="bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-center">What We Offer</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-center text-white">What We Offer</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 md:grid-cols-2">
@@ -65,7 +65,7 @@ export default function AboutUs() {
         {/* Our Mission */}
         <Card className="bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-center">Making a Difference</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-center text-white">Making a Difference</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-gray-300">
@@ -84,7 +84,7 @@ export default function AboutUs() {
         {/* Why Choose Us */}
         <Card className="bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-center">Why Choose Trobits?</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-center text-white">Why Choose Trobits?</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="list-disc list-inside space-y-2 text-gray-300 max-w-2xl mx-auto">
@@ -108,7 +108,7 @@ export default function AboutUs() {
         {/* Meet the Team */}
         <Card className="bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-center">Meet the Team</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-center text-white">Meet the Team</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 md:grid-cols-3">
@@ -124,7 +124,15 @@ export default function AboutUs() {
                 {
                   name: "Calvin",
                   bio: "With a background in Information Technology, Calvin brings over 20 years of experience to Trobits. An investor in Shiba Inu and Cardano, he&lsquo;s passionate about crypto&lsquo;s future and dedicated to providing a secure, engaging platform."
-                }
+                },
+                {
+                  name: "Arrey",
+                  bio: "The growth of the cryptocurrency market is evident. It is never too late to take action. Arrey believes in the use of digital media to change the narrative around cryptocurrency and power the value of coins that have stood the test of time. Arrey is strongly behind building strong online communities of crypto enthusiasts who will work together to achieve a common goal."
+                },
+                {
+                  name: "Bernard",
+                  bio: "With the relentless growth and acceptance of cryptocurrency, Bernard believes there is a need for crypto social communities. He is passionate about bridging technology and social connectivity, contributing to the development of an inclusive space where technology and community intersect. Bernard aims to harness the transformative power of crypto to build resilient, forward-thinking communities and foster a more connected, equitable digital future."
+                },
               ].map((member, index) => (
                 <Card key={index} className="bg-gray-700">
                   <CardHeader>

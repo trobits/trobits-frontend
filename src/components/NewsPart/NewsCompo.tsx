@@ -97,7 +97,7 @@ export default function NewsCompo() {
         <h2 className=" text-2xl text-center mb-6 font-bold text-cyan-600">Crypto News</h2>
 
         <div className="flex flex-wrap justify-center gap-2 max-w- mx-auto">
-          {allBlogs.slice(0, 8).map((article, index) => (
+          {allBlogs?.slice(0, 8).map((article, index) => (
             <NewsCard key={index + 1} articleData={article} />
           ))}
         </div>
