@@ -90,7 +90,7 @@ export default function NewsCompo() {
 
   const allBlogs: Article[] = allBlogsData?.data;
 
-  console.log(allBlogs)
+  // console.log(allBlogs)
   return (
     <div>
       <div className="container mx-auto mt-10">
