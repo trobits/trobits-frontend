@@ -180,7 +180,7 @@ export default function Navbar() {
   const [ isBasicsDropdownOpen, setIsBasicsDropdownOpen ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
-  const { data: userFromDbData, isLoading: userFromDbLoading, refetch: refetchUserFromDb } = useGetUserByIdQuery(user?.id);
+  const { data: userFromDbData, isLoading: userFromDbLoading, refetch: refetchUserFromDb } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
   const dispatch = useAppDispatch();
   const router = useRouter();
   const userFromDb = userFromDbData?.data;

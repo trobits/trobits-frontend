@@ -97,7 +97,6 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
             authorId,
             id
         })
-        console.log(response);
     }
 
     return (

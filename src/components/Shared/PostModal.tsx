@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCreatePostMutation } from '@/redux/features/api/postApi';
 import { useAppSelector } from '@/redux/hooks';
 import { Images } from 'lucide-react';
@@ -50,7 +51,6 @@ const PostModal: FC<ModalProps> = ({ topicId, isOpen, onClose }) => {
             }
             toast.success("New post created successfully!")
         } catch (error) {
-            console.log({ error })
         } finally {
             toast.dismiss(createPostLoadingToast)
         }

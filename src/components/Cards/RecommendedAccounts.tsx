@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // "use client";
 // import React, { useState, useEffect } from "react";
@@ -61,7 +62,6 @@
 //                 followerId,
 //                 followedId,
 //             });
-//             console.log(response);
 
 //             if (response?.error) {
 //                 toast.error("Failed to follow user! Try again.");
@@ -88,7 +88,6 @@
 //             }, 1000); // Re-enable after 1 second
 
 //         } catch (error) {
-//             console.log(error);
 //             setIsButtonDisabled(false); // Re-enable button in case of error
 //         }
 //     };
@@ -234,7 +233,6 @@ const RecommendedAccounts = () => {
                 followerId,
                 followedId,
             });
-            console.log(response);
 
             if (response?.error) {
                 toast.error("Failed to follow user! Try again.");
@@ -273,7 +271,6 @@ const RecommendedAccounts = () => {
                 setIsButtonDisabled(false);
             }, 1000); // Re-enable after 1 second
         } catch (error) {
-            console.log(error);
             setIsButtonDisabled(false); // Re-enable button in case of error
         }
     };

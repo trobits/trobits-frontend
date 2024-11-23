@@ -11,7 +11,6 @@ interface PageProps {
     }
 }
 const MySpotPage = ({ params: { userId } }: PageProps) => {
-    console.log(userId)
     return (
         <AuthGuard>
             <div className="flex gap-4 flex-1 p-4 flex-wrap justify-center  min-h-screen bg-[#00000027]">

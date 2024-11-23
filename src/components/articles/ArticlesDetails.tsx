@@ -45,7 +45,6 @@
 //             authorId,
 //             id
 //         })
-//         console.log(response);
 //     }
 
 //     const handleCommentSubmit = async (e: FormEvent) => {

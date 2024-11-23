@@ -34,7 +34,6 @@ export default function NotificationPage() {
   // Handle real-time notifications
   useEffect(() => {
     socket.on("connect", () => {
-      console.log(`Socket connected on:`, socket.id);
     });
 
     socket.on("receiveNotification", (notification: Notification) => {

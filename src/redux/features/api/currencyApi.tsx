@@ -21,7 +21,6 @@ const currencyApi = baseApi.injectEndpoints({
         }),
         updateShiba: build.mutation({
             query: (data) => {
-                console.log({ data })
                 return {
                     url: `/shiba/update-shiba`,
                     method: "PATCH",
@@ -31,7 +30,6 @@ const currencyApi = baseApi.injectEndpoints({
         }),
         updateLunc: build.mutation({
             query: (data) => {
-                console.log({ data })
                 return {
                     url: `/lunc/update-lunc`,
                     method: "PATCH",

@@ -16,7 +16,6 @@ export default function ContactUs() {
     const user: User = useAppSelector((state) => state.auth.user);
     const [ sendEmail, { isLoading: sendEmailLoading } ] = useContactUsMutation();
 
-    console.log({ user })
 
     // Handle subject change
     const handleSubjectChange = (e: React.ChangeEvent<HTMLInputElement>) => {

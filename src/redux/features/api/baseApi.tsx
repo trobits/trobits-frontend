@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { RootState } from "@/redux/store";
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
@@ -49,10 +50,8 @@ const baseQueryWithRefreshToken: BaseQueryFn<string | FetchArgs, unknown, FetchB
                 result = await baseQuery(args, api, extraOptions);
             } else {
                 // api.dispatch(clearUser());
-                console.error("it will fixed very soon!");
             }
         } catch (error) {
-            console.error("Error during token refresh:", error);
         }
     }
     // if (result.error?.status === 403) {

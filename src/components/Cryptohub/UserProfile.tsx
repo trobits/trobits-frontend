@@ -28,7 +28,7 @@ interface IUser {
 }
 
 export default function UserProfile({ userId }: { userId: string }) {
-    const { data: updatedUserData, isLoading: updatedUserDataLoading } = useGetUserByIdQuery(userId as string);
+    const { data: updatedUserData, isLoading: updatedUserDataLoading } = useGetUserByIdQuery(userId as string,{skip:!userId});
     const { data: allPostsData, isLoading: allPostsDataLoading } = useGetPostsByUserIdQuery(userId);
     const [ isEditModalOpen, setIsEditModalOpen ] = useState(false);
 

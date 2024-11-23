@@ -71,11 +71,9 @@ const topicApi = baseApi.injectEndpoints({
         //     async onQueryStarted({ postId, content, authorId }, { dispatch, queryFulfilled }) {
         //         try {
         //             const { data } = await queryFulfilled;
-        //             console.log({ data })
         //             // Emit comment event to notify the backend for real-time updates
         //             socket.emit("createComment", { postId, content, authorId });
         //         } catch (error) {
-        //             console.error("Error creating comment:", error);
         //         }
         //     },
         //     invalidatesTags: [ "post" ]
@@ -91,14 +89,11 @@ const topicApi = baseApi.injectEndpoints({
         // ),
         // invalidatesTags: [ "post" ],
         // async onQueryStarted({ id, authorId }, { queryFulfilled }) {
-        //         console.log("hit")
         //         try {
         //             const { data } = await queryFulfilled;
         //             // Emit like event to notify the backend for real-time updates
         //             socket.emit("addOrRemoveLike", { id, authorId });
-        //             console.log({data})
         //         } catch (error) {
-        //             console.error("Error liking/unliking post:", error);
         //         }
         //     },
         // }),

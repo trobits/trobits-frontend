@@ -14,7 +14,6 @@ const ContactUs = () => {
         e.preventDefault();
 
         // Example form submission logic
-        console.log("Form submitted:", form);
 
         // Show success message
         setSuccessMessage("Your message has been sent successfully!");

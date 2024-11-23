@@ -6,7 +6,6 @@
 // }
 
 // const LearnItemsDetailsPage: FC<IPageProps> = ({ params: { id } }) => {
-//   console.log(id)
 //   return (
 //     <div>
 

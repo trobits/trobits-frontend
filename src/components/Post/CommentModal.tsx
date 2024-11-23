@@ -87,7 +87,6 @@ export default function CommentsModal({ post, onClose }: { post: Partial<Post>, 
             }
 
         } catch (error) {
-            console.log(error)
         }
 
     }
@@ -116,7 +115,6 @@ export default function CommentsModal({ post, onClose }: { post: Partial<Post>, 
                 toast.success("Comment added successfully.")
             }
         } catch (error) {
-            console.log({ error })
             // toast.error("Something went wrong! try again.")
         }
     };

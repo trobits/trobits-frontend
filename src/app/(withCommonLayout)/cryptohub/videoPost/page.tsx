@@ -67,7 +67,7 @@ export default function Component() {
     const [ postContent, setPostContent ] = useState<string>("");
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
     const [ videoPreview, setVideoPreview ] = useState<string | null>(null);
-    const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id);
+    const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
 
 
 
@@ -117,7 +117,6 @@ export default function Component() {
             setSelectedFile(null);
             setVideoPreview(null);
         } catch (error) {
-            console.log({ error });
         } finally {
             toast.dismiss(createPostLoadingToast);
         }

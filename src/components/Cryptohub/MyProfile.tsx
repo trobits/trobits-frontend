@@ -34,7 +34,7 @@ interface IUser {
 export default function MyProfilePage() {
     const router = useRouter();
     const currentUser: Partial<IUser> = useAppSelector((state) => state.auth.user);
-    const { data: updatedUserData, isLoading: updatedUserDataLoading } = useGetUserByIdQuery(currentUser.id as string);
+    const { data: updatedUserData, isLoading: updatedUserDataLoading } = useGetUserByIdQuery(currentUser.id as string,{skip:!currentUser?.id});
     const { data: allPostsData, isLoading: allPostsDataLoading } = useGetPostsByUserIdQuery(currentUser.id);
     const [ isEditModalOpen, setIsEditModalOpen ] = useState(false);
 

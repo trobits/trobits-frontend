@@ -50,7 +50,6 @@ const PostCard = ({ post }: { post: Post }) => {
         try {
             // Call the API to toggle the like
             const response = await toggleLike({ authorId, id: currentPost.id });
-            console.log("", response.data)
             // If the API call fails, revert the optimistic update
             if (response.error) {
                 setCurrentPost(post); // Revert back to the original state
@@ -59,7 +58,6 @@ const PostCard = ({ post }: { post: Post }) => {
             refetch()
         } catch (error) {
             setCurrentPost(post); // Revert back to the original state if there is an error
-            console.error(error);
             toast.error("Failed to like the post.");
         }
     };
@@ -268,7 +266,6 @@ export default PostCard;
 //             refetch();
 //         } catch (error) {
 //             setCurrentPost(post); // Revert back to the original state if there is an error
-//             console.error(error);
 //             toast.error("Failed to like the post.");
 //         }
 //     };
@@ -488,7 +485,6 @@ export default PostCard;
 //             }
 //         } catch (error) {
 //             setCurrentPost(post);
-//             console.error(error);
 //             toast.error("Failed to like the post.");
 //         }
 //     };
@@ -526,7 +522,6 @@ export default PostCard;
 //             setLocalComments((prevComments) =>
 //                 prevComments.filter((comment) => comment.id !== newCommentData.id)
 //             );
-//             console.error(error);
 //             toast.error("Failed to add comment.");
 //         }
 //     };

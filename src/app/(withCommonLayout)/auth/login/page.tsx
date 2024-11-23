@@ -36,7 +36,7 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
-  const { data: userFromDb, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id || null);
+  const { data: userFromDb, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id || null,{skip:!user?.id});
 
   // Show and hide password visibility
   const togglePasswordVisibility = () => {
@@ -60,7 +60,6 @@ export default function Login() {
     const loginLoadingToast = toast.loading("Logging in user...");
     try {
       const response = await loginMutation(loginInfo);
-      console.log({ response });
 
       // Check if response contains OTP verification error message
       if (response.error && (response as { error: { data: { message: string } } }).error.data) {
@@ -86,7 +85,7 @@ export default function Login() {
       router.push("/");
       toast.success("Successfully logged in!");
     } catch (error) {
-      console.log(error);
+
     } finally {
       toast.dismiss(loginLoadingToast);
     }
@@ -111,7 +110,6 @@ export default function Login() {
         localStorage.setItem("refreshToken", response?.data?.token?.refreshToken);
       }
     } catch (error) {
-      console.error("OTP verification error:", error);
       toast.error("Something went wrong while verifying OTP.");
     } finally {
       setOtpLoading(false);

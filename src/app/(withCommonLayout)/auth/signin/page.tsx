@@ -58,7 +58,6 @@ export default function SignUp() {
       toast.success("Successfully signed up!")
       router.push('/auth/login');
     } catch (error: any) {
-      console.log(error)
     } finally {
       toast.dismiss(registerLoadingToast)
     }

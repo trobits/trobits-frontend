@@ -22,7 +22,6 @@ const blogApi = baseApi.injectEndpoints({
         }),
         updateBlog: build.mutation({
             query: (data) => {
-                console.log({ data })
                 return {
                     url: `/article/update-article`,
                     method: "PATCH",

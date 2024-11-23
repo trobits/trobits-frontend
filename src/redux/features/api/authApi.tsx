@@ -88,15 +88,12 @@ const authApi = baseApi.injectEndpoints({
         //             const { data } = await queryFulfilled;
 
         //             // Log to confirm that socket.emit is being called
-        //             console.log("Emitting toggleFollow event:", { followerId, followedId });
 
         //             // Emit follow event to notify the backend for real-time updates
         //             socket.emit("toggleFollow", { followerId, followedId });
 
         //             // Log the data received from the query fulfillment
-        //             console.log("Follow event data:", data);
         //         } catch (error) {
-        //             console.error("Error following/unfollowing:", error);
         //         }
         //     },
         // }),

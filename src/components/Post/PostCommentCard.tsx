@@ -76,7 +76,6 @@ const PostCommentCard = ({ comment }: { comment: IComment }) => {
                         id
                     }
                 )
-                console.log({ response })
             }
             if (mode === "disLike") {
                 const response = await toggleCommentDisLike(
@@ -85,11 +84,9 @@ const PostCommentCard = ({ comment }: { comment: IComment }) => {
                         id
                     }
                 )
-                console.log({ response })
             }
 
         } catch (error) {
-            console.log(error)
         }
 
     }

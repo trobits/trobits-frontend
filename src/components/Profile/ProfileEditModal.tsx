@@ -26,7 +26,7 @@ interface IUser {
 
 export default function ProfileEditModal({ isOpen, onClose }: ProfileEditModalProps) {
     const currentUser: Partial<IUser> = useAppSelector((state) => state.auth.user);
-    const { data: updatedUserData, isLoading: updatedUserDataLoading } = useGetUserByIdQuery(currentUser.id as string)
+    const { data: updatedUserData, isLoading: updatedUserDataLoading } = useGetUserByIdQuery(currentUser.id as string,{skip:!currentUser?.id})
     const [ firstName, setFirstName ] = useState<string>((updatedUserData?.data as Partial<IUser>).firstName || "");
     const [ lastName, setLastName ] = useState<string>((updatedUserData?.data as Partial<IUser>).lastName || "");
     const [ profileImage, setProfileImage ] = useState<File | null>(null);
@@ -60,9 +60,7 @@ export default function ProfileEditModal({ isOpen, onClose }: ProfileEditModalPr
             if (profileImage) formData.append("profileImage", profileImage);
             if (coverImage) formData.append("coverImage", coverImage);
 
-            // console.log("Form Data:");
             // formData.forEach((value, key) => {
-            //     console.log(`${key}:`, value);
             // });
             const response = await updateProfile({ data: formData, userId: user.email })
             if (response?.error) {
@@ -72,7 +70,6 @@ export default function ProfileEditModal({ isOpen, onClose }: ProfileEditModalPr
             toast.success("Profile information updated successfully!")
             onClose();
         } catch (error) {
-            // console.log(error)
         } finally {
             toast.dismiss(updateProfileToastLoading)
         }

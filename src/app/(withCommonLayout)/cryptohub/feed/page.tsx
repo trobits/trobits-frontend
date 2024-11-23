@@ -47,13 +47,12 @@ export default function Component() {
   const [ postContent, setPostContent ] = useState<string>('');
   const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
   const [ imagePreview, setImagePreview ] = useState<string | null>(null);
-  const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id);
+  const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
 
   // State for search query
   const [ searchQuery, setSearchQuery ] = useState("");
   // Debounced search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  console.log()
   // Memoized filtered posts
   const filteredPosts = useMemo(() => {
     return allPosts.filter((post: Post) =>
@@ -88,9 +87,7 @@ export default function Component() {
     const createPostLoadingToast = toast.loading("Creating new post...");
     try {
       const response = await createPost(formData);
-      console.log({ response })
       if (response.error) {
-        console.log(response.error)
         const errorMessage = (response as { error: { data: { message: string } } })?.error?.data?.message || "Failed to create a new post!"
         toast.error(errorMessage)
         return;
@@ -100,7 +97,6 @@ export default function Component() {
       setSelectedFile(null);
       setImagePreview(null);
     } catch (error) {
-      console.log({ error });
     } finally {
       toast.dismiss(createPostLoadingToast);
     }
