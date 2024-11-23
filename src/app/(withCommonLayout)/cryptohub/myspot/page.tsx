@@ -24,8 +24,8 @@ const MySpotPage = () => {
         </div>
         <div className="w-80 space-y-4 ">
           <TrendingTopic />
-          <VerifiedAccounts />
           <RecommendedAccounts />
+          <VerifiedAccounts />
         </div>
 
       </div>

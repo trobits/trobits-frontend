@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import { useState, ChangeEvent, FormEvent } from "react";
 import { Camera, Image as ImageIcon } from "lucide-react"; // Import icons from lucide
@@ -59,19 +60,19 @@ export default function ProfileEditModal({ isOpen, onClose }: ProfileEditModalPr
             if (profileImage) formData.append("profileImage", profileImage);
             if (coverImage) formData.append("coverImage", coverImage);
 
-            console.log("Form Data:");
-            formData.forEach((value, key) => {
-                console.log(`${key}:`, value);
-            });
+            // console.log("Form Data:");
+            // formData.forEach((value, key) => {
+            //     console.log(`${key}:`, value);
+            // });
             const response = await updateProfile({ data: formData, userId: user.email })
-            if(response?.error){
+            if (response?.error) {
                 toast.error("Failed to update profile information! Try again.")
                 return;
             }
             toast.success("Profile information updated successfully!")
             onClose();
         } catch (error) {
-            console.log(error)
+            // console.log(error)
         } finally {
             toast.dismiss(updateProfileToastLoading)
         }
