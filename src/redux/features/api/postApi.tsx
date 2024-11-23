@@ -112,7 +112,7 @@ const topicApi = baseApi.injectEndpoints({
                     body: data
                 }
             },
-            invalidatesTags: [ "post" ]
+            invalidatesTags: [ "post","blog" ]
         }),
 
         toggleDisLikeOnComment: build.mutation({
