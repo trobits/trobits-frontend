@@ -29,7 +29,7 @@ const PostCard = ({ post }: { post: Post }) => {
     };
     // Handle like toggle with optimistic UI update
     const handleLikeToggle = async () => {
-        if (!user) {
+        if (!user?.id) {
             toast.error("Please Login first!");
             return;
         }
