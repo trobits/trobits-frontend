@@ -26,6 +26,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<string | FetchArgs, unknown, FetchB
 ) => {
     let result = await baseQuery(args, api, extraOptions);
 
+
     if (result.error?.status === 401) {
         try {
             // const res = await fetch("http://localhost:3000/api/v1/user/access-token", {

@@ -130,7 +130,7 @@ export default function Component() {
 
     
     return (
-        <AuthGuard>
+        <div>
             {/* Post Option */}
 
             {/* only recommended user can post video */}
@@ -217,6 +217,6 @@ export default function Component() {
                     </div>
                 </div>
             </div>
-        </AuthGuard>
+        </div>
     );
 }

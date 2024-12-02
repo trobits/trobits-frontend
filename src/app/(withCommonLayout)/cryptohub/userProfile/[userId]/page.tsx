@@ -1,4 +1,4 @@
-import AuthGuard from "@/components/Auth/AuthGuard"
+// import AuthGuard from "@/components/Auth/AuthGuard"
 import RecommendedAccounts from "@/components/Cards/RecommendedAccounts"
 import TrendingTopic from "@/components/Cards/TrendingTopic"
 import VerifiedAccounts from "@/components/Cards/VerifiedAccounts"
@@ -12,7 +12,7 @@ interface PageProps {
 }
 const MySpotPage = ({ params: { userId } }: PageProps) => {
     return (
-        <AuthGuard>
+        <div>
             <div className="flex gap-4 flex-1 p-4 flex-wrap justify-center  min-h-screen bg-[#00000027]">
                 {/* Main Feed */}
                 <div className="flex-1">
@@ -34,7 +34,7 @@ const MySpotPage = ({ params: { userId } }: PageProps) => {
                 </div>
 
             </div>
-        </AuthGuard>
+        </div>
     )
 }
 
