@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Footer from "@/app/shared/Footer/Footer"
 // import { Grid } from "@/components/ui/grid"
 
 export default function AboutUs() {
@@ -147,6 +148,7 @@ export default function AboutUs() {
           </CardContent>
         </Card>
       </div>
+      <Footer />
     </div>
   )
 }

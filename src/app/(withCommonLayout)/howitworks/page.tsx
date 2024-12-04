@@ -2,6 +2,7 @@ import { Flame, TrendingUp, Wallet } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import imagesCoin from "../../../assets/giveCoinImage.png";
+import Footer from "@/app/shared/Footer/Footer";
 function HowItWorks() {
   const features = [
     {
@@ -60,6 +61,7 @@ function HowItWorks() {
           ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 
+import Footer from "@/app/shared/Footer/Footer";
 import LearnComponent from "@/components/LearnComponent/LearnComponent";
 import * as React from "react";
 export const cryptoTypesAndCryptoBasics = [
@@ -89,6 +90,7 @@ const CryptoTips = () => {
     return (
         <div>
             <LearnComponent title={"Crypto Tips & Basics"} cryptoBasic={cryptoTypesAndCryptoBasics} />
+            <Footer />
         </div>
     );
 };

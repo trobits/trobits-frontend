@@ -7,6 +7,7 @@ import globalGlove from "../../../assets/pngGlobe.png";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "@/components/Shared/Loading";
 import { IComment } from "@/components/Post/PostCommentCard";
+import Footer from "@/app/shared/Footer/Footer";
 
 export interface Article {
   id: string;
@@ -72,6 +73,7 @@ const ArticlesPage = () => {
           </button>
         </div>
       )}
+      <Footer />
     </div>
   );
 };
