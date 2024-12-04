@@ -76,9 +76,6 @@ export default function MyProfilePage() {
         }
     };
 
-console.log({currentPage})
-
-    console.log({ allPostsData })
     const joinedDate = user?.createdAt ? format(new Date(user.createdAt), 'dd MMMM yyyy') : '';
 
     return (
