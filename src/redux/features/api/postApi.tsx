@@ -120,6 +120,7 @@ const topicApi = baseApi.injectEndpoints({
             },
             invalidatesTags: [ "post" ]
         }),
+        
         getPostsByAuthorId: build.query({
             query: (authorId) => {
                 return {
@@ -131,6 +132,8 @@ const topicApi = baseApi.injectEndpoints({
             },
             providesTags: [ "post" ]
         }),
+
+
         getAllPosts: build.query({
             query: (data: string) => {
   

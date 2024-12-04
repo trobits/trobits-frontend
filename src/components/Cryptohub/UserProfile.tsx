@@ -11,6 +11,7 @@ import { Post } from "./TopicDetails";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 import { format } from 'date-fns';
 import ProfileEditModal from '../Profile/ProfileEditModal';
+import { Button } from '../ui/button';
 
 interface IUser {
     id: string;

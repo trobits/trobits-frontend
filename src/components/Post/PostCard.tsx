@@ -109,6 +109,8 @@ const PostCard = ({ post }: { post: Post }) => {
                             Posted: &nbsp;{postCreatedDate}
                         </p>
                     </div>
+
+                    {/* <Button variant={"default"} className={` bg-cyan-600 text-white font-bold`}>Follow</Button> */}
                 </div>
                 <Link href={`/cryptohub/cryptochat/${currentPost?.topicId}/${currentPost?.id}`}>
                     <Button className="px-1 py-1 md:px-3 mx:py-2 md:font-bold bg-cyan-600 text-white">
