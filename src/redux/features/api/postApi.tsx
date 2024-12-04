@@ -46,7 +46,7 @@ const topicApi = baseApi.injectEndpoints({
                     body: data
                 }
             },
-            invalidatesTags: [ "post" ,"blog"]
+            invalidatesTags: [ "post", "blog" ]
         }),
 
 
@@ -107,7 +107,7 @@ const topicApi = baseApi.injectEndpoints({
                     body: data
                 }
             },
-            invalidatesTags: [ "post","blog" ]
+            invalidatesTags: [ "post", "blog" ]
         }),
 
         toggleDisLikeOnComment: build.mutation({
@@ -120,7 +120,7 @@ const topicApi = baseApi.injectEndpoints({
             },
             invalidatesTags: [ "post" ]
         }),
-        
+
         getPostsByAuthorId: build.query({
             query: (authorId) => {
                 return {
@@ -136,7 +136,7 @@ const topicApi = baseApi.injectEndpoints({
 
         getAllPosts: build.query({
             query: (data: string) => {
-  
+
                 return {
                     url: `/post/all-post`,
                     method: "GET",
@@ -147,7 +147,7 @@ const topicApi = baseApi.injectEndpoints({
         }),
         getAllVideoPost: build.query({
             query: (data: string) => {
-        
+
                 return {
                     url: `/post/video-post`,
                     method: "GET",
@@ -166,9 +166,9 @@ const topicApi = baseApi.injectEndpoints({
             providesTags: [ "post" ]
         }),
         getPostsByUserId: build.query({
-            query: (userId) => {
+            query: (data) => {
                 return {
-                    url: `post/author/${userId}`,
+                    url: `post/author/${data?.id}?page=${data.page}&limit=${data.limit}`,
                     method: "GET",
 
                 }
@@ -180,6 +180,6 @@ const topicApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useCreatePostMutation,useGetAllImagePostQuery,useGetAllVideoPostQuery, useGetPostsByUserIdQuery, useGetAllPostsQuery, useGetPostsByAuthorIdQuery, useToggleDisLikeOnCommentMutation, useToggleLikeOnCommentMutation, useGetPostsByIdQuery, useToggleLikeMutation, useCreateCommentMutation, useGetAllPostsByTopicQuery } = topicApi;
+export const { useCreatePostMutation, useGetAllImagePostQuery, useGetAllVideoPostQuery, useGetPostsByUserIdQuery, useGetAllPostsQuery, useGetPostsByAuthorIdQuery, useToggleDisLikeOnCommentMutation, useToggleLikeOnCommentMutation, useGetPostsByIdQuery, useToggleLikeMutation, useCreateCommentMutation, useGetAllPostsByTopicQuery } = topicApi;
 
 

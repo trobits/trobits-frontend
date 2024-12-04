@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 "use client"
 import { useState } from 'react';
@@ -33,15 +34,21 @@ interface IUser {
 
 export default function MyProfilePage() {
     const router = useRouter();
+    const [ currentPage, setCurrentPage ] = useState(1);
+    const limit = 15;
     const currentUser: Partial<IUser> = useAppSelector((state) => state.auth.user);
-    const { data: updatedUserData, isLoading: updatedUserDataLoading } = useGetUserByIdQuery(currentUser.id as string,{skip:!currentUser?.id});
-    const { data: allPostsData, isLoading: allPostsDataLoading } = useGetPostsByUserIdQuery(currentUser.id);
+    const { data: updatedUserData, isLoading: updatedUserDataLoading } = useGetUserByIdQuery(currentUser.id as string, { skip: !currentUser?.id });
+
+
+    const { data: allPostsData, isLoading: allPostsDataLoading } = useGetPostsByUserIdQuery({ id: currentUser.id, limit, page: currentPage });
+
     const [ isEditModalOpen, setIsEditModalOpen ] = useState(false);
 
 
     if (!currentUser) {
         router.push("/auth/login");
     }
+
 
     if (updatedUserDataLoading) {
         return <Loading />;
@@ -53,10 +60,28 @@ export default function MyProfilePage() {
     }
 
     const allPosts: Post[] = allPostsData?.data || [];
+    const totalPages = allPostsData?.meta?.totalPages || 0;
+
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage((prevPage) => prevPage + 1);
+        }
+    };
+
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage((prevPage) => prevPage - 1);
+        }
+    };
+
+console.log({currentPage})
+
+    console.log({ allPostsData })
     const joinedDate = user?.createdAt ? format(new Date(user.createdAt), 'dd MMMM yyyy') : '';
 
     return (
-
         <div className="w-full max-w-6xl mx-auto text-white">
             <div className="relative">
                 {/* Banner Image */}
@@ -123,9 +148,11 @@ export default function MyProfilePage() {
                         <p className="font-bold text-sm">Joined: {joinedDate}</p>
                     </div>
                 </div>
+
                 <div className=' flex justify-center'>
-                   <h2 className=' text-3xl'>Posts</h2>
+                    <h2 className=' text-3xl'>Posts</h2>
                 </div>
+                
                 <div className="space-y-6 mt-12">
                     {allPosts.length > 0 ? (
                         allPosts.map((post) => <PostCard key={post.id} post={post} />)
@@ -139,6 +166,27 @@ export default function MyProfilePage() {
             {isEditModalOpen && (
                 <ProfileEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
             )}
+
+            {/* Pagination Controls */}
+            <div className="flex justify-center items-center gap-4 mt-6">
+                <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className={`px-4 disabled:cursor-not-allowed py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-400' : 'bg-cyan-600 text-white'}`}
+                >
+                    Previous
+                </button>
+                <span className="text-lg text-gray-300">
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 disabled:cursor-not-allowed rounded-lg ${currentPage === totalPages ? 'bg-gray-400' : 'bg-cyan-600 text-white'}`}
+                >
+                    Next
+                </button>
+            </div>
         </div>
 
     );

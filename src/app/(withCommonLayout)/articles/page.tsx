@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+
 "use client";
 import NewsCard from "@/components/NewsPart/NewsCard";
 import Image from "next/image";
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import globalGlove from "../../../assets/pngGlobe.png";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "@/components/Shared/Loading";
 import { IComment } from "@/components/Post/PostCommentCard";
 import Footer from "@/app/shared/Footer/Footer";
+import { Pagination } from "@/components/ui/pagination";
 
 export interface Article {
   id: string;
@@ -23,19 +27,38 @@ export interface Article {
 }
 
 const ArticlesPage = () => {
-  const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
-  const [ visibleArticlesCount, setVisibleArticlesCount ] = useState(12); // Initial articles count to display
+  const [ currentPage, setCurrentPage ] = useState(1); 
+  const limit = 12;
 
+
+  const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery({
+    page: currentPage,
+    limit: limit,
+  });
+
+  // Handle loading state
   if (allBlogsDataLoading) {
     return <Loading />;
   }
 
   const allBlogs: Article[] = allBlogsData?.data || [];
+  const totalPages = allBlogsData?.meta?.totalPages || 0;
 
-  // Function to handle "Show More" button click
-  const handleShowMore = () => {
-    setVisibleArticlesCount((prevCount) => prevCount + 12);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
   };
+
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+
 
   return (
     <div>
@@ -55,27 +78,38 @@ const ArticlesPage = () => {
         </div>
       </div>
 
-      {/* Articles Section */}
+      {/* Display Articles */}
       <div className="flex flex-wrap justify-center gap-4 px-1 md:px-24">
-        {allBlogs.slice(0, visibleArticlesCount).map((article, index) => (
-          <NewsCard key={index + 1} articleData={article} />
+        {allBlogs.map((article) => (
+          <NewsCard key={article.id} articleData={article} />
         ))}
       </div>
 
-      {/* Show More Button */}
-      {visibleArticlesCount < allBlogs.length && (
-        <div className="text-center my-6">
-          <button
-            onClick={handleShowMore}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
-          >
-            Show More
-          </button>
-        </div>
-      )}
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center gap-4 mt-6">
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className={`px-4 disabled:cursor-not-allowed py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-400' : 'bg-cyan-600 text-white'}`}
+        >
+          Previous
+        </button>
+        <span className="text-lg text-gray-300">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 disabled:cursor-not-allowed rounded-lg ${currentPage === totalPages ? 'bg-gray-400' : 'bg-cyan-600 text-white'}`}
+        >
+          Next
+        </button>
+      </div>
+
       <Footer />
     </div>
   );
 };
 
 export default ArticlesPage;
+

@@ -11,15 +11,28 @@ const blogApi = baseApi.injectEndpoints({
                 }
             }
         }),
+
+        // getAllBlogs: build.query({
+        //     query: () => {
+        //         return {
+        //             url: "/article/all-article",
+        //             method: "GET"
+        //         }
+        //     },
+        //     providesTags: [ 'blog' ],
+        // }),
+
         getAllBlogs: build.query({
-            query: () => {
+            query: ({ page = 1, limit = 12, sortBy = "createdAt", sortOrder = "desc" }) => {
                 return {
-                    url: "/article/all-article",
-                    method: "GET"
-                }
+                    url: `/article/all-article?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+                    method: "GET",
+                };
             },
             providesTags: [ 'blog' ],
         }),
+
+
         updateBlog: build.mutation({
             query: (data) => {
                 return {
@@ -30,6 +43,7 @@ const blogApi = baseApi.injectEndpoints({
             },
             invalidatesTags: [ 'blog' ]
         }),
+
         deleteBlog: build.mutation({
             query: (id) => {
 
