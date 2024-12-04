@@ -5,9 +5,9 @@ import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError 
 import { setUser } from "../slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api/v1",
+    // baseUrl: "http://localhost:3000/api/v1",
     // baseUrl: "https://sisiku-backend.vercel.app/api/v1",
-    // baseUrl: "https://api.trobits.com/api/v1",
+    baseUrl: "https://api.trobits.com/api/v1",
     credentials: "include",
     prepareHeaders: (headers, { }) => {
         const token = localStorage.getItem("refreshToken");
@@ -29,9 +29,9 @@ const baseQueryWithRefreshToken: BaseQueryFn<string | FetchArgs, unknown, FetchB
 
     if (result.error?.status === 401) {
         try {
-            const res = await fetch("http://localhost:3000/api/v1/user/access-token", {
+            // const res = await fetch("http://localhost:3000/api/v1/user/access-token", {
                 // const res = await fetch("https://sisiku-backend.vercel.app/api/v1", {
-                // const res = await fetch("https://api.trobits.com/api/v1", {
+                const res = await fetch("https://api.trobits.com/api/v1", {
                 method: "POST",
                 credentials: "include", // Sends cookies with the request
                 headers: {
