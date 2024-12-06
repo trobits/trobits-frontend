@@ -66,7 +66,6 @@ type Tab = "Coins" | "Trending" | "Most Visited" | "Recently Added";
             ))}
           </div>
         </div>
-
         <div className="relative overflow-x-auto">
           <Table>
             <TableHeader>

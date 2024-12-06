@@ -26,7 +26,7 @@ function HowItWorks() {
   ];
 
   return (
-    <div className=" py-16 px-4">
+    <div className=" pt-16">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-cyan-400 mb-2">Our Features</h2>

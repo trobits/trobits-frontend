@@ -5,6 +5,7 @@ import NewsCompo from "@/components/NewsPart/NewsCompo";
 import React from "react";
 // import Footer from "../shared/Footer/Footer";
 import CryptoNavbar from "../shared/navbar/CryptoNavbar";
+import Footer from "../shared/Footer/Footer";
 
 const Profile = () => {
   return (
@@ -13,7 +14,7 @@ const Profile = () => {
       <CryptoData />
       <Slider />
       <NewsCompo />
-      {/* <Footer/> */}
+      <Footer/>
     </div>
   );
 };

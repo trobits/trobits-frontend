@@ -18,6 +18,7 @@ const LeaderBoard = () => {
       displayCurrency: "USD",
       colorTheme: "dark",
       locale: "en",
+      largeChartUrl: "https://trobits.com/leaderboard",
       isTransparent: true,
     });
 

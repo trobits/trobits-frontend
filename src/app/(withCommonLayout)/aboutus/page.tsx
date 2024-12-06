@@ -5,7 +5,7 @@ import Footer from "@/app/shared/Footer/Footer"
 
 export default function AboutUs() {
   return (
-    <div className="bg-[#00000077] px-4 md:px-12 lg:px-20 text-white min-h-screen py-16">
+    <div className="bg-[#00000077]  text-white min-h-screen pt-16">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
         <Card className="bg-gray-800">
