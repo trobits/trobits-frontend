@@ -75,10 +75,10 @@ export default function AboutUs() {
               impact directly on our homepage with live data on visitor counts, ad revenue, and
               the amount of LUNC and SHIB burned!
             </p>
-            <p className="text-gray-300">
+            {/* <p className="text-gray-300">
               <strong>Donations Welcome:</strong> Your contributions to support our burning
               efforts are greatly appreciated. You can find a &rdquo;Donate&rdquo; button on our homepage.
-            </p>
+            </p> */}
           </CardContent>
         </Card>
 
@@ -120,11 +120,11 @@ export default function AboutUs() {
                 },
                 {
                   name: "Rolin",
-                  bio: "A long-time crypto advocate, Rolin has been instrumental in developing strategies for Trobits. He shares Tabi&lsquo;s dedication to LUNC and continues to work on creative ways to boost the crypto community&lsquo;s resilience."
+                  bio: "A long-time crypto advocate, Rolin has been instrumental in developing strategies for Trobits. He shares Tabi's dedication to LUNC and continues to work on creative ways to boost the crypto community's resilience."
                 },
                 {
                   name: "Calvin",
-                  bio: "With a background in Information Technology, Calvin brings over 20 years of experience to Trobits. An investor in Shiba Inu and Cardano, he&lsquo;s passionate about crypto&lsquo;s future and dedicated to providing a secure, engaging platform."
+                  bio: "With a background in Information Technology, Calvin brings over 20 years of experience to Trobits. An investor in Shiba Inu and Cardano, he is passionate about crypto's future and dedicated to providing a secure, engaging platform."
                 },
                 {
                   name: "Arrey",

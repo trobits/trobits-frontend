@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // components/Slider.js
 import { useState, useEffect } from "react";
 
@@ -30,33 +31,18 @@ const Slider = () => {
     <div className="flex flex-col sm:flex-row justify-between items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
       {/* Left section */}
       <div className="flex-1 text-center sm:text-left">
-        <h3 className="text-white text-sm sm:text-md font-semibold">
+        {/* <h3 className="text-white text-sm sm:text-md font-semibold">
           Trobits Articles
-        </h3>
-        <h1 className="text-white text-2xl sm:text-3xl font-bold mt-1 sm:max-w-80">
+        </h3> */}
+        {/* <h1 className="text-white text-2xl sm:text-3xl font-bold mt-1 sm:max-w-80">
           Check out our latest trobits articles.
-        </h1>
+        </h1> */}
       </div>
 
       {/* Right section */}
       <div className="flex-1 flex flex-col items-center sm:items-end mt-4 sm:mt-0">
-        <div className="bg-teal-500 p-2 sm:p-3 rounded-md w-56 sm:w-64 text-center">
-          <h3 className="text-white text-xs sm:text-sm font-medium">
-            {sliderData[currentSlide].title}
-          </h3>
-        </div>
-        {/* Slide indicators */}
-        <div className="mt-4 flex space-x-2">
-          {sliderData.map((_, index) => (
-            <span
-              key={index}
-              className={`w-2 h-2 rounded-full cursor-pointer transition-colors duration-300 ${
-                index === currentSlide ? "bg-teal-500" : "bg-white"
-              }`}
-              onClick={() => setCurrentSlide(index)}
-            />
-          ))}
-        </div>
+        
+
       </div>
     </div>
   );
