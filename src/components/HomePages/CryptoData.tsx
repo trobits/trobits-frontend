@@ -68,6 +68,7 @@ import Lunc from "../../assets/icons/lunc.png";
 import { useGetLuncInformationQuery, useGetShibaInformationQuery } from "@/redux/features/api/currencyApi";
 import Loading from "../Shared/Loading";
 
+
 export default function CryptoData() {
   const { data: shibaInformation, isLoading: shibaDataLoading } = useGetShibaInformationQuery("");
   const { data: luncInformation, isLoading: luncDataLoading } = useGetLuncInformationQuery("");
