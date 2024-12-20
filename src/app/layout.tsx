@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Source_Sans_3, Lato } from "next/font/google"; // Import both fonts
 import "./globals.css";
 import Providers from "@/provider/Provider";
-import Script from "next/script";
 
 // Source Sans 3 Font
 const sourceSansPro = Source_Sans_3({
@@ -36,11 +35,7 @@ export default function RootLayout({
       >
 
         <Providers>{children}</Providers>
-        <Script
-          strategy="afterInteractive"
-          src="//diagramjawlineunhappy.com/t/9/fret/meow4/2049457/31016ea6.js"
-          data-cfasync="false"
-        />
+
       </body>
     </html>
   );
