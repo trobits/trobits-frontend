@@ -2,7 +2,7 @@
 
 import { RootState } from "@/redux/store";
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import { setUser } from "../slices/authSlice";
+import { clearUser, setUser } from "../slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
     // baseUrl: "http://localhost:3000/api/v1",
@@ -10,7 +10,7 @@ const baseQuery = fetchBaseQuery({
     baseUrl: "https://api.trobits.com/api/v1",
     credentials: "include",
     prepareHeaders: (headers, { }) => {
-        const token = localStorage.getItem("refreshToken");
+        const token = localStorage.getItem("accessToken");
         if (token) {
             headers.set("authorization", `Bearer ${token}`);
         }
@@ -55,9 +55,9 @@ const baseQueryWithRefreshToken: BaseQueryFn<string | FetchArgs, unknown, FetchB
         } catch (error) {
         }
     }
-    // if (result.error?.status === 403) {
-    //     api.dispatch(clearUser())
-    // }
+    if (result.error?.status === 403) {
+        api.dispatch(clearUser())
+    }
 
     return result;
 };
