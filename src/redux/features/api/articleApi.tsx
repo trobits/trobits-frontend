@@ -65,15 +65,15 @@ const blogApi = baseApi.injectEndpoints({
             },
             providesTags: [ 'blog' ],
         }),
-        toggleLike: build.mutation({
+        likeToggle: build.mutation({
             query: (data) => {
                 return {
-                    url: "/article/add-remove-like",
+                    url: "/article/toggle-like",
                     method: "PATCH",
                     body: data
                 }
             },
-            invalidatesTags: [ "post", "blog" ]
+            invalidatesTags: [ "blog" ]
         }),
 
     })
@@ -82,7 +82,7 @@ const blogApi = baseApi.injectEndpoints({
 export const { useCreateBlogMutation,
     // useGetAllSubscriberQuery,
     useGetAllBlogsQuery,
-    useToggleLikeMutation,
+    useLikeToggleMutation,
     useUpdateBlogMutation,
     useDeleteBlogMutation,
     useGetSingleArticleQuery

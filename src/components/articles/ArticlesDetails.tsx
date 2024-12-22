@@ -3,7 +3,7 @@
 
 
 "use client"
-import { useGetSingleArticleQuery, useToggleLikeMutation } from "@/redux/features/api/articleApi";
+import { useGetSingleArticleQuery, useLikeToggleMutation } from "@/redux/features/api/articleApi";
 import Image from "next/image";
 import Loading from "../Shared/Loading";
 import DummyImage from "@/assets/dummy-blog.png";
@@ -20,7 +20,7 @@ import { Button } from "../ui/button";
 function ArticleDetailsPage({ articleId }: { articleId: string }) {
     const { data: articleData, isLoading: articleLoading } = useGetSingleArticleQuery(articleId);
     const user: IUser | null = useAppSelector((state) => state.auth.user);
-    const [ toggleLike, { isLoading: toggleLikeLoading } ] = useToggleLikeMutation();
+    const [ toggleLikeMutation, { isLoading: toggleLikeLoading } ] = useLikeToggleMutation();
 
     const article: Article | undefined = articleData?.data;
 
@@ -32,6 +32,7 @@ function ArticleDetailsPage({ articleId }: { articleId: string }) {
     const [ createComment, { isLoading: createCommentLoading } ] = useCreateCommentMutation();
 
     const handleLikeToggle = async () => {
+        
         if (!user) {
             toast.error("Please Login first!");
             return;
@@ -47,7 +48,7 @@ function ArticleDetailsPage({ articleId }: { articleId: string }) {
         );
 
         try {
-            await toggleLike({ authorId: userId, id: article?.id });
+            await toggleLikeMutation({ authorId: userId, id: article?.id });
         } catch (error: any) {
             // Rollback on failure
             toast.error("Failed to update like status.");

@@ -310,7 +310,7 @@ export default function Navbar() {
                     Learn
                   </Link>
                 </div>
-              ) : item.name === "Basics" ? (
+              ) : item.name === "Welcome" ? (
                 <div key={item.name}>
                   <button
                     onClick={toggleBasicsDropdown}
