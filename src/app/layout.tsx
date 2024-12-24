@@ -2,19 +2,20 @@ import type { Metadata } from "next";
 import { Source_Sans_3, Lato } from "next/font/google"; // Import both fonts
 import "./globals.css";
 import Providers from "@/provider/Provider";
+import Script from "next/script";
 
 // Source Sans 3 Font
 const sourceSansPro = Source_Sans_3({
-  weight: [ "300", "400", "600", "700" ], // Choose the weights you need
-  subsets: [ "latin" ], // Choose subsets if needed
+  weight: ["300", "400", "600", "700"], // Choose the weights you need
+  subsets: ["latin"], // Choose subsets if needed
   display: "swap",
 });
 
 // Lato Font
 // Lato Font
 const lato = Lato({
-  weight: [ "300", "400", "700" ], // Removed "600" as it is not supported
-  subsets: [ "latin" ], // Choose subsets if needed
+  weight: ["300", "400", "700"], // Removed "600" as it is not supported
+  subsets: ["latin"], // Choose subsets if needed
   display: "swap",
 });
 
@@ -33,9 +34,27 @@ export default function RootLayout({
       <body
         className={`${sourceSansPro.className} ${lato.className} antialiased`}
       >
-
         <Providers>{children}</Providers>
+        {/* <Script
+          strategy="afterInteractive"
+          src="//diagramjawlineunhappy.com/t/9/fret/meow4/2049457/31016ea6.js"
+          data-cfasync="false"
+        /> */}
 
+        <Script
+          data-cfasync="false"
+          type="text/javascript"
+          src="//chaseherbalpasty.com/lv/esnk/2049681/code.js"
+          async
+          className="__clb-2049681"
+        ></Script>
+        <Script
+          data-cfasync="false"
+          type="text/javascript"
+          src="//chaseherbalpasty.com/lv/esnk/2049612/code.js"
+          async
+          className="__clb-2049612"
+        ></Script>
       </body>
     </html>
   );
