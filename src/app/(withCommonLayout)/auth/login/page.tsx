@@ -71,6 +71,7 @@ export default function Login() {
           return;
         }
       }
+      console.log({response})
 
       // Handle other errors
       if (response.error) {
