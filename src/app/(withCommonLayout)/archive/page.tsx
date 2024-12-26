@@ -2,8 +2,9 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import ShibImage from "/public/shib-topic.png";
-import LuncImage from "/public/lunc-topic.png";
+// import ShibImage from "/public/shib-topic.png";
+import ShibImage from "/src/assets/shib-topic.png";
+import LuncImage from "/src/assets/lunc-topic.png";
 import { useGetAllArchiveQuery } from "@/redux/features/api/archiveApi";
 import Loading from "@/components/Shared/Loading";
 import Link from "next/link";
