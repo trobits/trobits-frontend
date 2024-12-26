@@ -256,15 +256,15 @@ const ShibaBurnsPage: React.FC = () => {
         direction="column"
       >
         <Grid item xs={12}>
-        <Typography
-          className="text-4xl font-bold text-center mb-2 text-cyan-600"
+          <Typography
+            className="text-4xl font-bold text-center mb-2 text-cyan-600"
             variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
           >
             Shiba Burn Data
           </Typography>
           <Typography
-          className="text-xl font-bold text-center mb-2 text-cyan-600"
+            className="text-xl font-bold text-center mb-2 text-cyan-600"
             // variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
           >
@@ -328,49 +328,67 @@ const ShibaBurnsPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {sortedRecords.map((record, index) => (
-                  <TableRow
-                    key={record.id}
-                    sx={{
-                      backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#eaeaea",
-                      cursor: "pointer",
-                      "&:hover": { backgroundColor: "#d1d1d1" },
-                    }}
-                  >
+                {allShibaBurnsData?.data?.length > 0 ? (
+                  sortedRecords.map((record, index) => (
+                    <TableRow
+                      key={record.id}
+                      sx={{
+                        backgroundColor:
+                          index % 2 === 0 ? "#f7f7f7" : "#eaeaea",
+                        cursor: "pointer",
+                        "&:hover": { backgroundColor: "#d1d1d1" },
+                      }}
+                    >
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "black",
+                          fontWeight: "600",
+                          textAlign: "center",
+                        }}
+                      >
+                        {format(parseISO(record.date), "MMMM dd, yyyy")}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "black",
+                          fontWeight: "600",
+                          textAlign: "center",
+                        }}
+                      >
+                        {record.burnCount.toLocaleString()}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "black",
+                          fontWeight: "600",
+                          textAlign: "center",
+                        }}
+                      >
+                        {/* {record?.transactionRef?.length > 20
+                          ? record?.transactionRef?.slice(0, 20) + "..."
+                          : record.transactionRef} */}
+                          {record.transactionRef}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
                     <TableCell
+                      colSpan={3}
                       style={{
+                        textAlign: "center",
                         fontSize: "16px",
                         color: "black",
                         fontWeight: "600",
-                        textAlign: "center",
                       }}
                     >
-                      {format(parseISO(record.date), "MMMM dd, yyyy")}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
-                        color: "black",
-                        fontWeight: "600",
-                        textAlign: "center",
-                      }}
-                    >
-                      {record.burnCount.toLocaleString()}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
-                        color: "black",
-                        fontWeight: "600",
-                        textAlign: "center",
-                      }}
-                    >
-                      {record?.transactionRef?.length > 20
-                        ? record?.transactionRef?.slice(0, 20) + "..."
-                        : record.transactionRef}
+                      No Data Found
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
