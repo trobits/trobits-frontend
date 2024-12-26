@@ -16,7 +16,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField
+  TextField,
 } from "@mui/material";
 import { format, parseISO } from "date-fns";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -72,18 +72,24 @@ const LuncBurnsPage: React.FC = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
-      <Grid container spacing={3} justifyContent="center" alignItems="center" direction="column">
+      <Grid
+        container
+        spacing={3}
+        justifyContent="center"
+        alignItems="center"
+        direction="column"
+      >
         <Grid item xs={12}>
-        <Typography
-          className="text-4xl font-bold text-center mb-2 text-cyan-600"
+          <Typography
+            className="text-4xl font-bold text-center mb-2 text-cyan-600"
             variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
           >
             Lunc Burn Data
           </Typography>
           <Typography
-          className="text-xl font-bold text-center mb-2 text-cyan-600"
-            // variant="h5"
+            className="text-4xl font-bold text-center mb-2 text-cyan-600"
+            variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
           >
             Pick your Month to see Burn Data on This Month
@@ -104,57 +110,110 @@ const LuncBurnsPage: React.FC = () => {
         <Grid item xs={12}>
           <TableContainer
             component={Paper}
-            sx={{ backgroundColor: "#f8f9fa", borderRadius: "8px", width: "100vw", overflowX: "auto" }}
+            sx={{
+              backgroundColor: "#f8f9fa",
+              borderRadius: "8px",
+              width: "100vw",
+              overflowX: "auto",
+            }}
           >
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell
-                    style={{ fontWeight: "bold", fontSize: "18px", color: "black", textAlign: "center" }}
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                      color: "black",
+                      textAlign: "center",
+                    }}
                   >
                     Date
                   </TableCell>
                   <TableCell
-                    style={{ fontWeight: "bold", fontSize: "18px", color: "black", textAlign: "center" }}
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                      color: "black",
+                      textAlign: "center",
+                    }}
                   >
                     Burn Count
                   </TableCell>
                   <TableCell
-                    style={{ fontWeight: "bold", fontSize: "18px", color: "black", textAlign: "center" }}
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                      color: "black",
+                      textAlign: "center",
+                    }}
                   >
                     Transaction Ref
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {sortedRecords.map((record, index) => (
-                  <TableRow
-                    key={record.id}
-                    sx={{
-                      backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#eaeaea",
-                      cursor: "pointer",
-                      '&:hover': { backgroundColor: "#d1d1d1" },
-                    }}
-                  >
-                    <TableCell
-                      style={{ fontSize: "16px", color: "black", fontWeight: "600", textAlign: "center" }}
+                {allLuncBurnsData?.data?.length > 0 ? (
+                  sortedRecords.map((record, index) => (
+                    <TableRow
+                      key={record.id}
+                      sx={{
+                        backgroundColor:
+                          index % 2 === 0 ? "#f7f7f7" : "#eaeaea",
+                        cursor: "pointer",
+                        "&:hover": { backgroundColor: "#d1d1d1" },
+                      }}
                     >
-                      {format(parseISO(record.date), "MMMM dd, yyyy")}
-                    </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "black",
+                          fontWeight: "600",
+                          textAlign: "center",
+                        }}
+                      >
+                        {format(parseISO(record.date), "MMMM dd, yyyy")}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "black",
+                          fontWeight: "600",
+                          textAlign: "center",
+                        }}
+                      >
+                        {record.burnCount.toLocaleString()}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "black",
+                          fontWeight: "600",
+                          textAlign: "center",
+                        }}
+                      >
+                        {/* {record?.transactionRef?.length > 20
+                          ? record?.transactionRef?.slice(0, 20) + "..."
+                          : record.transactionRef} */}
+                          {record.transactionRef}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
                     <TableCell
-                      style={{ fontSize: "16px", color: "black", fontWeight: "600", textAlign: "center" }}
+                      colSpan={3}
+                      style={{
+                        textAlign: "center",
+                        fontSize: "16px",
+                        color: "black",
+                        fontWeight: "600",
+                      }}
                     >
-                      {record.burnCount.toLocaleString()}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontSize: "16px", color: "black", fontWeight: "600", textAlign: "center" }}
-                    >
-                      {record?.transactionRef?.length > 20
-                        ? record?.transactionRef?.slice(0, 20) + "..."
-                        : record.transactionRef}
+                      No Data Found
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -181,7 +240,11 @@ const MonthPicker = ({ selectedMonth, onChange }: any) => {
             fullWidth: false,
             margin: "normal",
             size: "medium",
-            sx: { backgroundColor: "#f7f7f7", borderRadius: "8px", fontSize: "20px" },
+            sx: {
+              backgroundColor: "#f7f7f7",
+              borderRadius: "8px",
+              fontSize: "20px",
+            },
           },
         }}
       />
