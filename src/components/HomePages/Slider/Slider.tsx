@@ -62,23 +62,23 @@ const Slider = () => {
 
   return (
     <div className="flex flex-col justify-center items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
-      <h2 className="text-3xl text- font-bold mb-6 text-yellow-400">Burning Will Start After&nbsp;:</h2>
+      <h2 className="text-3xl text- font-bold mb-6 text-yellow-500">Burning Will Start After&nbsp;:</h2>
       <div className="grid grid-cols-4 gap-6 text-center">
         <div className="flex flex-col items-center">
-          <span className="text-6xl font-bold text-pink-500">{timeLeft.days}    &nbsp;&nbsp;:</span>
-          <span className="text-xl text-white">Days</span>
+          <span className="text-6xl font-bold text-yellow-500">{timeLeft.days}:</span>
+          <span className="text-xl text-cyan-300">Days</span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="text-6xl font-bold text-green-400">{timeLeft.hours}   &nbsp;&nbsp;:</span>
-          <span className="text-xl text-white">Hours</span>
+          <span className="text-6xl font-bold text-yellow-500">{timeLeft.hours}:</span>
+          <span className="text-xl text-cyan-300">Hours</span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="text-6xl font-bold text-cyan-500">{timeLeft.minutes}   &nbsp;&nbsp;:</span>
-          <span className="text-xl text-white">Minutes</span>
+          <span className="text-6xl font-bold text-yellow-500">{timeLeft.minutes}:</span>
+          <span className="text-xl text-cyan-300">Minutes</span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="text-6xl font-bold text-yellow-400">{timeLeft.seconds}</span>
-          <span className="text-xl text-white">Seconds</span>
+          <span className="text-6xl font-bold text-yellow-500">{timeLeft.seconds}</span>
+          <span className="text-xl text-cyan-300">Seconds</span>
         </div>
       </div>
     </div>
