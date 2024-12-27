@@ -1,77 +1,19 @@
-// "use client"
-// import TransparentCard from "./CryptoCard/CryptoCard";
-// import shibaInu from "../../assets/icons/shiba-inu.png";
-// import Lunc from "../../assets/icons/lunc.png";
-// import { useGetLuncInformationQuery, useGetShibaInformationQuery } from "@/redux/features/api/currencyApi";
-// import Loading from "../Shared/Loading";
-
-
-// export default function CryptoData() {
-//   const { data: shibaInformation, isLoading: shibaDataLoading } = useGetShibaInformationQuery("");
-//   const { data: luncInformation, isLoading: luncDataLoading } = useGetLuncInformationQuery("");
-
-//   if (shibaDataLoading || luncDataLoading) {
-//     return <Loading />
-//   }
-
-//   const shibaData = shibaInformation?.data;
-//   const luncData = luncInformation?.data;
-
-//   // Data for the cards
-//   const cardData = [
-//     {
-//       coin: "SHIB",
-//       shibPrice: "0.000016939",
-//       luncPrice: "0",
-//       interval: "1 Month",
-//       icon: shibaInu,
-//       visits: shibaData?.visits,
-//       revenue: shibaData?.revenue,
-//       burns: shibaData?.burns,
-//     },
-//     {
-//       coin: "LUNC",
-//       icon: Lunc,
-//       shibPrice: "0",
-//       luncPrice: "0.000090378",
-//       interval: "7 Days",
-//       visits: luncData?.visits,
-//       revenue: luncData?.revenue,
-//       burns: luncData?.burns,
-//     },
-//   ];
-
-//   return (
-//     <div className="flex justify-center flex-wrap items-center mt-20 gap-24">
-//       {cardData.map((card, index) => (
-//         <div
-//           key={index}
-//           className={`animated-card ${index === 0 ? "slide-left" : "slide-right"
-//             }`}
-//         >
-//           <TransparentCard cryptoData={card} index={index} />
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-
-
-
-
 
 "use client";
 import TransparentCard from "./CryptoCard/CryptoCard";
 import shibaInu from "../../assets/icons/shiba-inu.png";
 import Lunc from "../../assets/icons/lunc.png";
-import { useGetLuncInformationQuery, useGetShibaInformationQuery } from "@/redux/features/api/currencyApi";
+import {
+  useGetLuncInformationQuery,
+  useGetShibaInformationQuery,
+} from "@/redux/features/api/currencyApi";
 import Loading from "../Shared/Loading";
 
-
 export default function CryptoData() {
-  const { data: shibaInformation, isLoading: shibaDataLoading } = useGetShibaInformationQuery("");
-  const { data: luncInformation, isLoading: luncDataLoading } = useGetLuncInformationQuery("");
+  const { data: shibaInformation, isLoading: shibaDataLoading } =
+    useGetShibaInformationQuery("");
+  const { data: luncInformation, isLoading: luncDataLoading } =
+    useGetLuncInformationQuery("");
 
   if (shibaDataLoading || luncDataLoading) {
     return <Loading />;
@@ -121,7 +63,9 @@ export default function CryptoData() {
       {cardData.map((card, index) => (
         <div
           key={index}
-          className={`animated-card ${index === 0 ? "slide-left" : "slide-right"}`}
+          className={`animated-card ${
+            index === 0 ? "slide-left" : "slide-right"
+          }`}
         >
           <TransparentCard cryptoData={card} index={index} />
         </div>
