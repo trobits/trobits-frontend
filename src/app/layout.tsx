@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Source_Sans_3, Lato } from "next/font/google"; // Import both fonts
 import "./globals.css";
 import Providers from "@/provider/Provider";
-import Script from "next/script";
+// import Script from "next/script";
 
 // Source Sans 3 Font
 const sourceSansPro = Source_Sans_3({
@@ -41,7 +41,7 @@ export default function RootLayout({
           data-cfasync="false"
         /> */}
 
-        <Script
+        {/* <Script
           data-cfasync="false"
           type="text/javascript"
           src="//chaseherbalpasty.com/lv/esnk/2049681/code.js"
@@ -54,7 +54,7 @@ export default function RootLayout({
           src="//chaseherbalpasty.com/lv/esnk/2049612/code.js"
           async
           className="__clb-2049612"
-        ></Script>
+        ></Script> */}
       </body>
     </html>
   );
