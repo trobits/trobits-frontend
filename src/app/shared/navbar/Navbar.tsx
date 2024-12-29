@@ -514,7 +514,7 @@ export default function Navbar() {
                           closeAllDropdowns();
                         }}
                       >
-                        Shiba
+                        SHIB
                       </Link>
                       <Link
                         href="/archive/lunc"
@@ -524,7 +524,7 @@ export default function Navbar() {
                           closeAllDropdowns();
                         }}
                       >
-                        Lunc
+                        LUNC
                       </Link>
                     </div>
                   )}

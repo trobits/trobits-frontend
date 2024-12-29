@@ -85,7 +85,7 @@ const LuncBurnsPage: React.FC = () => {
             variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
           >
-            Lunc Burn Data
+            LUNC Burn Data
           </Typography>
           <Typography
             className="text-4xl font-bold text-center mb-2 text-cyan-600"
