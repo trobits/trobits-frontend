@@ -350,14 +350,14 @@ export default function Navbar() {
                           className="block cursor-pointer px-4 py-2 text-sm"
                           onClick={closeAllDropdowns}
                         >
-                          Shiba
+                          SHIB
                         </Link>
                         <Link
                           href="/archive/lunc"
                           className="block cursor-pointer px-4 py-2 text-sm"
                           onClick={closeAllDropdowns}
                         >
-                          Lunc
+                          LUNC
                         </Link>
                       </div>
                     )}
