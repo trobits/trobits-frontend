@@ -1,7 +1,6 @@
-
-
 import React, { useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 
 interface CryptoData {
   coin: string;
@@ -22,7 +21,10 @@ interface TransparentCardProps {
   index: number;
 }
 
-const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) => {
+const TransparentCard: React.FC<TransparentCardProps> = ({
+  cryptoData,
+  index,
+}) => {
   const {
     coin,
     icon,
@@ -46,7 +48,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
       // Convert value to number to remove leading zeros
       return Number(value).toString();
     };
-  
+
     switch (intervals[selectedInterval]) {
       case "7 Days":
         return {
@@ -68,7 +70,6 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
         };
     }
   };
-  
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -84,10 +85,12 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
 
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
     script.async = true;
     script.innerHTML = JSON.stringify({
-      symbol: coin.toUpperCase() === "SHIB" ? "CRYPTO:SHIBUSD" : "CRYPTO:LUNCUSD",
+      symbol:
+        coin.toUpperCase() === "SHIB" ? "CRYPTO:SHIBUSD" : "CRYPTO:LUNCUSD",
       width: 350,
       isTransparent: true,
       colorTheme: "dark",
@@ -113,7 +116,10 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
     <div className="border border-cyan-400 rounded-xl bg-black p-3 md:p-8 max-w-[290px] md:max-w-[450px] min-h-[450px] text-white shadow-lg backdrop-blur-md relative overflow-hidden">
       {/* TradingView Widget */}
       <div className="tradingview-widget-container mb-4 text-sm">
-        <div id={`tradingview-widget-${index}`} className="tradingview-widget-container__widget"></div>
+        <div
+          id={`tradingview-widget-${index}`}
+          className="tradingview-widget-container__widget"
+        ></div>
       </div>
 
       {/* Sliding Content */}
@@ -124,7 +130,13 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
           }`}
         >
           <div className="flex gap-4 items-center">
-            <Image src={icon} alt={`${coin} logo`} width={60} height={60} className="rounded-full" />
+            <Image
+              src={icon}
+              alt={`${coin} logo`}
+              width={60}
+              height={60}
+              className="rounded-full"
+            />
             <span className="ml-auto px-3 py-2 text rounded-3xl border border-cyan-400 bg-black">
               Interval - {intervals[selectedInterval]}
             </span>
@@ -160,11 +172,18 @@ const TransparentCard: React.FC<TransparentCardProps> = ({ cryptoData, index }) 
           ></button>
         ))}
       </div>
+      <div className=" flex justify-center mt-4">
+        <Link
+          href={`/archive/${cryptoData.coin === "SHIB" ? "shiba" : "lunc"}`}
+          className="mt-4 font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+        >
+          {cryptoData.coin === "SHIB" ? "SHIB Burn" : "LUNC Burn"}
+        </Link>
+      </div>
     </div>
   );
 };
 
 export default TransparentCard;
-
 
 // export default TransparentCard;

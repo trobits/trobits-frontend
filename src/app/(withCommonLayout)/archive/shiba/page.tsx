@@ -261,7 +261,7 @@ const ShibaBurnsPage: React.FC = () => {
             variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
           >
-            Shiba Burn Data
+            SHIB Burn Data
           </Typography>
           <Typography
             className="text-xl font-bold text-center mb-2 text-cyan-600"

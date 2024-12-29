@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Source_Sans_3, Lato } from "next/font/google"; // Import both fonts
 import "./globals.css";
 import Providers from "@/provider/Provider";
+import Script from "next/script";
 // import Script from "next/script";
 
 // Source Sans 3 Font
@@ -34,7 +35,35 @@ export default function RootLayout({
       <body
         className={`${sourceSansPro.className} ${lato.className} antialiased`}
       >
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-101CZRBSL4"
+        ></Script>
+
+        <Script id="google-analytics">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-101CZRBSL4');
+          `}
+        </Script>
+
+        {/* <Script id=“google-analytics”>
+                              {
+                                    window.dataLayer = window.dataLayer || [];
+                                    function gtag(){dataLayer.push(arguments);}
+                                    gtag('js', new Date());
+
+                                    gtag('config', 'G-101CZRBSL4');
+
+                              }
+                        </Script> */}
+
+        
         <Providers>{children}</Providers>
+
         {/* <Script
           strategy="afterInteractive"
           src="//diagramjawlineunhappy.com/t/9/fret/meow4/2049457/31016ea6.js"
