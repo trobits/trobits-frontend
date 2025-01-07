@@ -37,7 +37,7 @@ function OtherVideoModal({ isOpen, onClose }: TVideoModalProps) {
       />
 
       {/* Modal Content */}
-      <div className="relative rounded-lg shadow-lg w-full max-w-3xl z-50 p-40">
+      <div className="relative rounded-lg shadow-lg w-full max-w-3xl z-50 p-20 lg:p-40 md:p-40">
         {/* Close Button */}
 
         {/* Video Container */}
