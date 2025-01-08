@@ -124,14 +124,14 @@ export default function MyProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between">
+                        {/* <div className="flex items-center justify-between">
                             <div>
                                 <h1 className="text-2xl font-bold">
                                     {user?.firstName + " " + user?.lastName}
                                 </h1>
                                 <p className="text-muted-foreground">{user?.email}</p>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="flex gap-4 text-sm">
                             <span>
