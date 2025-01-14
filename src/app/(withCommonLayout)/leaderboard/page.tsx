@@ -29,6 +29,10 @@ const LeaderBoard = () => {
     if (widgetContainer) {
       widgetContainer?.appendChild(script);
     }
+     // Cleanup function to restore the original overflow style
+  return () => {
+    document.body.style.overflow = "auto";
+  };
   }, []);
 
   return (
@@ -45,52 +49,4 @@ const LeaderBoard = () => {
 
 export default LeaderBoard;
 
-
-
-
-// "use client";
-// import React, { useEffect } from "react";
-
-// const LeaderBoard = () => {
-
-//   useEffect(() => {
-//     // Disable scrolling on the body
-//     document.body.style.overflow = "hidden";
-
-//     // Load the CryptoHopper widget script
-//     const script = document.createElement("script");
-//     script.type = "text/javascript";
-//     script.src = "https://www.cryptohopper.com/widgets/js/script";
-//     script.async = true;
-
-//     document.body.appendChild(script);
-
-//     return () => {
-//       // Re-enable scrolling on the body and cleanup script
-//       document.body.style.overflow = "auto";
-//       document.body.removeChild(script);
-//     };
-//   }, []);
-
-//   return (
-//     <div className="flex justify-center min-h-screen bg-[#00000000] fixed mt-5 left-0 w-full h-full">
-//       <div className="w-full max-w-[95rem] h-[85vh] p-5 bg-[#00000081] rounded-lg shadow-2xl">
-//         <div className="cryptohopper-web-widget-container h-full">
-//           <div
-//             className="cryptohopper-web-widget w-full h-full rounded-lg overflow-auto"
-//             data-id="1"
-//             data-price_format="2"
-//             data-table_title="Crypto Market"
-//             data-table_columns="rank,name,price_usd,market_cap_usd,available_supply,percent_change_24h"
-//             data-table_style="dark"
-//             data-realtime="on"
-//             data-table_length="50"
-//           ></div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LeaderBoard;
 
