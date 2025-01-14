@@ -1,7 +1,7 @@
 import { Flame, TrendingUp, Wallet } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import imagesCoin from "../../../assets/giveCoinImage.png";
+import imagesCoin from "../../../assets/how-trobits-work.png";
 import Footer from "@/app/shared/Footer/Footer";
 function HowItWorks() {
   const features = [
@@ -26,18 +26,18 @@ function HowItWorks() {
   ];
 
   return (
-    <div className=" pt-16">
+    <div className=" pt-8">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-2">
           <h2 className="text-cyan-400 mb-2">Our Features</h2>
-          <h1 className="text-4xl font-bold text-white mb-16">How It Works</h1>
-          <div className="w-80 h-32 mx-auto mb-16">
+          <h1 className="text-4xl font-bold text-white mb-2">How It Works</h1>
+          <div className="w-[35rem] h-[35rem] mx-auto mb-8 rounded">
             <Image
               src={imagesCoin}
-              height={200}
-              width={200}
+              height={600}
+              width={600}
               alt="Crypto mascot"
-              className="w-80 h-80 object-contain"
+              className="w-[60rem] h-[60rem] object-contain rounded"
             />
           </div>
         </div>
