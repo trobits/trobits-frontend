@@ -33,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <meta name="coinzilla" content="6da20f03eebe33b3ff64c22cef3eb7a3" />
-      </Head>
+
       <Script id="custom-script" strategy="lazyOnload">
         {`
             (function(ukn){
