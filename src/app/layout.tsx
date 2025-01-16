@@ -3,6 +3,7 @@ import { Source_Sans_3, Lato } from "next/font/google"; // Import both fonts
 import "./globals.css";
 import Providers from "@/provider/Provider";
 import Script from "next/script";
+import Head from "next/head";
 // import Script from "next/script";
 
 // Source Sans 3 Font
@@ -32,6 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <meta name="coinzilla" content="6da20f03eebe33b3ff64c22cef3eb7a3" />
+      </Head>
       <Script id="custom-script" strategy="lazyOnload">
         {`
             (function(ukn){
