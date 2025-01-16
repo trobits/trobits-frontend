@@ -3,7 +3,6 @@ import { Source_Sans_3, Lato } from "next/font/google"; // Import both fonts
 import "./globals.css";
 import Providers from "@/provider/Provider";
 import Script from "next/script";
-import Head from "next/head";
 // import Script from "next/script";
 
 // Source Sans 3 Font
