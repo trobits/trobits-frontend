@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-
 "use client";
 import NewsCard from "@/components/NewsPart/NewsCard";
 import Image from "next/image";
@@ -27,14 +26,14 @@ export interface Article {
 }
 
 const ArticlesPage = () => {
-  const [ currentPage, setCurrentPage ] = useState(1); 
+  const [currentPage, setCurrentPage] = useState(1);
   const limit = 12;
 
-
-  const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery({
-    page: currentPage,
-    limit: limit,
-  });
+  const { data: allBlogsData, isLoading: allBlogsDataLoading } =
+    useGetAllBlogsQuery({
+      page: currentPage,
+      limit: limit,
+    });
 
   // Handle loading state
   if (allBlogsDataLoading) {
@@ -44,13 +43,11 @@ const ArticlesPage = () => {
   const allBlogs: Article[] = allBlogsData?.data || [];
   const totalPages = allBlogsData?.meta?.totalPages || 0;
 
-
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
-
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -58,14 +55,14 @@ const ArticlesPage = () => {
     }
   };
 
-
-
   return (
     <div>
       {/* Header Section */}
       <div className="flex items-center justify-between py-5 px-20 bg-gradient-to-r from-[#574386] to-[#0a1c79] m-10 bg-transparent rounded-lg">
         <div className="flex items-center">
-          <h1 className="text-2xl text-[#33d9b2] font-semibold">Trobits Article</h1>
+          <h1 className="text-2xl text-[#33d9b2] font-semibold">
+            Trobits Article
+          </h1>
         </div>
         <div className="flex items-center justify-center">
           <Image
@@ -90,7 +87,9 @@ const ArticlesPage = () => {
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          className={`px-4 disabled:cursor-not-allowed py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-400' : 'bg-cyan-600 text-white'}`}
+          className={`px-4 disabled:cursor-not-allowed py-2 rounded-lg ${
+            currentPage === 1 ? "bg-gray-400" : "bg-cyan-600 text-white"
+          }`}
         >
           Previous
         </button>
@@ -100,7 +99,11 @@ const ArticlesPage = () => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 disabled:cursor-not-allowed rounded-lg ${currentPage === totalPages ? 'bg-gray-400' : 'bg-cyan-600 text-white'}`}
+          className={`px-4 py-2 disabled:cursor-not-allowed rounded-lg ${
+            currentPage === totalPages
+              ? "bg-gray-400"
+              : "bg-cyan-600 text-white"
+          }`}
         >
           Next
         </button>
@@ -112,4 +115,3 @@ const ArticlesPage = () => {
 };
 
 export default ArticlesPage;
-
