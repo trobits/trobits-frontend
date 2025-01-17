@@ -19,7 +19,7 @@ const Profile = () => {
       <Slider />
       <NewsCompo />
       <div style={{ width: "100%", height: "500px", overflow: "hidden" }}>
-        <iframe
+        {/* <iframe
           data-aa="2376212"
           src="//ad.a-ads.com/2376212?size=728x90"
           style={{
@@ -31,10 +31,12 @@ const Profile = () => {
             backgroundColor: "transparent",
           }}
           title="Ad 728x90"
-        ></iframe>
+        >
+
+        </iframe> */}
 
         {/* Second Ad */}
-        <iframe
+        {/* <iframe
           data-aa="2376213"
           src="//ad.a-ads.com/2376213?size=300x250"
           style={{
@@ -46,7 +48,9 @@ const Profile = () => {
             backgroundColor: "transparent",
           }}
           title="Ad 300x250"
-        ></iframe>
+        >
+
+        </iframe> */}
       </div>
       <Footer />
     </div>

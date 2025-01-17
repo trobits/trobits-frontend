@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
 
-      <Script id="custom-script" strategy="lazyOnload">
+      {/* <Script id="custom-script" strategy="lazyOnload">
         {`
             (function(ukn){
               var d = document,
@@ -46,7 +46,8 @@ export default function RootLayout({
               l.parentNode.insertBefore(s, l);
             })({});
           `}
-      </Script>
+      </Script> */}
+
       <body
         className={`${sourceSansPro.className} ${lato.className} antialiased`}
       >
