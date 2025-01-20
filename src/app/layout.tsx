@@ -3,6 +3,7 @@ import { Source_Sans_3, Lato } from "next/font/google"; // Import both fonts
 import "./globals.css";
 import Providers from "@/provider/Provider";
 import Script from "next/script";
+import Head from "next/head";
 // import Script from "next/script";
 
 // Source Sans 3 Font
@@ -32,7 +33,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-
       {/* <Script id="custom-script" strategy="lazyOnload">
         {`
             (function(ukn){
@@ -47,6 +47,13 @@ export default function RootLayout({
             })({});
           `}
       </Script> */}
+      <Head>
+        <script
+          type="text/javascript"
+          src="https://app.web3ads.net/main.js"
+          async
+        ></script>
+      </Head>
 
       <body
         className={`${sourceSansPro.className} ${lato.className} antialiased`}
@@ -65,6 +72,18 @@ export default function RootLayout({
             gtag('config', 'G-101CZRBSL4');
           `}
         </Script>
+
+        <iframe
+          src="//ads.coinserom.com/publisher?adsunit=34373033&size=728x90"
+          style={{
+            width: "728px",
+            height: "90px",
+            border: "0px",
+            padding: "0",
+            backgroundColor: "transparent",
+            overflow: "auto",
+          }}
+        ></iframe>
 
         {/* <Script id=“google-analytics”>
                               {
