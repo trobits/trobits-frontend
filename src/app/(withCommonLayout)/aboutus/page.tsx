@@ -127,8 +127,8 @@ export default function AboutUs() {
                   bio: "With a background in Information Technology, Calvin brings over 20 years of experience to Trobits. An investor in Shiba Inu and Cardano, he is passionate about crypto's future and dedicated to providing a secure, engaging platform."
                 },
                 {
-                 // name: "Arrey",
-                  //bio: "The growth of the cryptocurrency market is evident. It is never too late to take action. Arrey believes in the use of digital media to change the narrative around cryptocurrency and power the value of coins that have stood the test of time. Arrey is strongly behind building strong online communities of crypto enthusiasts who will work together to achieve a common goal."
+                 name: "Arrey",
+                 bio: "The growth of the cryptocurrency market is evident. It is never too late to take action. Arrey believes in the use of digital media to change the narrative around cryptocurrency and power the value of coins that have stood the test of time. Arrey is strongly behind building strong online communities of crypto enthusiasts who will work together to achieve a common goal."
                 },
                 {
                   name: "Bernard",
