@@ -18,22 +18,8 @@ const Profile = () => {
 
       <Slider />
       <NewsCompo />
-      <iframe
-        src="//ads.coinserom.com/publisher?adsunit=34373235&size=300x250"
-        style={{
-          width: "300px",
-          height: "250px",
-          border: "0px",
-          padding: "0",
-          backgroundColor: "transparent",
-          overflow: "auto",
-        }}
-      ></iframe>
-
-      <iframe
-        <!-- Bidvertiser2097768 -->
-      ></iframe>
       
+
       <Footer />
     </div>
   );
