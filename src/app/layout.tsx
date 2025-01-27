@@ -73,7 +73,7 @@ export default function RootLayout({
           `}
         </Script>
 
-        <iframe
+      <iframe
           src="//ads.coinserom.com/publisher?adsunit=34373033&size=728x90"
           style={{
             width: "728px",

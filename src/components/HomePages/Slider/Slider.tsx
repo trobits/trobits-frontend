@@ -55,7 +55,7 @@ const Slider = () => {
   if (!timeLeft) {
     return (
       <div className="flex justify-center items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
-        <p className="text-4xl text-center text-yellow-400 font-bold"><!-- Bidvertiser2097768 --></p>
+        <p className="text-4xl text-center text-yellow-400 font-bold">{/* Bidvertiser2097768 */}</p>
       </div>
     );
   }
