@@ -64,17 +64,7 @@ export default function RootLayout({
           `}
 </Script>
  
-        <iframe
-          src="//ads.coinserom.com/publisher?adsunit=34373033&size=728x90"
-          style={{
-            width: "728px",
-            height: "90px",
-            border: "0px",
-            padding: "0",
-            backgroundColor: "transparent",
-            overflow: "auto",
-          }}
-></iframe>
+      
  
         <Providers>{children}</Providers>
 </body>
