@@ -39,11 +39,37 @@ export default function RootLayout({
 ></script>
  
         {/* Newly added script */}
-<script
-          dangerouslySetInnerHTML={{
-            __html: `(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',8865487,document.createElement('script'))`,
-          }}
-></script>
+export default function AdBanner() {
+  return (
+    <>
+      {/* Ad container */}
+      <ins
+        className="67a60c079c91f9bf7c3bf03d"
+        style={{ display: 'inline-block', width: '336px', height: '280px' }}
+      ></ins>
+
+      {/* Injecting external script */}
+      <Script
+        id="ad-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(e,n,c,t,o,r,d){
+              !function e(n,c,t,o,r,m,d,s,a){
+                s=c.getElementsByTagName(t)[0],
+                (a=c.createElement(t)).async=!0,
+                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+                s.parentNode.insertBefore(a,s)
+              }
+              (window,document,"script","67a60c079c91f9bf7c3bf03d",["cdn.bmcdn6.com"], 0, new Date().getTime())
+            }();
+          `,
+        }}
+      />
+    </>
+  );
+}
 </Head>
  
       <body
@@ -63,8 +89,6 @@ export default function RootLayout({
             gtag('config', 'G-101CZRBSL4');
           `}
 </Script>
- 
-      
  
         <Providers>{children}</Providers>
 </body>
