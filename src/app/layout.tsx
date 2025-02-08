@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
-import { Source_Sans_3, Lato } from "next/font/google"; // Import both fonts
+import { Source_Sans_3, Lato } from "next/font/google";
 import "./globals.css";
 import Providers from "@/provider/Provider";
 import Script from "next/script";
-import Head from "next/head";
  
 // Source Sans 3 Font
 const sourceSansPro = Source_Sans_3({
-  weight: ["300", "400", "600", "700"], // Choose the weights you need
-  subsets: ["latin"], // Choose subsets if needed
+  weight: ["300", "400", "600", "700"],
+  subsets: ["latin"],
   display: "swap",
 });
  
 // Lato Font
 const lato = Lato({
-  weight: ["300", "400", "700"], // Removed "600" as it is not supported
-  subsets: ["latin"], // Choose subsets if needed
+  weight: ["300", "400", "700"],
+  subsets: ["latin"],
   display: "swap",
 });
  
@@ -26,29 +25,49 @@ export const metadata: Metadata = {
  
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-<html lang="en">
-<Head>
+<>
+<head>
 <script
           type="text/javascript"
           src="https://app.web3ads.net/main.js"
           async
 ></script>
+</head>
  
-        {/* Newly added script */}
-export default function AdBanner() {
+      <body className={`${sourceSansPro.className} ${lato.className} antialiased`}>
+        {/* Google Analytics */}
+<Script async src="https://www.googletagmanager.com/gtag/js?id=G-101CZRBSL4"></Script>
+<Script id="google-analytics">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-101CZRBSL4');
+          `}
+</Script>
+ 
+        {/* Ad Banner */}
+<AdBanner />
+ 
+        <Providers>{children}</Providers>
+</body>
+</>
+  );
+}
+ 
+// ✅ Separate AdBanner Component
+function AdBanner() {
   return (
-    <>
-      {/* Ad container */}
-      <ins
+<>
+<ins
         className="67a60c079c91f9bf7c3bf03d"
-        style={{ display: 'inline-block', width: '336px', height: '280px' }}
-      ></ins>
-
-      {/* Injecting external script */}
+        style={{ display: "inline-block", width: "336px", height: "280px" }}
+></ins>
+ 
       <Script
         id="ad-script"
         strategy="afterInteractive"
@@ -67,31 +86,6 @@ export default function AdBanner() {
           `,
         }}
       />
-    </>
-  );
-}
-</Head>
- 
-      <body
-        className={`${sourceSansPro.className} ${lato.className} antialiased`}
->
-<Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-101CZRBSL4"
-></Script>
- 
-        <Script id="google-analytics">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
- 
-            gtag('config', 'G-101CZRBSL4');
-          `}
-</Script>
- 
-        <Providers>{children}</Providers>
-</body>
-</html>
+</>
   );
 }
