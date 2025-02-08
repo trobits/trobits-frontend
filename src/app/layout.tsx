@@ -65,7 +65,7 @@ function AdBanner() {
 <>
 <ins
         className="67a60c079c91f9bf7c3bf03d"
-        style={{ display: "inline-block", width: "336px", height: "280px" }}
+        style={{ display: "inline-block", width: "336px", height: "180px" }}
 ></ins>
  
       <Script
