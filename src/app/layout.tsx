@@ -31,6 +31,36 @@ function AdBanner() {
     <>
       {/* Ad container */}
       <ins
+         className="67a80a6f40c2d4901be49056"
+         style={{ display: 'inline-block', width: '120px', height: '600px' }}
+      ></ins>
+
+      {/* Script to load the ad */}
+      <Script
+        id="ad-banner-script-loader"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(e,n,c,t,o,r,d){
+              !function e(n,c,t,o,r,m,d,s,a){
+                s=c.getElementsByTagName(t)[0],
+                (a=c.createElement(t)).async=!0,
+                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+                s.parentNode.insertBefore(a,s)
+              }(window,document,"script","67a80a6f40c2d4901be49056",["cdn.bmcdn6.com"], 0, new Date().getTime())
+            }();
+          `,
+        }}
+      />
+    </>
+  );
+}
+function RightAdBanner() {
+  return (
+    <>
+      {/* Ad container */}
+      <ins
         className="67a80a6f40c2d4901be49056"
         style={{ display: "inline-block", width: "120px", height: "600px" }}
       ></ins>
@@ -90,7 +120,8 @@ export default function RootLayout({
         </Script>
 
         {/* Ad Banner */}
-        <AdBanner />
+        <RightAdBanner />
+        <RightAdBanner />
 
         {/* Providers and Children */}
         <Providers>{children}</Providers>
