@@ -64,12 +64,12 @@ function AdBanner() {
   return (
 <>
 <ins
-        className="67a60c079c91f9bf7c3bf03d"
-        style={{ display: "inline-block", width: "336px", height: "280px" }}
+        className="67a6c31640c2d4901be10b66"
+        style={{ display: 'inline-block', width: '970px', height: '90px' }}
 ></ins>
  
       <Script
-        id="ad-script"
+        id="ad-script-loader"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -80,8 +80,7 @@ function AdBanner() {
                 a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
                 a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
                 s.parentNode.insertBefore(a,s)
-              }
-              (window,document,"script","67a60c079c91f9bf7c3bf03d",["cdn.bmcdn6.com"], 0, new Date().getTime())
+              }(window,document,"script","67a6c31640c2d4901be10b66",["cdn.bmcdn6.com"], 0, new Date().getTime())
             }();
           `,
         }}
