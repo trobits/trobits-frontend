@@ -64,26 +64,26 @@ function AdBanner() {
   return (
 <>
 <ins
-        className="67a6c31640c2d4901be10b66"
-        style={{ display: 'inline-block', width: '970px', height: '90px' }}
+        className="67a800899c91f9bf7c42c785"
+        style={{ display: 'inline-block', width: '1px', height: '1px' }}
 ></ins>
  
       <Script
-        id="ad-script-loader"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67a6c31640c2d4901be10b66",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
+      id="ad-pixel-script-loader"
+      strategy="afterInteractive"
+      dangerouslySetInnerHTML={{
+        __html: `
+          !function(e,n,c,t,o,r,d){
+            !function e(n,c,t,o,r,m,d,s,a){
+              s=c.getElementsByTagName(t)[0],
+              (a=c.createElement(t)).async=!0,
+              a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+              a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+              s.parentNode.insertBefore(a,s)
+            }(window,document,"script","67a800899c91f9bf7c42c785",["cdn.bmcdn6.com"], 0, new Date().getTime())
+          }();
+        `,
+      }}
       />
 </>
   );
