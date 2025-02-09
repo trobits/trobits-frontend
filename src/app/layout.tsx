@@ -143,30 +143,6 @@ function AdBanner() {
           `,
         }}
       />
-
-      {/* ✅  Footer Ad Banner */}
-      <ins
-        className="67a8187c9c91f9bf7c42ecda"
-        style={{ display: "inline-block", width: "970px", height: "90px" }}
-      ></ins>
-
-      <Script
-        id="fourth-ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67a8187c9c91f9bf7c42ecda",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
     </>
   );
 }
