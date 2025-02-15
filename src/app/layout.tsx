@@ -67,7 +67,6 @@ export default function RootLayout({
     </html>
   );
 }
-
 // ✅ AdBanner Component (Includes All Ads)
 function AdBanner() {
   return (
@@ -114,3 +113,4 @@ function AdBanner() {
     </>
   );
 }
+

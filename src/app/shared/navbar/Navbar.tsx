@@ -347,6 +347,7 @@ export default function Navbar() {
         </div>
       )}
       <VideoModal isOpen={isModalOpen} onClose={handleCloseModal} />
+      
     </nav>
   );
 }
