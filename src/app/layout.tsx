@@ -104,12 +104,12 @@ function AdBanner() {
       {/* footer */}
       <div style={{ height: "90px", width: "100%", display: "block" }}></div>
       <ins
-        className="67b008e690c926b6d6b98939"
-        style={{
-          display: "block",
-          width: "100%",
-          height: "90px",
-          marginBottom: "20px", // Adds spacing below
+          className=""
+          style={{
+            display: "block",
+            width: "100%",
+            height: "90px", // Adjust height to create space
+            marginTop: "20px", // Adds spacing below
         }}
       ></ins>
       <Script
