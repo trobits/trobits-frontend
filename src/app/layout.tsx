@@ -71,21 +71,21 @@ export default function RootLayout({
 function AdBanner() {
   return (
     <>
-      {/* Top Ad banner  */}
-     {/* Another New Ad Banner */}
-     {/* Top Ad banner with space */}
-     <div style={{ height: "90px", width: "100%", display: "block" }}></div>
-      <ins
-        className="67b008e690c926b6d6b98939"
-        style={{
-          display: "block",
-          width: "100%",
-          height: "90px",
-          marginBottom: "20px", // Adds spacing below
-        }}
-      ></ins>
+      {/* Top Ad Banner (Above Header) */}
+      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <ins
+          className="67b008e690c926b6d6b98939"
+          style={{
+            display: "block",
+            width: "100%",
+            maxWidth: "1200px", // Adjust max-width if needed
+            height: "90px",
+            marginBottom: "20px",
+          }}
+        ></ins>
+      </div>
       <Script
-        id="top-ad-banner-script"
+        id="ad-banner-script"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -105,3 +105,4 @@ function AdBanner() {
   );
 }
 
+export default AdBanner;
