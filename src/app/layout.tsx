@@ -110,7 +110,7 @@ function AdBanner() {
           `,
         }}
       />
-      <ins className="67b00b6de904d5920e690b84" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
+      <ins className="67b008e690c926b6d6b98939" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
             <Script
               id="newly-added-ad-banner-script"
               strategy="afterInteractive"
