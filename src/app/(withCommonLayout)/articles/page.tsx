@@ -11,6 +11,7 @@ import Loading from "@/components/Shared/Loading";
 import { IComment } from "@/components/Post/PostCommentCard";
 import Footer from "@/app/shared/Footer/Footer";
 import { Pagination } from "@/components/ui/pagination";
+import Script from "next/script";
 
 export interface Article {
   id: string;
