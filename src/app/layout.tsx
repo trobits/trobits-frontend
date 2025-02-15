@@ -73,13 +73,10 @@ function AdBanner() {
   return (
     <>
       {/* Top Ad banner  */}
-      <ins
-        className="67a800899c91f9bf7c42c785"
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
-
+     {/* Another New Ad Banner */}
+     <ins className="67b008e690c926b6d6b98939" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
       <Script
-        id="ad-pixel-script-loader"
+        id="another-new-ad-banner-script"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -90,7 +87,7 @@ function AdBanner() {
                 a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
                 a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
                 s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67a800899c91f9bf7c42c785",["cdn.bmcdn6.com"], 0, new Date().getTime())
+              }(window,document,"script","67b008e690c926b6d6b98939",["cdn.bmcdn6.com"], 0, new Date().getTime())
             }();
           `,
         }}
