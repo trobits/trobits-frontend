@@ -81,7 +81,7 @@ function AdBanner() {
           display: "block",
           width: "100%",
           height: "90px",
-          marginBottom: "20px", // Adds spacing below
+          marginTop: "20px", // Adds spacing below
         }}
       ></ins>
       <Script
