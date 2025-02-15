@@ -102,9 +102,18 @@ function AdBanner() {
         }}
       />
       {/* footer */}
-      <ins className="67b00549e904d5920e68f979" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
+      <div style={{ height: "90px", width: "100%", display: "block" }}></div>
+      <ins
+        className="67b008e690c926b6d6b98939"
+        style={{
+          display: "block",
+          width: "100%",
+          height: "90px",
+          marginBottom: "20px", // Adds spacing below
+        }}
+      ></ins>
       <Script
-        id="new-ad-banner-script"
+        id="top-ad-banner-script"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -115,7 +124,7 @@ function AdBanner() {
                 a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
                 a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
                 s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00549e904d5920e68f979",["cdn.bmcdn6.com"], 0, new Date().getTime())
+              }(window,document,"script","67b008e690c926b6d6b98939",["cdn.bmcdn6.com"], 0, new Date().getTime())
             }();
           `,
         }}
