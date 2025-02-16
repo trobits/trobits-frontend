@@ -53,7 +53,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-[#00000085]">
+    <nav className="bg-[#00000085] mt-6">
       <div className="w-full px-4 lg:px-20">
         <div className="flex items-center justify-evenly h-24">
           <div className="flex-shrink-0 my-2">
