@@ -8,7 +8,7 @@ import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "@/components/Shared/Loading";
 import { IComment } from "@/components/Post/PostCommentCard";
 import Footer from "@/app/shared/Footer/Footer";
-import { Pagination } from "@/components/ui/pagination";
+//import { Pagination } from "@/components/ui/pagination";
 import Script from "next/script";
 
 export interface Article {
@@ -100,6 +100,7 @@ const ArticlesPage = () => {
             {/* Insert an Ad every 4 articles */}
             {index % 4 === 0 && (
               <AdBanner adClass="67b00b6de904d5920e690b84" />
+              <AdBanner adClass="67b3b9469a62fcbf1eeb65df" />
             )}
           </React.Fragment>
         ))}
