@@ -11,6 +11,7 @@ import Loading from "@/components/Shared/Loading";
 import { IComment } from "@/components/Post/PostCommentCard";
 import Footer from "@/app/shared/Footer/Footer";
 import { Pagination } from "@/components/ui/pagination";
+import Script from "next/script";
 
 export interface Article {
   id: string;
@@ -26,8 +27,37 @@ export interface Article {
 }
 
 
+function AdBanner() {
+  return (
+    <>
+      {/* Top Ad banner  */}
+      {/* Another New Ad Banner */}
+      <ins className="67b00b6de904d5920e690b84" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
+      <Script
+        id="newly-added-ad-banner-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(e,n,c,t,o,r,d){
+              !function e(n,c,t,o,r,m,d,s,a){
+                s=c.getElementsByTagName(t)[0],
+                (a=c.createElement(t)).async=!0,
+                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+                s.parentNode.insertBefore(a,s)
+              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
+            }();
+          `,
+        }}
+      />
+    </>
+  );
+}
+
+
+
 const ArticlesPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [ currentPage, setCurrentPage ] = useState(1);
   const limit = 12;
 
   const { data: allBlogsData, isLoading: allBlogsDataLoading } =
@@ -78,8 +108,36 @@ const ArticlesPage = () => {
 
       {/* Display Articles */}
       <div className="flex flex-wrap justify-center gap-4 px-1 md:px-24">
-        {allBlogs.map((article) => (
-          <NewsCard key={article.id} articleData={article} />
+        <AdBanner/>
+        {allBlogs.map((article, index) => (
+
+          // <>
+          //   <NewsCard key={article.id} articleData={article} />
+          //   <ins class="67b00b6de904d5920e690b84" style="display:inline-block;width:1px;height:1px;"></ins>
+          //   <script>!function(e,n,c,t,o,r,d){!function e(n, c, t, o, r, m, d, s, a) { s = c.getElementsByTagName(t)[ 0 ], (a = c.createElement(t)).async = !0, a.src = "https://" + r[ m ] + "/js/" + o + ".js?v=" + d, a.onerror = function () { a.remove(), (m += 1) >= r.length || e(n, c, t, o, r, m) }, s.parentNode.insertBefore(a, s) }(window, document, "script", "67b00b6de904d5920e690b84", [ "cdn.bmcdn6.com" ], 0, new Date().getTime())}();</script>
+          // </>
+
+
+          <div key={article.id}>
+            <NewsCard articleData={article} />
+            {/* Insert 4 ads every 4 NewsCards */}
+{/*             
+            {(index + 1) % 4 === 0 && (
+              <>
+                <AdBanner />
+                <AdBanner />
+                <AdBanner />
+                <AdBanner />
+              </>
+            )} */}
+
+            <AdBanner />
+            <AdBanner />
+            <AdBanner />
+            <AdBanner />
+
+          </div>
+
         ))}
       </div>
 
@@ -88,9 +146,8 @@ const ArticlesPage = () => {
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          className={`px-4 disabled:cursor-not-allowed py-2 rounded-lg ${
-            currentPage === 1 ? "bg-gray-400" : "bg-cyan-600 text-white"
-          }`}
+          className={`px-4 disabled:cursor-not-allowed py-2 rounded-lg ${currentPage === 1 ? "bg-gray-400" : "bg-cyan-600 text-white"
+            }`}
         >
           Previous
         </button>
@@ -100,11 +157,10 @@ const ArticlesPage = () => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 disabled:cursor-not-allowed rounded-lg ${
-            currentPage === totalPages
-              ? "bg-gray-400"
-              : "bg-cyan-600 text-white"
-          }`}
+          className={`px-4 py-2 disabled:cursor-not-allowed rounded-lg ${currentPage === totalPages
+            ? "bg-gray-400"
+            : "bg-cyan-600 text-white"
+            }`}
         >
           Next
         </button>
