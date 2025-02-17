@@ -111,10 +111,10 @@ const ArticlesPage = () => {
               <AdBanner adClass="67b3b9469a62fcbf1eeb65df" />
             )}
             {index % 4 === 4 && (
-              <AdBanner adClass="67b3b9469a62fcbf1eeb65df" />
+              <AdBanner adClass="67b3c7949a62fcbf1eeb83a6" />
             )}
             {index % 4 === 5 && (
-              <AdBanner adClass="67b3b9469a62fcbf1eeb65df" />
+              <AdBanner adClass="67b3c7d89a62fcbf1eeb842e" />
             )}
           </React.Fragment>
         ))}
