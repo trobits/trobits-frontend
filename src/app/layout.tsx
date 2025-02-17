@@ -76,15 +76,10 @@ function AdBanner() {
       {/* Top Ad banner  */}
      {/* Another New Ad Banner */}
      {/* Top Ad banner with space */}
-     <div style={{ height: "80px", width: "100%", display: "block" }}></div>
+      <div style={{ height: "80px", width: "100%", display: "block" }}></div>
       <ins
         className="67b008e690c926b6d6b98939"
-        style={{
-          display: "block",
-          width: "100%",
-          height: "80px",
-          marginBottom: "20px", // Adds spacing below
-        }}
+        style={{ display: "inline-block", width: "1px", height: "1px",marginBottom:"20px" }}
       ></ins>
       <Script
         id="top-ad-banner-script"
