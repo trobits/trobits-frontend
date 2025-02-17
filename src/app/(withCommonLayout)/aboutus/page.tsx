@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Footer from "@/app/shared/Footer/Footer"
+import Script from "next/script";
 // import { Grid } from "@/components/ui/grid"
 
 export default function AboutUs() {
@@ -127,8 +128,8 @@ export default function AboutUs() {
                   bio: "With a background in Information Technology, Calvin brings over 20 years of experience to Trobits. An investor in Shiba Inu and Cardano, he is passionate about crypto's future and dedicated to providing a secure, engaging platform."
                 },
                 {
-                 name: "Arrey",
-                 bio: "The growth of the cryptocurrency market is evident. It is never too late to take action. Arrey believes in the use of digital media to change the narrative around cryptocurrency and power the value of coins that have stood the test of time. Arrey is strongly behind building strong online communities of crypto enthusiasts who will work together to achieve a common goal."
+                  name: "Arrey",
+                  bio: "The growth of the cryptocurrency market is evident. It is never too late to take action. Arrey believes in the use of digital media to change the narrative around cryptocurrency and power the value of coins that have stood the test of time. Arrey is strongly behind building strong online communities of crypto enthusiasts who will work together to achieve a common goal."
                 },
                 {
                   name: "Bernard",
@@ -149,6 +150,36 @@ export default function AboutUs() {
         </Card>
       </div>
       <Footer />
+      <AdBannerF />
     </div>
   )
+}
+
+export function AdBannerF() {
+  return (
+    <>
+      {/* Top Ad banner  */}
+      {/* Another New Ad Banner */}
+      {/* Top Ad banner with space */}
+      <div className=" mt-0" style={{ height: "80px", width: "100%", display: "block" }}></div>
+      <ins className="67b00549e904d5920e68f979" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
+      <Script
+        id="new-ad-banner-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(e,n,c,t,o,r,d){
+              !function e(n,c,t,o,r,m,d,s,a){
+                s=c.getElementsByTagName(t)[0],
+                (a=c.createElement(t)).async=!0,
+                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+                s.parentNode.insertBefore(a,s)
+              }(window,document,"script","67b00549e904d5920e68f979",["cdn.bmcdn6.com"], 0, new Date().getTime())
+            }();
+          `,
+        }}
+      />
+    </>
+  );
 }

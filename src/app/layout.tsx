@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/provider/Provider";
 import Script from "next/script";
 import Head from "next/head";
+import { AdBannerF } from "./(withCommonLayout)/aboutus/page";
 
 // Source Sans 3 Font
 const sourceSansPro = Source_Sans_3({
@@ -63,6 +64,7 @@ export default function RootLayout({
 
         {/* App Providers */}
         <Providers>{children}</Providers>
+        <AdBannerF/>
       </body>
     </html>
   );
