@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import NewsCard from "./NewsCard";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "../Shared/Loading";
-import { Article } from "@/app/(withCommonLayout)/articles/page";
+import { AdBannerA, Article } from "@/app/(withCommonLayout)/articles/page";
 
 // export const articlesData = [
 //   {
@@ -97,7 +97,21 @@ export default function NewsCompo() {
 
         <div className="flex flex-wrap justify-center gap-2 max-w- mx-auto">
           {allBlogs?.slice(0, 8).map((article, index) => (
-            <NewsCard key={index + 1} articleData={article} />
+
+            <div key={article.id}>
+              <NewsCard articleData={article} />
+              {/* Insert 4 ads every 4 NewsCards */}
+              {(index + 1) % 4 === 0 && (
+                <>
+                  <AdBannerA />
+                  <AdBannerA />
+                  <AdBannerA />
+                  <AdBannerA />
+                </>
+              )}
+
+            </div>
+            
           ))}
         </div>
       </div>
