@@ -204,16 +204,24 @@ const ArticlesPage = () => {
           <div key={article.id}>
             <NewsCard articleData={article} />
             {/* Insert 4 ads every 4 NewsCards */}
-            {(index + 1) % 4 === 0 && (
+            {(
               <>
                 <AdBannerA/>
-                <AdBannerB/>
-                <AdBannerC/>
-                <AdBannerD/>
+              
               </>
             )}
             
           </div>
+          <div key={article.id}>
+          <NewsCard articleData={article} />
+          {/* Insert 4 ads every 4 NewsCards */}
+          {(
+            <>
+              <AdBannerB/>
+            </>
+          )}
+          
+        </div>
 
         ))}
       </div>
