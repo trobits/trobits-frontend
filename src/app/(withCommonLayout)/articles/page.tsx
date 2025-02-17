@@ -100,6 +100,7 @@ const ArticlesPage = () => {
             {/* Insert an Ad every 4 articles */}
             {index % 4 === 0 && (
               <AdBanner adClass="67b00b6de904d5920e690b84" />
+              <AdBanner adClass="67b00b6de904d5920e690b84" />
             )}
           </React.Fragment>
         ))}
