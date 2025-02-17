@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client";
 import NewsCard from "@/components/NewsPart/NewsCard";
 import Image from "next/image";
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import globalGlove from "../../../assets/pngGlobe.png";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "@/components/Shared/Loading";
@@ -26,17 +24,13 @@ export interface Article {
   comments: IComment[];
 }
 
-
- function AdBannerA() {
+// Reusable Ad Component
+const AdBanner = ({ adClass }: { adClass: string }) => {
   return (
     <>
-      {/* Ad banner */}
-      <ins
-        className="67b00b6de904d5920e690b84"
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
+      <ins className={adClass} style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
       <Script
-        id="ad-banner-script"
+        id={`ad-banner-script-${adClass}`}
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -47,108 +41,23 @@ export interface Article {
                 a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
                 a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
                 s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
+              }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
             }();
           `,
         }}
       />
     </>
   );
-}
-function AdBannerB() {
-  return (
-    <>
-      {/* Ad banner */}
-      <ins
-        className="67b3b8a41b3a7f15c72fcc94"
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
-      <Script
-        id="ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
-  );
-}
-function AdBannerC() {
-  return (
-    <>
-      {/* Ad banner */}
-      <ins
-        className="67b3b9181b3a7f15c72fce5d"
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
-      <Script
-        id="ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
-  );
-}
-function AdBannerD() {
-  return (
-    <>
-      {/* Ad banner */}
-      <ins
-        className="67b3b9469a62fcbf1eeb65df"
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
-      <Script
-        id="ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
-  );
-}
+};
 
 const ArticlesPage = () => {
-  const [ currentPage, setCurrentPage ] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const limit = 12;
 
-  const { data: allBlogsData, isLoading: allBlogsDataLoading } =
-    useGetAllBlogsQuery({
-      page: currentPage,
-      limit: limit,
-    });
+  const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery({
+    page: currentPage,
+    limit: limit,
+  });
 
   // Handle loading state
   if (allBlogsDataLoading) {
@@ -175,54 +84,24 @@ const ArticlesPage = () => {
       {/* Header Section */}
       <div className="flex items-center justify-between py-5 px-20 bg-gradient-to-r from-[#574386] to-[#0a1c79] m-10 bg-transparent rounded-lg">
         <div className="flex items-center">
-          <h1 className="text-2xl text-[#33d9b2] font-semibold">
-            Trobits Article
-          </h1>
+          <h1 className="text-2xl text-[#33d9b2] font-semibold">Trobits Articles</h1>
         </div>
         <div className="flex items-center justify-center">
-          <Image
-            src={globalGlove}
-            alt="Crypto Icon"
-            width={100}
-            height={100}
-            className="rounded-full"
-          />
+          <Image src={globalGlove} alt="Crypto Icon" width={100} height={100} className="rounded-full" />
         </div>
       </div>
 
       {/* Display Articles */}
       <div className="flex flex-wrap justify-center gap-4 px-1 md:px-24">
         {allBlogs.map((article, index) => (
-
-          // <>
-          //   <NewsCard key={article.id} articleData={article} />
-          //   <ins class="67b00b6de904d5920e690b84" style="display:inline-block;width:1px;height:1px;"></ins>
-          //   <script>!function(e,n,c,t,o,r,d){!function e(n, c, t, o, r, m, d, s, a) { s = c.getElementsByTagName(t)[ 0 ], (a = c.createElement(t)).async = !0, a.src = "https://" + r[ m ] + "/js/" + o + ".js?v=" + d, a.onerror = function () { a.remove(), (m += 1) >= r.length || e(n, c, t, o, r, m) }, s.parentNode.insertBefore(a, s) }(window, document, "script", "67b00b6de904d5920e690b84", [ "cdn.bmcdn6.com" ], 0, new Date().getTime())}();</script>
-          // </>
-
-
-          <div key={article.id}>
+          <React.Fragment key={article.id}>
             <NewsCard articleData={article} />
-            {/* Insert 4 ads every 4 NewsCards */}
-            {(
-              <>
-                <AdBannerA/>
-              
-              </>
-            )}
-            
-          </div>
-          <div key={article.id}>
-          <NewsCard articleData={article} />
-          {/* Insert 4 ads every 4 NewsCards */}
-          {(
-            <>
-              <AdBannerB/>
-            </>
-          )}
-          
-        </div>
 
+            {/* Insert an Ad every 4 articles */}
+            {index % 4 === 0 && (
+              <AdBanner adClass="67b00b6de904d5920e690b84" />
+            )}
+          </React.Fragment>
         ))}
       </div>
 
@@ -231,8 +110,9 @@ const ArticlesPage = () => {
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          className={`px-4 disabled:cursor-not-allowed py-2 rounded-lg ${currentPage === 1 ? "bg-gray-400" : "bg-cyan-600 text-white"
-            }`}
+          className={`px-4 disabled:cursor-not-allowed py-2 rounded-lg ${
+            currentPage === 1 ? "bg-gray-400" : "bg-cyan-600 text-white"
+          }`}
         >
           Previous
         </button>
@@ -242,10 +122,9 @@ const ArticlesPage = () => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 disabled:cursor-not-allowed rounded-lg ${currentPage === totalPages
-            ? "bg-gray-400"
-            : "bg-cyan-600 text-white"
-            }`}
+          className={`px-4 py-2 disabled:cursor-not-allowed rounded-lg ${
+            currentPage === totalPages ? "bg-gray-400" : "bg-cyan-600 text-white"
+          }`}
         >
           Next
         </button>
@@ -255,6 +134,5 @@ const ArticlesPage = () => {
     </div>
   );
 };
-
 
 export default ArticlesPage;
