@@ -13,7 +13,6 @@ import Footer from "@/app/shared/Footer/Footer";
 import { Pagination } from "@/components/ui/pagination";
 import Script from "next/script";
 
-
 export interface Article {
   id: string;
   title: string;
@@ -31,11 +30,13 @@ export interface Article {
 function AdBanner() {
   return (
     <>
-      {/* Top Ad banner  */}
-      {/* Another New Ad Banner */}
-      <ins className="67b00b6de904d5920e690b84" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
+      {/* Ad banner */}
+      <ins
+        className="67b00b6de904d5920e690b84"
+        style={{ display: "inline-block", width: "1px", height: "1px" }}
+      ></ins>
       <Script
-        id="newly-added-ad-banner-script"
+        id="ad-banner-script"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -109,7 +110,6 @@ const ArticlesPage = () => {
 
       {/* Display Articles */}
       <div className="flex flex-wrap justify-center gap-4 px-1 md:px-24">
-        <AdBanner/>
         {allBlogs.map((article, index) => (
 
           // <>
@@ -122,7 +122,6 @@ const ArticlesPage = () => {
           <div key={article.id}>
             <NewsCard articleData={article} />
             {/* Insert 4 ads every 4 NewsCards */}
-{/*             
             {(index + 1) % 4 === 0 && (
               <>
                 <AdBanner />
@@ -130,13 +129,8 @@ const ArticlesPage = () => {
                 <AdBanner />
                 <AdBanner />
               </>
-            )} */}
-
-            <AdBanner />
-            <AdBanner />
-            <AdBanner />
-            <AdBanner />
-
+            )}
+            
           </div>
 
         ))}
