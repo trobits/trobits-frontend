@@ -27,7 +27,7 @@ export interface Article {
 }
 
 
-export function AdBannerA() {
+ function AdBannerA() {
   return (
     <>
       {/* Ad banner */}
