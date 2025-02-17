@@ -4,84 +4,40 @@ import { Button } from "../ui/button";
 import NewsCard from "./NewsCard";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "../Shared/Loading";
-import { AdBannerA, Article } from "@/app/(withCommonLayout)/articles/page";
+import { Article } from "@/app/(withCommonLayout)/articles/page";
+import Script from "next/script";
 
-// export const articlesData = [
-//   {
-//     id: 1,
-//     title:
-//       "SHIB: From Meme to Mainstream – The Evolution of a Crypto Phenomenon",
-//     author: "Greenlysphere",
-//     description:
-//       "The token Shiba Inu (SHIB) has risen from being just an internet meme...",
-//     image:
-//       "https://bravenewcoin.com/wp-content/uploads/2024/08/IMG-20240820-WA0013.jpg",
-//   },
-//   {
-//     id: 2,
-//     title: "Impact of Burning SHIB and LUNC on Their Value",
-//     author: "Greenlysphere",
-//     description:
-//       "The process of cryptocurrency burning involves permanently removing...",
-//     image:
-//       "https://bravenewcoin.com/wp-content/uploads/2024/08/IMG-20240820-WA0013.jpg",
-//   },
-//   {
-//     id: 3,
-//     title: "How to Choose the Right Exchange for Buying Crypto",
-//     author: "Maxwell",
-//     description:
-//       "Entering the world of cryptocurrencies often feels like going...",
-//     image:
-//       "https://bravenewcoin.com/wp-content/uploads/2024/08/IMG-20240820-WA0013.jpg",
-//   },
-//   {
-//     id: 4,
-//     title: "How to Choose the Right Exchange for Buying Crypto",
-//     author: "Maxwell",
-//     description:
-//       "Entering the world of cryptocurrencies often feels like going...",
-//     image:
-//       "https://bravenewcoin.com/wp-content/uploads/2024/08/IMG-20240820-WA0013.jpg",
-//   },
-//   {
-//     id: 5,
-//     title: "How to Choose the Right Exchange for Buying Crypto",
-//     author: "Maxwell",
-//     description:
-//       "Entering the world of cryptocurrencies often feels like going...",
-//     image:
-//       "https://bravenewcoin.com/wp-content/uploads/2024/08/IMG-20240820-WA0013.jpg",
-//   },
-//   {
-//     id: 6,
-//     title: "How to Choose the Right Exchange for Buying Crypto",
-//     author: "Maxwell",
-//     description:
-//       "Entering the world of cryptocurrencies often feels like going...",
-//     image:
-//       "https://bravenewcoin.com/wp-content/uploads/2024/08/IMG-20240820-WA0013.jpg",
-//   },
-//   {
-//     id: 7,
-//     title: "How to Choose the Right Exchange for Buying Crypto",
-//     author: "Maxwell",
-//     description:
-//       "Entering the world of cryptocurrencies often feels like going...",
-//     image:
-//       "https://bravenewcoin.com/wp-content/uploads/2024/08/IMG-20240820-WA0013.jpg",
-//   },
-//   {
-//     id: 8,
-//     title: "How to Choose the Right Exchange for Buying Crypto",
-//     author: "Maxwell",
-//     description:
-//       "Entering the world of cryptocurrencies often feels like going...",
-//     image:
-//       "https://bravenewcoin.com/wp-content/uploads/2024/08/IMG-20240820-WA0013.jpg",
-//   },
-// ];
 
+
+
+export function AdBannerA() {
+  return (
+    <>
+      {/* Ad banner */}
+      <ins
+        className="67b00b6de904d5920e690b84"
+        style={{ display: "inline-block", width: "1px", height: "1px" }}
+      ></ins>
+      <Script
+        id="ad-banner-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(e,n,c,t,o,r,d){
+              !function e(n,c,t,o,r,m,d,s,a){
+                s=c.getElementsByTagName(t)[0],
+                (a=c.createElement(t)).async=!0,
+                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+                s.parentNode.insertBefore(a,s)
+              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
+            }();
+          `,
+        }}
+      />
+    </>
+  );
+}
 export default function NewsCompo() {
   const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
   if (allBlogsDataLoading) {
