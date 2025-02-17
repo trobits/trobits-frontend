@@ -60,7 +60,7 @@ function AdBannerB() {
     <>
       {/* Ad banner */}
       <ins
-        className="67b00b6de904d5920e690b84"
+        className="67b3b8a41b3a7f15c72fcc94"
         style={{ display: "inline-block", width: "1px", height: "1px" }}
       ></ins>
       <Script
@@ -88,7 +88,7 @@ function AdBannerC() {
     <>
       {/* Ad banner */}
       <ins
-        className="67b00b6de904d5920e690b84"
+        className="67b3b9181b3a7f15c72fce5d"
         style={{ display: "inline-block", width: "1px", height: "1px" }}
       ></ins>
       <Script
@@ -116,7 +116,7 @@ function AdBannerD() {
     <>
       {/* Ad banner */}
       <ins
-        className="67b00b6de904d5920e690b84"
+        className="67b3b9469a62fcbf1eeb65df"
         style={{ display: "inline-block", width: "1px", height: "1px" }}
       ></ins>
       <Script
