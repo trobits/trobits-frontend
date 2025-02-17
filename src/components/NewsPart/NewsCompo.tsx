@@ -10,7 +10,7 @@ import Script from "next/script";
 
 
 
-export function AdBannerA() {
+function AdBannerA() {
   return (
     <>
       {/* Ad banner */}
