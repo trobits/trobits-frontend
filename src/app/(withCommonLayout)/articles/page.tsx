@@ -27,7 +27,7 @@ export interface Article {
 }
 
 
-function AdBanner1() {
+export function AdBannerA() {
   return (
     <>
       {/* Ad banner */}
@@ -55,90 +55,9 @@ function AdBanner1() {
     </>
   );
 }
-function AdBanner2() {
-  return (
-    <>
-      {/* Ad banner */}
-      <ins
-        className="67b00b6de904d5920e690b84"
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
-      <Script
-        id="ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
-  );
-}
-function AdBanner3() {
-  return (
-    <>
-      {/* Ad banner */}
-      <ins
-        className="67b00b6de904d5920e690b84"
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
-      <Script
-        id="ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
-  );
-}
-function AdBanner4() {
-  return (
-    <>
-      {/* Ad banner */}
-      <ins
-        className="67b00b6de904d5920e690b84"
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
-      <Script
-        id="ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00b6de904d5920e690b84",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
-  );
-}
+
+
+
 
 
 
@@ -208,10 +127,10 @@ const ArticlesPage = () => {
             {/* Insert 4 ads every 4 NewsCards */}
             {(index + 1) % 4 === 0 && (
               <>
-                <AdBanner1 key={index+1}/>
-                <AdBanner2 key={index+2}/>
-                <AdBanner3 key={index+3}/>
-                <AdBanner4 key={index+4}/>
+                <AdBannerA/>
+                <AdBannerA />
+                <AdBannerA/>
+                <AdBannerA/>
               </>
             )}
             
