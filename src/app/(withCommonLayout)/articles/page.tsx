@@ -98,22 +98,22 @@ const ArticlesPage = () => {
             <NewsCard articleData={article} />
 
             {/* Insert an Ad every 4 articles */}
-            {index % 4 === 0 && (
+            {index % 6 === 0 && (
               <AdBanner adClass="67b00b6de904d5920e690b84" />
             )}
-            {index % 4 === 1 && (
+            {index % 6 === 1 && (
               <AdBanner adClass="67b3b8a41b3a7f15c72fcc94" />
             )}
-             {index % 4 === 2 && (
+             {index % 6 === 2 && (
               <AdBanner adClass="67b3b9181b3a7f15c72fce5d" />
             )}
-             {index % 4 === 3 && (
+             {index % 6 === 3 && (
               <AdBanner adClass="67b3b9469a62fcbf1eeb65df" />
             )}
-            {index % 4 === 4 && (
+            {index % 6 === 4 && (
               <AdBanner adClass="67b3c7949a62fcbf1eeb83a6" />
             )}
-            {index % 4 === 5 && (
+            {index % 6 === 5 && (
               <AdBanner adClass="67b3c7d89a62fcbf1eeb842e" />
             )}
           </React.Fragment>
