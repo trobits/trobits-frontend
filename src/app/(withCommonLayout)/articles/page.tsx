@@ -208,8 +208,8 @@ const ArticlesPage = () => {
               <>
                 <AdBannerA/>
                 <AdBannerB/>
-                <AdBannerA/>
-                <AdBannerA/>
+                <AdBannerC/>
+                <AdBannerD/>
               </>
             )}
             
