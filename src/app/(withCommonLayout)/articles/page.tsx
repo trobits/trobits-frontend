@@ -322,6 +322,18 @@ const ArticlesPage = () => {
     return ads;
   };
 
+    const handleNextPage = () => {
+      if (currentPage < totalPages) {
+        setCurrentPage((prevPage) => prevPage + 1);
+      }
+    };
+
+    const handlePrevPage = () => {
+      if (currentPage > 1) {
+        setCurrentPage((prevPage) => prevPage - 1);
+      }
+    };
+
   return (
     <div>
       {/* Header Section */}
