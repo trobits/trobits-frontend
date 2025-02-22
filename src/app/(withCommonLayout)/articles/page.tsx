@@ -204,6 +204,8 @@ const ArticlesPage = () => {
     "67b3b9469a62fcbf1eeb65df",
     "67b3c7949a62fcbf1eeb83a6",
     "67b3c7d89a62fcbf1eeb842e",
+    "67b3b8a41b3a7f15c72fcc94",
+    "67b3b9181b3a7f15c72fce5d"
   ];
 
   // Function to get the next 4 ads
