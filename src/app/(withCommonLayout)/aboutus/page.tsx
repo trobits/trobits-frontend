@@ -150,7 +150,7 @@ export default function AboutUs() {
         </Card>
       </div>
       <Footer />
-      <AdBannerF />
+      {/* <AdBannerF /> */}
     </div>
   )
 }

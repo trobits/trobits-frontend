@@ -12,7 +12,7 @@ const topicApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["post"],
+      invalidatesTags: [ "post" ],
     }),
 
     getAllPostsByTopic: build.query({
@@ -22,7 +22,7 @@ const topicApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["post"],
+      providesTags: [ "post" ],
     }),
 
     getPostsById: build.query({
@@ -34,7 +34,7 @@ const topicApi = baseApi.injectEndpoints({
           //
         };
       },
-      providesTags: ["post"],
+      providesTags: [ "post" ],
     }),
 
     createComment: build.mutation({
@@ -45,7 +45,7 @@ const topicApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["post", "blog"],
+      invalidatesTags: [ "post", "blog" ],
     }),
 
     toggleLike: build.mutation({
@@ -56,7 +56,7 @@ const topicApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["post"],
+      invalidatesTags: [ "post" ],
     }),
 
     // createComment: build.mutation({
@@ -102,7 +102,7 @@ const topicApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["post", "blog"],
+      invalidatesTags: [ "post", "blog" ],
     }),
 
     toggleDisLikeOnComment: build.mutation({
@@ -113,7 +113,7 @@ const topicApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["post"],
+      invalidatesTags: [ "post" ],
     }),
 
     getPostsByAuthorId: build.query({
@@ -125,7 +125,7 @@ const topicApi = baseApi.injectEndpoints({
           //
         };
       },
-      providesTags: ["post"],
+      providesTags: [ "post" ],
     }),
 
     getAllPosts: build.query({
@@ -135,7 +135,7 @@ const topicApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["post"],
+      providesTags: [ "post" ],
     }),
 
     getAllVideoPost: build.query({
@@ -145,7 +145,7 @@ const topicApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["post"],
+      providesTags: [ "post" ],
     }),
 
     getAllImagePost: build.query({
@@ -155,7 +155,7 @@ const topicApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["post"],
+      providesTags: [ "post" ],
     }),
 
     getPostsByUserId: build.query({
@@ -172,13 +172,46 @@ const topicApi = baseApi.injectEndpoints({
         return {
           url: `/comment/reply/${data?.commentId}`,
           method: "POST",
-          body:{ content:data?.content},
+          body: { content: data?.content },
         };
       },
-      invalidatesTags: ["post"],
+      invalidatesTags: [ "post" ],
     }),
+
+    increaseVideoViewCount: build.mutation({
+      query: (id) => {
+        return {
+          url: `/post/increase-video-view/${id}`,
+          method: "PATCH",
+        };
+      },
+      invalidatesTags: [ "post" ],
+    }),
+
+    updatePost: build.mutation({
+      query: (data) => {
+        return {
+          url: `/post/update-post/${data?.id}`,
+          method: "PATCH",
+          body: data?.formData,
+        };
+      },
+      invalidatesTags: [ "post" ],
+    }),
+    deletePost: build.mutation({
+      query: (id) => {
+        return {
+          url: `/post/delete-post/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: [ "post" ],
+    }),
+
   }),
 });
+
+
 
 export const {
   useCreatePostMutation,
@@ -194,4 +227,7 @@ export const {
   useCreateCommentMutation,
   useGetAllPostsByTopicQuery,
   useReplyCommentMutation,
+  useIncreaseVideoViewCountMutation,
+  useUpdatePostMutation,
+  useDeletePostMutation
 } = topicApi;

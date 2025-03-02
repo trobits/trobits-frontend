@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import {
     useCreatePostMutation,
     useGetAllVideoPostQuery,
+    useIncreaseVideoViewCountMutation,
 } from "@/redux/features/api/postApi";
 import Loading from "@/components/Shared/Loading";
 import PostCard from "@/components/Post/PostCard";
@@ -69,7 +70,7 @@ export default function Component() {
     const [ videoPreview, setVideoPreview ] = useState<string | null>(null);
     const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
 
-
+console.log({allPosts})
 
     // State for search query
     const [ searchQuery, setSearchQuery ] = useState("");

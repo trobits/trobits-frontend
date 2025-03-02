@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Metadata } from "next";
 import { Source_Sans_3, Lato } from "next/font/google";
 import "./globals.css";
@@ -60,11 +61,11 @@ export default function RootLayout({
         />
 
         {/* Ad Banners */}
-        <AdBanner />
+        {/* <AdBanner /> */}
 
         {/* App Providers */}
         <Providers>{children}</Providers>
-        <AdBannerF/>
+        {/* <AdBannerF/> */}
       </body>
     </html>
   );

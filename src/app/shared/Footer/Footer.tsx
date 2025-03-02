@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // components/Footer.js
 "use client"
 import { FaFacebookF, FaTwitter, FaReddit, FaYoutube, FaTiktok, FaLinkedin, FaInstagram, FaTelegram } from "react-icons/fa";
@@ -116,7 +117,7 @@ const Footer = () => {
         </div>
       </div>
 
-        <AdBanner />
+        {/* <AdBanner /> */}
  
     </footer>
   );
