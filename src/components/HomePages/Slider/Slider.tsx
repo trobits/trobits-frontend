@@ -45,7 +45,7 @@ const calculateTimeLeft = () => {
   return (
     <>
       {/* Top Ad banner */}
-      <div className="mt-0" style={{ height: "80px", width: "100%", display: "block" }}></div>
+      {/* <div className="mt-0" style={{ height: "80px", width: "100%", display: "block" }}></div> */}
 
       {/* Ad Banner */}
       <ins className="67c24fd7aa72d3d47fc083ad" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
