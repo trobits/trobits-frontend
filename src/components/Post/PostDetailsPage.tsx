@@ -49,14 +49,15 @@ export interface Post {
   topicId: string;
   author: Author;
   comments: IComment[];
+  viewCount: number;
 }
 
 export default function PostDetailsPage({ postId }: { postId: string }) {
   const { data, isLoading: postLoading } = useGetPostsByIdQuery(postId);
-  const [newComment, setNewComment] = useState("");
-  const [createComment, { isLoading: createCommentLoading }] =
+  const [ newComment, setNewComment ] = useState("");
+  const [ createComment, { isLoading: createCommentLoading } ] =
     useCreateCommentMutation();
-  const [likeToggleMutation, { isLoading: likeToggleLoading }] =
+  const [ likeToggleMutation, { isLoading: likeToggleLoading } ] =
     useToggleLikeMutation();
   const user: IUser = useAppSelector((state) => state.auth.user);
 
@@ -123,7 +124,7 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
           {post?.video && (
             <div className="aspect-[3/2] overflow-hidden rounded-xl">
               <video
-                src={`https://${post.video}`}
+                src={`${post.video}`}
                 width={600}
                 height={400}
                 className="w-full h-full mt-4 rounded-xl object-cover"
@@ -140,26 +141,34 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
             <p className="text-lg mt-2">{post?.content}</p>
           </div>
         </div>
-        {/* like section */}
-        <div className=" flex justify-end mt-4">
-          <Button className="bg-cyan-700 px-8">
-            <div
-              onClick={() => handleLikeToggle(post)}
-              className="flex items-center space-x-2 cursor-pointer"
-            >
-              <h2 className=" mr-4">Like</h2>
-              <HeartIcon
-                scale={2}
-                size={12}
-                fill={post?.likers?.includes(user?.id) ? "red" : ""}
-                className={`w-12 h-12 transform transition-transform duration-200 ${
-                  likeToggleLoading ? "scale-125" : ""
-                }`}
-              />
-              <span>{post?.likeCount}</span>
+        {post?.video &&
+
+
+          <div className="flex justify-between ml-5  ">
+            <div className="inline text-white font-bold">
+              Views:{post?.viewCount}
             </div>
-          </Button>
-        </div>
+            {/* like section */}
+            <div className=" flex justify-end mt-4">
+              <Button className="bg-cyan-700 px-8">
+                <div
+                  onClick={() => handleLikeToggle(post)}
+                  className="flex items-center space-x-2 cursor-pointer"
+                >
+                  <h2 className=" mr-4">Like</h2>
+                  <HeartIcon
+                    scale={2}
+                    size={12}
+                    fill={post?.likers?.includes(user?.id) ? "red" : ""}
+                    className={`w-12 h-12 transform transition-transform duration-200 ${likeToggleLoading ? "scale-125" : ""
+                      }`}
+                  />
+                  <span>{post?.likeCount}</span>
+                </div>
+              </Button>
+            </div>
+          </div>
+        }
         {/* Comments Section */}
         <div className="bg-gray-800 rounded-xl p-6 mt-8 text-white">
           <h2 className="text-2xl font-bold mb-4">Comments</h2>

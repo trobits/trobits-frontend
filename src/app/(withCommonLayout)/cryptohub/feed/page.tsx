@@ -67,6 +67,7 @@ export default function Component() {
     return <Loading />;
   }
 
+
   // handle post image change
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[ 0 ];

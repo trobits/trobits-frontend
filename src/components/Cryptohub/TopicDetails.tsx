@@ -45,6 +45,7 @@ export interface Post {
     topicId: string;
     author: Author;
     comments: Comment[];
+    viewCount: number;
 }
 
 
