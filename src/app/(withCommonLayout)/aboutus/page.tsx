@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Footer from "@/app/shared/Footer/Footer"
@@ -155,7 +156,7 @@ export default function AboutUs() {
   )
 }
 
-export function AdBannerF() {
+ function AdBannerF() {
   return (
     <>
       {/* Top Ad banner  */}
