@@ -122,6 +122,42 @@ import HomeNewsCard from "./HomeNewsCard";
 // };
 
 
+// const AdBanner = ({ adClass }: { adClass: string }) => {
+//   useEffect(() => {
+//     // Manually inject the script
+//     const script = document.createElement("script");
+//     script.innerHTML = `
+//       !function(e,n,c,t,o,r,d){
+//         !function e(n,c,t,o,r,m,d,s,a){
+//           s=c.getElementsByTagName(t)[0],
+//           (a=c.createElement(t)).async=!0,
+//           a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+//           a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+//           s.parentNode.insertBefore(a,s)
+//         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
+//       }();
+//     `;
+//     document.body.appendChild(script);
+
+//     // Cleanup function to remove the script when the component unmounts
+//     return () => {
+//       document.body.removeChild(script);
+//     };
+//   }, [ adClass ]);
+
+//   // Ad classes to rotate through
+
+//   return (
+//     <>
+//       {/* Ad banner */}
+//       <ins
+//         className={adClass}
+//         style={{ display: "inline-block", width: "1px", height: "1px" }}
+//       ></ins>
+//     </>
+//   );
+// };
+
 const AdBanner = ({ adClass }: { adClass: string }) => {
   useEffect(() => {
     // Manually inject the script
@@ -145,14 +181,13 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     };
   }, [ adClass ]);
 
-  // Ad classes to rotate through
-
   return (
     <>
       {/* Ad banner */}
       <ins
         className={adClass}
         style={{ display: "inline-block", width: "1px", height: "1px" }}
+        key={adClass} // Add a unique key to force re-render
       ></ins>
     </>
   );
