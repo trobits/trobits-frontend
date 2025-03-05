@@ -157,33 +157,35 @@ import HomeNewsCard from "./HomeNewsCard";
 //     </>
 //   );
 // };
+
 const AdBanner = ({ adClass }: { adClass: string }) => {
   useEffect(() => {
-    // Clean up any existing ad script
-    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
-    if (existingScript) {
-      existingScript.remove();
-    }
+    // Function to inject the ad script
+    const injectAdScript = () => {
+      const script = document.createElement("script");
+      script.innerHTML = `
+        !function(e,n,c,t,o,r,d){
+          !function e(n,c,t,o,r,m,d,s,a){
+            s=c.getElementsByTagName(t)[0],
+            (a=c.createElement(t)).async=!0,
+            a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+            a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+            s.parentNode.insertBefore(a,s)
+          }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
+        }();
+      `;
+      script.setAttribute("data-ad-class", adClass); // Add a unique identifier to the script
+      document.body.appendChild(script);
+    };
 
-    // Manually inject the script
-    const script = document.createElement("script");
-    script.innerHTML = `
-      !function(e,n,c,t,o,r,d){
-        !function e(n,c,t,o,r,m,d,s,a){
-          s=c.getElementsByTagName(t)[0],
-          (a=c.createElement(t)).async=!0,
-          a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-          a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-          s.parentNode.insertBefore(a,s)
-        }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
-      }();
-    `;
-    script.setAttribute("data-ad-class", adClass); // Add a unique identifier to the script
-    document.body.appendChild(script);
+    // Delay the script injection to ensure proper re-initialization
+    const timeoutId = setTimeout(() => {
+      injectAdScript();
+    }, 500); // Adjust the delay as needed
 
-    // Cleanup function to remove the script when the component unmounts
+    // Cleanup function to clear the timeout
     return () => {
-      document.body.removeChild(script);
+      clearTimeout(timeoutId);
     };
   }, [ adClass ]);
 
@@ -198,6 +200,8 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     </>
   );
 };
+
+
 
 export default function NewsCompo() {
   const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
