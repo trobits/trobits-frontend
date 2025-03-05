@@ -195,7 +195,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
       <ins
         className={adClass}
         style={{ display: "inline-block", width: "1px", height: "1px" }}
-        key={adClass} // Force re-render by using a unique key
+        key={adClass+Date.now()} // Force re-render by using a unique key
       ></ins>
     </>
   );
