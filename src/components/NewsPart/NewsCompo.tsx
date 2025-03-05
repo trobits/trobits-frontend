@@ -157,9 +157,14 @@ import HomeNewsCard from "./HomeNewsCard";
 //     </>
 //   );
 // };
-
 const AdBanner = ({ adClass }: { adClass: string }) => {
   useEffect(() => {
+    // Clean up any existing ad script
+    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+    if (existingScript) {
+      existingScript.remove();
+    }
+
     // Manually inject the script
     const script = document.createElement("script");
     script.innerHTML = `
@@ -173,6 +178,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
       }();
     `;
+    script.setAttribute("data-ad-class", adClass); // Add a unique identifier to the script
     document.body.appendChild(script);
 
     // Cleanup function to remove the script when the component unmounts
@@ -187,12 +193,11 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
       <ins
         className={adClass}
         style={{ display: "inline-block", width: "1px", height: "1px" }}
-        key={adClass} // Add a unique key to force re-render
+        key={adClass} // Force re-render by using a unique key
       ></ins>
     </>
   );
 };
-
 
 export default function NewsCompo() {
   const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
