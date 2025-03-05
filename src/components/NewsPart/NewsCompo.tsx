@@ -118,6 +118,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
 
 
 
+
 export default function NewsCompo() {
   const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
 
