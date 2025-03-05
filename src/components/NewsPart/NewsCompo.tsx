@@ -13,19 +13,19 @@
 // const AdBanner = ({ adClass }: { adClass: string }) => {
 //   useEffect(() => {
 //     // Manually inject the script
-//     const script = document.createElement("script");
-//     script.innerHTML = `
-//       !function(e,n,c,t,o,r,d){
-//         !function e(n,c,t,o,r,m,d,s,a){
-//           s=c.getElementsByTagName(t)[0],
-//           (a=c.createElement(t)).async=!0,
-//           a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-//           a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-//           s.parentNode.insertBefore(a,s)
-//         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
-//       }();
-//     `;
-//     document.body.appendChild(script);
+    // const script = document.createElement("script");
+    // script.innerHTML = `
+    //   !function(e,n,c,t,o,r,d){
+    //     !function e(n,c,t,o,r,m,d,s,a){
+    //       s=c.getElementsByTagName(t)[0],
+    //       (a=c.createElement(t)).async=!0,
+    //       a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+    //       a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+    //       s.parentNode.insertBefore(a,s)
+    //     }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
+    //   }();
+    // `;
+    // document.body.appendChild(script);
 
 //     // Cleanup function to remove the script when the component unmounts
 //     return () => {
@@ -58,20 +58,51 @@ import HomeNewsCard from "./HomeNewsCard";
 
 const AdBanner = ({ adClass }: { adClass: string }) => {
   useEffect(() => {
-    // Function to handle the popstate event (back/forward navigation)
-    const handlePopState = () => {
-      // Force a full page reload when navigating back to the page
-      window.location.reload();
+    // Function to inject the ad script
+    const injectAdScript = () => {
+      const script = document.createElement("script");
+      script.innerHTML = `
+        !function(e,n,c,t,o,r,d){
+          !function e(n,c,t,o,r,m,d,s,a){
+            s=c.getElementsByTagName(t)[0],
+            (a=c.createElement(t)).async=!0,
+            a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+            a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+            s.parentNode.insertBefore(a,s)
+          }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
+        }();
+      `;
+      script.setAttribute("data-ad-class", adClass); // Add a unique identifier to the script
+      document.body.appendChild(script);
     };
 
-    // Add the event listener for the popstate event
-    window.addEventListener("popstate", handlePopState);
+    // Inject the ad script
+    injectAdScript();
 
-    // Cleanup function to remove the event listener
+    // Function to handle the pageshow event
+    const handlePageShow = (event: PageTransitionEvent) => {
+      // Check if the page is being shown from the cache (e.g., when navigating back)
+      if (event.persisted) {
+        // Force a full page reload
+        window.location.reload();
+      }
+    };
+
+    // Add the event listener for the pageshow event
+    window.addEventListener("pageshow", handlePageShow);
+
+    // Cleanup function
     return () => {
-      window.removeEventListener("popstate", handlePopState);
+      // Remove the ad script
+      const script = document.querySelector(`script[data-ad-class="${adClass}"]`);
+      if (script) {
+        document.body.removeChild(script);
+      }
+
+      // Remove the pageshow event listener
+      window.removeEventListener("pageshow", handlePageShow);
     };
-  }, []);
+  }, [ adClass ]);
 
   return (
     <>
@@ -84,6 +115,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     </>
   );
 };
+
 
 
 export default function NewsCompo() {
