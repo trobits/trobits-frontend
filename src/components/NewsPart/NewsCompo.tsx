@@ -52,15 +52,15 @@ import { Button } from "../ui/button";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "../Shared/Loading";
 import { Article } from "@/app/(withCommonLayout)/articles/page";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import HomeNewsCard from "./HomeNewsCard";
-import { useRouter } from "next/router";
 
 
 const AdBanner = ({ adClass }: { adClass: string }) => {
-  const router = useRouter();
+  const adContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Function to inject the ad script
     const injectAdScript = () => {
       const script = document.createElement("script");
       script.innerHTML = `
@@ -74,30 +74,50 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
           }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
         }();
       `;
-      script.setAttribute("data-ad-class", adClass);
+      script.setAttribute("data-ad-class", adClass); // Add a unique identifier to the script
       document.body.appendChild(script);
     };
 
-    injectAdScript(); // Inject on component mount
+    // Inject the ad script
+    injectAdScript();
 
-    // Re-inject on route change
-    const handleRouteChange = () => {
-      injectAdScript();
-    };
+    // Use a MutationObserver to monitor changes to the ad container
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList") {
+          console.log("Ad container modified:", mutation);
+        }
+      }
+    });
 
-    router.events.on("routeChangeComplete", handleRouteChange);
+    if (adContainerRef.current) {
+      observer.observe(adContainerRef.current, { childList: true, subtree: true });
+    }
 
+    // Cleanup function
     return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
+      // Disconnect the observer
+      observer.disconnect();
+
+      // Remove the ad script
+      const script = document.querySelector(`script[data-ad-class="${adClass}"]`);
+      if (script) {
+        document.body.removeChild(script);
+      }
     };
-  }, [ router, adClass ]);
+  }, [ adClass ]);
 
   return (
-    <ins
-      className={adClass}
-      style={{ display: "inline-block", width: "1px", height: "1px" }}
-      key={adClass + Date.now()}
-    ></ins>
+    <>
+      {/* Ad banner */}
+      <div ref={adContainerRef}>
+        <ins
+          className={adClass}
+          style={{ display: "inline-block", width: "1px", height: "1px" }}
+          key={adClass + Date.now()} // Force re-render by using a unique key
+        ></ins>
+      </div>
+    </>
   );
 };
 
