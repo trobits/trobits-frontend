@@ -52,12 +52,21 @@ import { Button } from "../ui/button";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "../Shared/Loading";
 import { Article } from "@/app/(withCommonLayout)/articles/page";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import HomeNewsCard from "./HomeNewsCard";
 
 
+
 const AdBanner = ({ adClass }: { adClass: string }) => {
+  const adContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    // Check if the script is already injected
+    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+    if (existingScript) {
+      return; // Script is already injected, do nothing
+    }
+
     // Function to inject the ad script
     const injectAdScript = () => {
       const script = document.createElement("script");
@@ -79,18 +88,6 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     // Inject the ad script
     injectAdScript();
 
-    // Function to handle the pageshow event
-    const handlePageShow = (event: PageTransitionEvent) => {
-      // Check if the page is being shown from the cache (e.g., when navigating back)
-      if (event.persisted) {
-        // Force a full page reload
-        window.location.reload();
-      }
-    };
-
-    // Add the event listener for the pageshow event
-    window.addEventListener("pageshow", handlePageShow);
-
     // Cleanup function
     return () => {
       // Remove the ad script
@@ -98,20 +95,19 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
       if (script) {
         document.body.removeChild(script);
       }
-
-      // Remove the pageshow event listener
-      window.removeEventListener("pageshow", handlePageShow);
     };
   }, [ adClass ]);
 
   return (
     <>
       {/* Ad banner */}
-      <ins
-        className={adClass}
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-        key={adClass + Date.now()} // Force re-render by using a unique key
-      ></ins>
+      <div ref={adContainerRef}>
+        <ins
+          className={adClass}
+          style={{ display: "inline-block", width: "1px", height: "1px" }}
+          key={adClass + Date.now()} // Force re-render by using a unique key
+        ></ins>
+      </div>
     </>
   );
 };
