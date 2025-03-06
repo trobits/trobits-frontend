@@ -68,12 +68,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface IInitialState {
     user: any | null;
     token: string | null;
+    previousPath: string | null;
+    currentPath:string|null;
 }
 
 // Set initial state without using localStorage
 const initialState: IInitialState = {
     user: null,
-    token: null
+    token: null,
+    previousPath:null,
+    currentPath:null
 };
 
 // Create the slice
@@ -90,9 +94,18 @@ const authSlice = createSlice({
             // localStorage.removeItem("refreshToken")
             localStorage.removeItem("accessToken")
         },
+        setPaths: (state, action: PayloadAction<string | null>) => {
+            if(state.previousPath === null && state.currentPath===null){
+                state.previousPath = null;
+                state.currentPath = action.payload;
+            }else{
+                state.previousPath = state.currentPath;
+                state.currentPath = action.payload;
+            }
+        }
     },
 });
 
 // Export actions and reducer
-export const { setUser, clearUser } = authSlice.actions;
+export const { setUser, clearUser,setPaths } = authSlice.actions;
 export default authSlice.reducer;

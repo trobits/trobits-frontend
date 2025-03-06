@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -54,7 +55,9 @@ import Loading from "../Shared/Loading";
 import { Article } from "@/app/(withCommonLayout)/articles/page";
 import React, { useEffect, useRef } from "react";
 import HomeNewsCard from "./HomeNewsCard";
-
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setPaths } from "@/redux/features/slices/authSlice"; 
+import { usePathname } from "next/navigation";
 
 
 const AdBanner = ({ adClass }: { adClass: string }) => {
@@ -119,6 +122,18 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
 
 export default function NewsCompo() {
   const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
+  const previousPath = useAppSelector((state) => state.auth.previousPath);
+  const currentPath = useAppSelector((state) => state.auth.currentPath);
+  const dispatch = useAppDispatch();
+  const pathName = usePathname();
+
+
+  if(window){
+    if (previousPath !== "/" && currentPath === "/"){
+      dispatch(setPaths(pathName));
+      window.location.reload();
+    }
+  }
 
   // Handle loading state
   if (allBlogsDataLoading) {

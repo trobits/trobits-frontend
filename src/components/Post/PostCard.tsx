@@ -822,7 +822,6 @@ const PostCard = ({ post }: { post: Post }) => {
         }
         try {
             const response = await updatePost({ id: currentPost?.id, formData }).unwrap();
-            console.log(response?.data);
             setCurrentPost(response?.data);
             toast.success("Post updated successfully!");
             handleCloseEditModal();
