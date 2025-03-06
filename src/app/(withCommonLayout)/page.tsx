@@ -7,8 +7,11 @@ import React from "react";
 import CryptoNavbar from "../shared/navbar/CryptoNavbar";
 import Footer from "../shared/Footer/Footer";
 import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
+// import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const Profile = () => {
+  // const dispatch = useAppDispatch();
+
   return (
     <div>
       <CryptoNavbar />

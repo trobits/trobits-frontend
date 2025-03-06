@@ -48,7 +48,6 @@ export default function NotificationPage() {
     socket.on("connect", () => {});
 
     socket.on("receiveNotification", (notification: Notification) => {
-      console.log({ notification });
       setNotifications((prevNotifications) => [
         notification,
         ...prevNotifications,

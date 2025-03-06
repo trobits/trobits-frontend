@@ -583,6 +583,10 @@ import Loading from "@/components/Shared/Loading";
 import { IComment } from "@/components/Post/PostCommentCard";
 import Footer from "@/app/shared/Footer/Footer";
 import Script from "next/script";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { usePathname } from "next/navigation";
+import { setPaths } from "@/redux/features/slices/authSlice";
+
 
 export interface Article {
   id: string;
@@ -645,6 +649,17 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
 const ArticlesPage = () => {
   const [ currentPage, setCurrentPage ] = useState(1);
   const limit = 12;
+  const previousPath = useAppSelector((state) => state.auth.previousPath);
+  const currentPath = useAppSelector((state) => state.auth.currentPath);
+  const dispatch = useAppDispatch();
+  const pathName = usePathname();
+
+  if (window) {
+    if (previousPath !== "/articles" && currentPath === "/articles") {
+      dispatch(setPaths(pathName));
+      window.location.reload();
+    }
+  }
 
   const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery({
     page: currentPage,
@@ -689,7 +704,7 @@ const ArticlesPage = () => {
 
   // Function to get the ad element
   const getNextAds = (chunkIndex: number) => {
-    return <AdBanner adClass={adClasses[chunkIndex]} key={`ad-${chunkIndex}`} />;
+    return <AdBanner adClass={adClasses[ chunkIndex ]} key={`ad-${chunkIndex}`} />;
   };
 
   const handleNextPage = () => {
@@ -754,7 +769,7 @@ const ArticlesPage = () => {
           ))}
         </div>
       </div>
-{/* test */}
+      {/* test */}
       {/* Pagination Controls */}
       <div className="flex justify-center items-center gap-4 mt-6">
         <button

@@ -70,7 +70,6 @@ export default function Component() {
     const [ videoPreview, setVideoPreview ] = useState<string | null>(null);
     const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
 
-console.log({allPosts})
 
     // State for search query
     const [ searchQuery, setSearchQuery ] = useState("");
