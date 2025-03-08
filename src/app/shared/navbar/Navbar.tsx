@@ -484,7 +484,10 @@ export default function Navbar() {
     <nav className="bg-[#00000085] relative">
       {/* Ad Banner at the top of the navbar */}
       <div className="w-full px-4 lg:px-20">
+        <div className={"flex justify-center items-center w-full"}>
+
       <AdBannerF />
+        </div>
         <div className="flex items-center justify-evenly h-24">
           <div className="flex-shrink-0 my-2">
             <Logo />
