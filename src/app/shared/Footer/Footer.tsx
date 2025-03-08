@@ -5,14 +5,10 @@ import { FaFacebookF, FaTwitter, FaReddit, FaYoutube, FaTiktok, FaLinkedin, FaIn
 import Logo from "@/components/Shared/Logo";
 import Link from "next/link";
 import Script from "next/script";
-import { AdBannerF } from "../navbar/Navbar";
 
 const Footer = () => {
   return (
     <footer className="bg-black py-8 mt-40 text-white">
-      <div className=" w-full flex justify-center items-center">
-        <AdBannerF />
-      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo Section */}
