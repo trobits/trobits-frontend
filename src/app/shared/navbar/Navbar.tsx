@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 
-// "use client";
 
 // import Link from "next/link";
 // import { useState } from "react";
@@ -9,6 +8,7 @@
 // import { navItems } from "@/components/Constant/Navbar.constant";
 // import Logo from "@/components/Shared/Logo";
 // import VideoModal from "@/components/VideoModal/VideoModal";
+
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 // import { Button } from "@/components/ui/button";
 // import { clearUser } from "@/redux/features/slices/authSlice";
@@ -356,17 +356,69 @@
 
 
 
+"use client";
 
 
+// function AdBanner() {
+//   return (
+//     <>
+//       {/* Top Ad banner  */}
+//       <ins
+//         className="67b008e690c926b6d6b98939"
+//         style={{ display: "inline-block", width: "1px", height: "1px", marginBottom: "20px" }}
+//       ></ins>
+//       <Script
+//         id="top-ad-banner-script"
+//         strategy="afterInteractive"
+//         dangerouslySetInnerHTML={{
+//           __html: `
+//             !function(e,n,c,t,o,r,d){
+//               !function e(n,c,t,o,r,m,d,s,a){
+//                 s=c.getElementsByTagName(t)[0],
+//                 (a=c.createElement(t)).async=!0,
+//                 a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+//                 a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+//                 s.parentNode.insertBefore(a,s)
+//               }(window,document,"script","67b008e690c926b6d6b98939",["cdn.bmcdn6.com"], 0, new Date().getTime())
+//             }();
+//           `,
+//         }}
+//       />
+//     </>
+//   );
+// }
 
 
+function AdBannerF() {
+  return (
+    <>
+      <ins className="67c24fd7aa72d3d47fc083ad" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
 
-
+      <Script
+        id="ad-banner-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(e,n,c,t,o,r,d){
+              !function e(n,c,t,o,r,m,d,s,a){
+                s=c.getElementsByTagName(t)[0],
+                (a=c.createElement(t)).async=!0,
+                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+                s.parentNode.insertBefore(a,s)
+              }(window,document,"script","67c24fd7aa72d3d47fc083ad",["cdn.bmcdn6.com"], 0, new Date().getTime())
+            }();
+          `,
+        }}
+      />
+    </>
+  );
+}
 
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-"use client";
+
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -379,6 +431,7 @@ import { Button } from "@/components/ui/button";
 import { clearUser, setPaths } from "@/redux/features/slices/authSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
+import Script from "next/script";
 
 
 export default function Navbar() {
@@ -428,8 +481,10 @@ export default function Navbar() {
 
 
   return (
-    <nav className="bg-[#00000085]">
+    <nav className="bg-[#00000085] relative">
+      {/* Ad Banner at the top of the navbar */}
       <div className="w-full px-4 lg:px-20">
+      <AdBannerF />
         <div className="flex items-center justify-evenly h-24">
           <div className="flex-shrink-0 my-2">
             <Logo />
