@@ -359,69 +359,69 @@
 "use client";
 
 
-// function AdBanner() {
-//   return (
-//     <>
-//       {/* Top Ad banner  */}
-//       <ins
-//         className="67b008e690c926b6d6b98939"
-//         style={{ display: "inline-block", width: "1px", height: "1px", marginBottom: "20px" }}
-//       ></ins>
-//       <Script
-//         id="top-ad-banner-script"
-//         strategy="afterInteractive"
-//         dangerouslySetInnerHTML={{
-//           __html: `
-//             !function(e,n,c,t,o,r,d){
-//               !function e(n,c,t,o,r,m,d,s,a){
-//                 s=c.getElementsByTagName(t)[0],
-//                 (a=c.createElement(t)).async=!0,
-//                 a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-//                 a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-//                 s.parentNode.insertBefore(a,s)
-//               }(window,document,"script","67b008e690c926b6d6b98939",["cdn.bmcdn6.com"], 0, new Date().getTime())
-//             }();
-//           `,
-//         }}
-//       />
-//     </>
-//   );
-// }
+const AdBannerHeader = ({ adClass }: { adClass: string }) => {
+  const adContainerRef = useRef<HTMLDivElement>(null);
 
+  const injectAdScript = () => {
+    if (!adContainerRef.current) return;
 
-export function AdBannerF() {
+    // Remove existing ad script if any
+    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    // Create and inject new ad script
+    const script = document.createElement("script");
+    script.innerHTML = `
+      !function(e,n,c,t,o,r,d){
+        !function e(n,c,t,o,r,m,d,s,a){
+          s=c.getElementsByTagName(t)[0],
+          (a=c.createElement(t)).async=!0,
+          a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+          a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+          s.parentNode.insertBefore(a,s)
+        }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
+      }();
+    `;
+    script.setAttribute("data-ad-class", adClass);
+    document.body.appendChild(script);
+  };
+
+  useEffect(() => {
+    injectAdScript(); // Inject on mount
+
+    // Listen for page visibility changes (when navigating back)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        injectAdScript(); // Re-inject ads on page activation
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [ adClass ]);
+
   return (
-    <>
-      <ins className="67c24fd7aa72d3d47fc083ad" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
-
-      <Script
-        id="ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67c24fd7aa72d3d47fc083ad",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
+    <div ref={adContainerRef}>
+      <ins
+        className={adClass}
+        style={{ display: "inline-block", width: "1px", height: "1px" }}
+        key={adClass + Date.now()}
+      ></ins>
+    </div>
   );
-}
-
+};
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { navItems } from "@/components/Constant/Navbar.constant";
 import Logo from "@/components/Shared/Logo";
@@ -486,7 +486,7 @@ export default function Navbar() {
       <div className="w-full px-4 lg:px-20">
         <div className={"flex justify-center items-center w-full"}>
 
-      <AdBannerF />
+          <AdBannerHeader adClass="67b29a8ee904d5920e70a203" />
         </div>
         <div className="flex items-center justify-evenly h-24">
           <div className="flex-shrink-0 my-2">
