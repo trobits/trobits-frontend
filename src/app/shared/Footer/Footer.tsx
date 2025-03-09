@@ -68,8 +68,8 @@ const AdBannerFooter = ({ adClass }: { adClass: string }) => {
 const Footer = () => {
   return (
     <footer className="bg-black py-8 mt-40 text-white">
-      <AdBannerFooter adClass="67b00549e904d5920e68f979" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <AdBannerFooter adClass="67b00549e904d5920e68f979" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo Section */}
           <div className="flex items-center">
@@ -176,42 +176,10 @@ const Footer = () => {
 
         </div>
       </div>
-
-      {/* <AdBanner /> */}
-
     </footer>
   );
 };
 
-
-function AdBanner() {
-  return (
-    <>
-      {/* Top Ad banner  */}
-      {/* Another New Ad Banner */}
-      {/* Top Ad banner with space */}
-      <div className=" mt-0" style={{ height: "80px", width: "100%", display: "block" }}></div>
-      <ins className="67b00549e904d5920e68f979" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
-      <Script
-        id="new-ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67b00549e904d5920e68f979",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
-  );
-}
 
 export default Footer;
 
