@@ -175,7 +175,6 @@
 
 
 
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -234,10 +233,10 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   }, [ adClass ]);
 
   return (
-    <div ref={adContainerRef}>
+    <div ref={adContainerRef} className="w-full my-4">
       <ins
         className={adClass}
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
+        style={{ display: "block", width: "100%", height: "auto" }}
         key={adClass + Date.now()}
       ></ins>
     </div>
