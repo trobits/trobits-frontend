@@ -61,7 +61,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   }, [ adClass ]);
 
   return (
-    <div ref={adContainerRef}>
+    <div key={adClass} ref={adContainerRef}>
       <ins
         className={adClass}
         style={{ display: "inline-block", width: "1px", height: "1px" }}
@@ -141,7 +141,7 @@ export default function NewsCompo() {
               <HomeNewsCard articleData={article} />
               {/* Show ad after every 4 articles */}
               {(index + 1) % 3 === 0 && (
-                <AdBanner adClass={adClasses[index]} />
+                <AdBanner key={adClasses[index]} adClass={adClasses[index]} />
                 // <div className={"size-80"}></div>
               )}
             </div>
