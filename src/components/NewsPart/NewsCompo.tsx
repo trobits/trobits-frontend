@@ -141,8 +141,8 @@ export default function NewsCompo() {
               <HomeNewsCard articleData={article} />
               {/* Show ad after every 4 articles */}
               {(index + 1) % 2 === 0 && (
-                // <AdBanner adClass={adClasses[ index - 1 ]} />
-                <div className={"size-80"}></div>
+                <AdBanner adClass={adClasses[ index - 1 ]} />
+                // <div className={"size-80"}></div>
               )}
             </div>
           ))}
