@@ -140,7 +140,7 @@ export default function NewsCompo() {
             <div key={article.id} className={"flex flex-wrap justify-center items-center"}>
               <HomeNewsCard articleData={article} />
               {/* Show ad after every 4 articles */}
-              {(index + 1) % 3 === 0 && (
+              {(index + 1) % 2 === 0 && (
                 <AdBanner key={adClasses[index]} adClass={adClasses[index]} />
                 // <div className={"size-80"}></div>
               )}
