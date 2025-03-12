@@ -67,7 +67,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     document.body.appendChild(script);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     console.log(`Injecting ad: ${adClass}`);
     injectAdScript(); // Inject on mount
 
