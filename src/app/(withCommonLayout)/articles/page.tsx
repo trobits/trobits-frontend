@@ -338,7 +338,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
 
 const ArticlesPage = () => {
   const [ currentPage, setCurrentPage ] = useState(1);
-  const limit = 15;
+  const limit = 14;
   const previousPath = useAppSelector((state) => state.auth.previousPath);
   const currentPath = useAppSelector((state) => state.auth.currentPath);
   const dispatch = useAppDispatch();
