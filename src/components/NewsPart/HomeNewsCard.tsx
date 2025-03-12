@@ -35,7 +35,7 @@ const NewsCard = ({ articleData }: NewsCardProps) => {
   return (
     <Link href={`/articles/${articleData?.id}`}>
       <div
-        className={`w-[335px] md:w-[335px] h-[284px] bg-gray-900 rounded-lg shadow-lg overflow-hidden transform transition-all duration-500 ease-in-out hover:scale-102 hover:-translate-y-2 hover:shadow-2xl ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5 mb-4"
+        className={`w-[336px] md:w-[336px] h-[284px] bg-gray-900 rounded-lg shadow-lg overflow-hidden transform transition-all duration-500 ease-in-out hover:scale-102 hover:-translate-y-2 hover:shadow-2xl ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5 mb-4"
           }`}
       >
         {/* Blog Image Section */}
