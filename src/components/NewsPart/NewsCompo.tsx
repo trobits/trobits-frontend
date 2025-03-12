@@ -97,22 +97,22 @@ export default function NewsCompo() {
   const allBlogs: Article[] = allBlogsData?.data || [];
 
   // Function to split articles into chunks
-  const chunkArray = (array: Article[], size: number) => {
-    const result = [];
-    for (let i = 0; i < array.length; i += size) {
-      result.push(array.slice(i, i + size));
-    }
-    return result;
-  };
+  // const chunkArray = (array: Article[], size: number) => {
+  //   const result = [];
+  //   for (let i = 0; i < array.length; i += size) {
+  //     result.push(array.slice(i, i + size));
+  //   }
+  //   return result;
+  // };
 
   // First row: 4 articles
-  const firstRowArticles = allBlogs.slice(0, 4);
+  // const firstRowArticles = allBlogs.slice(0, 4);
 
   // Remaining articles: 9 articles (to make the total 13)
-  const remainingArticles = allBlogs.slice(4, 12);
+  // const remainingArticles = allBlogs.slice(4, 12);
 
   // Split remaining articles into chunks of 3
-  const articleChunks = chunkArray(remainingArticles, 3);
+  // const articleChunks = chunkArray(remainingArticles, 3);
 
   const adClasses = [
     "67b00b6de904d5920e690b84",
