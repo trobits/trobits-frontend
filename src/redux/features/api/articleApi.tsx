@@ -23,7 +23,7 @@ const blogApi = baseApi.injectEndpoints({
         // }),
 
         getAllBlogs: build.query({
-            query: ({ page = 1, limit = 12, sortBy = "createdAt", sortOrder = "desc" }) => {
+            query: ({ page = 1, limit = 14, sortBy = "createdAt", sortOrder = "desc" }) => {
                 return {
                     url: `/article/all-article?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
                     method: "GET",
