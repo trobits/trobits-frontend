@@ -129,7 +129,7 @@ export default function NewsCompo() {
       <div className="container mx-auto mt-10">
         <h2 className="text-2xl text-center mb-6 font-bold text-cyan-600">Trobits Articles</h2>
         
-        <div className="flex flex-wrap justify-center gap-2 max-w- mx-auto">
+        <div className="flex flex-wrap justify-center gap-1 max-w- mx-auto">
           {allBlogs.slice(0,4).map((article, index) => (
             <div key={article.id} className={"flex flex-wrap justify-center items-center"}>
               <HomeNewsCard articleData={article} />
