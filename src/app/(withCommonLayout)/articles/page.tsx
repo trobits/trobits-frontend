@@ -39,8 +39,18 @@ export interface Article {
 // };
 
 const AdBanner = ({ adClass }: { adClass: string }) => {
-  React.useEffect(() => {
-    // Manually inject the script
+  const adContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const injectAdScript = () => {
+    if (!adContainerRef.current) return;
+
+    // Remove existing ad script if any
+    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    // Create and inject new ad script
     const script = document.createElement("script");
     script.innerHTML = `
       !function(e,n,c,t,o,r,d){
@@ -53,24 +63,34 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
       }();
     `;
+    script.setAttribute("data-ad-class", adClass);
     document.body.appendChild(script);
+  };
 
-    // Cleanup function to remove the script when the component unmounts
+  useEffect(() => {
+    console.log(`Injecting ad: ${adClass}`);
+    injectAdScript(); // Inject on mount
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        injectAdScript(); // Re-inject ads on page activation
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
-      document.body.removeChild(script);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [ adClass ]);
 
-  // Ad classes to rotate through
-
   return (
-    <>
-      {/* Ad banner */}
+    <div ref={adContainerRef}>
       <ins
         className={adClass}
         style={{ display: "inline-block", width: "1px", height: "1px" }}
       ></ins>
-    </>
+    </div>
   );
 };
 
