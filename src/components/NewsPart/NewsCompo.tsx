@@ -115,12 +115,9 @@ export default function NewsCompo() {
   // const articleChunks = chunkArray(remainingArticles, 3);
 
   const adClasses = [
-    "67b00b6de904d5920e690b84",
-    "67b3b8a41b3a7f15c72fcc94",
     "67b3b9181b3a7f15c72fce5d",
     "67b00b6de904d5920e690b84",
     "67b3b8a41b3a7f15c72fcc94",
-    "67b3b9181b3a7f15c72fce5d",
   ];
 
 
