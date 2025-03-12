@@ -130,13 +130,19 @@ export default function NewsCompo() {
         <h2 className="text-2xl text-center mb-6 font-bold text-cyan-600">Trobits Articles</h2>
         
         <div className="flex flex-wrap justify-center gap-2 max-w- mx-auto">
-          {allBlogs.map((article, index) => (
+          {allBlogs.slice(0,4).map((article, index) => (
+            <div key={article.id} className={"flex flex-wrap justify-center items-center"}>
+              <HomeNewsCard articleData={article} />
+            </div>
+          ))}
+
+          {allBlogs.slice(4).map((article, index) => (
             <div key={article.id} className={"flex flex-wrap justify-center items-center"}>
               <HomeNewsCard articleData={article} />
               {/* Show ad after every 4 articles */}
-              {(index + 1) % 4 === 0 && (
-                <AdBanner adClass={adClasses[index-1]} />
-                // <div className={"size-80"}></div>
+              {(index + 1) % 2 === 0 && (
+                // <AdBanner adClass={adClasses[ index - 1 ]} />
+                <div className={"size-80"}></div>
               )}
             </div>
           ))}
