@@ -11,7 +11,7 @@ import PostCard from "@/components/Post/PostCard";
 import { Post } from "@/components/Cryptohub/TopicDetails";
 import { Search } from "lucide-react";
 import toast from "react-hot-toast";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Images } from 'lucide-react';
 import AnimatedButton from "@/components/Shared/AnimatedButton";
 import Image from "next/image";
@@ -21,6 +21,8 @@ import RecommendedAccounts from "@/components/Cards/RecommendedAccounts";
 import AuthGuard from "@/components/Auth/AuthGuard";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 import { User } from "../videoPost/page";
+import { usePathname } from "next/navigation";
+import { setPaths } from "@/redux/features/slices/authSlice";
 
 // Debounce function to delay the search execution
 function useDebounce(value: string, delay: number) {
@@ -50,6 +52,11 @@ export default function Component() {
   const [ imagePreview, setImagePreview ] = useState<string | null>(null);
   const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
 
+  const dispatch = useAppDispatch();
+  const previousPath = useAppSelector((state) => state.auth.previousPath);
+  const currentPath = useAppSelector((state) => state.auth.currentPath);
+  const pathName = usePathname();
+
   // State for search query
   const [ searchQuery, setSearchQuery ] = useState("");
   // Debounced search query
@@ -58,11 +65,17 @@ export default function Component() {
   const filteredPosts = useMemo(() => {
     return allPosts.filter((post: Post) =>
       post.author.firstName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-      post.author.lastName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-      post.content.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-    );
+    post.author.lastName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+    post.content.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+  );
   }, [ debouncedSearchQuery, allPosts ]);
 
+  if (window) {
+    if (previousPath !== "/cryptohub/feed" && currentPath === "/cryptohub/feed") {
+      dispatch(setPaths(pathName));
+      window.location.reload();
+    }
+  }
   if (allImagePostLoading) {
     return <Loading />;
   }

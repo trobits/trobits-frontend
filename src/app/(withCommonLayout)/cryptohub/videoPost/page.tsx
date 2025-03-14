@@ -13,11 +13,13 @@ import PostCard from "@/components/Post/PostCard";
 import { Post } from "@/components/Cryptohub/TopicDetails";
 import { Search } from "lucide-react";
 import toast from "react-hot-toast";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Video } from "lucide-react";
 import AnimatedButton from "@/components/Shared/AnimatedButton";
 import AuthGuard from "@/components/Auth/AuthGuard";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
+import { usePathname } from "next/navigation";
+import { setPaths } from "@/redux/features/slices/authSlice";
 
 
 export interface User {
@@ -69,11 +71,22 @@ export default function Component() {
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
     const [ videoPreview, setVideoPreview ] = useState<string | null>(null);
     const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
+    const dispatch = useAppDispatch();
+    const previousPath = useAppSelector((state) => state.auth.previousPath);
+    const currentPath = useAppSelector((state) => state.auth.currentPath);
+    const pathName = usePathname();
 
-
+    
+    
     // State for search query
     const [ searchQuery, setSearchQuery ] = useState("");
     const debouncedSearchQuery = useDebounce(searchQuery, 500);
+    if (window) {
+        if (previousPath !== "/cryptohub/videoPost" && currentPath === "/cryptohub/videoPost") {
+            dispatch(setPaths(pathName));
+            window.location.reload();
+        }
+    }
 
     const filteredPosts = useMemo(() => {
         return allPosts.filter((post: Post) =>
@@ -86,7 +99,7 @@ export default function Component() {
     if (allVideoPostLoading) {
         return <Loading />;
     }
-
+    
     // Handle post video change
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[ 0 ];
@@ -121,7 +134,7 @@ export default function Component() {
             toast.dismiss(createPostLoadingToast);
         }
     };
-
+    
     if (userFromDbLoading) {
         return <Loading />
     }
