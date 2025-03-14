@@ -175,7 +175,6 @@
 // export default ShibaBurnsPage;
 
 
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -273,6 +272,8 @@ const LuncBurnsPage: React.FC = () => {
       <Box sx={{ display: { xs: "block", md: "none" }, mb: 2 }}>
         <AdBanner adClass={adClasses[ 0 ]} />
         <AdBanner adClass={adClasses[ 1 ]} />
+        <AdBanner adClass={adClasses[ 2 ]} />
+        <AdBanner adClass={adClasses[ 3 ]} />
       </Box>
 
       <Grid
@@ -293,9 +294,10 @@ const LuncBurnsPage: React.FC = () => {
               gap: 2,
             }}
           >
-            {/* Left Ad */}
-            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+            {/* Left Ads */}
+            <Box sx={{ flex: 1, maxWidth: "300px", display: "flex", gap: 2 }}>
               <AdBanner adClass={adClasses[ 0 ]} />
+              <AdBanner adClass={adClasses[ 1 ]} />
             </Box>
 
             {/* Title */}
@@ -316,49 +318,17 @@ const LuncBurnsPage: React.FC = () => {
               </Typography>
             </Box>
 
-            {/* Right Ad */}
-            <Box sx={{ flex: 1, maxWidth: "300px" }}>
-              <AdBanner adClass={adClasses[ 1 ]} />
+            {/* Right Ads */}
+            <Box sx={{ flex: 1, maxWidth: "300px", display: "flex", gap: 2 }}>
+              <AdBanner adClass={adClasses[ 2 ]} />
+              <AdBanner adClass={adClasses[ 3 ]} />
             </Box>
           </Box>
         </Grid>
 
         <Grid item xs={12}>
-          {/* Ads and date picker for larger devices */}
-          <Box
-            sx={{
-              display: { xs: "none", md: "flex" },
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              gap: 2,
-            }}
-          >
-            {/* Left Ad */}
-            <Box sx={{ flex: 1, maxWidth: "300px" }}>
-              <AdBanner adClass={adClasses[ 2 ]} />
-            </Box>
-
-            {/* Date Picker */}
-            <Box sx={{ flex: 2, display: "flex", justifyContent: "center" }}>
-              <MonthPicker
-                selectedMonth={selectedMonth}
-                onChange={(newValue: Date | null) => {
-                  if (newValue) {
-                    setSelectedMonth(newValue);
-                  }
-                }}
-              />
-            </Box>
-
-            {/* Right Ad */}
-            <Box sx={{ flex: 1, maxWidth: "300px" }}>
-              <AdBanner adClass={adClasses[ 3 ]} />
-            </Box>
-          </Box>
-
-          {/* Date picker for small devices */}
-          <Box sx={{ display: { xs: "block", md: "none" }, mb: 2 }}>
+          {/* Date picker for all devices */}
+          <Box sx={{ mb: 2 }}>
             <MonthPicker
               selectedMonth={selectedMonth}
               onChange={(newValue: Date | null) => {
@@ -482,7 +452,7 @@ const LuncBurnsPage: React.FC = () => {
     </div>
   );
 };
-
+// Ad banner component
 const AdBanner = ({ adClass }: { adClass: string }) => {
   const adContainerRef = useRef<HTMLDivElement>(null);
 
@@ -568,7 +538,6 @@ const MonthPicker = ({ selectedMonth, onChange }: any) => {
   );
 };
 
-// Ad banner component
 
 
 export default LuncBurnsPage;
