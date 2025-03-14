@@ -174,10 +174,10 @@
 
 // export default ShibaBurnsPage;
 
+
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// /* eslint-disable @typescript-eslint/no-unused-vars */
 
 "use client";
 import React, { useState, useEffect, useRef } from "react";
@@ -199,15 +199,15 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
   useGetAllArchiveQuery,
-  useGetAllShibaBurnsQuery,
+  useGetAllLuncBurnsQuery,
 } from "@/redux/features/api/archiveApi";
 import Loading from "@/components/Shared/Loading";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { setPaths } from "@/redux/features/slices/authSlice";
-import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { usePathname } from "next/navigation";
 
-interface ShibaBurnRecord {
+interface LuncBurnRecord {
   id: string;
   currency: string;
   date: string; // ISO date string
@@ -216,16 +216,16 @@ interface ShibaBurnRecord {
   shibaBurnArchiveId?: string; // Optional field if not always present
 }
 
-
 const adClasses = [
   "67d2cfc79eb53572455e13e3",
   "67d2d0779eb53572455e1516",
   "67d2d0c56f9479aa015d006a",
+  "67d2d0c56f9479aa015d006a",
 ];
 
-const ShibaBurnsPage: React.FC = () => {
-  const [records, setRecords] = useState<ShibaBurnRecord[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
+const LuncBurnsPage: React.FC = () => {
+  const [ records, setRecords ] = useState<LuncBurnRecord[]>([]);
+  const [ selectedMonth, setSelectedMonth ] = useState<Date>(new Date());
   const dispatch = useAppDispatch();
   const previousPath = useAppSelector((state) => state.auth.previousPath);
   const currentPath = useAppSelector((state) => state.auth.currentPath);
@@ -241,34 +241,40 @@ const ShibaBurnsPage: React.FC = () => {
   const { data: allArchiveData, isLoading: allArchiveDataLoading } =
     useGetAllArchiveQuery("");
 
-  const { data: allShibaBurnsData, isLoading: allShibaBurnsDataLoading } =
-    useGetAllShibaBurnsQuery(`?month=${month}&year=${year}`);
+  const { data: allLuncBurnsData, isLoading: allLuncBurnsDataLoading } =
+    useGetAllLuncBurnsQuery(`?month=${month}&year=${year}`);
 
   const allArchive =
     allArchiveData?.data?.length > 0 ? allArchiveData?.data : [];
-    
-    useEffect(() => {
-      if (allShibaBurnsData?.data?.length > 0) {
-        setRecords(allShibaBurnsData.data);
-      }
-  }, [allShibaBurnsData]);
+
+  useEffect(() => {
+    if (allLuncBurnsData?.data?.length > 0) {
+      setRecords(allLuncBurnsData.data);
+    }
+  }, [ allLuncBurnsData ]);
 
   if (window) {
-    if (previousPath !== "/archive/shiba" && currentPath === "/archive/shiba") {
+    if (previousPath !== "/archive/lunc" && currentPath === "/archive/lunc") {
       dispatch(setPaths(pathName));
       window.location.reload();
     }
   }
-  if (allArchiveDataLoading || allShibaBurnsDataLoading) {
+  if (allArchiveDataLoading || allLuncBurnsDataLoading) {
     return <Loading />;
   }
-  
-  const sortedRecords = [...records].sort(
+
+  const sortedRecords = [ ...records ].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
-  
+
   return (
     <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
+      {/* Ads at the top for small devices */}
+      <Box sx={{ display: { xs: "block", md: "none" }, mb: 2 }}>
+        <AdBanner adClass={adClasses[ 0 ]} />
+        <AdBanner adClass={adClasses[ 1 ]} />
+      </Box>
+
       <Grid
         container
         spacing={3}
@@ -277,23 +283,82 @@ const ShibaBurnsPage: React.FC = () => {
         direction="column"
       >
         <Grid item xs={12}>
-          <Typography
-            className="text-4xl font-bold text-center mb-2 text-cyan-600"
-            variant="h5"
-            sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
+          {/* Ads and title for larger devices */}
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              gap: 2,
+            }}
           >
-            SHIB Burn Data
-          </Typography>
-          <Typography
-            className="text-xl font-bold text-center mb-2 text-cyan-600"
-            // variant="h5"
-            sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
-          >
-            Pick your Month to see Burn Data on This Month
-          </Typography>
+            {/* Left Ad */}
+            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+              <AdBanner adClass={adClasses[ 0 ]} />
+            </Box>
+
+            {/* Title */}
+            <Box sx={{ flex: 2, textAlign: "center" }}>
+              <Typography
+                className="text-4xl font-bold text-center mb-2 text-cyan-600"
+                variant="h5"
+                sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
+              >
+                LUNC Burn Data
+              </Typography>
+              <Typography
+                className="text-4xl font-bold text-center mb-2 text-cyan-600"
+                variant="h5"
+                sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
+              >
+                Pick your Month to see Burn Data on This Month
+              </Typography>
+            </Box>
+
+            {/* Right Ad */}
+            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+              <AdBanner adClass={adClasses[ 1 ]} />
+            </Box>
+          </Box>
         </Grid>
+
         <Grid item xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+          {/* Ads and date picker for larger devices */}
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              gap: 2,
+            }}
+          >
+            {/* Left Ad */}
+            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+              <AdBanner adClass={adClasses[ 2 ]} />
+            </Box>
+
+            {/* Date Picker */}
+            <Box sx={{ flex: 2, display: "flex", justifyContent: "center" }}>
+              <MonthPicker
+                selectedMonth={selectedMonth}
+                onChange={(newValue: Date | null) => {
+                  if (newValue) {
+                    setSelectedMonth(newValue);
+                  }
+                }}
+              />
+            </Box>
+
+            {/* Right Ad */}
+            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+              <AdBanner adClass={adClasses[ 3 ]} />
+            </Box>
+          </Box>
+
+          {/* Date picker for small devices */}
+          <Box sx={{ display: { xs: "block", md: "none" }, mb: 2 }}>
             <MonthPicker
               selectedMonth={selectedMonth}
               onChange={(newValue: Date | null) => {
@@ -304,6 +369,7 @@ const ShibaBurnsPage: React.FC = () => {
             />
           </Box>
         </Grid>
+
         <Grid item xs={12}>
           <TableContainer
             component={Paper}
@@ -311,6 +377,7 @@ const ShibaBurnsPage: React.FC = () => {
               backgroundColor: "#f8f9fa",
               borderRadius: "8px",
               width: "100vw",
+              overflowX: "auto",
             }}
           >
             <Table>
@@ -349,7 +416,7 @@ const ShibaBurnsPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {allShibaBurnsData?.data?.length > 0 ? (
+                {allLuncBurnsData?.data?.length > 0 ? (
                   sortedRecords.map((record, index) => (
                     <TableRow
                       key={record.id}
@@ -388,10 +455,7 @@ const ShibaBurnsPage: React.FC = () => {
                           textAlign: "center",
                         }}
                       >
-                        {/* {record?.transactionRef?.length > 20
-                          ? record?.transactionRef?.slice(0, 20) + "..."
-                          : record.transactionRef} */}
-                          {record.transactionRef}
+                        {record.transactionRef}
                       </TableCell>
                     </TableRow>
                   ))
@@ -475,15 +539,15 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   );
 };
 
-//month picker
+// Month picker
 const MonthPicker = ({ selectedMonth, onChange }: any) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
-        views={["year", "month"]}
+        views={[ "year", "month" ]}
         value={selectedMonth}
         onChange={onChange}
-        openTo="month" // This ensures the picker opens to the month view by default
+        openTo="month"
         slots={{ textField: TextField }}
         slotProps={{
           textField: {
@@ -504,6 +568,7 @@ const MonthPicker = ({ selectedMonth, onChange }: any) => {
   );
 };
 
+// Ad banner component
 
 
-export default ShibaBurnsPage;
+export default LuncBurnsPage;
