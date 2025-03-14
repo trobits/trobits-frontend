@@ -292,12 +292,22 @@ import DummyImage from "@/assets/dummy-blog.png";
 import { Article } from "@/app/(withCommonLayout)/articles/page";
 import { HeartIcon } from "lucide-react";
 import PostCommentCard from "../Post/PostCommentCard";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { IUser } from "../Cryptohub/Types";
 import toast from "react-hot-toast";
 import { useCreateCommentMutation } from "@/redux/features/api/postApi";
 import { Button } from "../ui/button";
+
+
+const adClasses = [
+  "67b00b6de904d5920e690b84",
+  "67b3b8a41b3a7f15c72fcc94",
+  "67b3b9181b3a7f15c72fce5d",
+  "67b3b9469a62fcbf1eeb65df",
+  "67b3c7949a62fcbf1eeb83a6",
+  "67b3c7d89a62fcbf1eeb842e",
+];
 
 function ArticleDetailsPage({ articleId }: { articleId: string }) {
   const { data: articleData, isLoading: articleLoading } =
@@ -373,6 +383,9 @@ function ArticleDetailsPage({ articleId }: { articleId: string }) {
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-8 lg:px-8">
+      <div className="flex flex-wrap justify-center gap-2 mx-auto">{adClasses.map((adClass) => (
+        <AdBanner key={adClass} adClass={adClass} />
+      ))}</div>
       {/* Main content */}
       <div className="flex justify-center">
         <article className="max-w-5xl bg-[#ffffffce] border-4 border-cyan-500 text-black tracking-wide leading-9 shadow-lg rounded-lg overflow-hidden">
@@ -461,4 +474,61 @@ function ArticleDetailsPage({ articleId }: { articleId: string }) {
   );
 }
 
+
+
+const AdBanner = ({ adClass }: { adClass: string }) => {
+  const adContainerRef = useRef<HTMLDivElement>(null);
+
+  const injectAdScript = () => {
+    if (!adContainerRef.current) return;
+
+    // Remove existing ad script if any
+    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    // Create and inject new ad script
+    const script = document.createElement("script");
+    script.innerHTML = `
+      !function(e,n,c,t,o,r,d){
+        !function e(n,c,t,o,r,m,d,s,a){
+          s=c.getElementsByTagName(t)[0],
+          (a=c.createElement(t)).async=!0,
+          a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+          a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+          s.parentNode.insertBefore(a,s)
+        }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
+      }();
+    `;
+    script.setAttribute("data-ad-class", adClass);
+    document.body.appendChild(script);
+  };
+
+  useEffect(() => {
+    console.log(`Injecting ad: ${adClass}`);
+    injectAdScript(); // Inject on mount
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        injectAdScript(); // Re-inject ads on page activation
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [ adClass ]);
+
+  return (
+    <div ref={adContainerRef}>
+      <ins
+        className={adClass}
+        style={{ display: "inline-block", width: "1px", height: "1px" }}
+      ></ins>
+    </div>
+  );
+};
 export default ArticleDetailsPage;
