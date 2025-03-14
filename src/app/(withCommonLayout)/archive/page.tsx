@@ -18,18 +18,6 @@ const ArchivePage: React.FC = () => {
   const allArchive =
     allArchiveData?.data?.length > 0 ? allArchiveData?.data : [];
 
-  const archives = [
-    {
-      title: "Shiba Burns Archive",
-      imageSrc: ShibImage,
-      description: "Explore the Shiba Burns Archive",
-    },
-    {
-      title: "Lunc Burns Archive",
-      imageSrc: LuncImage,
-      description: "Discover the Lunc Burns Archive",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 rounded-md">

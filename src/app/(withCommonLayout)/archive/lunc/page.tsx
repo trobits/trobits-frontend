@@ -27,6 +27,9 @@ import {
 } from "@/redux/features/api/archiveApi";
 import Loading from "@/components/Shared/Loading";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { setPaths } from "@/redux/features/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { usePathname } from "next/navigation";
 
 interface LuncBurnRecord {
   id: string;
@@ -40,6 +43,11 @@ interface LuncBurnRecord {
 const LuncBurnsPage: React.FC = () => {
   const [records, setRecords] = useState<LuncBurnRecord[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
+  const dispatch = useAppDispatch();
+  const previousPath = useAppSelector((state) => state.auth.previousPath);
+  const currentPath = useAppSelector((state) => state.auth.currentPath);
+  const pathName = usePathname();
+
   const formatSelectedMonth = (date: Date) => {
     const month = date.getMonth() + 1; // Months are 0-indexed
     const year = date.getFullYear();
@@ -61,7 +69,13 @@ const LuncBurnsPage: React.FC = () => {
       setRecords(allLuncBurnsData.data);
     }
   }, [allLuncBurnsData]);
-
+  
+  if (window) {
+    if (previousPath !== "/archive/lunc" && currentPath === "/archive/lunc") {
+      dispatch(setPaths(pathName));
+      window.location.reload();
+    }
+  }
   if (allArchiveDataLoading || allLuncBurnsDataLoading) {
     return <Loading />;
   }
