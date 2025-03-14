@@ -180,7 +180,7 @@
 // /* eslint-disable @typescript-eslint/no-unused-vars */
 
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Typography,
   Grid,
@@ -419,35 +419,6 @@ const ShibaBurnsPage: React.FC = () => {
   );
 };
 
-//month picker
-const MonthPicker = ({ selectedMonth, onChange }: any) => {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        views={["year", "month"]}
-        value={selectedMonth}
-        onChange={onChange}
-        openTo="month" // This ensures the picker opens to the month view by default
-        slots={{ textField: TextField }}
-        slotProps={{
-          textField: {
-            variant: "outlined",
-            label: "Select Month",
-            fullWidth: false,
-            margin: "normal",
-            size: "medium",
-            sx: {
-              backgroundColor: "#f7f7f7",
-              borderRadius: "8px",
-              fontSize: "20px",
-            },
-          },
-        }}
-      />
-    </LocalizationProvider>
-  );
-};
-
 const AdBanner = ({ adClass }: { adClass: string }) => {
   const adContainerRef = useRef<HTMLDivElement>(null);
 
@@ -503,5 +474,36 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     </div>
   );
 };
+
+//month picker
+const MonthPicker = ({ selectedMonth, onChange }: any) => {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DatePicker
+        views={["year", "month"]}
+        value={selectedMonth}
+        onChange={onChange}
+        openTo="month" // This ensures the picker opens to the month view by default
+        slots={{ textField: TextField }}
+        slotProps={{
+          textField: {
+            variant: "outlined",
+            label: "Select Month",
+            fullWidth: false,
+            margin: "normal",
+            size: "medium",
+            sx: {
+              backgroundColor: "#f7f7f7",
+              borderRadius: "8px",
+              fontSize: "20px",
+            },
+          },
+        }}
+      />
+    </LocalizationProvider>
+  );
+};
+
+
 
 export default ShibaBurnsPage;
