@@ -1,11 +1,27 @@
+
+"use client"
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Footer from "@/app/shared/Footer/Footer"
 import Script from "next/script";
+import { setPaths } from "@/redux/features/slices/authSlice";
+import { usePathname } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 // import { Grid } from "@/components/ui/grid"
 
 export default function AboutUs() {
+  const dispatch = useAppDispatch();
+  const previousPath = useAppSelector((state) => state.auth.previousPath);
+  const currentPath = useAppSelector((state) => state.auth.currentPath);
+  const pathName = usePathname();
+
+  if (window) {
+    if (previousPath !== "/aboutus" && currentPath === "/aboutus") {
+      dispatch(setPaths(pathName));
+      window.location.reload();
+    }
+  }
   return (
     <div className="bg-[#00000077]  text-white min-h-screen pt-16">
       <div className="max-w-7xl mx-auto space-y-12">

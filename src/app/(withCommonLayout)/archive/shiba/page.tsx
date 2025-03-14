@@ -203,6 +203,9 @@ import {
 } from "@/redux/features/api/archiveApi";
 import Loading from "@/components/Shared/Loading";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { setPaths } from "@/redux/features/slices/authSlice";
+import { usePathname } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 interface ShibaBurnRecord {
   id: string;
@@ -216,6 +219,11 @@ interface ShibaBurnRecord {
 const ShibaBurnsPage: React.FC = () => {
   const [records, setRecords] = useState<ShibaBurnRecord[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
+  const dispatch = useAppDispatch();
+  const previousPath = useAppSelector((state) => state.auth.previousPath);
+  const currentPath = useAppSelector((state) => state.auth.currentPath);
+  const pathName = usePathname();
+
   const formatSelectedMonth = (date: Date) => {
     const month = date.getMonth() + 1; // Months are 0-indexed
     const year = date.getFullYear();
@@ -231,21 +239,27 @@ const ShibaBurnsPage: React.FC = () => {
 
   const allArchive =
     allArchiveData?.data?.length > 0 ? allArchiveData?.data : [];
-
-  useEffect(() => {
-    if (allShibaBurnsData?.data?.length > 0) {
-      setRecords(allShibaBurnsData.data);
-    }
+    
+    useEffect(() => {
+      if (allShibaBurnsData?.data?.length > 0) {
+        setRecords(allShibaBurnsData.data);
+      }
   }, [allShibaBurnsData]);
 
+  if (window) {
+    if (previousPath !== "/archive/shiba" && currentPath === "/archive/shiba") {
+      dispatch(setPaths(pathName));
+      window.location.reload();
+    }
+  }
   if (allArchiveDataLoading || allShibaBurnsDataLoading) {
     return <Loading />;
   }
-
+  
   const sortedRecords = [...records].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
-
+  
   return (
     <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
       <Grid
