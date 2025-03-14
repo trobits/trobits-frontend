@@ -301,12 +301,9 @@ import { Button } from "../ui/button";
 
 
 const adClasses = [
-  "67b00b6de904d5920e690b84",
-  "67b3b8a41b3a7f15c72fcc94",
-  "67b3b9181b3a7f15c72fce5d",
-  "67b3b9469a62fcbf1eeb65df",
-  "67b3c7949a62fcbf1eeb83a6",
-  "67b3c7d89a62fcbf1eeb842e",
+  "67d2cfc79eb53572455e13e3",
+  "67d2d0779eb53572455e1516",
+  "67d2d0c56f9479aa015d006a",
 ];
 
 function ArticleDetailsPage({ articleId }: { articleId: string }) {
