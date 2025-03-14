@@ -19,11 +19,13 @@ import {
   Bell,
 } from "lucide-react";
 import socket from "@/redux/features/api/socketClient";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { IoNotificationsCircle } from "react-icons/io5";
 import { useGetNotificationByUseridQuery } from "@/redux/features/api/authApi";
 import Loading from "@/components/Shared/Loading";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { setPaths } from "@/redux/features/slices/authSlice";
 
 // Define types for notifications
 type Notification = {
@@ -42,7 +44,12 @@ export default function NotificationPage() {
   const user = useAppSelector((state) => state.auth.user);
   const { data: allNotificationData, isLoading: allNotificationDataLoading } =
     useGetNotificationByUseridQuery(user?.id);
+  const dispatch = useAppDispatch();
+  const previousPath = useAppSelector((state) => state.auth.previousPath);
+  const currentPath = useAppSelector((state) => state.auth.currentPath);
+  const pathName = usePathname();
 
+  
   // Handle real-time notifications
   useEffect(() => {
     socket.on("connect", () => {});
@@ -53,33 +60,40 @@ export default function NotificationPage() {
         ...prevNotifications,
       ]);
     });
-
+    
     const userId = user?.id;
     if (userId) {
       socket.emit("joinUserRoom", userId);
     }
-
+    
     return () => {
       socket.off("receiveNotification");
     };
   }, [user?.id]);
-
+  
   useEffect(() => {
     if (allNotificationData?.data?.length) {
       setNotifications(allNotificationData.data);
     }
   }, [allNotificationData]);
 
+  if (window) {
+    if (previousPath !== "/cryptohub/notifications" && currentPath === "/cryptohub/notifications") {
+      dispatch(setPaths(pathName));
+      window.location.reload();
+    }
+  }
+  
   if (allNotificationDataLoading) {
     return <Loading />;
   }
-
+  
   const handleShowMore = () => {
     setVisibleCount((prevCount) => prevCount + 20);
   };
-
+  
   const visibleNotifications = notifications.slice(0, visibleCount);
-
+  
   return (
     <AuthGuard>
       <div className="min-h-screen bg-[#0000004f]">

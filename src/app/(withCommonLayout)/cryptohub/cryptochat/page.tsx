@@ -4,9 +4,23 @@ import TopicsCard from '@/components/Cryptohub/TopicsCard';
 import { ITopicInfo } from '@/components/Cryptohub/Types';
 import Loading from '@/components/Shared/Loading';
 import { useGetAllTopicQuery } from '@/redux/features/api/topicApi';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
+import { usePathname } from 'next/navigation'
+import { setPaths } from '@/redux/features/slices/authSlice'
 
 const CryptoChatPage = () => {
   const { data, isLoading: allTopicLoading } = useGetAllTopicQuery("");
+  const dispatch = useAppDispatch();
+  const previousPath = useAppSelector((state) => state.auth.previousPath);
+  const currentPath = useAppSelector((state) => state.auth.currentPath);
+  const pathName = usePathname();
+
+  if (window) {
+    if (previousPath !== "/cryptohub/cryptochat" && currentPath === "/cryptohub/cryptochat") {
+      dispatch(setPaths(pathName));
+      window.location.reload();
+    }
+  }
   const allTopics = data?.data
   if (allTopicLoading) {
     return <Loading/>
