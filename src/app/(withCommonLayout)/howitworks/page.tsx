@@ -34,7 +34,7 @@ function HowItWorks() {
   const currentPath = useAppSelector((state) => state.auth.currentPath);
   const dispatch = useAppDispatch();
     if (window) {
-      if (previousPath !== "/archive/shiba" && currentPath === "/archive/shiba") {
+      if (previousPath !== "/howitworks" && currentPath === "/howitworks") {
         dispatch(setPaths(pathName));
         window.location.reload();
       }
