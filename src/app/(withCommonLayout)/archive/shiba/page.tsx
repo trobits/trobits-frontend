@@ -29,6 +29,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { setPaths } from "@/redux/features/slices/authSlice";
 import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import Footer from "@/app/shared/Footer/Footer";
 
 interface ShibaBurnRecord {
   id: string;
@@ -81,6 +82,7 @@ const ShibaBurnsPage: React.FC = () => {
       window.location.reload();
     }
   }
+  
   if (allArchiveDataLoading || allShibaBurnsDataLoading) {
     return <Loading />;
   }
@@ -242,6 +244,7 @@ const ShibaBurnsPage: React.FC = () => {
           </TableContainer>
         </Grid>
       </Grid>
+      <Footer/>
     </div>
   );
 };
