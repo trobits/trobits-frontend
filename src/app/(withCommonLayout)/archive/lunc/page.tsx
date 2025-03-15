@@ -370,6 +370,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { setPaths } from "@/redux/features/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname } from "next/navigation";
+import Footer from "@/app/shared/Footer/Footer";
 
 interface LuncBurnRecord {
   id: string;
@@ -615,6 +616,7 @@ const LuncBurnsPage: React.FC = () => {
           </TableContainer>
         </Grid>
       </Grid>
+      <Footer/>
     </div>
   );
 };
