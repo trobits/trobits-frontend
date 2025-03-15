@@ -435,8 +435,8 @@ const LuncBurnsPage: React.FC = () => {
     <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
       <div className="flex flex-wrap justify-center gap-2 mb-3">
         {adClasses.map((adClass) => (
-          <div key={adClass,index} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-            <AdBanner adClass={adClass +index} />
+          <div key={adClass} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
+            <AdBanner adClass={adClass} />
           </div>
         ))}
       </div>
