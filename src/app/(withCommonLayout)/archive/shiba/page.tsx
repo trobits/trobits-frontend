@@ -326,7 +326,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     <div ref={adContainerRef}>
       <ins
         className={adClass}
-        style={{  }}
+        style={{ display: "block", width: "100%", height: "auto" }}
       ></ins>
     </div>
   );
