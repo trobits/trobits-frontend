@@ -94,9 +94,9 @@ const ShibaBurnsPage: React.FC = () => {
       {/* Ad Banners at the top */}
       <div className="flex flex-wrap justify-center gap-2 mb-3 mx-auto">
         {adClasses.map((adClass) => (
-          <div key={adClass} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-            <AdBanner adClass={adClass} />
-          </div>
+          
+          <AdBanner key={adClass} adClass={adClass} />
+         
         ))}
       </div>
 
