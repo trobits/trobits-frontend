@@ -404,7 +404,7 @@ const ArticlesPage = () => {
               <NewsCard articleData={article} />
 
               {/* Show an ad after every 3 articles */}
-              {(index + 1) % 2 === 0 && adIndex < adClasses.length && (
+              {(index + 1) % 3 === 0 && adIndex < adClasses.length && (
                 <AdBanner key={adClasses[ adIndex ]} adClass={adClasses[ adIndex++ ]} />
               )}
             </div>
