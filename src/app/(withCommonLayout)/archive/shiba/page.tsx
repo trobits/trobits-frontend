@@ -92,7 +92,7 @@ const ShibaBurnsPage: React.FC = () => {
   return (
     <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
       {/* Ad Banners at the top */}
-      <div className="flex flex-wrap justify-center gap-2 mb-3">
+      <div className="flex flex-wrap justify-center gap-2 mb-3 mx-auto">
         {adClasses.map((adClass) => (
           <div key={adClass} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
             <AdBanner adClass={adClass} />
