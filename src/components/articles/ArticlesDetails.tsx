@@ -380,9 +380,11 @@ function ArticleDetailsPage({ articleId }: { articleId: string }) {
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-8 lg:px-8">
-      <div className="flex flex-wrap justify-center gap-2 mx-auto">{adClasses.map((adClass) => (
+      <div className="flex flex-wrap justify-center gap-2 mx-auto">
+        {adClasses.map((adClass) => (
         <AdBanner key={adClass} adClass={adClass} />
-      ))}</div>
+      ))}
+      </div>
       {/* Main content */}
       <div className="flex justify-center">
         <article className="max-w-5xl bg-[#ffffffce] border-4 border-cyan-500 text-black tracking-wide leading-9 shadow-lg rounded-lg overflow-hidden">
