@@ -289,7 +289,7 @@ import {
 import Image from "next/image";
 import Loading from "../Shared/Loading";
 import DummyImage from "@/assets/dummy-blog.png";
-import { Article } from "@/app/(withCommonLayout)/articles/page";
+import { Article } from "@/app/(withCommonLayout)/articles/SubPage";
 import { HeartIcon } from "lucide-react";
 import PostCommentCard from "../Post/PostCommentCard";
 import { FormEvent, useEffect, useRef, useState } from "react";
