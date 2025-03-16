@@ -370,7 +370,6 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { setPaths } from "@/redux/features/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname } from "next/navigation";
-import Footer from "@/app/shared/Footer/Footer";
 
 interface LuncBurnRecord {
   id: string;
@@ -434,13 +433,6 @@ const LuncBurnsPage: React.FC = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
-      <div className="flex flex-wrap justify-center gap-2 mb-3">
-        {adClasses.map((adClass) => (
-          <div key={adClass} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-            <AdBanner adClass={adClass} />
-          </div>
-        ))}
-      </div>
       <Grid
         container
         spacing={3}
@@ -459,6 +451,10 @@ const LuncBurnsPage: React.FC = () => {
               gap: 2,
             }}
           >
+            {/* Left Ad */}
+            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+              <AdBanner adClass={adClasses[ 0 ]} />
+            </Box>
 
             {/* Title */}
             <Box sx={{ flex: 2, textAlign: "center" }}>
@@ -478,6 +474,10 @@ const LuncBurnsPage: React.FC = () => {
               </Typography>
             </Box>
 
+            {/* Right Ad */}
+            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+              <AdBanner adClass={adClasses[ 1 ]} />
+            </Box>
           </Box>
         </Grid>
 
@@ -492,6 +492,11 @@ const LuncBurnsPage: React.FC = () => {
               gap: 2,
             }}
           >
+            {/* Left Ad */}
+            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+              <AdBanner adClass={adClasses[ 2 ]} />
+            </Box>
+
             {/* Date Picker */}
             <Box sx={{ flex: 2, display: "flex", justifyContent: "center" }}>
               <MonthPicker
@@ -504,6 +509,10 @@ const LuncBurnsPage: React.FC = () => {
               />
             </Box>
 
+            {/* Right Ad */}
+            <Box sx={{ flex: 1, maxWidth: "300px" }}>
+              <AdBanner adClass={adClasses[ 3 ]} />
+            </Box>
           </Box>
         </Grid>
 
@@ -616,7 +625,6 @@ const LuncBurnsPage: React.FC = () => {
           </TableContainer>
         </Grid>
       </Grid>
-      <Footer/>
     </div>
   );
 };
@@ -698,10 +706,10 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   }, [ adClass ]);
 
   return (
-    <div ref={adContainerRef} className="w-full h-auto">
+    <div ref={adContainerRef}>
       <ins
         className={adClass}
-        style={{ display: "block", width: "100%", height: "auto" }}
+        style={{ display: "inline-block", width: "1px", height: "1px" }}
       ></ins>
     </div>
   );
