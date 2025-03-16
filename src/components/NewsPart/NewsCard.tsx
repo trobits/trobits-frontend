@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Article } from "@/app/(withCommonLayout)/articles/page";
 import DummyBlogImage from "@/assets/dummy-blog.png";
+import { Article } from "@/app/(withCommonLayout)/articles/SubPage";
 
 interface NewsCardProps {
   articleData: Article;
 }
+
 
 const NewsCard = ({ articleData }: NewsCardProps) => {
   // State to manage when the card should appear
