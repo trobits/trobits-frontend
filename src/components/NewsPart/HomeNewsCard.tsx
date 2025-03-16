@@ -10,6 +10,7 @@ interface NewsCardProps {
   articleData: Article;
 }
 
+
 const NewsCard = ({ articleData }: NewsCardProps) => {
   // State to manage when the card should appear
   const [ isVisible, setIsVisible ] = useState(false);
