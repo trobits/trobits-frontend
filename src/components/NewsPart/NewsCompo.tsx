@@ -162,7 +162,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "../Shared/Loading";
-import { Article } from "@/app/(withCommonLayout)/articles/page";
+import { Article } from "@/app/(withCommonLayout)/articles/SubPage";
 import React, { useEffect, useRef } from "react";
 import HomeNewsCard from "./HomeNewsCard";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
