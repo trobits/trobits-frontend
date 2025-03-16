@@ -70,9 +70,9 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
 
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
-        return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-        };
+        // return () => {
+        //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+        // };
     }, [ adClass ]);
 
     return (
