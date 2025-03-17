@@ -88,12 +88,20 @@ export default function RecommendedArticles() {
     const currentPath = useAppSelector((state) => state.auth.currentPath);
     const dispatch = useAppDispatch();
     const pathName = usePathname();
+    // useEffect(() => {
+    //     if (!((previousPath?.split("/").includes("articles")) && (previousPath?.split("/").length === 3)) && ((currentPath?.split("/").includes("articles")) && (currentPath?.split("/").length === 3))) {
+    //         dispatch(setPaths(pathName));
+    //         window.location.reload();
+    //     }
+    // }, [ currentPath, dispatch, pathName, previousPath ]);
+
     useEffect(() => {
-        if (!((previousPath?.split("/").includes("articles")) && (previousPath?.split("/").length === 3)) && ((currentPath?.split("/").includes("articles")) && (currentPath?.split("/").length === 3))) {
+        if (previousPath !== "/" && currentPath === "/") {
             dispatch(setPaths(pathName));
             window.location.reload();
         }
     }, [ currentPath, dispatch, pathName, previousPath ]);
+
 
     console.log(pathName.split("/").includes("articles"))
     // Handle loading state
