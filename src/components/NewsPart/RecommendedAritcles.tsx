@@ -117,13 +117,9 @@ export default function RecommendedArticles() {
 
 
             <div className="flex flex-wrap justify-center gap-2 mx-auto">
-                {allBlogs.slice(0, 4).map((article) => (
-                    <div key={article.id} className="flex flex-wrap justify-center items-center">
-                        <HomeNewsCard articleData={article} />
-                    </div>
-                ))}
+           
 
-                {allBlogs.slice(4).map((article, index) => (
+                {allBlogs?.map((article, index) => (
                     <div key={article.id} className="flex flex-wrap justify-center items-center">
                         <HomeNewsCard articleData={article} />
                         {/* Show an ad after every 2 articles */}
