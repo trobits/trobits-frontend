@@ -89,7 +89,7 @@ export default function RecommendedArticles() {
     const dispatch = useAppDispatch();
     const pathName = usePathname();
     useEffect(() => {
-        if (!((previousPath?.split("/").includes("articles")) && (previousPath?.split("/").length === 3)) && ((currentPath?.split("/").includes("articles")) && (currentPath?.split("/").length === 3)) && previousPath !== currentPath ) {
+        if (!((previousPath?.split("/").includes("articles")) && (previousPath?.split("/").length === 3)) && ((currentPath?.split("/").includes("articles")) && (currentPath?.split("/").length === 3)) || previousPath !== currentPath ) {
             dispatch(setPaths(pathName));
             window.location.reload();
         }
