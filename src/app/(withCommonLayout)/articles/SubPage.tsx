@@ -398,6 +398,12 @@ const SubPage = () => {
                         Next
                     </button>
                 </div>
+                <div className="flex justify-center items-center mt-5">
+                    <button onClick={() => handlePageChange(1)}
+                        className="px-4 py-2 rounded-lg bg-cyan-600 text-white cursor-pointer"
+                        disabled={currentPage === 1}
+                    >Goto First Page</button>
+                </div>
 
                 {/* Footer Component */}
             </div>
