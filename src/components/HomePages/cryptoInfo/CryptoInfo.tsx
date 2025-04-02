@@ -4,6 +4,7 @@
 import OtherVideoModal from "@/components/VideoModal/OtherVideoModal";
 import VideoModal from "@/components/VideoModal/VideoModal";
 import React, { useState } from "react";
+import { GrowMeWidget } from "../Slider/Slider";
 
 const CryptoInfo = () => {
   const [isMOdalOpen, setIsModalOpen] = useState(false);
@@ -45,6 +46,7 @@ const CryptoInfo = () => {
             }}
           />
         ))}
+        <GrowMeWidget />
     </>
   );
 };
