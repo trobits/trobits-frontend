@@ -90,7 +90,7 @@ const Slider = () => {
   }
 
   return (
-    <>
+    <div>
       <Script
         id="grow-me-script"
         strategy="lazyOnload"
@@ -129,7 +129,7 @@ const Slider = () => {
           </div>
         </div>
       </div>
-    </>
+    </d>
   );
 };
 
