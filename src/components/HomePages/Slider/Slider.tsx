@@ -129,7 +129,7 @@ const Slider = () => {
           </div>
         </div>
       </div>
-    </d>
+    </div>
   );
 };
 
