@@ -46,7 +46,7 @@ declare global {
   }
 }
 
-function GrowMeWidget() {
+export function GrowMeWidget() {
   useEffect(() => {
     const loadGrowMeScript = () => {
       if (window.growMe) return; // Avoid multiple script injections
