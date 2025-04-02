@@ -41,7 +41,7 @@ const calculateTimeLeft = () => {
   return { days, hours, minutes, seconds };
 };
 
- function AdBannerF() {
+function AdBannerF() {
   return (
     <>
       <ins className="67c24fd7aa72d3d47fc083ad" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
@@ -90,27 +90,46 @@ const Slider = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
-      <h2 className="text-3xl text- font-bold mb-6 text-yellow-500">BURNING &nbsp; COINS &nbsp;  STARTS &nbsp;  JANUARY  1, 2025:</h2>
-      <div className="grid grid-cols-4 gap-6 text-center">
-        <div className="flex flex-col items-center">
-          <span className="text-6xl font-bold text-yellow-500">{timeLeft.days}:</span>
-          <span className="text-xl text-cyan-300">Days</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-6xl font-bold text-yellow-500">{timeLeft.hours}:</span>
-          <span className="text-xl text-cyan-300">Hours</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-6xl font-bold text-yellow-500">{timeLeft.minutes}:</span>
-          <span className="text-xl text-cyan-300">Minutes</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-6xl font-bold text-yellow-500">{timeLeft.seconds}</span>
-          <span className="text-xl text-cyan-300">Seconds</span>
+    <>
+      <Script
+        id="grow-me-script"
+        strategy="lazyOnload"
+        data-grow-initializer=""
+        dangerouslySetInnerHTML={{
+          __html: `!(function(){
+            window.growMe||((window.growMe=function(e){window.growMe.push(e);}),(window.growMe=[]));
+            var e=document.createElement("script");
+            (e.type="text/javascript"),
+            (e.src="https://faves.grow.me/main.js"),
+            (e.defer=!0),
+            e.setAttribute("data-grow-faves-site-id","U2l0ZTplN2U5ODc0NC02MzJjLTQ2NWQtOGI0ZC00YzdlNTZjODAwYzA=");
+            var t=document.getElementsByTagName("script")[0];
+            t.parentNode.insertBefore(e,t);
+          })();`,
+        }}
+      />
+      <div className="flex flex-col justify-center items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
+        <h2 className="text-3xl text- font-bold mb-6 text-yellow-500">BURNING &nbsp; COINS &nbsp;  STARTS &nbsp;  JANUARY  1, 2025:</h2>
+        <div className="grid grid-cols-4 gap-6 text-center">
+          <div className="flex flex-col items-center">
+            <span className="text-6xl font-bold text-yellow-500">{timeLeft.days}:</span>
+            <span className="text-xl text-cyan-300">Days</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-6xl font-bold text-yellow-500">{timeLeft.hours}:</span>
+            <span className="text-xl text-cyan-300">Hours</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-6xl font-bold text-yellow-500">{timeLeft.minutes}:</span>
+            <span className="text-xl text-cyan-300">Minutes</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-6xl font-bold text-yellow-500">{timeLeft.seconds}</span>
+            <span className="text-xl text-cyan-300">Seconds</span>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
