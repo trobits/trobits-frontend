@@ -40,6 +40,38 @@ const calculateTimeLeft = () => {
 
   return { days, hours, minutes, seconds };
 };
+declare global {
+  interface Window {
+    growMe?: ((e: unknown) => void) & unknown[]; // Define growMe globally
+  }
+}
+
+function GrowMeWidget() {
+  useEffect(() => {
+    const loadGrowMeScript = () => {
+      if (window.growMe) return; // Avoid multiple script injections
+
+      const growMeArray: unknown[] = [];
+      const growMeFunction = (e: unknown) => {
+        growMeArray.push(e);
+      };
+
+      window.growMe = Object.assign(growMeFunction, growMeArray);
+
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://faves.grow.me/main.js";
+      script.defer = true;
+      script.setAttribute("data-grow-faves-site-id", "U2l0ZTplN2U5ODc0NC02MzJjLTQ2NWQtOGI0ZC00YzdlNTZjODAwYzA=");
+
+      document.body.appendChild(script);
+    };
+
+    loadGrowMeScript();
+  }, []);
+
+  return null; // No UI element needed
+}
 
 function AdBannerF() {
   return (
@@ -91,23 +123,7 @@ const Slider = () => {
 
   return (
     <div>
-      <Script
-        id="grow-me-script"
-        strategy="lazyOnload"
-        data-grow-initializer=""
-        dangerouslySetInnerHTML={{
-          __html: `!(function(){
-            window.growMe||((window.growMe=function(e){window.growMe.push(e);}),(window.growMe=[]));
-            var e=document.createElement("script");
-            (e.type="text/javascript"),
-            (e.src="https://faves.grow.me/main.js"),
-            (e.defer=!0),
-            e.setAttribute("data-grow-faves-site-id","U2l0ZTplN2U5ODc0NC02MzJjLTQ2NWQtOGI0ZC00YzdlNTZjODAwYzA=");
-            var t=document.getElementsByTagName("script")[0];
-            t.parentNode.insertBefore(e,t);
-          })();`,
-        }}
-      />
+<GrowMeWidget />
       <div className="flex flex-col justify-center items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
         <h2 className="text-3xl text- font-bold mb-6 text-yellow-500">BURNING &nbsp; COINS &nbsp;  STARTS &nbsp;  JANUARY  1, 2025:</h2>
         <div className="grid grid-cols-4 gap-6 text-center">
