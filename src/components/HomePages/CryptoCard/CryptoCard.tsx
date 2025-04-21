@@ -44,10 +44,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
   const [isSliding, setIsSliding] = useState(false);
 
   const getCurrentData = () => {
-    const formatNumber = (value: string) => {
-      // Convert value to number to remove leading zeros
-      return Number(value).toString();
-    };
+    const formatNumber = (value: string) => Number(value).toString();
 
     switch (intervals[selectedInterval]) {
       case "7 Days":
@@ -73,14 +70,14 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setIsSliding(true); // Start sliding
+      setIsSliding(true);
       setTimeout(() => {
-        setSelectedInterval((prev) => (prev + 1) % intervals.length); // Update interval index
-        setIsSliding(false); // End sliding
+        setSelectedInterval((prev) => (prev + 1) % intervals.length);
+        setIsSliding(false);
       }, 100);
     }, 4000);
 
-    return () => clearInterval(intervalId); // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -172,18 +169,43 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
           ></button>
         ))}
       </div>
-      <div className=" flex justify-center mt-4">
-        <Link
-          href={`/archive/${cryptoData.coin === "SHIB" ? "shiba" : "lunc"}`}
-          className="mt-4 font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
-        >
-          {cryptoData.coin === "SHIB" ? "SHIB Burn" : "LUNC Burn"}
-        </Link>
+
+      {/* Action Buttons */}
+      <div className="flex justify-center mt-4 gap-3">
+        {cryptoData.coin === "SHIB" ? (
+          <>
+            <Link
+              href="/archive/shiba"
+              className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+            >
+              SHIB Burn
+            </Link>
+            <Link
+              href="/shiba"
+              className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+            >
+              Shiba Details
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link
+              href="/archive/lunc"
+              className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+            >
+              LUNC Burn
+            </Link>
+            <Link
+              href="/lunc"
+              className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+            >
+              LUNC Details
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );
 };
 
 export default TransparentCard;
-
-// export default TransparentCard;
