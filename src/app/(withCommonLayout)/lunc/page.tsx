@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef } from "react";
 
-// ✅ Ad Banner (ref fix applied)
+// ✅ Ad Banner using <div> to avoid ref typing issues
 function AdBannerF() {
-  const adRef = useRef<HTMLElement>(null); // ✅ Correct type for <ins> tag
+  const adRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -25,7 +25,7 @@ function AdBannerF() {
 
   return (
     <div className="flex justify-center">
-      <ins
+      <div
         ref={adRef}
         className="67c24fd7aa72d3d47fc083ad"
         style={{ display: "block", width: "300px", height: "250px" }}
@@ -34,9 +34,9 @@ function AdBannerF() {
   );
 }
 
-const ShibHeader = () => (
+const LuncHeader = () => (
   <h1 className="text-5xl font-extrabold mb-4 text-center text-blue-400">
-    Shiba Inu
+    Terra Classic
   </h1>
 );
 
@@ -50,7 +50,7 @@ const PriceGraph = () => {
     script.async = true;
     script.innerHTML = JSON.stringify({
       autosize: true,
-      symbol: "CRYPTO:SHIBUSD",
+      symbol: "CRYPTO:LUNCUSD",
       interval: "D",
       timezone: "Etc/UTC",
       theme: "light",
@@ -90,7 +90,7 @@ const SymbolInfo = () => {
       "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
     script.async = true;
     script.innerHTML = JSON.stringify({
-      symbol: "CRYPTO:SHIBUSD",
+      symbol: "CRYPTO:LUNCUSD",
       width: "100%",
       locale: "en",
       colorTheme: "light",
@@ -129,7 +129,7 @@ const ArticleFeed = () => {
       height: 550,
       colorTheme: "light",
       locale: "en",
-      filter: "shiba-inu",
+      filter: "terra-luna",
     });
 
     if (feedRef.current) {
@@ -173,7 +173,7 @@ const CryptoCalendar = () => {
         data-id="6"
         data-text_color="#003366"
         data-background_color="#f0f8ff"
-        data-coins="shiba-inu"
+        data-coins="terra-luna"
         data-numcoins="1000"
       />
     </div>
@@ -183,7 +183,7 @@ const CryptoCalendar = () => {
 export default function Page() {
   return (
     <div className="p-4 space-y-4 bg-[#00000077] text-white min-h-screen">
-      <ShibHeader />
+      <LuncHeader />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SymbolInfo />
