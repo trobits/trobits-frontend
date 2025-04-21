@@ -1,11 +1,12 @@
+
 "use client";
 
 import React, { useEffect, useRef } from "react";
 
-
-// ✅ Single inline ad (300x250 below chart)
+// ✅ Ad Banner
 function AdBannerF() {
-  const adRef = useRef(null);
+  const adRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
@@ -34,16 +35,17 @@ function AdBannerF() {
   );
 }
 
-// ✅ Header
+// ✅ Page Header
 const ShibHeader = () => (
   <h1 className="text-5xl font-extrabold mb-4 text-center text-blue-400">
     Shiba Inu
   </h1>
 );
 
-// ✅ Price Chart
+// ✅ TradingView Chart
 const PriceGraph = () => {
   const chartRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -85,6 +87,7 @@ const PriceGraph = () => {
 // ✅ Symbol Info
 const SymbolInfo = () => {
   const infoRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -117,6 +120,7 @@ const SymbolInfo = () => {
 // ✅ News Feed
 const ArticleFeed = () => {
   const feedRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const feedScript = document.createElement("script");
     feedScript.src =
@@ -150,9 +154,10 @@ const ArticleFeed = () => {
   );
 };
 
-// ✅ Calendar Widget
+// ✅ Crypto Calendar
 const CryptoCalendar = () => {
   const calendarRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://www.cryptohopper.com/widgets/js/script";
@@ -176,7 +181,7 @@ const CryptoCalendar = () => {
         data-background_color="#f0f8ff"
         data-coins="shiba-inu"
         data-numcoins="1000"
-      ></div>
+      />
     </div>
   );
 };
@@ -205,5 +210,3 @@ export default function Page() {
     </div>
   );
 }
-
-
