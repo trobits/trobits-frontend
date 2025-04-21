@@ -1,11 +1,10 @@
-
 "use client";
 
 import React, { useEffect, useRef } from "react";
 
-// ✅ Ad Banner
+// ✅ Ad Banner with Correct Ref Typing
 function AdBannerF() {
-  const adRef = useRef<HTMLDivElement>(null);
+  const adRef = useRef<HTMLElement>(null); // ✅ FIXED ref type for <ins> tag
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -35,14 +34,12 @@ function AdBannerF() {
   );
 }
 
-// ✅ Page Header
-const ShibHeader = () => (
+const LuncHeader = () => (
   <h1 className="text-5xl font-extrabold mb-4 text-center text-blue-400">
-    Shiba Inu
+    Terra Classic
   </h1>
 );
 
-// ✅ TradingView Chart
 const PriceGraph = () => {
   const chartRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +50,7 @@ const PriceGraph = () => {
     script.async = true;
     script.innerHTML = JSON.stringify({
       autosize: true,
-      symbol: "CRYPTO:SHIBUSD",
+      symbol: "CRYPTO:LUNCUSD",
       interval: "D",
       timezone: "Etc/UTC",
       theme: "light",
@@ -84,7 +81,6 @@ const PriceGraph = () => {
   );
 };
 
-// ✅ Symbol Info
 const SymbolInfo = () => {
   const infoRef = useRef<HTMLDivElement>(null);
 
@@ -94,7 +90,7 @@ const SymbolInfo = () => {
       "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
     script.async = true;
     script.innerHTML = JSON.stringify({
-      symbol: "CRYPTO:SHIBUSD",
+      symbol: "CRYPTO:LUNCUSD",
       width: "100%",
       locale: "en",
       colorTheme: "light",
@@ -117,7 +113,6 @@ const SymbolInfo = () => {
   );
 };
 
-// ✅ News Feed
 const ArticleFeed = () => {
   const feedRef = useRef<HTMLDivElement>(null);
 
@@ -134,7 +129,7 @@ const ArticleFeed = () => {
       height: 550,
       colorTheme: "light",
       locale: "en",
-      filter: "shiba-inu",
+      filter: "terra-luna",
     });
 
     if (feedRef.current) {
@@ -154,7 +149,6 @@ const ArticleFeed = () => {
   );
 };
 
-// ✅ Crypto Calendar
 const CryptoCalendar = () => {
   const calendarRef = useRef<HTMLDivElement>(null);
 
@@ -179,18 +173,17 @@ const CryptoCalendar = () => {
         data-id="6"
         data-text_color="#003366"
         data-background_color="#f0f8ff"
-        data-coins="shiba-inu"
+        data-coins="terra-luna"
         data-numcoins="1000"
       />
     </div>
   );
 };
 
-// ✅ Final Page Component
 export default function Page() {
   return (
     <div className="p-4 space-y-4 bg-[#00000077] text-white min-h-screen">
-      <ShibHeader />
+      <LuncHeader />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SymbolInfo />
@@ -210,3 +203,4 @@ export default function Page() {
     </div>
   );
 }
+
