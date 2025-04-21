@@ -34,7 +34,7 @@ function AdBannerF() {
   );
 }
 
-// ✅ Updated Header
+// ✅ Header
 const ShibHeader = () => (
   <h1 className="text-5xl font-extrabold mb-4 text-center text-blue-400">
     Shiba Inu
@@ -105,7 +105,10 @@ const SymbolInfo = () => {
   }, []);
 
   return (
-    <div className="w-full h-[450px] bg-white rounded shadow border border-blue-400" ref={infoRef}>
+    <div
+      className="w-full h-[450px] bg-white rounded shadow border border-blue-400"
+      ref={infoRef}
+    >
       <div className="tradingview-widget-container__widget" />
     </div>
   );
@@ -147,7 +150,7 @@ const ArticleFeed = () => {
   );
 };
 
-// ✅ Converter
+// ✅ Calendar Widget
 const CryptoCalendar = () => {
   const calendarRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -178,8 +181,8 @@ const CryptoCalendar = () => {
   );
 };
 
-// ✅ Full Page
-const ShibDashboard = () => {
+// ✅ Final Page Component
+export default function Page() {
   return (
     <div className="p-4 space-y-4 bg-[#00000077] text-white min-h-screen">
       <ShibHeader />
@@ -201,6 +204,6 @@ const ShibDashboard = () => {
       </div>
     </div>
   );
-};
+}
 
-export default ShibDashboard;
+
