@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import script from "next/script";
+
 
 // ✅ Ad below chart
 function AdBannerF() {
