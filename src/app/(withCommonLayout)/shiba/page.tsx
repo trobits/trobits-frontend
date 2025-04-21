@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-
+import script from "next/script";
 
 // ✅ Single inline ad (300x250 below chart)
 function AdBannerF() {
