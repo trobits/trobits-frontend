@@ -184,7 +184,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
               href="/shiba"
               className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
             >
-              Shiba Details
+              SHIB Details
             </Link>
           </>
         ) : (
