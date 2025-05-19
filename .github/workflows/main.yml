@@ -19,6 +19,7 @@ jobs:
         host: 160.153.175.21
         username: trobits
         password: 3MSbAx39Gb$kVi
+        command_timeout: 200m
         script: |
           sudo systemctl start ssh
           cd ../..
