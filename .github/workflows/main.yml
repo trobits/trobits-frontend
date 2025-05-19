@@ -10,20 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Deploy to SSH server
-      uses: appleboy/ssh-action@master
-      with:
-        host: 160.153.175.21
-        username: trobits
-        password: 1SHIBLUNC
-        command_timeout: 200m
-        script: |
-          cd ../..
-          cd /var/www/newsisiku-frontend
-          git pull origin main
-          npm install
-          npm run build
-          pm2 restart 1
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          ssh-keyscan -H 160.153.175.21 >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH
+        run: |
+          ssh trobits@160.153.175.21 << 'EOF'
+            cd /var/www/newsisiku-frontend
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart 1
+          EOF
