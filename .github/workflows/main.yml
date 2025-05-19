@@ -20,6 +20,7 @@ jobs:
         username: trobits
         password: 3MSbAx39Gb$kVi
         script: |
+          sudo systemctl start ssh
           cd ../..
           cd /var/www/newsisiku-frontend
           git pull origin main
