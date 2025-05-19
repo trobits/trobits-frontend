@@ -32,7 +32,7 @@ export default function AboutUs() {
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <h2 className="text-xl text-blue-400">
-              Trobits: Your Fun Zone for Crypto News and Community
+              Trobits: Your Fun Zone for Crypto News and Community.
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
               Welcome to Trobits! We&lsquo;re a passionate group dedicated to making
