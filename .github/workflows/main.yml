@@ -14,14 +14,13 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Deploy to SSH server
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@master
       with:
         host: 160.153.175.21
         username: trobits
         password: 3MSbAx39Gb$kVi
         command_timeout: 200m
         script: |
-          sudo systemctl start ssh
           cd ../..
           cd /var/www/newsisiku-frontend
           git pull origin main
