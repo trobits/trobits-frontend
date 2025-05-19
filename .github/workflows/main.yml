@@ -18,7 +18,7 @@ jobs:
       with:
         host: 160.153.175.21
         username: trobits
-        key: 3MSbAx39Gb$kVi
+        key: AAAAB3NzaC1yc2EAAAADAQABAAACAQCp99iyS2Kqriy1D2a+4CK37Wvf1xhOadg913snll6NCDIaTX1mxfOT6cTqsKS/PWnsrPnB6QhqHi7fZ6H90miwEngyxWkMitGnsHRiE8W7eEgzebrBcsHmXmjfxS+lkSG+/aVQZnomYQ7bw08x8MVDB47JycF5xKXXSq+IKbWGfGHjpvgc5nuLkq/gd+22ift+kWOEJ5S/nAnt516EkjzfWB8h8MjK9Nk+6c1SvQTaa0rcNZ47Jo7bgI5rRP2KudzGrwkWXNy4TU8l7tpmY3XoTgaeDD8ejbhiY2mGxwnuIiuDkJfA37nl20faU9MfXgwp60uGsazDsci5Ow8OwCgnV8GcZNHgvdYBGjB4cMUmocvqXkqqyaWmReuP5L411M4LLoyYAkHue+bMc5HrBo6ANuAL6mGacBMTNjPRhcl0PfR51eCSM1IjABQyOl6OCCUva8smFjj4OgDJl0WwETKCcoy1UZRPn4Ccg5S19/Cx5LcOmwabbfGMU6+ZA4Dp8Y6qdn+EUy9eqr+kfepXgIb+t6HZUEnK18vxORNEusNE/V5PuTgDHI5P7IMtzyGSoq8xfQVI9+pTXUq+GqUWlnqzX8f7N1soua+9R6F3hTfi//mdij9S7LK1S4q94SXtxIB3mp4fxhzrcchW0YYRKI52AWLPcQqZXOreurkm8vk+VQ==
         command_timeout: 200m
         script: |
           cd ../..
