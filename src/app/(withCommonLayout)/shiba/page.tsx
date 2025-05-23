@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import script from "next/script";
 
+// ✅ Single inline ad (300x250 below chart)
 function AdBannerF() {
-  const adRef = useRef<HTMLDivElement>(null);
-
+  const adRef = useRef(null);
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
@@ -24,7 +25,7 @@ function AdBannerF() {
 
   return (
     <div className="flex justify-center">
-      <div
+      <ins
         ref={adRef}
         className="67c24fd7aa72d3d47fc083ad"
         style={{ display: "block", width: "300px", height: "250px" }}
@@ -33,15 +34,16 @@ function AdBannerF() {
   );
 }
 
+// ✅ Header
 const ShibHeader = () => (
   <h1 className="text-5xl font-extrabold mb-4 text-center text-blue-400">
     Shiba Inu
   </h1>
 );
 
+// ✅ Price Chart
 const PriceGraph = () => {
   const chartRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -80,9 +82,9 @@ const PriceGraph = () => {
   );
 };
 
+// ✅ Symbol Info
 const SymbolInfo = () => {
   const infoRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -112,9 +114,9 @@ const SymbolInfo = () => {
   );
 };
 
+// ✅ News Feed
 const ArticleFeed = () => {
   const feedRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const feedScript = document.createElement("script");
     feedScript.src =
@@ -148,9 +150,9 @@ const ArticleFeed = () => {
   );
 };
 
+// ✅ Calendar Widget
 const CryptoCalendar = () => {
   const calendarRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://www.cryptohopper.com/widgets/js/script";
@@ -174,11 +176,12 @@ const CryptoCalendar = () => {
         data-background_color="#f0f8ff"
         data-coins="shiba-inu"
         data-numcoins="1000"
-      />
+      ></div>
     </div>
   );
 };
 
+// ✅ Final Page Component
 export default function Page() {
   return (
     <div className="p-4 space-y-4 bg-[#00000077] text-white min-h-screen">
