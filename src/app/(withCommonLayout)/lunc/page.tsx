@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 
 // ✅ Ad below chart
 function AdBannerF() {
-  const adRef = useRef(null);
+  const adRef = useRef<HTMLDivElement>(null); // or HTMLSpanElement, etc.
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
