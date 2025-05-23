@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 
 // ✅ Single inline ad (300x250 below chart)
 function AdBannerF() {
-  const adRef = useRef<HTMLDivElement>(null); // or HTMLSpanElement, etc.
+  const adRef = useRef<HTMLModElement>(null); // or HTMLSpanElement, etc.
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
