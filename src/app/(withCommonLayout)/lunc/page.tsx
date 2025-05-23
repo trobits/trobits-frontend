@@ -1,31 +1,28 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import script from "next/script";
 
-// ✅ Ad Banner using <div> to avoid ref typing issues
+// ✅ Ad below chart
 function AdBannerF() {
-  const adRef = useRef<HTMLDivElement>(null);
-
+  const adRef = useRef(null);
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
     script.src =
       "https://cdn.bmcdn6.com/js/67c24fd7aa72d3d47fc083ad.js?v=" +
       new Date().getTime();
-
     if (adRef.current) {
       adRef.current.innerHTML = "";
       adRef.current.appendChild(script);
     }
-
     return () => {
       if (adRef.current) adRef.current.innerHTML = "";
     };
   }, []);
-
   return (
     <div className="flex justify-center">
-      <div
+      <ins
         ref={adRef}
         className="67c24fd7aa72d3d47fc083ad"
         style={{ display: "block", width: "300px", height: "250px" }}
@@ -34,15 +31,16 @@ function AdBannerF() {
   );
 }
 
+// ✅ Terra Classic Header with h1
 const LuncHeader = () => (
   <h1 className="text-5xl font-extrabold mb-4 text-center text-blue-400">
     Terra Classic
   </h1>
 );
 
+// ✅ LUNC Chart with blue styling
 const PriceGraph = () => {
   const chartRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -60,13 +58,11 @@ const PriceGraph = () => {
       calendar: false,
       support_host: "https://www.tradingview.com",
     });
-
     if (chartRef.current) {
       chartRef.current.innerHTML = "";
       chartRef.current.appendChild(script);
     }
   }, []);
-
   return (
     <div
       className="tradingview-widget-container border border-blue-500 rounded"
@@ -81,9 +77,9 @@ const PriceGraph = () => {
   );
 };
 
+// ✅ Symbol Info
 const SymbolInfo = () => {
   const infoRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -96,26 +92,21 @@ const SymbolInfo = () => {
       colorTheme: "light",
       isTransparent: false,
     });
-
     if (infoRef.current) {
       infoRef.current.innerHTML = "";
       infoRef.current.appendChild(script);
     }
   }, []);
-
   return (
-    <div
-      className="w-full h-[450px] bg-white rounded shadow border border-blue-400"
-      ref={infoRef}
-    >
+    <div className="w-full h-[450px] bg-white rounded shadow border border-blue-400" ref={infoRef}>
       <div className="tradingview-widget-container__widget" />
     </div>
   );
 };
 
+// ✅ Article Feed
 const ArticleFeed = () => {
   const feedRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const feedScript = document.createElement("script");
     feedScript.src =
@@ -131,13 +122,11 @@ const ArticleFeed = () => {
       locale: "en",
       filter: "terra-luna",
     });
-
     if (feedRef.current) {
       feedRef.current.innerHTML = "";
       feedRef.current.appendChild(feedScript);
     }
   }, []);
-
   return (
     <div className="w-full h-[550px] bg-white rounded shadow border border-blue-400">
       <div
@@ -149,9 +138,9 @@ const ArticleFeed = () => {
   );
 };
 
+// ✅ Crypto Calendar (Converter)
 const CryptoCalendar = () => {
   const calendarRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://www.cryptohopper.com/widgets/js/script";
@@ -161,7 +150,6 @@ const CryptoCalendar = () => {
       document.body.removeChild(script);
     };
   }, []);
-
   return (
     <div
       className="rounded shadow p-2 border border-blue-500"
@@ -180,7 +168,8 @@ const CryptoCalendar = () => {
   );
 };
 
-export default function Page() {
+// ✅ Full Dashboard
+const LuncDashboard = () => {
   return (
     <div className="p-4 space-y-4 bg-[#00000077] text-white min-h-screen">
       <LuncHeader />
@@ -202,5 +191,6 @@ export default function Page() {
       </div>
     </div>
   );
-}
+};
 
+export default LuncDashboard;
