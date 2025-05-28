@@ -1,363 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-
-
-// import Link from "next/link";
-// import { useState } from "react";
-// import { Menu, X, ChevronDown } from "lucide-react";
-// import { navItems } from "@/components/Constant/Navbar.constant";
-// import Logo from "@/components/Shared/Logo";
-// import VideoModal from "@/components/VideoModal/VideoModal";
-
-// import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-// import { Button } from "@/components/ui/button";
-// import { clearUser } from "@/redux/features/slices/authSlice";
-// import { usePathname, useRouter } from "next/navigation";
-// import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
-
-// export default function Navbar() {
-//   const [isOpen, setIsOpen] = useState(false);
-//   const [isBasicsDropdownOpen, setIsBasicsDropdownOpen] = useState(false);
-//   const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] =
-//     useState(false);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const user = useAppSelector((state) => state.auth.user);
-//   const {
-//     data: userFromDbData,
-//     isLoading: userFromDbLoading,
-//     refetch: refetchUserFromDb,
-//   } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
-//   const dispatch = useAppDispatch();
-//   const router = useRouter();
-//   const userFromDb = userFromDbData?.data;
-//   const pathName = usePathname();
-
-//   if (userFromDbLoading) return null;
-
-//   const handleOpenModal = () => setIsModalOpen(true);
-//   const handleCloseModal = () => setIsModalOpen(false);
-//   const toggleDropdown = (dropdownSetter: any) => {
-//     setIsBasicsDropdownOpen(false);
-//     setIsBurnArchiveDropdownOpen(false);
-//     dropdownSetter((prev: any) => !prev);
-//   };
-
-//   const handleLogOut = async () => {
-//     await refetchUserFromDb();
-//     dispatch(clearUser());
-//     router.push("/");
-//   };
-
-//   const closeAllDropdowns = () => {
-//     setIsBasicsDropdownOpen(false);
-//     setIsBurnArchiveDropdownOpen(false);
-//   };
-
-//   return (
-//     <nav className="bg-[#00000085]">
-//       <div className="w-full px-4 lg:px-20">
-//         <div className="flex items-center justify-evenly h-24">
-//           <div className="flex-shrink-0 my-2">
-//             <Logo />
-//           </div>
-
-//           {/* Desktop Navigation */}
-//           <div className="hidden md:flex flex-grow justify-around ml-10">
-//             {navItems.map((item) => {
-//               if (item.name === "Learn") {
-//                 return (
-//                   <div key={item.name} className="relative">
-//                     <Link
-//                       href={"/learn"}
-//                       className={`px-3 py-2 rounded-md text-sm cursor-pointer font-medium flex items-center ${
-//                         pathName.includes(item.href)
-//                           ? "text-teal-400"
-//                           : "text-gray-300 hover:text-white"
-//                       }`}
-//                       onClick={closeAllDropdowns}
-//                     >
-//                       {item.name}
-//                     </Link>
-//                   </div>
-//                 );
-//               } else if (item.name === "Welcome") {
-//                 return (
-//                   <div key={item.name} className="relative">
-//                     <button
-//                       onClick={() => toggleDropdown(setIsBasicsDropdownOpen)}
-//                       className={`px-3 py-2 rounded-md cursor-pointer text-sm font-medium flex items-center ${
-//                         isBasicsDropdownOpen || pathName.includes(item.href)
-//                           ? "text-teal-400"
-//                           : "text-gray-300 hover:text-white"
-//                       }`}
-//                     >
-//                       {item.name}
-//                       <ChevronDown className="ml-1" />
-//                     </button>
-//                     {isBasicsDropdownOpen && (
-//                       <div className="absolute left-0 mt-2 w-48 bg-black text-white rounded-md shadow-lg z-10">
-//                         <button
-
-//                           onClick={() => {
-//                             handleOpenModal();
-//                             closeAllDropdowns();
-//                           }}
-//                           className="block cursor-pointer px-4 py-2 text-sm"
-//                         >
-//                           Demo Video
-//                         </button>
-//                         <Link
-//                           href="/howitworks"
-//                           className="block cursor-pointer px-4 py-2 text-sm"
-//                           onClick={closeAllDropdowns}
-//                         >
-//                           How It Works
-//                         </Link>
-//                         <Link
-//                           href="/aboutus"
-//                           className="block cursor-pointer px-4 py-2 text-sm"
-//                           onClick={closeAllDropdowns}
-//                         >
-//                           About Us
-//                         </Link>
-//                       </div>
-//                     )}
-//                   </div>
-//                 );
-//               } else if (item.name === "Burn Archive") {
-//                 return (
-//                   <div key={item.name} className="relative">
-//                     <button
-//                       onClick={() =>
-//                         toggleDropdown(setIsBurnArchiveDropdownOpen)
-//                       }
-//                       className={`px-3 py-2 rounded-md cursor-pointer text-sm font-medium flex items-center ${
-//                         isBurnArchiveDropdownOpen
-//                           ? "text-teal-400"
-//                           : "text-gray-300 hover:text-white"
-//                       }`}
-//                     >
-//                       {item.name}
-//                       <ChevronDown className="ml-1" />
-//                     </button>
-//                     {isBurnArchiveDropdownOpen && (
-//                       <div className="absolute left-0 mt-2 w-48 bg-black text-white rounded-md shadow-lg z-10">
-//                         <Link
-//                           href="/archive/shiba"
-//                           className="block cursor-pointer px-4 py-2 text-sm"
-//                           onClick={closeAllDropdowns}
-//                         >
-//                           SHIB
-//                         </Link>
-//                         <Link
-//                           href="/archive/lunc"
-//                           className="block cursor-pointer px-4 py-2 text-sm"
-//                           onClick={closeAllDropdowns}
-//                         >
-//                           LUNC
-//                         </Link>
-//                       </div>
-//                     )}
-//                   </div>
-//                 );
-//               } else {
-//                 return (
-//                   <Link
-//                     key={item.name}
-//                     href={item.href}
-//                     className={`px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${
-//                       pathName.includes(item.href)
-//                         ? "text-teal-400"
-//                         : "text-gray-300 hover:text-white"
-//                     }`}
-//                     onClick={() => {
-//                       setIsOpen(false);
-//                       closeAllDropdowns();
-//                     }}
-//                   >
-//                     {item.name}
-//                   </Link>
-//                 );
-//               }
-//             })}
-//           </div>
-
-//           {/* User Section */}
-//           {userFromDb && user ? (
-//             <Button
-//               onClick={() => {
-//                 handleLogOut();
-//                 closeAllDropdowns();
-//               }}
-//               className="bg-cyan-700 hover:scale-105 cursor-pointer hover:bg-cyan-600 px-3 py-2 mr-1 rounded-md text-white"
-//             >
-//               Logout
-//             </Button>
-//           ) : (
-//             <Link
-//               href={"/auth/login"}
-//               className="bg-cyan-700 hover:scale-105 cursor-pointer hover:bg-cyan-600 px-3 py-2 mr-1 rounded-md text-white"
-//               onClick={() => {
-//                 setIsOpen(false);
-//                 closeAllDropdowns();
-//               }}
-//             >
-//               Login
-//             </Link>
-//           )}
-
-//           {/* Mobile Menu Toggle */}
-//           <div className="md:hidden">
-//             <button
-//               onClick={() => setIsOpen(!isOpen)}
-//               className="inline-flex items-center cursor-pointer justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-//             >
-//               <span className="sr-only">Open main menu</span>
-//               {isOpen ? (
-//                 <X className="block h-6 w-6" aria-hidden="true" />
-//               ) : (
-//                 <Menu className="block h-6 w-6" aria-hidden="true" />
-//               )}
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Mobile Navigation */}
-//       {isOpen && (
-//         <div className="md:hidden">
-//           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-//             {navItems.map((item) =>
-//               item.name === "Learn" ? (
-//                 <div key={item.name}>
-//                   <Link
-//                     href="/learn"
-//                     className={`block px-3 cursor-pointer py-2 rounded-md text-base font-medium ${
-//                       pathName.includes(item.href)
-//                         ? "text-teal-400"
-//                         : "text-gray-300 hover:text-white"
-//                     }`}
-//                     onClick={() => {
-//                       setIsOpen(false);
-//                       closeAllDropdowns();
-//                     }}
-//                   >
-//                     Learn
-//                   </Link>
-//                 </div>
-//               ) : item.name === "Welcome" ? (
-//                 <div key={item.name}>
-//                   <button
-//                     onClick={() => toggleDropdown(setIsBasicsDropdownOpen)}
-//                     className={`px-3 py-2 cursor-pointer rounded-md text-base font-medium flex items-center ${
-//                       isBasicsDropdownOpen || pathName.includes(item.href)
-//                         ? "text-teal-400"
-//                         : "text-gray-300 hover:text-white"
-//                     }`}
-//                   >
-//                     {item.name}
-//                     <ChevronDown className="ml-1" />
-//                   </button>
-//                   {isBasicsDropdownOpen && (
-//                     <div className="space-y-1">
-//                       <button
-//                         onClick={() => {
-//                           handleOpenModal();
-//                           closeAllDropdowns();
-//                         }}
-//                         className="block px-3 py-2 cursor-pointer rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
-//                       >
-//                         Demo Video
-//                       </button>
-//                       <Link
-//                         href="/howitworks"
-//                         className="block px-3 py-2 cursor-pointer rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
-//                         onClick={() => {
-//                           setIsOpen(false);
-//                           closeAllDropdowns();
-//                         }}
-//                       >
-//                         How It Works
-//                       </Link>
-//                       <Link
-//                         href="/aboutus"
-//                         className="block px-3 py-2 cursor-pointer rounded-md text-base font-medium text-gray-300 hover                      bg-gray-700"
-//                       >
-//                         About Us
-//                       </Link>
-//                     </div>
-//                   )}
-//                 </div>
-//               ) : item.name === "Burn Archive" ? (
-//                 <div key={item.name}>
-//                   <button
-//                     onClick={() => toggleDropdown(setIsBurnArchiveDropdownOpen)}
-//                     className={`px-3 py-2 rounded-md text-base font-medium flex items-center ${
-//                       isBurnArchiveDropdownOpen
-//                         ? "text-teal-400"
-//                         : "text-gray-300 hover:text-white"
-//                     }`}
-//                   >
-//                     {item.name}
-//                     <ChevronDown className="ml-1" />
-//                   </button>
-//                   {isBurnArchiveDropdownOpen && (
-//                     <div className="space-y-1">
-//                       <Link
-//                         href="/archive/shiba"
-//                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
-//                         onClick={() => {
-//                           setIsOpen(false);
-//                           closeAllDropdowns();
-//                         }}
-//                       >
-//                         SHIB
-//                       </Link>
-//                       <Link
-//                         href="/archive/lunc"
-//                         className="block px-3 py-2 cursor-pointer rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
-//                         onClick={() => {
-//                           setIsOpen(false);
-//                           closeAllDropdowns();
-//                         }}
-//                       >
-//                         LUNC
-//                       </Link>
-//                     </div>
-//                   )}
-//                 </div>
-//               ) : (
-//                 <Link
-//                   key={item.name}
-//                   href={item.href}
-//                   className={`block px-3 py-2 cursor-pointer rounded-md text-base font-medium ${
-//                     pathName.includes(item.href)
-//                       ? "text-teal-400"
-//                       : "text-gray-300 hover:text-white"
-//                   }`}
-//                   onClick={() => {
-//                     setIsOpen(false);
-//                     closeAllDropdowns();
-//                   }}
-//                 >
-//                   {item.name}
-//                 </Link>
-//               )
-//             )}
-//           </div>
-//         </div>
-//       )}
-//       <VideoModal isOpen={isModalOpen} onClose={handleCloseModal} />
-
-//     </nav>
-//   );
-// }
-
-
-
-
 "use client";
 
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { navItems } from "@/components/Constant/Navbar.constant";
+import Logo from "@/components/Shared/Logo";
+import VideoModal from "@/components/VideoModal/VideoModal";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { Button } from "@/components/ui/button";
+import { clearUser, setPaths } from "@/redux/features/slices/authSlice";
+import { usePathname, useRouter } from "next/navigation";
+import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 
 const AdBannerHeader = ({ adClass }: { adClass: string }) => {
   const adContainerRef = useRef<HTMLDivElement>(null);
@@ -403,7 +56,7 @@ const AdBannerHeader = ({ adClass }: { adClass: string }) => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [ adClass ]);
+  }, [adClass]);
 
   return (
     <div ref={adContainerRef}>
@@ -416,30 +69,14 @@ const AdBannerHeader = ({ adClass }: { adClass: string }) => {
   );
 };
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-
-
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { navItems } from "@/components/Constant/Navbar.constant";
-import Logo from "@/components/Shared/Logo";
-import VideoModal from "@/components/VideoModal/VideoModal";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { Button } from "@/components/ui/button";
-import { clearUser, setPaths } from "@/redux/features/slices/authSlice";
-import { usePathname, useRouter } from "next/navigation";
-import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
-import Script from "next/script";
-
-
 export default function Navbar() {
-  const [ isOpen, setIsOpen ] = useState(false);
-  const [ isBasicsDropdownOpen, setIsBasicsDropdownOpen ] = useState(false);
-  const [ isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen ] =
-    useState(false);
-  const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isBasicsDropdownOpen, setIsBasicsDropdownOpen] = useState(false);
+  const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  
   const user = useAppSelector((state) => state.auth.user);
   const paths = useAppSelector((state) => state.auth);
   const {
@@ -452,9 +89,38 @@ export default function Navbar() {
   const userFromDb = userFromDbData?.data;
   const pathName = usePathname();
 
+  // Scroll behavior
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (typeof window !== 'undefined') {
+        const currentScrollY = window.scrollY;
+        
+        if (currentScrollY < 10) {
+          // Always show at top
+          setIsVisible(true);
+        } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          // Scrolling down & past threshold
+          setIsVisible(false);
+        } else if (currentScrollY < lastScrollY) {
+          // Scrolling up
+          setIsVisible(true);
+        }
+        
+        setLastScrollY(currentScrollY);
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [lastScrollY]);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+  
   const toggleDropdown = (dropdownSetter: any) => {
     setIsBasicsDropdownOpen(false);
     setIsBurnArchiveDropdownOpen(false);
@@ -474,341 +140,476 @@ export default function Navbar() {
 
   useEffect(() => {
     dispatch(setPaths(pathName));
-  }, [ pathName ])
-
+  }, [pathName]);
 
   if (userFromDbLoading) return <p>Loading...</p>;
 
-
   return (
-    <nav className="bg-[#00000085] relative">
-      {/* Ad Banner at the top of the navbar */}
-      <div className="w-full px-4 lg:px-20">
-        <div className={"flex justify-center items-center w-full"}>
-
+    <>
+      {/* Ad Banner - Always at top */}
+      <div className="w-full bg-[#00000085] px-4 lg:px-20 py-2">
+        <div className="flex justify-center items-center w-full">
           <AdBannerHeader adClass="67b29a8ee904d5920e70a203" />
         </div>
-        <div className="flex items-center justify-evenly h-24">
-          <div className="flex-shrink-0 my-2">
-            <Logo />
-          </div>
+      </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex flex-grow justify-around ml-10">
-            {navItems.map((item) => {
-              if (item.name === "Learn") {
-                return (
-                  <div key={item.name} className="relative">
+      {/* Island Navbar */}
+      <nav 
+        className={`
+          fixed top-4 left-1/2 transform -translate-x-1/2 z-50 
+          transition-all duration-500 ease-in-out
+          ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}
+        `}
+      >
+        <div className="
+          bg-black/80 backdrop-blur-xl border border-white/10 
+          rounded-2xl px-6 py-3 shadow-2xl
+          w-[95vw]
+        ">
+          <div className="flex items-center justify-between md:gap-8 px-10">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Logo />
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-1">
+              {navItems.map((item) => {
+                if (item.name === "Learn") {
+                  return (
                     <Link
+                      key={item.name}
                       href={"/learn"}
-                      className={`px-3 py-2 rounded-md text-sm cursor-pointer font-medium flex items-center ${pathName.includes(item.href)
-                        ? "text-teal-400"
-                        : "text-gray-300 hover:text-white"
-                        }`}
+                      className={`
+                        px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
+                        hover:bg-white/10 hover:scale-105
+                        ${pathName.includes(item.href)
+                          ? "text-teal-400 bg-teal-400/10"
+                          : "text-gray-300 hover:text-white"
+                        }
+                      `}
                       onClick={() => {
                         closeAllDropdowns();
-                        //logNavigation(item.name);
                       }}
                     >
                       {item.name}
                     </Link>
-                  </div>
-                );
-              } else if (item.name === "Welcome") {
-                return (
-                  <div key={item.name} className="relative">
-                    <button
-                      onClick={() => {
-                        toggleDropdown(setIsBasicsDropdownOpen);
-                        //logNavigation(item.name);
-                      }}
-                      className={`px-3 py-2 rounded-md cursor-pointer text-sm font-medium flex items-center ${isBasicsDropdownOpen || pathName.includes(item.href)
-                        ? "text-teal-400"
-                        : "text-gray-300 hover:text-white"
-                        }`}
+                  );
+                } else if (item.name === "Welcome") {
+                  return (
+                    <div 
+                      key={item.name} 
+                      className="relative group"
+                      onMouseEnter={() => setIsBasicsDropdownOpen(true)}
+                      onMouseLeave={() => setIsBasicsDropdownOpen(false)}
                     >
-                      {item.name}
-                      <ChevronDown className="ml-1" />
-                    </button>
-                    {isBasicsDropdownOpen && (
-                      <div className="absolute left-0 mt-2 w-48 bg-black text-white rounded-md shadow-lg z-10">
-                        <button
-                          onClick={() => {
-                            handleOpenModal();
-                            closeAllDropdowns();
-                            // logNavigation("Demo Video");
-                          }}
-                          className="block cursor-pointer px-4 py-2 text-sm"
-                        >
-                          Demo Video
-                        </button>
-                        <Link
-                          href="/howitworks"
-                          className="block cursor-pointer px-4 py-2 text-sm"
-                          onClick={() => {
-                            closeAllDropdowns();
-                            // logNavigation("How It Works");
-                          }}
-                        >
-                          How It Works
-                        </Link>
-                        <Link
-                          href="/aboutus"
-                          className="block cursor-pointer px-4 py-2 text-sm"
-                          onClick={() => {
-                            closeAllDropdowns();
-                            // logNavigation("About Us");
-                          }}
-                        >
-                          About Us
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                );
-              } else if (item.name === "Burn Archive") {
-                return (
-                  <div key={item.name} className="relative">
-                    <button
-                      onClick={() => {
-                        toggleDropdown(setIsBurnArchiveDropdownOpen);
-                        //logNavigation(item.name);
-                      }}
-                      className={`px-3 py-2 rounded-md cursor-pointer text-sm font-medium flex items-center ${isBurnArchiveDropdownOpen
-                        ? "text-teal-400"
-                        : "text-gray-300 hover:text-white"
-                        }`}
-                    >
-                      {item.name}
-                      <ChevronDown className="ml-1" />
-                    </button>
-                    {isBurnArchiveDropdownOpen && (
-                      <div className="absolute left-0 mt-2 w-48 bg-black text-white rounded-md shadow-lg z-10">
-                        <Link
-                          href="/archive/shiba"
-                          className="block cursor-pointer px-4 py-2 text-sm"
-                          onClick={() => {
-                            closeAllDropdowns();
-                            // logNavigation("SHIB");
-                          }}
-                        >
-                          SHIB
-                        </Link>
-                        <Link
-                          href="/archive/lunc"
-                          className="block cursor-pointer px-4 py-2 text-sm"
-                          onClick={() => {
-                            closeAllDropdowns();
-                            // logNavigation("LUNC");
-                          }}
-                        >
-                          LUNC
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                );
-              } else {
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${pathName.includes(item.href)
-                      ? "text-teal-400"
-                      : "text-gray-300 hover:text-white"
-                      }`}
-                    onClick={() => {
-                      setIsOpen(false);
-                      closeAllDropdowns();
-                      //logNavigation(item.name);
-                    }}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              }
-            })}
-          </div>
-
-          {/* User Section */}
-          {userFromDb && user ? (
-            <Button
-              onClick={() => {
-                handleLogOut();
-                closeAllDropdowns();
-              }}
-              className="bg-cyan-700 hover:scale-105 cursor-pointer hover:bg-cyan-600 px-3 py-2 mr-1 rounded-md text-white"
-            >
-              Logout
-            </Button>
-          ) : (
-            <Link
-              href={"/auth/login"}
-              className="bg-cyan-700 hover:scale-105 cursor-pointer hover:bg-cyan-600 px-3 py-2 mr-1 rounded-md text-white"
-              onClick={() => {
-                setIsOpen(false);
-                closeAllDropdowns();
-              }}
-            >
-              Login
-            </Link>
-          )}
-
-          {/* Mobile Menu Toggle */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center cursor-pointer justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-            >
-              <span className="sr-only">Open main menu</span>
-              {isOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navItems.map((item) =>
-              item.name === "Learn" ? (
-                <div key={item.name}>
-                  <Link
-                    href="/learn"
-                    className={`block px-3 cursor-pointer py-2 rounded-md text-base font-medium ${pathName.includes(item.href)
-                      ? "text-teal-400"
-                      : "text-gray-300 hover:text-white"
-                      }`}
-                    onClick={() => {
-                      setIsOpen(false);
-                      closeAllDropdowns();
-                      //logNavigation(item.name);
-                    }}
-                  >
-                    Learn
-                  </Link>
-                </div>
-              ) : item.name === "Welcome" ? (
-                <div key={item.name}>
-                  <button
-                    onClick={() => {
-                      toggleDropdown(setIsBasicsDropdownOpen);
-                      //logNavigation(item.name);
-                    }}
-                    className={`px-3 py-2 cursor-pointer rounded-md text-base font-medium flex items-center ${isBasicsDropdownOpen || pathName.includes(item.href)
-                      ? "text-teal-400"
-                      : "text-gray-300 hover:text-white"
-                      }`}
-                  >
-                    {item.name}
-                    <ChevronDown className="ml-1" />
-                  </button>
-                  {isBasicsDropdownOpen && (
-                    <div className="space-y-1">
                       <button
                         onClick={() => {
-                          handleOpenModal();
-                          closeAllDropdowns();
-                          // logNavigation("Demo Video");
+                          toggleDropdown(setIsBasicsDropdownOpen);
                         }}
-                        className="block px-3 py-2 cursor-pointer rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
+                        className={`
+                          px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1
+                          transition-all duration-300 hover:bg-white/10 hover:scale-105
+                          ${isBasicsDropdownOpen || pathName.includes(item.href)
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white"
+                          }
+                        `}
                       >
-                        Demo Video
+                        {item.name}
+                        <ChevronDown className={`
+                          w-4 h-4 transition-transform duration-300
+                          ${isBasicsDropdownOpen ? 'rotate-180' : 'rotate-0'}
+                        `} />
                       </button>
-                      <Link
-                        href="/howitworks"
-                        className="block px-3 py-2 cursor-pointer rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
-                        onClick={() => {
-                          setIsOpen(false);
-                          closeAllDropdowns();
-                          // logNavigation("How It Works");
-                        }}
-                      >
-                        How It Works
-                      </Link>
-                      <Link
-                        href="/aboutus"
-                        className="block px-3 py-2 cursor-pointer rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
-                        onClick={() => {
-                          setIsOpen(false);
-                          closeAllDropdowns();
-                          // logNavigation("About Us");
-                        }}
-                      >
-                        About Us
-                      </Link>
+                      
+                      <div className={`
+                        absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-56
+                        transition-all duration-300 origin-top
+                        ${isBasicsDropdownOpen 
+                          ? 'opacity-100 visible scale-100 translate-y-0' 
+                          : 'opacity-0 invisible scale-95 -translate-y-2'
+                        }
+                      `}>
+                        <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-2 overflow-hidden">
+                          <div className="space-y-1">
+                            <button
+                              onClick={() => {
+                                handleOpenModal();
+                                closeAllDropdowns();
+                              }}
+                              className="group/item w-full text-left px-4 py-3 rounded-xl text-sm font-medium 
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20 
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                            >
+                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"></div>
+                              Demo Video
+                            </button>
+                            <Link
+                              href="/howitworks"
+                              className="group/item block px-4 py-3 rounded-xl text-sm font-medium 
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20 
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                              onClick={() => {
+                                closeAllDropdowns();
+                              }}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"></div>
+                              How It Works
+                            </Link>
+                            <Link
+                              href="/aboutus"
+                              className="group/item block px-4 py-3 rounded-xl text-sm font-medium 
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20 
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                              onClick={() => {
+                                closeAllDropdowns();
+                              }}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"></div>
+                              About Us
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
-              ) : item.name === "Burn Archive" ? (
-                <div key={item.name}>
-                  <button
-                    onClick={() => {
-                      toggleDropdown(setIsBurnArchiveDropdownOpen);
-                      //logNavigation(item.name);
-                    }}
-                    className={`px-3 py-2 rounded-md text-base font-medium flex items-center ${isBurnArchiveDropdownOpen
-                      ? "text-teal-400"
-                      : "text-gray-300 hover:text-white"
-                      }`}
-                  >
-                    {item.name}
-                    <ChevronDown className="ml-1" />
-                  </button>
-                  {isBurnArchiveDropdownOpen && (
-                    <div className="space-y-1">
-                      <Link
-                        href="/archive/shiba"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
+                  );
+                } else if (item.name === "Burn Archive") {
+                  return (
+                    <div 
+                      key={item.name} 
+                      className="relative group"
+                      onMouseEnter={() => setIsBurnArchiveDropdownOpen(true)}
+                      onMouseLeave={() => setIsBurnArchiveDropdownOpen(false)}
+                    >
+                      <button
                         onClick={() => {
-                          setIsOpen(false);
-                          closeAllDropdowns();
-                          // logNavigation("SHIB");
+                          toggleDropdown(setIsBurnArchiveDropdownOpen);
                         }}
+                        className={`
+                          px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1
+                          transition-all duration-300 hover:bg-white/10 hover:scale-105
+                          ${isBurnArchiveDropdownOpen
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white"
+                          }
+                        `}
                       >
-                        SHIB
-                      </Link>
-                      <Link
-                        href="/archive/lunc"
-                        className="block px-3 py-2 cursor-pointer rounded-md text-base font-medium text-gray-300 hover:bg-gray-700"
-                        onClick={() => {
-                          setIsOpen(false);
-                          closeAllDropdowns();
-                          // logNavigation("LUNC");
-                        }}
-                      >
-                        LUNC
-                      </Link>
+                        {item.name}
+                        <ChevronDown className={`
+                          w-4 h-4 transition-transform duration-300
+                          ${isBurnArchiveDropdownOpen ? 'rotate-180' : 'rotate-0'}
+                        `} />
+                      </button>
+                      
+                      <div className={`
+                        absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-56
+                        transition-all duration-300 origin-top
+                        ${isBurnArchiveDropdownOpen 
+                          ? 'opacity-100 visible scale-100 translate-y-0' 
+                          : 'opacity-0 invisible scale-95 -translate-y-2'
+                        }
+                      `}>
+                        <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-2 overflow-hidden">
+                          <div className="space-y-1">
+                            <Link
+                              href="/archive/shiba"
+                              className="group/item block px-4 py-3 rounded-xl text-sm font-medium 
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20 
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                              onClick={() => {
+                                closeAllDropdowns();
+                              }}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"></div>
+                              SHIB
+                            </Link>
+                            <Link
+                              href="/archive/lunc"
+                              className="group/item block px-4 py-3 rounded-xl text-sm font-medium 
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20 
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                              onClick={() => {
+                                closeAllDropdowns();
+                              }}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"></div>
+                              LUNC
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
+                  );
+                } else {
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`
+                        px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
+                        hover:bg-white/10 hover:scale-105
+                        ${pathName.includes(item.href)
+                          ? "text-teal-400 bg-teal-400/10"
+                          : "text-gray-300 hover:text-white"
+                        }
+                      `}
+                      onClick={() => {
+                        setIsOpen(false);
+                        closeAllDropdowns();
+                      }}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                }
+              })}
+            </div>
+
+            {/* User Section */}
+            <div className="hidden md:block">
+              {userFromDb && user ? (
+                <Button
+                  onClick={() => {
+                    handleLogOut();
+                    closeAllDropdowns();
+                  }}
+                  className="
+                    bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
+                    text-white px-6 py-2 rounded-xl font-medium
+                    transition-all duration-200 hover:scale-105 shadow-lg
+                  "
+                >
+                  Logout
+                </Button>
               ) : (
                 <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`block px-3 py-2 cursor-pointer rounded-md text-base font-medium ${pathName.includes(item.href)
-                    ? "text-teal-400"
-                    : "text-gray-300 hover:text-white"
-                    }`}
+                  href={"/auth/login"}
+                  className="
+                    bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
+                    text-white px-6 py-2 rounded-xl font-medium
+                    transition-all duration-200 hover:scale-105 shadow-lg inline-block
+                  "
                   onClick={() => {
                     setIsOpen(false);
                     closeAllDropdowns();
-                    //logNavigation(item.name);
                   }}
                 >
-                  {item.name}
+                  Login
                 </Link>
-              )
-            )}
+              )}
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="
+                  p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10
+                  transition-all duration-200 hover:scale-105
+                "
+              >
+                <span className="sr-only">Open main menu</span>
+                {isOpen ? (
+                  <X className="w-6 h-6" aria-hidden="true" />
+                ) : (
+                  <Menu className="w-6 h-6" aria-hidden="true" />
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Navigation */}
+          {isOpen && (
+            <div className="md:hidden mt-4 pt-4 border-t border-white/10">
+              <div className="space-y-2">
+                {navItems.map((item) =>
+                  item.name === "Learn" ? (
+                    <div key={item.name}>
+                      <Link
+                        href="/learn"
+                        className={`
+                          block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200
+                          ${pathName.includes(item.href)
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white hover:bg-white/10"
+                          }
+                        `}
+                        onClick={() => {
+                          setIsOpen(false);
+                          closeAllDropdowns();
+                        }}
+                      >
+                        Learn
+                      </Link>
+                    </div>
+                  ) : item.name === "Welcome" ? (
+                    <div key={item.name}>
+                      <button
+                        onClick={() => {
+                          toggleDropdown(setIsBasicsDropdownOpen);
+                        }}
+                        className={`
+                          w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center justify-between
+                          transition-all duration-200
+                          ${isBasicsDropdownOpen || pathName.includes(item.href)
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white hover:bg-white/10"
+                          }
+                        `}
+                      >
+                        {item.name}
+                        <ChevronDown className="w-4 h-4" />
+                      </button>
+                      {isBasicsDropdownOpen && (
+                        <div className="mt-2 ml-4 space-y-1">
+                          <button
+                            onClick={() => {
+                              handleOpenModal();
+                              closeAllDropdowns();
+                            }}
+                            className="block w-full text-left px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+                          >
+                            Demo Video
+                          </button>
+                          <Link
+                            href="/howitworks"
+                            className="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+                            onClick={() => {
+                              setIsOpen(false);
+                              closeAllDropdowns();
+                            }}
+                          >
+                            How It Works
+                          </Link>
+                          <Link
+                            href="/aboutus"
+                            className="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+                            onClick={() => {
+                              setIsOpen(false);
+                              closeAllDropdowns();
+                            }}
+                          >
+                            About Us
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  ) : item.name === "Burn Archive" ? (
+                    <div key={item.name}>
+                      <button
+                        onClick={() => {
+                          toggleDropdown(setIsBurnArchiveDropdownOpen);
+                        }}
+                        className={`
+                          w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center justify-between
+                          transition-all duration-200
+                          ${isBurnArchiveDropdownOpen
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white hover:bg-white/10"
+                          }
+                        `}
+                      >
+                        {item.name}
+                        <ChevronDown className="w-4 h-4" />
+                      </button>
+                      {isBurnArchiveDropdownOpen && (
+                        <div className="mt-2 ml-4 space-y-1">
+                          <Link
+                            href="/archive/shiba"
+                            className="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+                            onClick={() => {
+                              setIsOpen(false);
+                              closeAllDropdowns();
+                            }}
+                          >
+                            SHIB
+                          </Link>
+                          <Link
+                            href="/archive/lunc"
+                            className="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+                            onClick={() => {
+                              setIsOpen(false);
+                              closeAllDropdowns();
+                            }}
+                          >
+                            LUNC
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`
+                        block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200
+                        ${pathName.includes(item.href)
+                          ? "text-teal-400 bg-teal-400/10"
+                          : "text-gray-300 hover:text-white hover:bg-white/10"
+                        }
+                      `}
+                      onClick={() => {
+                        setIsOpen(false);
+                        closeAllDropdowns();
+                      }}
+                    >
+                      {item.name}
+                    </Link>
+                  )
+                )}
+                
+                {/* Mobile User Section */}
+                <div className="pt-4 border-t border-white/10">
+                  {userFromDb && user ? (
+                    <Button
+                      onClick={() => {
+                        handleLogOut();
+                        closeAllDropdowns();
+                        setIsOpen(false);
+                      }}
+                      className="
+                        w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
+                        text-white px-6 py-3 rounded-xl font-medium
+                        transition-all duration-200 hover:scale-105 shadow-lg
+                      "
+                    >
+                      Logout
+                    </Button>
+                  ) : (
+                    <Link
+                      href={"/auth/login"}
+                      className="
+                        block w-full text-center bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
+                        text-white px-6 py-3 rounded-xl font-medium
+                        transition-all duration-200 hover:scale-105 shadow-lg
+                      "
+                      onClick={() => {
+                        setIsOpen(false);
+                        closeAllDropdowns();
+                      }}
+                    >
+                      Login
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </nav>
+
       <VideoModal isOpen={isModalOpen} onClose={handleCloseModal} />
-    </nav>
+    </>
   );
 }
