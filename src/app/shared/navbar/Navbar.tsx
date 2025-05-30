@@ -19,7 +19,9 @@ const AdBannerHeader = ({ adClass }: { adClass: string }) => {
     if (!adContainerRef.current) return;
 
     // Remove existing ad script if any
-    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+    const existingScript = document.querySelector(
+      `script[data-ad-class="${adClass}"]`
+    );
     if (existingScript) {
       existingScript.remove();
     }
@@ -72,11 +74,12 @@ const AdBannerHeader = ({ adClass }: { adClass: string }) => {
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isBasicsDropdownOpen, setIsBasicsDropdownOpen] = useState(false);
-  const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] = useState(false);
+  const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] =
+    useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  
+
   const user = useAppSelector((state) => state.auth.user);
   const paths = useAppSelector((state) => state.auth);
   const {
@@ -92,9 +95,9 @@ export default function Navbar() {
   // Scroll behavior
   useEffect(() => {
     const controlNavbar = () => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         const currentScrollY = window.scrollY;
-        
+
         if (currentScrollY < 10) {
           // Always show at top
           setIsVisible(true);
@@ -105,22 +108,22 @@ export default function Navbar() {
           // Scrolling up
           setIsVisible(true);
         }
-        
+
         setLastScrollY(currentScrollY);
       }
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', controlNavbar);
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", controlNavbar);
       return () => {
-        window.removeEventListener('scroll', controlNavbar);
+        window.removeEventListener("scroll", controlNavbar);
       };
     }
   }, [lastScrollY]);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
-  
+
   const toggleDropdown = (dropdownSetter: any) => {
     setIsBasicsDropdownOpen(false);
     setIsBurnArchiveDropdownOpen(false);
@@ -154,18 +157,24 @@ export default function Navbar() {
       </div>
 
       {/* Island Navbar */}
-      <nav 
+      <nav
         className={`
           fixed top-4 left-1/2 transform -translate-x-1/2 z-50 
           transition-all duration-500 ease-in-out
-          ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}
+          ${
+            isVisible
+              ? "translate-y-0 opacity-100"
+              : "-translate-y-full opacity-0"
+          }
         `}
       >
-        <div className="
+        <div
+          className="
           bg-black/80 backdrop-blur-xl border border-white/10 
           rounded-2xl px-6 py-3 shadow-2xl
           w-[95vw]
-        ">
+        "
+        >
           <div className="flex items-center justify-between md:gap-8 px-10">
             {/* Logo */}
             <div className="flex-shrink-0">
@@ -183,9 +192,10 @@ export default function Navbar() {
                       className={`
                         px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
                         hover:bg-white/10 hover:scale-105
-                        ${pathName.includes(item.href)
-                          ? "text-teal-400 bg-teal-400/10"
-                          : "text-gray-300 hover:text-white"
+                        ${
+                          pathName.includes(item.href)
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white"
                         }
                       `}
                       onClick={() => {
@@ -197,8 +207,8 @@ export default function Navbar() {
                   );
                 } else if (item.name === "Welcome") {
                   return (
-                    <div 
-                      key={item.name} 
+                    <div
+                      key={item.name}
                       className="relative group"
                       onMouseEnter={() => setIsBasicsDropdownOpen(true)}
                       onMouseLeave={() => setIsBasicsDropdownOpen(false)}
@@ -210,27 +220,33 @@ export default function Navbar() {
                         className={`
                           px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1
                           transition-all duration-300 hover:bg-white/10 hover:scale-105
-                          ${isBasicsDropdownOpen || pathName.includes(item.href)
-                            ? "text-teal-400 bg-teal-400/10"
-                            : "text-gray-300 hover:text-white"
+                          ${
+                            isBasicsDropdownOpen || pathName.includes(item.href)
+                              ? "text-teal-400 bg-teal-400/10"
+                              : "text-gray-300 hover:text-white"
                           }
                         `}
                       >
                         {item.name}
-                        <ChevronDown className={`
+                        <ChevronDown
+                          className={`
                           w-4 h-4 transition-transform duration-300
-                          ${isBasicsDropdownOpen ? 'rotate-180' : 'rotate-0'}
-                        `} />
+                          ${isBasicsDropdownOpen ? "rotate-180" : "rotate-0"}
+                        `}
+                        />
                       </button>
-                      
-                      <div className={`
+
+                      <div
+                        className={`
                         absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-56
                         transition-all duration-300 origin-top
-                        ${isBasicsDropdownOpen 
-                          ? 'opacity-100 visible scale-100 translate-y-0' 
-                          : 'opacity-0 invisible scale-95 -translate-y-2'
+                        ${
+                          isBasicsDropdownOpen
+                            ? "opacity-100 visible scale-100 translate-y-0"
+                            : "opacity-0 invisible scale-95 -translate-y-2"
                         }
-                      `}>
+                      `}
+                      >
                         <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-2 overflow-hidden">
                           <div className="space-y-1">
                             <button
@@ -243,8 +259,10 @@ export default function Navbar() {
                                 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
                                 flex items-center gap-3"
                             >
-                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
-                                transition-opacity duration-300"></div>
+                              <div
+                                className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"
+                              ></div>
                               Demo Video
                             </button>
                             <Link
@@ -257,8 +275,10 @@ export default function Navbar() {
                                 closeAllDropdowns();
                               }}
                             >
-                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
-                                transition-opacity duration-300"></div>
+                              <div
+                                className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"
+                              ></div>
                               How It Works
                             </Link>
                             <Link
@@ -271,8 +291,10 @@ export default function Navbar() {
                                 closeAllDropdowns();
                               }}
                             >
-                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
-                                transition-opacity duration-300"></div>
+                              <div
+                                className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"
+                              ></div>
                               About Us
                             </Link>
                           </div>
@@ -282,8 +304,8 @@ export default function Navbar() {
                   );
                 } else if (item.name === "Burn Archive") {
                   return (
-                    <div 
-                      key={item.name} 
+                    <div
+                      key={item.name}
                       className="relative group"
                       onMouseEnter={() => setIsBurnArchiveDropdownOpen(true)}
                       onMouseLeave={() => setIsBurnArchiveDropdownOpen(false)}
@@ -295,27 +317,37 @@ export default function Navbar() {
                         className={`
                           px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1
                           transition-all duration-300 hover:bg-white/10 hover:scale-105
-                          ${isBurnArchiveDropdownOpen
-                            ? "text-teal-400 bg-teal-400/10"
-                            : "text-gray-300 hover:text-white"
+                          ${
+                            isBurnArchiveDropdownOpen
+                              ? "text-teal-400 bg-teal-400/10"
+                              : "text-gray-300 hover:text-white"
                           }
                         `}
                       >
                         {item.name}
-                        <ChevronDown className={`
+                        <ChevronDown
+                          className={`
                           w-4 h-4 transition-transform duration-300
-                          ${isBurnArchiveDropdownOpen ? 'rotate-180' : 'rotate-0'}
-                        `} />
+                          ${
+                            isBurnArchiveDropdownOpen
+                              ? "rotate-180"
+                              : "rotate-0"
+                          }
+                        `}
+                        />
                       </button>
-                      
-                      <div className={`
+
+                      <div
+                        className={`
                         absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-56
                         transition-all duration-300 origin-top
-                        ${isBurnArchiveDropdownOpen 
-                          ? 'opacity-100 visible scale-100 translate-y-0' 
-                          : 'opacity-0 invisible scale-95 -translate-y-2'
+                        ${
+                          isBurnArchiveDropdownOpen
+                            ? "opacity-100 visible scale-100 translate-y-0"
+                            : "opacity-0 invisible scale-95 -translate-y-2"
                         }
-                      `}>
+                      `}
+                      >
                         <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-2 overflow-hidden">
                           <div className="space-y-1">
                             <Link
@@ -328,8 +360,10 @@ export default function Navbar() {
                                 closeAllDropdowns();
                               }}
                             >
-                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
-                                transition-opacity duration-300"></div>
+                              <div
+                                className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"
+                              ></div>
                               SHIB
                             </Link>
                             <Link
@@ -342,8 +376,10 @@ export default function Navbar() {
                                 closeAllDropdowns();
                               }}
                             >
-                              <div className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
-                                transition-opacity duration-300"></div>
+                              <div
+                                className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100 
+                                transition-opacity duration-300"
+                              ></div>
                               LUNC
                             </Link>
                           </div>
@@ -359,9 +395,10 @@ export default function Navbar() {
                       className={`
                         px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
                         hover:bg-white/10 hover:scale-105
-                        ${pathName.includes(item.href)
-                          ? "text-teal-400 bg-teal-400/10"
-                          : "text-gray-300 hover:text-white"
+                        ${
+                          pathName.includes(item.href)
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white"
                         }
                       `}
                       onClick={() => {
@@ -440,9 +477,10 @@ export default function Navbar() {
                         href="/learn"
                         className={`
                           block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200
-                          ${pathName.includes(item.href)
-                            ? "text-teal-400 bg-teal-400/10"
-                            : "text-gray-300 hover:text-white hover:bg-white/10"
+                          ${
+                            pathName.includes(item.href)
+                              ? "text-teal-400 bg-teal-400/10"
+                              : "text-gray-300 hover:text-white hover:bg-white/10"
                           }
                         `}
                         onClick={() => {
@@ -462,9 +500,10 @@ export default function Navbar() {
                         className={`
                           w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center justify-between
                           transition-all duration-200
-                          ${isBasicsDropdownOpen || pathName.includes(item.href)
-                            ? "text-teal-400 bg-teal-400/10"
-                            : "text-gray-300 hover:text-white hover:bg-white/10"
+                          ${
+                            isBasicsDropdownOpen || pathName.includes(item.href)
+                              ? "text-teal-400 bg-teal-400/10"
+                              : "text-gray-300 hover:text-white hover:bg-white/10"
                           }
                         `}
                       >
@@ -514,9 +553,10 @@ export default function Navbar() {
                         className={`
                           w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center justify-between
                           transition-all duration-200
-                          ${isBurnArchiveDropdownOpen
-                            ? "text-teal-400 bg-teal-400/10"
-                            : "text-gray-300 hover:text-white hover:bg-white/10"
+                          ${
+                            isBurnArchiveDropdownOpen
+                              ? "text-teal-400 bg-teal-400/10"
+                              : "text-gray-300 hover:text-white hover:bg-white/10"
                           }
                         `}
                       >
@@ -554,9 +594,10 @@ export default function Navbar() {
                       href={item.href}
                       className={`
                         block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200
-                        ${pathName.includes(item.href)
-                          ? "text-teal-400 bg-teal-400/10"
-                          : "text-gray-300 hover:text-white hover:bg-white/10"
+                        ${
+                          pathName.includes(item.href)
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white hover:bg-white/10"
                         }
                       `}
                       onClick={() => {
@@ -568,7 +609,7 @@ export default function Navbar() {
                     </Link>
                   )
                 )}
-                
+
                 {/* Mobile User Section */}
                 <div className="pt-4 border-t border-white/10">
                   {userFromDb && user ? (
