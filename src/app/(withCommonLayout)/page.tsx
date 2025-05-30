@@ -21,7 +21,7 @@ const Profile = () => {
       <CryptoInfo />
 
       <Slider />
-      <SubPage />
+      <SubPage simpleHeader />
 
       <Footer />
     </div>

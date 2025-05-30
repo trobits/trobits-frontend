@@ -85,8 +85,11 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     </div>
   );
 };
-
-const SubPage = () => {
+//using simpleHeader prop to load the necessary header for homepage
+interface SubPageProps {
+  simpleHeader?: boolean;
+}
+const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSection, setSelectedSection] = useState("all");
@@ -212,30 +215,37 @@ const SubPage = () => {
       )}
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden mt-16">
-        <div className="container mx-auto px-6 py-16">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-green-500 text-sm font-medium">
-                LIVE FEED
-              </span>
-              <span className="text-gray-400 text-sm">
-                {filteredAndSortedArticles.length} articles
-              </span>
-            </div>
-            <div className="space-y-4">
-              <h1 className="text-6xl md:text-7xl font-bold text-white">
-                Articles
-              </h1>
-              <p className="text-xl text-gray-400 max-w-2xl">
-                Deep insights into crypto markets, blockchain technology, and
-                the future of digital finance.
-              </p>
+      {/* ← HERE */}
+      {simpleHeader ? (
+        <h2 className="text-2xl text-center mb-6 font-bold text-cyan-600">
+          Trobits Articles
+        </h2>
+      ) : (
+        <div className="relative overflow-hidden mt-16">
+          <div className="container mx-auto px-6 py-16">
+            <div className="max-w-4xl">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-green-500 text-sm font-medium">
+                  LIVE FEED
+                </span>
+                <span className="text-gray-400 text-sm">
+                  {filteredAndSortedArticles.length} articles
+                </span>
+              </div>
+              <div className="space-y-4">
+                <h1 className="text-6xl md:text-7xl font-bold text-white">
+                  Articles
+                </h1>
+                <p className="text-xl text-gray-400 max-w-2xl">
+                  Deep insights into crypto markets, blockchain technology, and
+                  the future of digital finance.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Search & Filter */}
       <div className="container mx-auto px-6 py-8">
