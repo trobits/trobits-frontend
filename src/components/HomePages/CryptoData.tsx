@@ -1,4 +1,3 @@
-
 "use client";
 import TransparentCard from "./CryptoCard/CryptoCard";
 import shibaInu from "../../assets/icons/shiba-inu.png";
@@ -22,7 +21,6 @@ export default function CryptoData() {
   const shibaData = shibaInformation?.data;
   const luncData = luncInformation?.data;
 
-  // Data for the cards with added 7-day and 30-day interval data
   const cardData = [
     {
       coin: "SHIB",
@@ -59,17 +57,24 @@ export default function CryptoData() {
   ];
 
   return (
-    <div className="flex justify-center flex-wrap items-center mt-20 gap-24">
-      {cardData.map((card, index) => (
-        <div
-          key={index}
-          className={`animated-card ${
-            index === 0 ? "slide-left" : "slide-right"
-          }`}
-        >
-          <TransparentCard cryptoData={card} index={index} />
-        </div>
-      ))}
-    </div>
+    <section className="container mx-auto mt-20 px-4">
+      <div className="flex justify-center flex-wrap items-center gap-24 perspective-1000">
+        {cardData.map((card, index) => (
+          <div
+            key={index}
+            className={
+              `relative transform-gpu transition-transform duration-500 ease-out ` +
+              // scale up and lift on hover
+              `hover:scale-70 hover:-translate-y-4 hover:z-15 cursor-pointer ` +
+              // custom 3D-like shadow: heavier bottom, softer sides
+              `hover:shadow-[0_40px_50px_-20px_rgba(0,0,0,0.7),0_15px_25px_-5px_rgba(0,0,0,0.3)] ` +
+              `${index === 0 ? "slide-left" : "slide-right"}`
+            }
+          >
+            <TransparentCard cryptoData={card} index={index} />
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
