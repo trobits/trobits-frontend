@@ -7,6 +7,7 @@ import React from "react";
 import CryptoNavbar from "../shared/navbar/CryptoNavbar";
 import Footer from "../shared/Footer/Footer";
 import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
+import SubPage from "./articles/SubPage";
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const Profile = () => {
@@ -20,8 +21,7 @@ const Profile = () => {
       <CryptoInfo />
 
       <Slider />
-      <NewsCompo />
-      
+      <SubPage />
 
       <Footer />
     </div>
