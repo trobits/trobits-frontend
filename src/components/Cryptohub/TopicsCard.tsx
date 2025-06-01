@@ -2,20 +2,14 @@ import React from "react";
 import Image from "next/image";
 import { ITopicInfo } from "./Types";
 import Link from "next/link";
-import { motion } from "framer-motion"; // Import framer-motion
+import { motion } from "framer-motion";
+import { ArrowRight, MessageCircle, Clock } from "lucide-react";
 
-// Now define the TopicsCard interface which accepts topicInfo prop
 interface TopicsCardProps {
   topicInfo: ITopicInfo;
 }
 
 const TopicsCard: React.FC<TopicsCardProps> = ({ topicInfo }) => {
-  console.log(
-    "TopicsCard - topicInfo.id:",
-    topicInfo.id,
-    "image:",
-    topicInfo.image
-  );
   return (
     <motion.div
       // Initial state for mounting (slightly smaller and moves up when it enters viewport)

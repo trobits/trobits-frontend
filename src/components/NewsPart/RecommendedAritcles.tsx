@@ -7,10 +7,11 @@ import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import Loading from "../Shared/Loading";
 import { Article } from "@/app/(withCommonLayout)/articles/SubPage";
 import React, { useEffect, useRef } from "react";
-import HomeNewsCard from "./HomeNewsCard";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname } from "next/navigation";
 import { setPaths } from "@/redux/features/slices/authSlice";
+import NewsCard from "./NewsCard";
+import { ArrowRight, Sparkles, TrendingUp } from "lucide-react";
 
 const adClasses = [
     "67b00b6de904d5920e690b84",
@@ -27,13 +28,11 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     const injectAdScript = () => {
         if (!adContainerRef.current) return;
 
-        // Remove existing ad script if any
         const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
         if (existingScript) {
             existingScript.remove();
         }
 
-        // Create and inject new ad script
         const script = document.createElement("script");
         script.innerHTML = `
       !function(e,n,c,t,o,r,d){
@@ -51,24 +50,20 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     };
 
     useEffect(() => {
-        console.log(`Injecting ad: ${adClass}`);
-        injectAdScript(); // Inject on mount
-
+        injectAdScript();
         const handleVisibilityChange = () => {
             if (document.visibilityState === "visible") {
-                injectAdScript(); // Re-inject ads on page activation
+                injectAdScript();
             }
         };
-
         document.addEventListener("visibilitychange", handleVisibilityChange);
-
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, [ adClass ]);
+    }, [adClass]);
 
     return (
-        <div ref={adContainerRef}>
+        <div ref={adContainerRef} className="w-full flex justify-center my-8">
             <ins
                 className={adClass}
                 style={{ display: "inline-block", width: "1px", height: "1px" }}
@@ -76,7 +71,6 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
         </div>
     );
 };
-
 
 export default function RecommendedArticles() {
     const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery({
@@ -88,22 +82,14 @@ export default function RecommendedArticles() {
     const currentPath = useAppSelector((state) => state.auth.currentPath);
     const dispatch = useAppDispatch();
     const pathName = usePathname();
+    
     useEffect(() => {
-        if (!((previousPath?.split("/").includes("articles")) && (previousPath?.split("/").length === 3)) && ((currentPath?.split("/").includes("articles")) && (currentPath?.split("/").length === 3)) || previousPath !== currentPath ) {
+        if (!((previousPath?.split("/").includes("articles")) && (previousPath?.split("/").length === 3)) && ((currentPath?.split("/").includes("articles")) && (currentPath?.split("/").length === 3)) || previousPath !== currentPath) {
             dispatch(setPaths(pathName));
             window.location.reload();
         }
-    }, [ currentPath, dispatch, pathName, previousPath ]);
+    }, [currentPath, dispatch, pathName, previousPath]);
 
-    // useEffect(() => {
-    //     if (previousPath !== "/" && currentPath === "/") {
-    //         dispatch(setPaths(pathName));
-    //         window.location.reload();
-    //     }
-    // }, [ currentPath, dispatch, pathName, previousPath ]);
-
-
-    console.log(pathName.split("/").includes("articles"))
     // Handle loading state
     if (allBlogsDataLoading) {
         return <Loading />;
@@ -112,38 +98,123 @@ export default function RecommendedArticles() {
     const allBlogs: Article[] = allBlogsData?.data || [];
 
     return (
-        <div className="container mx-auto mt-10">
-            <h2 className="text-2xl flex justify-center items-center container mb-6 font-bold text-white py-4 bg-cyan-600 rounded">Recommended Articles</h2>
-
-            {/* <div className="flex flex-wrap justify-center gap-1 mx-auto">
-                {allBlogs?.map((article) => (
-                    <div key={article.id} className="flex flex-wrap justify-center items-center">
-                        <HomeNewsCard articleData={article} />
-                    </div>
-                ))}
-            </div> */}
-
-
-            <div className="flex flex-wrap justify-center gap-2 mx-auto">
-           
-
-                {allBlogs?.map((article, index) => (
-                    <div key={article.id} className="flex flex-wrap justify-center items-center">
-                        <HomeNewsCard articleData={article} />
-                        {/* Show an ad after every 2 articles */}
-                        {(index + 1) % 2 === 0 && index < adClasses.length && (
-                            <AdBanner key={adClasses[ index ]} adClass={adClasses[ index++ ]} />
-                        )}
-                    </div>
-                ))}
+        <section className="relative py-16 bg-black">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+                <div className="absolute inset-0" style={{
+                    backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+                    backgroundSize: '24px 24px'
+                }} />
             </div>
 
-            {/* "See All Articles" Button */}
-            <div className="text-center my-10">
-                <Link href="/articles">
-                    <Button className="mx-auto bg-cyan-700 text-white text-lg font-bold">See All Articles</Button>
-                </Link>
+            <div className="container mx-auto px-6 relative">
+                {/* Section Header */}
+                <div className="text-center mb-16">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                        <Sparkles className="w-5 h-5 text-white" />
+                        <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">
+                            Curated Content
+                        </span>
+                    </div>
+                    
+                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                        Recommended Articles
+                    </h2>
+                    
+                    <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                        Discover the latest insights and trends in cryptocurrency and blockchain technology
+                    </p>
+                    
+                    {/* Decorative line */}
+                    <div className="flex items-center justify-center mt-8">
+                        <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent w-64" />
+                    </div>
+                </div>
+
+                {/* Articles Grid */}
+                <div className="mb-16">
+                    {allBlogs.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
+                            {allBlogs.map((article, index) => (
+                                <React.Fragment key={article.id}>
+                                    <div className="transform transition-all duration-500 hover:scale-[1.02]">
+                                        <NewsCard articleData={article} viewMode="grid" />
+                                    </div>
+                                    
+                                    {/* Show an ad after every 4 articles */}
+                                    {(index + 1) % 4 === 0 && index < adClasses.length && (
+                                        <div className="col-span-full">
+                                            <AdBanner key={adClasses[Math.floor(index / 4)]} adClass={adClasses[Math.floor(index / 4)]} />
+                                        </div>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-16">
+                            <div className="space-y-4">
+                                <TrendingUp className="w-16 h-16 text-gray-600 mx-auto" />
+                                <h3 className="text-2xl font-semibold text-gray-400">No articles available</h3>
+                                <p className="text-gray-500">Check back later for new content</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Call to Action */}
+                <div className="text-center">
+                    <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-3xl p-8 md:p-12 max-w-2xl mx-auto">
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-center">
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-white/10 rounded-full blur-xl" />
+                                    <div className="relative w-16 h-16 bg-white/5 border border-white/10 rounded-full flex items-center justify-center">
+                                        <TrendingUp className="w-8 h-8 text-white" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-3">
+                                <h3 className="text-2xl font-bold text-white">
+                                    Explore More Content
+                                </h3>
+                                <p className="text-gray-400">
+                                    Dive deeper into our extensive collection of cryptocurrency articles and insights
+                                </p>
+                            </div>
+                            
+                            <Link href="/articles">
+                                <Button className="
+                                    group bg-white text-black px-8 py-4 rounded-2xl font-semibold text-lg
+                                    hover:bg-gray-100 transition-all duration-300 hover:scale-105
+                                    flex items-center gap-3 mx-auto shadow-lg hover:shadow-xl
+                                ">
+                                    <span>View All Articles</span>
+                                    <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                                </Button>
+                            </Link>
+                            
+                            {/* Stats */}
+                            <div className="flex items-center justify-center gap-8 mt-8 pt-6 border-t border-gray-800/50">
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold text-white">{allBlogs.length}+</div>
+                                    <div className="text-sm text-gray-400">Articles</div>
+                                </div>
+                                <div className="w-px h-8 bg-gray-800" />
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold text-white">Daily</div>
+                                    <div className="text-sm text-gray-400">Updates</div>
+                                </div>
+                                <div className="w-px h-8 bg-gray-800" />
+                                <div className="text-center">
+                                    <div className="text-2xl font-bold text-white">Expert</div>
+                                    <div className="text-sm text-gray-400">Insights</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     );
 }

@@ -25,10 +25,10 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <div className="h-[calc(100vh-140px)] w-full fixed flex flex-col lg:flex-row items-center lg:items-center justify-center bg-transparent rounded-b-md mt-14 ml-4 ">
+    <div className="h-[calc(100vh-140px)] w-full fixed flex flex-col lg:flex-row bg-transparent rounded-b-md">
       {/* Fixed Sidebar */}
       <aside
-        className={`lg:w-64 w-64 h-full bg-[#000000b9] shadow-black text-gray-200 flex flex-col shadow-lg fixed lg:relative z-20 lg:translate-x-0 transition-transform transform rounded-xl ${
+        className={`lg:w-64 w-64 h-full bg-[#000000b9] shadow-black text-gray-200 flex flex-col shadow-lg fixed lg:relative z-20 lg:translate-x-0 transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
