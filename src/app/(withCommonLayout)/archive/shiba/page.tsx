@@ -1,22 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Typography,
-  Grid,
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  TextField,
-} from "@mui/material";
 import { format, parseISO } from "date-fns";
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -29,15 +12,16 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { setPaths } from "@/redux/features/slices/authSlice";
 import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Footer from "@/app/shared/Footer/Footer";
+import { Flame, Calendar, Hash, ExternalLink, TrendingDown } from "lucide-react";
+import { TextField } from "@mui/material";
 
 interface ShibaBurnRecord {
   id: string;
   currency: string;
-  date: string; // ISO date string
+  date: string;
   transactionRef: string;
   burnCount: number;
-  shibaBurnArchiveId?: string; // Optional field if not always present
+  shibaBurnArchiveId?: string;
 }
 
 const adClasses = [
@@ -47,15 +31,15 @@ const adClasses = [
 ];
 
 const ShibaBurnsPage: React.FC = () => {
-  const [ records, setRecords ] = useState<ShibaBurnRecord[]>([]);
-  const [ selectedMonth, setSelectedMonth ] = useState<Date>(new Date());
+  const [records, setRecords] = useState<ShibaBurnRecord[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
   const dispatch = useAppDispatch();
   const previousPath = useAppSelector((state) => state.auth.previousPath);
   const currentPath = useAppSelector((state) => state.auth.currentPath);
   const pathName = usePathname();
 
   const formatSelectedMonth = (date: Date) => {
-    const month = date.getMonth() + 1; // Months are 0-indexed
+    const month = date.getMonth() + 1;
     const year = date.getFullYear();
     return { month, year };
   };
@@ -74,58 +58,103 @@ const ShibaBurnsPage: React.FC = () => {
     if (allShibaBurnsData?.data?.length > 0) {
       setRecords(allShibaBurnsData.data);
     }
-  }, [ allShibaBurnsData ]);
+  }, [allShibaBurnsData]);
 
-  if (window) {
+  if (typeof window !== "undefined") {
     if (previousPath !== "/archive/shiba" && currentPath === "/archive/shiba") {
       dispatch(setPaths(pathName));
       window.location.reload();
     }
   }
-  
+
   if (allArchiveDataLoading || allShibaBurnsDataLoading) {
     return <Loading />;
   }
 
-  const sortedRecords = [ ...records ].sort(
+  const sortedRecords = [...records].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
+  // Calculate total burns for the month
+  const totalBurns = sortedRecords.reduce((sum, record) => sum + record.burnCount, 0);
+
   return (
-    <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
-      {/* Ad Banners at the top */}
-      <div className="flex flex-wrap justify-center gap-2 mb-3">
-        {adClasses.map((adClass) => (
-          <div key={adClass} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-            <AdBanner adClass={adClass} />
-          </div>
-        ))}
+    <div className="min-h-screen bg-black text-white">
+      {/* Ad Banner */}
+      <div className="w-full py-4">
+        <div className="flex flex-wrap justify-center gap-2 mx-auto">
+          {adClasses.map((adClass) => (
+            <AdBanner key={adClass} adClass={adClass} />
+          ))}
+        </div>
       </div>
 
-      <Grid
-        container
-        spacing={3}
-        justifyContent="center"
-        alignItems="center"
-        direction="column"
-      >
-        <Grid item xs={12}>
-          <Typography
-            className="text-4xl font-bold text-center mb-2 text-cyan-600"
-            variant="h5"
-            sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
-          >
+      <div className="container mx-auto px-6 py-16">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Flame className="w-5 h-5 text-orange-400" />
+            <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">
+              Burn Archive
+            </span>
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             SHIB Burn Data
-          </Typography>
-          <Typography
-            className="text-xl font-bold text-center mb-2 text-cyan-600"
-            sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
-          >
-            Pick your Month to see Burn Data on This Month
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+          </h1>
+          
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            Track Shiba Inu token burns with detailed transaction records and historical data
+          </p>
+        </div>
+
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center">
+                <Flame className="w-6 h-6 text-orange-400" />
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-1">Total Burns</h3>
+            <p className="text-2xl font-bold text-orange-400">
+              {totalBurns.toLocaleString()}
+            </p>
+            <p className="text-sm text-gray-400 mt-1">This month</p>
+          </div>
+
+          <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
+                <Hash className="w-6 h-6 text-blue-400" />
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-1">Transactions</h3>
+            <p className="text-2xl font-bold text-blue-400">
+              {sortedRecords.length}
+            </p>
+            <p className="text-sm text-gray-400 mt-1">Burn events</p>
+          </div>
+
+          <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                <TrendingDown className="w-6 h-6 text-green-400" />
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-1">Avg. Burn</h3>
+            <p className="text-2xl font-bold text-green-400">
+              {sortedRecords.length > 0 ? Math.floor(totalBurns / sortedRecords.length).toLocaleString() : "0"}
+            </p>
+            <p className="text-sm text-gray-400 mt-1">Per transaction</p>
+          </div>
+        </div>
+
+        {/* Month Picker */}
+        <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 mb-8">
+          <div className="flex items-center justify-center gap-4">
+            <Calendar className="w-5 h-5 text-gray-400" />
+            <span className="text-lg font-medium text-white">Select Month:</span>
             <MonthPicker
               selectedMonth={selectedMonth}
               onChange={(newValue: Date | null) => {
@@ -134,117 +163,91 @@ const ShibaBurnsPage: React.FC = () => {
                 }
               }}
             />
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <TableContainer
-            component={Paper}
-            sx={{
-              backgroundColor: "#f8f9fa",
-              borderRadius: "8px",
-              width: "100vw",
-            }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      color: "black",
-                      textAlign: "center",
-                    }}
-                  >
+          </div>
+        </div>
+
+        {/* Data Table */}
+        <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden">
+          <div className="p-6 border-b border-gray-800/50">
+            <h3 className="text-xl font-bold text-white">Burn Records</h3>
+            <p className="text-gray-400 text-sm mt-1">
+              {format(selectedMonth, "MMMM yyyy")} burn transactions
+            </p>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-800/50">
+                  <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
                     Date
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      color: "black",
-                      textAlign: "center",
-                    }}
-                  >
+                  </th>
+                  <th className="text-right p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
                     Burn Count
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      color: "black",
-                      textAlign: "center",
-                    }}
-                  >
-                    Transaction Ref
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {allShibaBurnsData?.data?.length > 0 ? (
+                  </th>
+                  <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                    Transaction Reference
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedRecords.length > 0 ? (
                   sortedRecords.map((record, index) => (
-                    <TableRow
+                    <tr
                       key={record.id}
-                      sx={{
-                        backgroundColor:
-                          index % 2 === 0 ? "#f7f7f7" : "#eaeaea",
-                        cursor: "pointer",
-                        "&:hover": { backgroundColor: "#d1d1d1" },
-                      }}
+                      className={`
+                        border-b border-gray-800/30 hover:bg-gray-800/30 transition-colors duration-200
+                        ${index % 2 === 0 ? 'bg-gray-800/10' : ''}
+                      `}
                     >
-                      <TableCell
-                        style={{
-                          fontSize: "16px",
-                          color: "black",
-                          fontWeight: "600",
-                          textAlign: "center",
-                        }}
-                      >
-                        {format(parseISO(record.date), "MMMM dd, yyyy")}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          fontSize: "16px",
-                          color: "black",
-                          fontWeight: "600",
-                          textAlign: "center",
-                        }}
-                      >
-                        {record.burnCount.toLocaleString()}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          fontSize: "16px",
-                          color: "black",
-                          fontWeight: "600",
-                          textAlign: "center",
-                        }}
-                      >
-                        {record.transactionRef}
-                      </TableCell>
-                    </TableRow>
+                      <td className="p-6">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                            <Calendar className="w-4 h-4 text-blue-400" />
+                          </div>
+                          <span className="text-white font-medium">
+                            {format(parseISO(record.date), "MMM dd, yyyy")}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="p-6 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="text-xl font-bold text-orange-400">
+                            {record.burnCount.toLocaleString()}
+                          </span>
+                          <Flame className="w-4 h-4 text-orange-400" />
+                        </div>
+                      </td>
+                      <td className="p-6">
+                        <div className="flex items-center gap-2">
+                          <code className="bg-gray-800/50 text-gray-300 px-3 py-1 rounded-lg text-sm font-mono">
+                            {record.transactionRef}
+                          </code>
+                          <ExternalLink className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer transition-colors" />
+                        </div>
+                      </td>
+                    </tr>
                   ))
                 ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={3}
-                      style={{
-                        textAlign: "center",
-                        fontSize: "16px",
-                        color: "black",
-                        fontWeight: "600",
-                      }}
-                    >
-                      No Data Found
-                    </TableCell>
-                  </TableRow>
+                  <tr>
+                    <td colSpan={3} className="p-12 text-center">
+                      <div className="space-y-4">
+                        <Flame className="w-12 h-12 text-gray-600 mx-auto" />
+                        <div>
+                          <h3 className="text-lg font-medium text-gray-400 mb-1">No burn data found</h3>
+                          <p className="text-gray-500 text-sm">
+                            No burn transactions recorded for {format(selectedMonth, "MMMM yyyy")}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
                 )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
-      <Footer/>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -254,7 +257,7 @@ const MonthPicker = ({ selectedMonth, onChange }: any) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
-        views={[ "year", "month" ]}
+        views={["year", "month"]}
         value={selectedMonth}
         onChange={onChange}
         openTo="month"
@@ -262,14 +265,29 @@ const MonthPicker = ({ selectedMonth, onChange }: any) => {
         slotProps={{
           textField: {
             variant: "outlined",
-            label: "Select Month",
-            fullWidth: false,
-            margin: "normal",
-            size: "medium",
+            size: "small",
             sx: {
-              backgroundColor: "#f7f7f7",
-              borderRadius: "8px",
-              fontSize: "20px",
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "rgba(17, 24, 39, 0.5)",
+                color: "white",
+                border: "1px solid rgba(75, 85, 99, 0.5)",
+                borderRadius: "12px",
+                "&:hover": {
+                  borderColor: "rgba(156, 163, 175, 0.5)",
+                },
+                "&.Mui-focused": {
+                  borderColor: "white",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "rgba(156, 163, 175, 1)",
+                "&.Mui-focused": {
+                  color: "white",
+                },
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "none",
+              },
             },
           },
         }}
@@ -285,13 +303,11 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   const injectAdScript = () => {
     if (!adContainerRef.current) return;
 
-    // Remove existing ad script if any
     const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
     if (existingScript) {
       existingScript.remove();
     }
 
-    // Create and inject new ad script
     const script = document.createElement("script");
     script.innerHTML = `
       !function(e,n,c,t,o,r,d){
@@ -309,27 +325,23 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   };
 
   useEffect(() => {
-    console.log(`Injecting ad: ${adClass}`);
-    injectAdScript(); // Inject on mount
-
+    injectAdScript();
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        injectAdScript(); // Re-inject ads on page activation
+        injectAdScript();
       }
     };
-
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [ adClass ]);
+  }, [adClass]);
 
   return (
-    <div ref={adContainerRef} className="w-full h-auto">
+    <div ref={adContainerRef} className="w-full flex justify-center">
       <ins
         className={adClass}
-        style={{ display: "block", width: "100%", height: "auto" }}
+        style={{ display: "inline-block", width: "1px", height: "1px" }}
       ></ins>
     </div>
   );

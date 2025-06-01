@@ -85,10 +85,12 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     </div>
   );
 };
+
 //using simpleHeader prop to load the necessary header for homepage
 interface SubPageProps {
   simpleHeader?: boolean;
 }
+
 const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -206,7 +208,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   };
 
   return (
-    <div className="min-h-screen px-20 relative">
+    <div className="min-h-screen bg-black text-white px-20 relative">
       {/* Overlay spinner on refetch */}
       {isFetching && (
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -215,18 +217,23 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
       )}
 
       {/* Hero Section */}
-      {/* ← HERE */}
       {simpleHeader ? (
-        <h2 className="text-2xl text-center mb-6 font-bold text-cyan-600">
-          Trobits Articles
-        </h2>
+        <div className="text-center pt-16 mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Trobits Articles
+          </h2>
+          {/* Decorative line */}
+          <div className="flex items-center justify-center mt-8">
+            <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent w-64" />
+          </div>
+        </div>
       ) : (
-        <div className="relative overflow-hidden mt-16">
+        <div className="relative overflow-hidden pt-16">
           <div className="container mx-auto px-6 py-16">
             <div className="max-w-4xl">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-green-500 text-sm font-medium">
+                <span className="text-green-500 text-sm font-medium uppercase tracking-wider">
                   LIVE FEED
                 </span>
                 <span className="text-gray-400 text-sm">
@@ -241,6 +248,11 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                   Deep insights into crypto markets, blockchain technology, and
                   the future of digital finance.
                 </p>
+              </div>
+              
+              {/* Decorative line */}
+              <div className="flex items-center mt-8">
+                <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent w-64" />
               </div>
             </div>
           </div>
@@ -257,7 +269,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
               placeholder="Search articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full md:min-w-[20vw] pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200"
+              className="w-full md:min-w-[20vw] pl-12 pr-4 py-4 bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700/80 focus:border-gray-700/80 transition-all duration-200"
             />
           </div>
           <div className="flex flex-wrap gap-2">
@@ -267,10 +279,10 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                 <button
                   key={section.id}
                   onClick={() => setSelectedSection(section.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-200 hover:scale-105 ${
                     selectedSection === section.id
-                      ? "bg-gradient-to-r from-cyan-600 to-purple-600 text-white shadow-lg"
-                      : "bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white"
+                      ? "bg-white text-black shadow-lg"
+                      : "bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm text-gray-300 hover:bg-gray-900/80 hover:border-gray-700/80 hover:text-white"
                   }`}
                 >
                   <IconComponent className="w-4 h-4" />
@@ -280,12 +292,12 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
             })}
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex bg-white/5 rounded-xl p-1">
+            <div className="flex bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-1">
               <button
                 onClick={() => setViewMode("grid")}
                 className={`p-2 rounded-lg transition-all duration-200 ${
                   viewMode === "grid"
-                    ? "bg-cyan-600 text-white"
+                    ? "bg-white text-black"
                     : "text-gray-400 hover:text-white"
                 }`}
               >
@@ -295,7 +307,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                 onClick={() => setViewMode("list")}
                 className={`p-2 rounded-lg transition-all duration-200 ${
                   viewMode === "list"
-                    ? "bg-cyan-600 text-white"
+                    ? "bg-white text-black"
                     : "text-gray-400 hover:text-white"
                 }`}
               >
@@ -337,10 +349,10 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
           <div className="text-center py-16">
             <div className="space-y-4">
               <div className="text-6xl">🔍</div>
-              <h3 className="text-2xl font-semibold text-gray-300">
+              <h3 className="text-2xl font-semibold text-gray-400">
                 No articles found
               </h3>
-              <p className="text-gray-400">
+              <p className="text-gray-500">
                 Try adjusting your search or filters
               </p>
             </div>
@@ -348,52 +360,75 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="container mx-auto px-6 pb-16">
-          <div className="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+          <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-3xl p-6">
             <div className="flex flex-wrap justify-center items-center gap-4">
               <button
                 onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
                 disabled={currentPage === 1}
-                className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-200 ${
                   currentPage === 1
-                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-cyan-600 to-purple-600 text-white hover:scale-105 shadow-lg"
+                    ? "bg-gray-800/50 text-gray-500 cursor-not-allowed"
+                    : "bg-white text-black hover:bg-gray-100 hover:scale-105 shadow-lg"
                 }`}
               >
                 Previous
               </button>
+              
               <div className="flex items-center gap-2">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const page = Math.max(
-                    1,
-                    Math.min(currentPage - 2 + i, totalPages)
-                  );
-                  return (
+                {(() => {
+                  const maxVisiblePages = 5;
+                  let startPage, endPage;
+                  
+                  if (totalPages <= maxVisiblePages) {
+                    startPage = 1;
+                    endPage = totalPages;
+                  } else {
+                    const halfVisible = Math.floor(maxVisiblePages / 2);
+                    
+                    if (currentPage <= halfVisible) {
+                      startPage = 1;
+                      endPage = maxVisiblePages;
+                    } else if (currentPage + halfVisible >= totalPages) {
+                      startPage = totalPages - maxVisiblePages + 1;
+                      endPage = totalPages;
+                    } else {
+                      startPage = currentPage - halfVisible;
+                      endPage = currentPage + halfVisible;
+                    }
+                  }
+                  
+                  const pageNumbers = [];
+                  for (let i = startPage; i <= endPage; i++) {
+                    pageNumbers.push(i);
+                  }
+                  
+                  return pageNumbers.map((page) => (
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`w-10 h-10 rounded-xl font-medium transition-all duration-200 ${
+                      className={`w-10 h-10 rounded-2xl font-medium transition-all duration-200 ${
                         currentPage === page
-                          ? "bg-gradient-to-r from-cyan-600 to-purple-600 text-white shadow-lg"
-                          : "bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white"
+                          ? "bg-white text-black shadow-lg"
+                          : "bg-gray-900/50 border border-gray-800/50 text-gray-300 hover:bg-gray-900/80 hover:border-gray-700/80 hover:text-white"
                       }`}
                     >
                       {page}
                     </button>
-                  );
-                })}
+                  ));
+                })()}
               </div>
+              
               <button
                 onClick={() =>
                   handlePageChange(Math.min(currentPage + 1, totalPages))
                 }
                 disabled={currentPage === totalPages}
-                className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-200 ${
                   currentPage === totalPages
-                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-cyan-600 to-purple-600 text-white hover:scale-105 shadow-lg"
+                    ? "bg-gray-800/50 text-gray-500 cursor-not-allowed"
+                    : "bg-white text-black hover:bg-gray-100 hover:scale-105 shadow-lg"
                 }`}
               >
                 Next
@@ -404,16 +439,6 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                 Page {currentPage} of {totalPages}
               </span>
             </div>
-            {currentPage !== 1 && (
-              <div className="text-center mt-4">
-                <button
-                  onClick={() => handlePageChange(1)}
-                  className="px-4 py-2 rounded-xl bg-white/5 text-gray-300 hover:bg-white/10 transition-all duration-200 text-sm"
-                >
-                  Back to First Page
-                </button>
-              </div>
-            )}
           </div>
         </div>
       )}

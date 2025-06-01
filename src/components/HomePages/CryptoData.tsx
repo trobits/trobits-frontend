@@ -57,18 +57,13 @@ export default function CryptoData() {
   ];
 
   return (
-    <section className="container mx-auto mt-20 px-4">
+    <section className="container mx-auto mt-28 px-4">
       <div className="flex justify-center flex-wrap items-center gap-24 perspective-1000">
         {cardData.map((card, index) => (
           <div
             key={index}
             className={
-              `relative transform-gpu transition-transform duration-500 ease-out ` +
-              // scale up and lift on hover
-              `hover:scale-70 hover:-translate-y-4 hover:z-15 cursor-pointer ` +
-              // custom 3D-like shadow: heavier bottom, softer sides
-              `hover:shadow-[0_40px_50px_-20px_rgba(0,0,0,0.7),0_15px_25px_-5px_rgba(0,0,0,0.3)] ` +
-              `${index === 0 ? "slide-left" : "slide-right"}`
+              `relative transform-gpu transition-transform duration-500 ease-out `
             }
           >
             <TransparentCard cryptoData={card} index={index} />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
+import { TrendingUp } from "lucide-react";
 
 interface CryptoData {
   coin: string;
@@ -39,7 +40,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
     burns30Day,
   } = cryptoData;
 
-  const intervals = ["1 Day", "7 Days", "30 Days"];
+  const intervals = ["1 Day", "Lifetime"];
   const [selectedInterval, setSelectedInterval] = useState(0);
   const [isSliding, setIsSliding] = useState(false);
 
@@ -47,22 +48,12 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
     const formatNumber = (value: string) => Number(value).toString();
 
     switch (intervals[selectedInterval]) {
-      case "7 Days":
+      case "Lifetime":
         return {
-          visits: formatNumber(visits7Day),
-          revenue: formatNumber(revenue7Day),
-          burns: formatNumber(burns7Day),
-        };
-      case "30 Days":
-        return {
-          visits: formatNumber(visits30Day),
-          revenue: formatNumber(revenue30Day),
-          burns: formatNumber(burns30Day),
+          burns: formatNumber(burns30Day), // Using 30 day as lifetime for now
         };
       default:
         return {
-          visits: formatNumber(visits),
-          revenue: formatNumber(revenue),
           burns: formatNumber(burns),
         };
     }
@@ -110,96 +101,112 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
   const currentData = getCurrentData();
 
   return (
-    <div className="border border-cyan-400 rounded-xl bg-black p-3 md:p-8 max-w-[290px] md:max-w-[450px] min-h-[450px] text-white shadow-lg backdrop-blur-md relative overflow-hidden">
+    <div className="bg-gray-900/80 border border-gray-800/50 backdrop-blur-xl rounded-3xl p-6 md:p-8 max-w-[320px] md:max-w-[500px] md:w-[450px] min-h-[400px] text-white shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-gray-700/70 group">
+      
+      {/* Header with coin info */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-all duration-500" />
+            <Image
+              src={icon}
+              alt={`${coin} logo`}
+              width={50}
+              height={50}
+              className="relative rounded-full border border-gray-700 group-hover:border-gray-600 transition-all duration-300"
+            />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-white">{coin}</h3>
+            <p className="text-sm text-gray-400">Cryptocurrency</p>
+          </div>
+        </div>
+        
+        {/* Live indicator */}
+        <div className="flex items-center gap-2 bg-green-600/20 border border-green-500/30 rounded-full px-3 py-1">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="text-xs font-medium text-green-400">Live</span>
+        </div>
+      </div>
+
       {/* TradingView Widget */}
-      <div className="tradingview-widget-container mb-4 text-sm">
+      {/* <div className="tradingview-widget-container mb-6 bg-black/30 rounded-2xl p-4 border border-gray-800/30">
         <div
           id={`tradingview-widget-${index}`}
           className="tradingview-widget-container__widget"
         ></div>
+      </div> */}
+
+      {/* Interval Selector */}
+      <div className="flex bg-gray-800/50 rounded-2xl p-1 mb-6">
+        {intervals.map((interval, idx) => (
+          <button
+            key={interval}
+            onClick={() => setSelectedInterval(idx)}
+            className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+              selectedInterval === idx
+                ? "bg-white text-black shadow-lg"
+                : "text-gray-400 hover:text-white hover:bg-gray-700/50"
+            }`}
+          >
+            {interval}
+          </button>
+        ))}
       </div>
 
-      {/* Sliding Content */}
-      <div className="relative w-full h-full overflow-hidden">
+      {/* Data Section */}
+      <div className="relative overflow-hidden mb-6">
         <div
-          className={`relative w-full transition-transform duration-300 ease-in-out transform ${
-            isSliding ? "translate-x-10 opacity-0" : "translate-x-0 opacity-100"
+          className={`transition-all duration-300 ease-in-out ${
+            isSliding ? "transform translate-x-4 opacity-0" : "transform translate-x-0 opacity-100"
           }`}
         >
-          <div className="flex gap-4 items-center">
-            <Image
-              src={icon}
-              alt={`${coin} logo`}
-              width={60}
-              height={60}
-              className="rounded-full"
-            />
-            <span className="ml-auto px-3 py-2 text rounded-3xl border border-cyan-400 bg-black">
-              Interval - {intervals[selectedInterval]}
-            </span>
-          </div>
-
-          {/* Prices Section */}
-          <div className="mt-6 space-y-3">
-            <div className="flex justify-between">
-              <span>Visits:</span>
-              <span>{currentData.visits}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Revenue:</span>
-              <span>{currentData.revenue}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Burns:</span>
-              <span>{currentData.burns}</span>
+          <div className="bg-black/30 border border-gray-800/30 rounded-2xl p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-600/20 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-red-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-400">Total Burns</p>
+                  <p className="text-2xl font-bold text-white">{currentData.burns}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Interval Selector Dots */}
-      <div className="flex justify-center mt-4 gap-2">
-        {intervals.map((interval, idx) => (
-          <button
-            key={interval}
-            onClick={() => setSelectedInterval(idx)}
-            className={`w-3 h-3 rounded-full ${
-              selectedInterval === idx ? "bg-cyan-400" : "bg-gray-500"
-            }`}
-          ></button>
-        ))}
-      </div>
-
       {/* Action Buttons */}
-      <div className="flex justify-center mt-4 gap-3">
+      <div className="flex gap-3">
         {cryptoData.coin === "SHIB" ? (
           <>
             <Link
               href="/archive/shiba"
-              className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+              className="flex-1 bg-white text-black font-semibold py-3 px-4 rounded-2xl text-center hover:bg-gray-100 transition-all duration-300 hover:scale-105 text-sm"
             >
               SHIB Burn
             </Link>
             <Link
               href="/shiba"
-              className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+              className="flex-1 bg-gray-800 border border-gray-700 text-white font-semibold py-3 px-4 rounded-2xl text-center hover:bg-gray-700 transition-all duration-300 hover:scale-105 text-sm"
             >
-              SHIB Details
+              Details
             </Link>
           </>
         ) : (
           <>
             <Link
               href="/archive/lunc"
-              className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+              className="flex-1 bg-white text-black font-semibold py-3 px-4 rounded-2xl text-center hover:bg-gray-100 transition-all duration-300 hover:scale-105 text-sm"
             >
               LUNC Burn
             </Link>
             <Link
               href="/lunc"
-              className="font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition-all py-1 px-4 rounded-lg"
+              className="flex-1 bg-gray-800 border border-gray-700 text-white font-semibold py-3 px-4 rounded-2xl text-center hover:bg-gray-700 transition-all duration-300 hover:scale-105 text-sm"
             >
-              LUNC Details
+              Details
             </Link>
           </>
         )}
