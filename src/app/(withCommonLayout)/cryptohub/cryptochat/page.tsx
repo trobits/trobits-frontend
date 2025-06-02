@@ -30,7 +30,7 @@ const CryptoChatPage = () => {
   }
 
   return (
-    <div className="flex flex-wrap justify-center w-full gap-4">
+    <div className="flex flex-wrap justify-center w-full gap-4 pt-24 lg:pt-4">
       {allTopics?.length ? (
         allTopics?.map((topic: ITopicInfo) => (
           <TopicsCard key={topic.id} topicInfo={topic} />
