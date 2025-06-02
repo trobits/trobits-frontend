@@ -1,179 +1,161 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
-import { Button } from '@/components/ui/button'
-import React, { ReactNode, useState } from 'react'
-import { FaHashtag, FaUser } from 'react-icons/fa';
-import { FiMenu, FiX } from 'react-icons/fi';
-import { IoMdNotifications } from 'react-icons/io';
-import { MdOutlineDynamicFeed, MdLogout } from "react-icons/md";
-import { BiVideo } from 'react-icons/bi';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import Logo from '@/components/Shared/Logo';
-import { clearUser } from '@/redux/features/slices/authSlice';
-import { useAppDispatch } from '@/redux/hooks';
+"use client";
+import { Button } from "@/components/ui/button";
+import React, { ReactNode, useState } from "react";
+import { FaHashtag, FaUser } from "react-icons/fa";
+import { FiMenu } from "react-icons/fi";
+import { IoMdNotifications } from "react-icons/io";
+import { MdOutlineDynamicFeed } from "react-icons/md";
+import { GrLogin } from "react-icons/gr";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import Logo from "@/components/Shared/Logo";
+import { clearUser } from "@/redux/features/slices/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 const CryptoLayout = ({ children }: { children: ReactNode }) => {
-    const dispatch = useAppDispatch();
-    const router = useRouter();
-    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-    const pathname = usePathname();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const pathname = usePathname();
 
-    const handleLogOut = () => {
-        dispatch(clearUser())
-        router.push('/');   
-    }
+  const handleLogOut = () => {
+    dispatch(clearUser());
+    router.push("/");
+  };
 
-    const navigationItems = [
-        {
-            href: '/cryptohub/cryptochat',
-            icon: <FaHashtag className="w-5 h-5" />,
-            label: 'CryptoChat',
-            active: pathname.includes('/cryptohub/cryptochat')
-        },
-        {
-            href: '/cryptohub/feed',
-            icon: <MdOutlineDynamicFeed className="w-5 h-5" />,
-            label: 'Feed',
-            active: pathname.includes('/cryptohub/feed')
-        },
-        {
-            href: '/cryptohub/videoPost',
-            icon: <BiVideo className="w-5 h-5" />,
-            label: 'Expert Videos',
-            active: pathname.includes('/cryptohub/videoPost')
-        },
-        {
-            href: '/cryptohub/myspot',
-            icon: <FaUser className="w-5 h-5" />,
-            label: 'My Spot',
-            active: pathname.includes('/cryptohub/myspot')
-        },
-        {
-            href: '/cryptohub/notifications',
-            icon: <IoMdNotifications className="w-5 h-5" />,
-            label: 'Notifications',
-            active: pathname.includes('/cryptohub/notifications')
-        }
-    ];
-
-    return (
-        <div className="h-[calc(100vh-140px)] w-full fixed flex flex-col lg:flex-row bg-black">
-            {/* Overlay for mobile */}
-            {isSidebarOpen && (
-                <div 
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-10 lg:hidden"
-                    onClick={() => setIsSidebarOpen(false)}
-                />
-            )}
-
-            {/* Sidebar */}
-            <aside
-                className={`lg:w-72 w-72 min-h-screen pb-10 pt-28 bg-gray-900/80 border-r border-gray-800/50 backdrop-blur-xl text-white flex flex-col fixed lg:relative z-20 lg:translate-x-0 transition-all duration-300 transform ${
-                    isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
-            >
-                {/* Sidebar Header */}
-                <div className="flex justify-between items-center p-6 border-b border-gray-800/50">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                            <span className="text-black font-bold text-sm">C</span>
-                        </div>
-                        <h2 className="text-xl font-bold text-white">CRYPTO HUB</h2>
-                    </div>
-                    
-                    {/* Close button for mobile */}
-                    <Button
-                        className="lg:hidden p-2 hover:bg-gray-800 rounded-xl transition-colors duration-200"
-                        variant="ghost"
-                        onClick={() => setIsSidebarOpen(false)}
-                    >
-                        <FiX className="w-5 h-5 text-gray-400" />
-                    </Button>
-                </div>
-
-                {/* Navigation */}
-                <nav className="flex-1 p-6">
-                    <div className="space-y-2">
-                        {navigationItems.map((item) => (
-                            <Link key={item.href} href={item.href} passHref>
-                                <div
-                                    onClick={() => setIsSidebarOpen(false)}
-                                    className={`
-                                        flex items-center gap-3 px-4 py-3 rounded-xl font-medium
-                                        transition-all duration-200 cursor-pointer group
-                                        ${item.active 
-                                            ? 'bg-white text-black shadow-lg' 
-                                            : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
-                                        }
-                                    `}
-                                >
-                                    <div className={`
-                                        transition-transform duration-200 group-hover:scale-110
-                                        ${item.active ? 'text-black' : 'text-gray-400 group-hover:text-white'}
-                                    `}>
-                                        {item.icon}
-                                    </div>
-                                    <span className="text-sm">{item.label}</span>
-                                    
-                                    {item.active && (
-                                        <div className="ml-auto w-2 h-2 bg-black rounded-full"></div>
-                                    )}
-                                </div>
-                            </Link>
-                        ))}
-                        
-                        {/* Logout Button */}
-                        <div className="pt-4 mt-4 border-t border-gray-800/50">
-                            <div
-                                onClick={handleLogOut}
-                                className="
-                                    flex items-center gap-3 px-4 py-3 rounded-xl font-medium
-                                    text-gray-300 hover:bg-red-600/10 hover:text-red-400
-                                    transition-all duration-200 cursor-pointer group
-                                "
-                            >
-                                <MdLogout className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
-                                <span className="text-sm">Logout</span>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-
-                {/* Footer/Logo Section */}
-                <div className="p-6 border-t border-gray-800/50">
-                    <div className="flex justify-center">
-                        <Logo />
-                    </div>
-                </div>
-            </aside>
-
-            {/* Mobile Menu Toggle */}
-            <div className="lg:hidden">
-                <Button
-                    className={`
-                        fixed top-4 left-4 z-30 bg-gray-900/80 border border-gray-800/50 backdrop-blur-xl
-                        text-white rounded-xl px-4 py-3 shadow-lg hover:bg-gray-800/80
-                        transition-all duration-200 hover:scale-105
-                        ${isSidebarOpen ? 'hidden' : 'flex items-center gap-2'}
-                    `}
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                >
-                    <FiMenu className="w-5 h-5" />
-                    <span className="text-sm font-medium">Menu</span>
-                </Button>
-            </div>
-
-            {/* Main Content */}
-            <main className="flex-1 min-h-screen overflow-y-auto bg-black">
-                <div className="min-h-full p-6 lg:p-8">
-                    <div className="max-w-7xl mx-auto">
-                        {children}
-                    </div>
-                </div>
-            </main>
+  return (
+    <div className="min-h-[calc(100vh-140px)] w-full fixed flex flex-col lg:flex-row bg-transparent rounded-b-md mt-14 ml-4 overflow-auto">
+      {/* Fixed Sidebar */}
+      <aside
+        className={`lg:w-72 w-72 max-h-[calc(100vh-9rem)] mt-8 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-start items-center fixed lg:relative z-20 lg:translate-x-0 transition-transform transform rounded-3xl backdrop-blur-xl ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } mx-2 my-4`}
+      >
+        {/* Sidebar Header - Logo only */}
+        <div className="flex flex-col items-center w-full pt-8">
+          <Logo />
         </div>
-    );
-}
+
+        {/* Navigation - Centered Vertically */}
+        <nav className="flex-1 w-full flex flex-col justify-center items-center">
+          {/* Title above buttons */}
+          <h2 className="text-2xl font-extrabold tracking-wide text-cyan-300 drop-shadow-lg mb-8">
+            CRYPTO HUB
+          </h2>
+          <ul className="flex flex-col gap-4 w-full px-6">
+            <li>
+              <Link href="/cryptohub/cryptochat" passHref>
+                <Button
+                  type="button"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
+                    pathname.includes("/cryptohub/cryptochat")
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
+                  }`}
+                >
+                  <FaHashtag className="text-cyan-300" />
+                  CryptoChat
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/cryptohub/feed" passHref>
+                <Button
+                  type="button"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
+                    pathname.includes("/cryptohub/feed")
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
+                  }`}
+                >
+                  <MdOutlineDynamicFeed className="text-cyan-300" />
+                  Feed
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/cryptohub/videoPost" passHref>
+                <Button
+                  type="button"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
+                    pathname.includes("/cryptohub/videoPost")
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
+                  }`}
+                >
+                  <MdOutlineDynamicFeed className="text-cyan-300" />
+                  Expert Videos
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/cryptohub/myspot" passHref>
+                <Button
+                  type="button"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
+                    pathname.includes("/cryptohub/myspot")
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
+                  }`}
+                >
+                  <FaUser className="text-cyan-300" />
+                  My Spot
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/cryptohub/notifications" passHref>
+                <Button
+                  type="button"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
+                    pathname.includes("/cryptohub/notifications")
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
+                  }`}
+                >
+                  <IoMdNotifications className="text-cyan-300" />
+                  Notifications
+                </Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/" passHref>
+                <Button
+                  type="button"
+                  onClick={handleLogOut}
+                  className="w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none text-white"
+                >
+                  <GrLogin className="text-cyan-300" />
+                  Logout
+                </Button>
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      {/* Sidebar Toggle Button for Mobile */}
+      <div className="lg:hidden flex justify-start p-4">
+        <Button
+          className={`bg-teal-600 ${
+            isSidebarOpen ? "hidden" : ""
+          } text-white rounded-lg px-5`}
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          <FiMenu size={24} />
+        </Button>
+      </div>
+
+      {/* Main Content */}
+      <main className="flex-1 ml-2 h-full overflow-y-auto p-4">{children}</main>
+    </div>
+  );
+};
 
 export default CryptoLayout;
