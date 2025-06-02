@@ -82,7 +82,7 @@ export default function ForgotPassword() {
   return (
     <div className="min-h-screen bg-[#0a0f1c] flex items-center justify-center px-4">
       {!showOtpModal && (
-        <div className="w-full max-w-lg rounded-3xl border border-cyan-400/20 bg-[#00000090] shadow-2xl p-10 backdrop-blur-md flex flex-col px-10 justify-center text-center">
+        <div className="w-full max-w-lg min-h-[400px] rounded-3xl border border-cyan-400/20 bg-[#00000090] shadow-2xl p-10 backdrop-blur-md flex flex-col px-10 justify-center text-center">
           <h2 className="text-center text-3xl font-bold text-cyan-300 mb-2 pb-4">
             Forgot Password
           </h2>
