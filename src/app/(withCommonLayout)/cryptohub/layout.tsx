@@ -25,42 +25,37 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <div className="h-[calc(100vh-140px)] w-full fixed flex flex-col lg:flex-row bg-transparent rounded-b-md">
+    <div className="min-h-[calc(100vh-140px)] w-full fixed flex flex-col lg:flex-row bg-transparent rounded-b-md mt-14 ml-4 overflow-auto">
       {/* Fixed Sidebar */}
       <aside
-        className={`lg:w-64 w-64 h-full bg-[#000000b9] shadow-black text-gray-200 flex flex-col shadow-lg fixed lg:relative z-20 lg:translate-x-0 transition-transform transform ${
+        className={`lg:w-72 w-72 max-h-[calc(100vh-9rem)] mt-8 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-start items-center fixed lg:relative z-20 lg:translate-x-0 transition-transform transform rounded-3xl backdrop-blur-xl ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        } mx-2 my-4`}
       >
-        <div className="flex justify-between items-center p-6 border-b border-gray-700 rounded-t-lg">
-          {/* Close button for mobile */}
-          <Button
-            className="lg:hidden text-white bg-red-500 px-4"
-            variant="ghost"
-            onClick={() => setIsSidebarOpen(false)}
-          >
-            ✕
-          </Button>
-        </div>
-        {/* Sidebar Header */}
-        <div className="flex justify-between items-center p-6">
-          <h2 className="text-lg font-bold text-white">CRYPTO HUB</h2>
+        {/* Sidebar Header - Logo only */}
+        <div className="flex flex-col items-center w-full pt-8">
+          <Logo />
         </div>
 
-        {/* Navigation */}
-        <nav className="w-full p-4">
-          <ul className="space-y-4">
+        {/* Navigation - Centered Vertically */}
+        <nav className="flex-1 w-full flex flex-col justify-center items-center">
+          {/* Title above buttons */}
+          <h2 className="text-2xl font-extrabold tracking-wide text-cyan-300 drop-shadow-lg mb-8">
+            CRYPTO HUB
+          </h2>
+          <ul className="flex flex-col gap-4 w-full px-6">
             <li>
               <Link href="/cryptohub/cryptochat" passHref>
                 <Button
+                  type="button"
                   onClick={() => setIsSidebarOpen(false)}
-                  className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
                     pathname.includes("/cryptohub/cryptochat")
-                      ? "bg-teal-700 text-white"
-                      : "bg-gray-800 text-gray-300"
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
                   }`}
                 >
-                  <FaHashtag className=" mr-2" />
+                  <FaHashtag className="text-cyan-300" />
                   CryptoChat
                 </Button>
               </Link>
@@ -68,14 +63,15 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
             <li>
               <Link href="/cryptohub/feed" passHref>
                 <Button
+                  type="button"
                   onClick={() => setIsSidebarOpen(false)}
-                  className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
                     pathname.includes("/cryptohub/feed")
-                      ? "bg-teal-700 text-white"
-                      : "bg-gray-800 text-gray-300"
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
                   }`}
                 >
-                  <MdOutlineDynamicFeed className=" mr-2" />
+                  <MdOutlineDynamicFeed className="text-cyan-300" />
                   Feed
                 </Button>
               </Link>
@@ -83,14 +79,15 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
             <li>
               <Link href="/cryptohub/videoPost" passHref>
                 <Button
+                  type="button"
                   onClick={() => setIsSidebarOpen(false)}
-                  className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
                     pathname.includes("/cryptohub/videoPost")
-                      ? "bg-teal-700 text-white"
-                      : "bg-gray-800 text-gray-300"
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
                   }`}
                 >
-                  <MdOutlineDynamicFeed className=" mr-2" />
+                  <MdOutlineDynamicFeed className="text-cyan-300" />
                   Expert Videos
                 </Button>
               </Link>
@@ -98,14 +95,15 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
             <li>
               <Link href="/cryptohub/myspot" passHref>
                 <Button
+                  type="button"
                   onClick={() => setIsSidebarOpen(false)}
-                  className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
                     pathname.includes("/cryptohub/myspot")
-                      ? "bg-teal-700 text-white"
-                      : "bg-gray-800 text-gray-300"
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
                   }`}
                 >
-                  <FaUser className=" mr-2" />
+                  <FaUser className="text-cyan-300" />
                   My Spot
                 </Button>
               </Link>
@@ -113,14 +111,15 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
             <li>
               <Link href="/cryptohub/notifications" passHref>
                 <Button
+                  type="button"
                   onClick={() => setIsSidebarOpen(false)}
-                  className={`w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400 transition-colors ${
+                  className={`w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none ${
                     pathname.includes("/cryptohub/notifications")
-                      ? "bg-teal-700 text-white"
-                      : "bg-gray-800 text-gray-300"
+                      ? "bg-cyan-600/60 text-white shadow-lg"
+                      : ""
                   }`}
                 >
-                  <IoMdNotifications className="mr-2" />
+                  <IoMdNotifications className="text-cyan-300" />
                   Notifications
                 </Button>
               </Link>
@@ -128,21 +127,17 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
             <li>
               <Link href="/" passHref>
                 <Button
+                  type="button"
                   onClick={handleLogOut}
-                  className="w-full justify-start text-left px-4 py-2 rounded-lg hover:bg-teal-400  text-white transition-colors"
+                  className="w-full flex items-center justify-center gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-300/30 shadow-md hover:scale-105 hover:bg-cyan-400/30 hover:text-cyan-200 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-cyan-400 focus:outline-none text-white"
                 >
-                  <GrLogin className="mr-2" />
+                  <GrLogin className="text-cyan-300" />
                   Logout
                 </Button>
               </Link>
             </li>
           </ul>
         </nav>
-
-        {/* Footer/Logo Section */}
-        <div className="flex flex-col flex-grow lg:justify-end mb-16">
-          <Logo />
-        </div>
       </aside>
 
       {/* Sidebar Toggle Button for Mobile */}
