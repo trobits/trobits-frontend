@@ -32,7 +32,7 @@ const CryptoInfo: React.FC = () => {
           className="
       group bg-white text-black px-8 py-7 rounded-2xl font-semibold text-base
       transition-all duration-300 hover:scale-105
-      hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-400 hover:text-white
+      hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-500 hover:text-white
       hover:shadow-[0_0_10px_2px_rgba(59,130,246,0.5)]
       flex items-center gap-2
     "
@@ -46,7 +46,7 @@ const CryptoInfo: React.FC = () => {
           className="
       group bg-white text-black px-9 py-7 rounded-2xl font-semibold text-base
       transition-all duration-300 hover:scale-105
-      hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-400 hover:text-white
+      hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-500 hover:text-white
       hover:shadow-[0_0_10px_2px_rgba(59,130,246,0.5)]
       flex items-center gap-2
     "
