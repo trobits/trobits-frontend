@@ -45,16 +45,20 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
   const [isSliding, setIsSliding] = useState(false);
 
   const getCurrentData = () => {
-    const formatNumber = (value: string) => Number(value).toString();
+    const formatNumber = (value: string) => Number(value).toLocaleString();
 
     switch (intervals[selectedInterval]) {
       case "Lifetime":
         return {
-          burns: formatNumber(burns30Day), // Using 30 day as lifetime for now
+          burns: formatNumber(burns30Day),
+          visits: formatNumber(visits30Day),
+          revenue: formatNumber(revenue30Day),
         };
       default:
         return {
           burns: formatNumber(burns),
+          visits: formatNumber(visits),
+          revenue: formatNumber(revenue),
         };
     }
   };
@@ -102,7 +106,6 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
 
   return (
     <div className="bg-gray-900/80 border border-gray-800/50 backdrop-blur-xl rounded-3xl p-6 md:p-8 max-w-[320px] md:max-w-[500px] md:w-[450px] min-h-[400px] text-white shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-gray-700/70 group">
-      
       {/* Header with coin info */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -121,7 +124,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
             <p className="text-sm text-gray-400">Cryptocurrency</p>
           </div>
         </div>
-        
+
         {/* Live indicator */}
         <div className="flex items-center gap-2 bg-green-600/20 border border-green-500/30 rounded-full px-3 py-1">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -155,24 +158,50 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
       </div>
 
       {/* Data Section */}
+      {/* Data Section */}
       <div className="relative overflow-hidden mb-6">
         <div
           className={`transition-all duration-300 ease-in-out ${
-            isSliding ? "transform translate-x-4 opacity-0" : "transform translate-x-0 opacity-100"
+            isSliding
+              ? "transform translate-x-4 opacity-0"
+              : "transform translate-x-0 opacity-100"
           }`}
         >
-          <div className="bg-black/30 border border-gray-800/30 rounded-2xl p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-600/20 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-red-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Total Burns</p>
-                  <p className="text-2xl font-bold text-white">{currentData.burns}</p>
+          <div className="space-y-4">
+            {[
+              {
+                label: "Total Burns",
+                value: currentData.burns,
+                iconColor: "red",
+              },
+              {
+                label: "Total Visits",
+                value: currentData.visits,
+                iconColor: "blue",
+              },
+              {
+                label: "Total Revenue",
+                value: `$${currentData.revenue}`,
+                iconColor: "green",
+              },
+            ].map(({ label, value, iconColor }, idx) => (
+              <div
+                key={idx}
+                className="bg-black/30 border border-gray-800/30 rounded-2xl p-4 flex items-center justify-between"
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className={`w-12 h-12 bg-${iconColor}-600/20 rounded-xl flex items-center justify-center`}
+                  >
+                    <TrendingUp className={`w-6 h-6 text-${iconColor}-400`} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400">{label}</p>
+                    <p className="text-xl font-bold text-white">{value}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
