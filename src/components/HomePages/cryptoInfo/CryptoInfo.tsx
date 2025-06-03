@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { LayoutGrid } from "lucide-react"; // Optional icon
 import React, { useState } from "react";
 import OtherVideoModal from "@/components/VideoModal/OtherVideoModal";
 import VideoModal from "@/components/VideoModal/VideoModal";
@@ -25,21 +26,33 @@ const CryptoInfo: React.FC = () => {
 
   return (
     <section className="container mx-auto mt-20 px-4">
-      <div className="flex flex-wrap justify-center gap-6 text-white">
+      <div className="flex flex-wrap justify-center gap-8 text-white">
         <Button
-          variant="default"
-          className="px-6 py-2 rounded-md bg-cyan-500 shadow-lg transform transition hover:scale-105 hover:bg-cyan-600"
           onClick={() => openModal("demoVideo")}
+          className="
+      group bg-white text-black px-8 py-7 rounded-2xl font-semibold text-base
+      transition-all duration-300 hover:scale-105
+      hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-400 hover:text-white
+      hover:shadow-[0_0_10px_2px_rgba(59,130,246,0.5)]
+      flex items-center gap-2
+    "
         >
-          Demo Video
+          <LayoutGrid className="w-4 h-4 group-hover:text-white text-black transition-colors duration-0" />
+          <span className="transition-colors duration-0">Demo Video</span>
         </Button>
 
         <Button
-          variant="default"
-          className="px-6 py-2 rounded-md bg-cyan-500 shadow-lg transform transition hover:scale-105 hover:bg-cyan-600"
           onClick={() => openModal("howitworks")}
+          className="
+      group bg-white text-black px-9 py-7 rounded-2xl font-semibold text-base
+      transition-all duration-300 hover:scale-105
+      hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-400 hover:text-white
+      hover:shadow-[0_0_10px_2px_rgba(59,130,246,0.5)]
+      flex items-center gap-2
+    "
         >
-          How Trobits Work
+          <LayoutGrid className="w-4 h-4 group-hover:text-white text-black transition-colors duration-0" />
+          <span className="transition-colors duration-0">How Trobits Work</span>
         </Button>
       </div>
 

@@ -82,7 +82,7 @@ export default function CryptoNavbar() {
 
   return (
     <nav className="w-full px-10 mt-24 z-10 relative animate-slidefade">
-      <div className="max-w-screen-3xl mx-auto flex items-center">
+      <div className="max-w-screen-3xl mx-auto items-center">
         <div className="w-full flex-shrink-0 rounded-2xl border border-blue-400 bg-gradient-to-br from-[#0c1220] to-[#0a1a3a] shadow-[0_0_30px_#00ffff33] p-[2px]">
           <div className="rounded-[15px] bg-[#0e152c] p-2">
             <div className="tradingview-ticker-tape w-full"></div>
