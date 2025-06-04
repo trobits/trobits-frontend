@@ -106,18 +106,26 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
 
   return (
     <div className="bg-gray-900/80 border border-gray-800/50 backdrop-blur-xl rounded-3xl p-6 md:p-8 max-w-[320px] md:max-w-[500px] md:w-[450px] min-h-[400px] text-white shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-gray-700/70 group">
+      {/* TradingView Widget */}
+      <div className="tradingview-widget-container mb-4 text-sm">
+        <div
+          id={`tradingview-widget-${index}`}
+          className="tradingview-widget-container__widget"
+        ></div>
+      </div>
+
       {/* Header with coin info */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <div className="relative">
             <div className="absolute inset-0 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-all duration-500" />
-            <Image
+            {/* <Image
               src={icon}
               alt={`${coin} logo`}
               width={50}
               height={50}
               className="relative rounded-full border border-gray-700 group-hover:border-gray-600 transition-all duration-300"
-            />
+            /> */}
           </div>
           <div>
             <h3 className="text-xl font-bold text-white">{coin}</h3>
