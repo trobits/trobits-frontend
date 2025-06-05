@@ -3,12 +3,8 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Roboto', Arial, Helvetica, sans-serif; 
-  background-image: url('../assets/background4.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  background: linear-gradient(to bottom right, #111827, #1f2937, #000000);
   position: relative; /* Required for the overlay positioning */
   z-index: 0; /* Ensure body is behind the overlay */
 }
@@ -68,7 +64,12 @@ body::before {
 }
 
 .animated-card {
-  animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1); /* Modify the timing function for a quick start and slow end */
+  animation-timing-function: cubic-bezier(
+    0.5,
+    0,
+    0.5,
+    1
+  ); /* Modify the timing function for a quick start and slow end */
 }
 
 .fade-in {
@@ -98,9 +99,6 @@ body::before {
     opacity: 1;
   }
 }
-
-
-
 
 @keyframes slideInRight {
   from {
@@ -116,7 +114,6 @@ body::before {
 .slide-in {
   animation: slideInRight 0.3s ease-in-out;
 }
-
 
 @keyframes slideInRight {
   from {

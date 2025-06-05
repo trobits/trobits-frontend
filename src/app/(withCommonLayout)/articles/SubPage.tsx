@@ -404,7 +404,6 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
           </div>
         ) : (
           <div className="relative overflow-hidden pt-16 pb-8 ">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 blur-3xl"></div>
             <div className="relative">
               <div className="max-w-4xl mx-auto text-center mt-20">
                 <div className="flex items-center justify-center gap-3 mb-6">
