@@ -154,7 +154,22 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
     "mixed"
   );
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  // start
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [pauseScroll, setPauseScroll] = useState(false);
 
+  // Auto scroll logic
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!pauseScroll && scrollRef.current) {
+        scrollRef.current.scrollBy({ left: 320, behavior: "smooth" });
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [pauseScroll]);
+
+  // end
   const limit = 20;
   const previousPath = useAppSelector((state) => state.auth.previousPath);
   const currentPath = useAppSelector((state) => state.auth.currentPath);
@@ -545,23 +560,65 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         <div className="mb-16">
           {filteredAndSortedArticles.length > 0 ? (
             simpleHeader ? (
-              <div className="overflow-x-auto">
-                <div className="flex gap-6 pb-4 px-2 w-max">
-                  {filteredAndSortedArticles
-                    .sort(
-                      (a, b) =>
-                        new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime()
-                    )
-                    .slice(0, 15)
-                    .map((article) => (
+              <div className="relative overflow-hidden">
+                {/* Left Button */}
+                <button
+                  onClick={() =>
+                    scrollRef.current?.scrollBy({
+                      left: -320,
+                      behavior: "smooth",
+                    })
+                  }
+                  onMouseEnter={() => setPauseScroll(true)}
+                  onMouseLeave={() => setPauseScroll(false)}
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-gradient-to-r from-black/80 to-transparent p-2 rounded-r-xl hover:bg-black/90"
+                >
+                  <ChevronDown className="w-6 h-6 rotate-180 text-white" />
+                </button>
+
+                {/* Right Button */}
+                <button
+                  onClick={() =>
+                    scrollRef.current?.scrollBy({
+                      left: 320,
+                      behavior: "smooth",
+                    })
+                  }
+                  onMouseEnter={() => setPauseScroll(true)}
+                  onMouseLeave={() => setPauseScroll(false)}
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-gradient-to-l from-black/80 to-transparent p-2 rounded-l-xl hover:bg-black/90"
+                >
+                  <ChevronDown className="w-6 h-6 text-white" />
+                </button>
+
+                {/* Scrollable article strip */}
+                <div
+                  ref={scrollRef}
+                  onMouseEnter={() => setPauseScroll(true)}
+                  onMouseLeave={() => setPauseScroll(false)}
+                  className="overflow-x-auto no-scrollbar scroll-smooth"
+                  style={{
+                    whiteSpace: "nowrap",
+                    display: "flex",
+                    gap: "1.5rem",
+                    paddingBottom: "1rem",
+                    paddingLeft: "0.5rem",
+                  }}
+                >
+                  {[...Array(45)].map((_, i) => {
+                    const article =
+                      filteredAndSortedArticles[
+                        i % filteredAndSortedArticles.length
+                      ];
+                    return (
                       <div
-                        key={article.id}
-                        className="min-w-[300px] max-w-[300px] flex-shrink-0"
+                        key={`${article.id}-${i}`}
+                        className="inline-block min-w-[300px] max-w-[300px] flex-shrink-0"
                       >
                         <NewsCard articleData={article} viewMode="grid" />
                       </div>
-                    ))}
+                    );
+                  })}
                 </div>
               </div>
             ) : (
