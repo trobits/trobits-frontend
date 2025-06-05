@@ -649,7 +649,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                     return (
                       <div
                         key={`${article.id}-${i}`}
-                        className="inline-block min-w-[300px] max-w-[300px] flex-shrink-0"
+                        className="inline-block w-[calc(100%/4-1.5rem)] min-w-[250px] max-w-[350px] flex-shrink-0"
                       >
                         <NewsCard articleData={article} viewMode="grid" />
                       </div>
