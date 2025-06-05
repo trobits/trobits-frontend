@@ -105,8 +105,8 @@ export default function CryptoData() {
   ];
 
   return (
-    <section className="container mx-auto mt-28 px-0 max-w-full">
-      <div className="flex justify-center flex-wrap items-center gap-2 perspective-1000">
+    <section className="container mx-auto mt-28 px-0">
+      <div className="flex justify-center flex-wrap items-center gap-10 perspective-1000">
         {cardData.map((card, index) => (
           <div
             key={index}

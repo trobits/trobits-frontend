@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
@@ -26,54 +26,9 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
   cryptoData,
   index,
 }) => {
-  const {
-    coin,
-    icon,
-    visits,
-    burns,
-    revenue,
-    visits7Day,
-    revenue7Day,
-    burns7Day,
-    visits30Day,
-    revenue30Day,
-    burns30Day,
-  } = cryptoData;
+  const { coin, icon, revenue, revenue30Day } = cryptoData;
 
-  const intervals = ["1 Day", "Lifetime"];
-  const [selectedInterval, setSelectedInterval] = useState(0);
-  const [isSliding, setIsSliding] = useState(false);
-
-  const getCurrentData = () => {
-    const formatNumber = (value: string) => Number(value).toLocaleString();
-
-    switch (intervals[selectedInterval]) {
-      case "Lifetime":
-        return {
-          burns: formatNumber(burns30Day),
-          visits: formatNumber(visits30Day),
-          revenue: formatNumber(revenue30Day),
-        };
-      default:
-        return {
-          burns: formatNumber(burns),
-          visits: formatNumber(visits),
-          revenue: formatNumber(revenue),
-        };
-    }
-  };
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setIsSliding(true);
-      setTimeout(() => {
-        setSelectedInterval((prev) => (prev + 1) % intervals.length);
-        setIsSliding(false);
-      }, 100);
-    }, 4000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+  const formatNumber = (value: string) => Number(value).toLocaleString();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -83,7 +38,8 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
     script.innerHTML = JSON.stringify({
       symbol:
         coin.toUpperCase() === "SHIB" ? "CRYPTO:SHIBUSD" : "CRYPTO:LUNCUSD",
-      width: 300,
+      width: 400,
+      height: 50,
       isTransparent: true,
       colorTheme: "dark",
       locale: "en",
@@ -102,10 +58,8 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
     };
   }, [coin, index]);
 
-  const currentData = getCurrentData();
-
   return (
-    <div className="bg-gray-900/80 border border-gray-800/50 backdrop-blur-xl rounded-3xl p-6 md:p-8 max-w-[290px] md:max-w-[370px] md:w-[350px] min-h-[400px] text-white shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-gray-700/70 group">
+    <div className="bg-gray-900/80 border border-gray-800/50 backdrop-blur-xl rounded-3xl p-6 md:p-8 max-w-[320px] md:max-w-[500px] md:w-[450px] min-h-[400px] text-white shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-gray-700/70 group">
       {/* TradingView Widget */}
       <div className="tradingview-widget-container mb-0 text-sm">
         <div
@@ -140,78 +94,30 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
         </div>
       </div>
 
-      {/* TradingView Widget */}
-      {/* <div className="tradingview-widget-container mb-6 bg-black/30 rounded-2xl p-4 border border-gray-800/30">
-        <div
-          id={`tradingview-widget-${index}`}
-          className="tradingview-widget-container__widget"
-        ></div>
-      </div> */}
-
-      {/* Interval Selector */}
-      <div className="flex bg-gray-800/50 rounded-2xl p-1 mb-6">
-        {intervals.map((interval, idx) => (
-          <button
-            key={interval}
-            onClick={() => setSelectedInterval(idx)}
-            className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-all duration-300 ${
-              selectedInterval === idx
-                ? "bg-white text-black shadow-lg"
-                : "text-gray-400 hover:text-white hover:bg-gray-700/50"
-            }`}
+      {/* Revenue Cards (1 Day + Lifetime) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        {[
+          { label: "1 Day Revenue", value: `$${formatNumber(revenue)}` },
+          {
+            label: "Lifetime Revenue",
+            value: `$${formatNumber(revenue30Day)}`,
+          },
+        ].map(({ label, value }, idx) => (
+          <div
+            key={idx}
+            className="bg-black/30 border border-gray-800/30 rounded-2xl p-4 flex items-center justify-between"
           >
-            {interval}
-          </button>
-        ))}
-      </div>
-
-      {/* Data Section */}
-      {/* Data Section */}
-      <div className="relative overflow-hidden mb-6">
-        <div
-          className={`transition-all duration-300 ease-in-out ${
-            isSliding
-              ? "transform translate-x-4 opacity-0"
-              : "transform translate-x-0 opacity-100"
-          }`}
-        >
-          <div className="space-y-4">
-            {[
-              {
-                label: "Total Burns",
-                value: currentData.burns,
-                iconColor: "red",
-              },
-              {
-                label: "Total Visits",
-                value: currentData.visits,
-                iconColor: "blue",
-              },
-              {
-                label: "Total Revenue",
-                value: `$${currentData.revenue}`,
-                iconColor: "green",
-              },
-            ].map(({ label, value, iconColor }, idx) => (
-              <div
-                key={idx}
-                className="bg-black/30 border border-gray-800/30 rounded-2xl p-4 flex items-center justify-between"
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-12 h-12 bg-${iconColor}-600/20 rounded-xl flex items-center justify-center`}
-                  >
-                    <TrendingUp className={`w-6 h-6 text-${iconColor}-400`} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">{label}</p>
-                    <p className="text-xl font-bold text-white">{value}</p>
-                  </div>
-                </div>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-green-400" />
               </div>
-            ))}
+              <div>
+                <p className="text-sm text-gray-400">{label}</p>
+                <p className="text-xl font-bold text-white">{value}</p>
+              </div>
+            </div>
           </div>
-        </div>
+        ))}
       </div>
 
       {/* Action Buttons */}
