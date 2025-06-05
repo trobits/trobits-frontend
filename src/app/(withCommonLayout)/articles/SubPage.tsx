@@ -428,115 +428,117 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         )}
 
         {/* Enhanced Search & Filter Section */}
-        <div className="mb-12">
-          <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-6">
-            <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-              {/* Search */}
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search articles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-700/50 border border-gray-600/50 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
-                />
-              </div>
+        {!simpleHeader && (
+          <div className="mb-12">
+            <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-6">
+              <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+                {/* Search */}
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search articles..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 bg-gray-700/50 border border-gray-600/50 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
+                  />
+                </div>
 
-              {/* Data Source Selector */}
-              <div className="flex bg-gray-700/50 border border-gray-600/30 rounded-2xl p-1">
-                <button
-                  onClick={() => setDataSource("mixed")}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                    dataSource === "mixed"
-                      ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
-                      : "text-gray-400 hover:text-white hover:bg-gray-600/50"
-                  }`}
-                >
-                  Mixed
-                </button>
-                <button
-                  onClick={() => setDataSource("crypto")}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                    dataSource === "crypto"
-                      ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg"
-                      : "text-gray-400 hover:text-white hover:bg-gray-600/50"
-                  }`}
-                >
-                  Crypto News
-                </button>
-                <button
-                  onClick={() => setDataSource("database")}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                    dataSource === "database"
-                      ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg"
-                      : "text-gray-400 hover:text-white hover:bg-gray-600/50"
-                  }`}
-                >
-                  Articles
-                </button>
-              </div>
-
-              {/* Filter Sections */}
-              <div className="flex flex-wrap gap-3">
-                {sections.map((section) => {
-                  const IconComponent = section.icon;
-                  return (
-                    <button
-                      key={section.id}
-                      onClick={() => setSelectedSection(section.id)}
-                      className={`group relative flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105 ${
-                        selectedSection === section.id
-                          ? `bg-gradient-to-r ${section.color} text-white shadow-lg shadow-cyan-500/25`
-                          : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white border border-gray-600/30"
-                      }`}
-                    >
-                      <IconComponent className="w-4 h-4" />
-                      {section.label}
-                      {selectedSection === section.id && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl"></div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* View Mode & Refresh */}
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => refetch()}
-                  className="p-3 bg-gray-700/50 hover:bg-gray-600/50 border border-gray-600/30 rounded-2xl text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
-                  title="Refresh articles"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                </button>
-
+                {/* Data Source Selector */}
                 <div className="flex bg-gray-700/50 border border-gray-600/30 rounded-2xl p-1">
                   <button
-                    onClick={() => setViewMode("grid")}
-                    className={`p-3 rounded-xl transition-all duration-300 ${
-                      viewMode === "grid"
+                    onClick={() => setDataSource("mixed")}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                      dataSource === "mixed"
                         ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
                         : "text-gray-400 hover:text-white hover:bg-gray-600/50"
                     }`}
                   >
-                    <Grid className="w-4 h-4" />
+                    Mixed
                   </button>
                   <button
-                    onClick={() => setViewMode("list")}
-                    className={`p-3 rounded-xl transition-all duration-300 ${
-                      viewMode === "list"
-                        ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                    onClick={() => setDataSource("crypto")}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                      dataSource === "crypto"
+                        ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg"
                         : "text-gray-400 hover:text-white hover:bg-gray-600/50"
                     }`}
                   >
-                    <List className="w-4 h-4" />
+                    Crypto News
                   </button>
+                  <button
+                    onClick={() => setDataSource("database")}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                      dataSource === "database"
+                        ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg"
+                        : "text-gray-400 hover:text-white hover:bg-gray-600/50"
+                    }`}
+                  >
+                    Articles
+                  </button>
+                </div>
+
+                {/* Filter Sections */}
+                <div className="flex flex-wrap gap-3">
+                  {sections.map((section) => {
+                    const IconComponent = section.icon;
+                    return (
+                      <button
+                        key={section.id}
+                        onClick={() => setSelectedSection(section.id)}
+                        className={`group relative flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105 ${
+                          selectedSection === section.id
+                            ? `bg-gradient-to-r ${section.color} text-white shadow-lg shadow-cyan-500/25`
+                            : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white border border-gray-600/30"
+                        }`}
+                      >
+                        <IconComponent className="w-4 h-4" />
+                        {section.label}
+                        {selectedSection === section.id && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl"></div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* View Mode & Refresh */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => refetch()}
+                    className="p-3 bg-gray-700/50 hover:bg-gray-600/50 border border-gray-600/30 rounded-2xl text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
+                    title="Refresh articles"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </button>
+
+                  <div className="flex bg-gray-700/50 border border-gray-600/30 rounded-2xl p-1">
+                    <button
+                      onClick={() => setViewMode("grid")}
+                      className={`p-3 rounded-xl transition-all duration-300 ${
+                        viewMode === "grid"
+                          ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                          : "text-gray-400 hover:text-white hover:bg-gray-600/50"
+                      }`}
+                    >
+                      <Grid className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setViewMode("list")}
+                      className={`p-3 rounded-xl transition-all duration-300 ${
+                        viewMode === "list"
+                          ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                          : "text-gray-400 hover:text-white hover:bg-gray-600/50"
+                      }`}
+                    >
+                      <List className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Articles Grid/List */}
         {/* Articles Display */}
@@ -613,7 +615,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         </div>
 
         {/* Enhanced Pagination */}
-        {totalPages > 1 && (
+        {!simpleHeader && totalPages > 1 && (
           <div className="pb-16">
             <div className="bg-gray-800/40 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-8">
               <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
