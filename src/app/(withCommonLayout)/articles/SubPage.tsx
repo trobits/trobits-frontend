@@ -158,6 +158,14 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [pauseScroll, setPauseScroll] = useState(false);
 
+  //time logic
+  const [isHoveringLeft, setIsHoveringLeft] = useState(false);
+  const [isHoveringRight, setIsHoveringRight] = useState(false);
+
+  //refs
+  const hoverLeftRef = React.useRef(false);
+  const hoverRightRef = React.useRef(false);
+
   // Auto scroll logic
   useEffect(() => {
     const interval = setInterval(() => {
@@ -168,6 +176,20 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
 
     return () => clearInterval(interval);
   }, [pauseScroll]);
+
+  useEffect(() => {
+    const scrollInterval = setInterval(() => {
+      if (scrollRef.current) {
+        if (hoverLeftRef.current) {
+          scrollRef.current.scrollBy({ left: -320, behavior: "smooth" });
+        } else if (hoverRightRef.current) {
+          scrollRef.current.scrollBy({ left: 320, behavior: "smooth" });
+        }
+      }
+    }, 1000);
+
+    return () => clearInterval(scrollInterval);
+  }, []);
 
   // end
   const limit = 20;
@@ -563,14 +585,16 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
               <div className="relative overflow-hidden">
                 {/* Left Button */}
                 <button
-                  onClick={() =>
-                    scrollRef.current?.scrollBy({
-                      left: -320,
-                      behavior: "smooth",
-                    })
-                  }
-                  onMouseEnter={() => setPauseScroll(true)}
-                  onMouseLeave={() => setPauseScroll(false)}
+                  onMouseEnter={() => {
+                    setPauseScroll(true);
+                    setIsHoveringLeft(true);
+                    hoverLeftRef.current = true;
+                  }}
+                  onMouseLeave={() => {
+                    setPauseScroll(false);
+                    setIsHoveringLeft(false);
+                    hoverLeftRef.current = false;
+                  }}
                   className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-gradient-to-r from-black/80 to-transparent p-2 rounded-r-xl hover:bg-black/90"
                 >
                   <ChevronDown className="w-6 h-6 rotate-180 text-white" />
@@ -578,14 +602,16 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
 
                 {/* Right Button */}
                 <button
-                  onClick={() =>
-                    scrollRef.current?.scrollBy({
-                      left: 320,
-                      behavior: "smooth",
-                    })
-                  }
-                  onMouseEnter={() => setPauseScroll(true)}
-                  onMouseLeave={() => setPauseScroll(false)}
+                  onMouseEnter={() => {
+                    setPauseScroll(true);
+                    setIsHoveringRight(true);
+                    hoverRightRef.current = true;
+                  }}
+                  onMouseLeave={() => {
+                    setPauseScroll(false);
+                    setIsHoveringRight(false);
+                    hoverRightRef.current = false;
+                  }}
                   className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-gradient-to-l from-black/80 to-transparent p-2 rounded-l-xl hover:bg-black/90"
                 >
                   <ChevronDown className="w-6 h-6 text-white" />
