@@ -193,7 +193,11 @@ export default function Navbar() {
                         px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
                         hover:bg-white/10 hover:scale-105
                         ${
-                          pathName.includes(item.href)
+                          (
+                            item.href === "/"
+                              ? pathName === "/"
+                              : pathName.includes(item.href)
+                          )
                             ? "text-teal-400 bg-teal-400/10"
                             : "text-gray-300 hover:text-white"
                         }
@@ -221,7 +225,10 @@ export default function Navbar() {
                           px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1
                           transition-all duration-300 hover:bg-white/10 hover:scale-105
                           ${
-                            isBasicsDropdownOpen || pathName.includes(item.href)
+                            isBasicsDropdownOpen ||
+                            (item.href === "/"
+                              ? pathName === "/"
+                              : pathName.includes(item.href))
                               ? "text-teal-400 bg-teal-400/10"
                               : "text-gray-300 hover:text-white"
                           }
@@ -396,7 +403,11 @@ export default function Navbar() {
                         px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
                         hover:bg-white/10 hover:scale-105
                         ${
-                          pathName.includes(item.href)
+                          (
+                            item.href === "/"
+                              ? pathName === "/"
+                              : pathName.includes(item.href)
+                          )
                             ? "text-teal-400 bg-teal-400/10"
                             : "text-gray-300 hover:text-white"
                         }
@@ -478,7 +489,11 @@ export default function Navbar() {
                         className={`
                           block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200
                           ${
-                            pathName.includes(item.href)
+                            (
+                              item.href === "/"
+                                ? pathName === "/"
+                                : pathName.includes(item.href)
+                            )
                               ? "text-teal-400 bg-teal-400/10"
                               : "text-gray-300 hover:text-white hover:bg-white/10"
                           }

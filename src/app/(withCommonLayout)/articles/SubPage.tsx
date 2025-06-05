@@ -17,7 +17,12 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
-import { useTrendingNews, useMixedArticles, useAllTickersNews, useSearchNews } from "@/hooks/useCryptoNews";
+import {
+  useTrendingNews,
+  useMixedArticles,
+  useAllTickersNews,
+  useSearchNews,
+} from "@/hooks/useCryptoNews";
 import { IComment } from "@/components/Post/PostCommentCard";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { usePathname } from "next/navigation";
@@ -38,34 +43,36 @@ export interface Article {
   sourceName?: string;
   tickers?: string[];
   sentiment?: string;
-  type?: 'crypto_news' | 'blog_post';
+  type?: "crypto_news" | "blog_post";
 }
 
 // Enhanced Loading Component
 const Loading = () => {
   return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
-        {/* Animated Globe */}
-        <div className="relative">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-spin">
-            <div className="absolute inset-2 rounded-full bg-gray-900"></div>
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Globe className="w-8 h-8 text-cyan-400 animate-pulse" />
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
+      {/* Animated Globe */}
+      <div className="relative">
+        <div className="w-20 h-20 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-spin">
+          <div className="absolute inset-2 rounded-full bg-gray-900"></div>
         </div>
-
-        {/* Loading Text */}
-        <div className="text-center space-y-2">
-          <h3 className="text-xl font-semibold text-white">Loading Articles</h3>
-          <p className="text-gray-400 text-sm">Fetching the latest crypto news...</p>
-        </div>
-
-        {/* Animated Progress Bar */}
-        <div className="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full animate-pulse"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Globe className="w-8 h-8 text-cyan-400 animate-pulse" />
         </div>
       </div>
+
+      {/* Loading Text */}
+      <div className="text-center space-y-2">
+        <h3 className="text-xl font-semibold text-white">Loading Articles</h3>
+        <p className="text-gray-400 text-sm">
+          Fetching the latest crypto news...
+        </p>
+      </div>
+
+      {/* Animated Progress Bar */}
+      <div className="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
+        <div className="h-full bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full animate-pulse"></div>
+      </div>
+    </div>
   );
 };
 
@@ -77,7 +84,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     if (!adContainerRef.current) return;
 
     const existingScript = document.querySelector(
-        `script[data-ad-class="${adClass}"]`
+      `script[data-ad-class="${adClass}"]`
     );
     if (existingScript) {
       existingScript.remove();
@@ -113,21 +120,23 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   }, [adClass]);
 
   return (
-      <div ref={adContainerRef} className="w-full flex justify-center my-12">
-        <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm border border-gray-600/30 rounded-2xl p-8 text-center">
-          <div className="space-y-3">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center">
-              <Zap className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-white">Sponsored Content</h3>
-            <p className="text-gray-400 text-sm">Advertisement</p>
+    <div ref={adContainerRef} className="w-full flex justify-center my-12">
+      <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm border border-gray-600/30 rounded-2xl p-8 text-center">
+        <div className="space-y-3">
+          <div className="w-16 h-16 mx-auto bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center">
+            <Zap className="w-8 h-8 text-white" />
           </div>
-          <ins
-              className={adClass}
-              style={{ display: "inline-block", width: "1px", height: "1px" }}
-          ></ins>
+          <h3 className="text-lg font-semibold text-white">
+            Sponsored Content
+          </h3>
+          <p className="text-gray-400 text-sm">Advertisement</p>
         </div>
+        <ins
+          className={adClass}
+          style={{ display: "inline-block", width: "1px", height: "1px" }}
+        ></ins>
       </div>
+    </div>
   );
 };
 
@@ -141,7 +150,9 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSection, setSelectedSection] = useState("all");
   const [sortBy, setSortBy] = useState("latest");
-  const [dataSource, setDataSource] = useState<"database" | "crypto" | "mixed">("mixed");
+  const [dataSource, setDataSource] = useState<"database" | "crypto" | "mixed">(
+    "mixed"
+  );
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const limit = 20;
@@ -166,9 +177,9 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   // Maintain previous/current path logic (only reload on BACK navigation)
   useEffect(() => {
     if (
-        typeof window !== "undefined" &&
-        previousPath !== "/articles" &&
-        currentPath === "/articles"
+      typeof window !== "undefined" &&
+      previousPath !== "/articles" &&
+      currentPath === "/articles"
     ) {
       dispatch(setPaths(pathName));
       window.location.reload();
@@ -180,15 +191,23 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
     data: databaseData,
     isLoading: dbLoading,
     isFetching: dbFetching,
-  } = useGetAllBlogsQuery({
-    page: currentPage,
-    limit,
-  }, {
-    skip: dataSource === "crypto"
-  });
+  } = useGetAllBlogsQuery(
+    {
+      page: currentPage,
+      limit,
+    },
+    {
+      skip: dataSource === "crypto",
+    }
+  );
 
   // Crypto news queries
-  const searchKeywords = searchQuery ? searchQuery.split(',').map(k => k.trim()).filter(k => k) : [];
+  const searchKeywords = searchQuery
+    ? searchQuery
+        .split(",")
+        .map((k) => k.trim())
+        .filter((k) => k)
+    : [];
 
   const {
     data: cryptoTrendingData,
@@ -198,7 +217,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   } = useTrendingNews({
     page: currentPage,
     limit,
-    enabled: dataSource === "crypto" && !searchQuery
+    enabled: dataSource === "crypto" && !searchQuery,
   });
 
   const {
@@ -208,7 +227,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   } = useSearchNews(searchKeywords, {
     page: currentPage,
     limit,
-    enabled: dataSource === "crypto" && !!searchQuery
+    enabled: dataSource === "crypto" && !!searchQuery,
   });
 
   const {
@@ -218,7 +237,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   } = useMixedArticles(databaseData?.data || [], {
     page: currentPage,
     limit: Math.ceil(limit / 2),
-    enabled: dataSource === "mixed"
+    enabled: dataSource === "mixed",
   });
 
   // Determine current data and loading states
@@ -243,7 +262,8 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
       isFetching = cryptoTrendingFetching;
     }
     totalPages = Math.ceil(currentArticles.length / limit) || 1;
-  } else { // mixed
+  } else {
+    // mixed
     currentArticles = mixedData || [];
     isLoading = mixedLoading;
     isFetching = mixedFetching;
@@ -261,9 +281,9 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   // First-time load
   if (isLoading) {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-          <Loading />
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+        <Loading />
+      </div>
     );
   }
 
@@ -273,9 +293,9 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   // Apply search filter (for database articles only, crypto search is handled by API)
   if (searchQuery && dataSource !== "crypto") {
     filteredAndSortedArticles = filteredAndSortedArticles.filter(
-        (article) =>
-            article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            article.content.toLowerCase().includes(searchQuery.toLowerCase())
+      (article) =>
+        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.content.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }
 
@@ -283,12 +303,12 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   if (selectedSection !== "all") {
     if (selectedSection === "popular") {
       filteredAndSortedArticles = filteredAndSortedArticles.filter(
-          (article) => article.likeCount > 5
+        (article) => article.likeCount > 5
       );
     }
     if (selectedSection === "featured") {
       filteredAndSortedArticles = filteredAndSortedArticles.filter(
-          (article) => article.comments && article.comments.length > 3
+        (article) => article.comments && article.comments.length > 3
       );
     }
   }
@@ -300,24 +320,44 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
       break;
     case "oldest":
       filteredAndSortedArticles.sort(
-          (a, b) =>
-              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
       break;
     case "latest":
     default:
       filteredAndSortedArticles.sort(
-          (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       break;
   }
 
   const sections = [
-    { id: "all", label: "All Articles", icon: Grid, color: "from-blue-500 to-cyan-500" },
-    { id: "latest", label: "Latest", icon: Clock, color: "from-green-500 to-emerald-500" },
-    { id: "popular", label: "Popular", icon: TrendingUp, color: "from-orange-500 to-red-500" },
-    { id: "featured", label: "Featured", icon: Star, color: "from-purple-500 to-pink-500" },
+    {
+      id: "all",
+      label: "All Articles",
+      icon: Grid,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      id: "latest",
+      label: "Latest",
+      icon: Clock,
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      id: "popular",
+      label: "Popular",
+      icon: TrendingUp,
+      color: "from-orange-500 to-red-500",
+    },
+    {
+      id: "featured",
+      label: "Featured",
+      icon: Star,
+      color: "from-purple-500 to-pink-500",
+    },
   ];
 
   const adClasses = [
@@ -336,292 +376,295 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   };
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
-        {/* Overlay spinner on refetch */}
-        {isFetching && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-              <div className="bg-gray-800/90 backdrop-blur-xl border border-gray-600/50 rounded-2xl p-8">
-                <div className="flex items-center space-x-4">
-                  <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">Updating Articles</h3>
-                    <p className="text-gray-400 text-sm">Please wait...</p>
-                  </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
+      {/* Overlay spinner on refetch */}
+      {isFetching && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gray-800/90 backdrop-blur-xl border border-gray-600/50 rounded-2xl p-8">
+            <div className="flex items-center space-x-4">
+              <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+              <div>
+                <h3 className="text-lg font-semibold text-white">
+                  Updating Articles
+                </h3>
+                <p className="text-gray-400 text-sm">Please wait...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="px-4 sm:px-6 lg:px-8 xl:px-20">
+        {/* Hero Section */}
+        {simpleHeader ? (
+          <div className="text-center py-8">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              Trobits Articles
+            </h2>
+          </div>
+        ) : (
+          <div className="relative overflow-hidden pt-16 pb-8 ">
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 blur-3xl"></div>
+            <div className="relative">
+              <div className="max-w-4xl mx-auto text-center mt-20">
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-green-400 text-sm font-semibold tracking-wider uppercase">
+                    Live Feed
+                  </span>
+                  <span className="text-gray-400 text-sm">
+                    {filteredAndSortedArticles.length} articles
+                  </span>
+                </div>
+                <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white via-cyan-200 to-purple-200 bg-clip-text text-transparent mb-6">
+                  Crypto Articles
+                </h1>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                  Deep insights into crypto markets, blockchain technology, and
+                  the future of digital finance.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Enhanced Search & Filter Section */}
+        <div className="mb-12">
+          <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-6">
+            <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+              {/* Search */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search articles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 bg-gray-700/50 border border-gray-600/50 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
+                />
+              </div>
+
+              {/* Data Source Selector */}
+              <div className="flex bg-gray-700/50 border border-gray-600/30 rounded-2xl p-1">
+                <button
+                  onClick={() => setDataSource("mixed")}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                    dataSource === "mixed"
+                      ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                      : "text-gray-400 hover:text-white hover:bg-gray-600/50"
+                  }`}
+                >
+                  Mixed
+                </button>
+                <button
+                  onClick={() => setDataSource("crypto")}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                    dataSource === "crypto"
+                      ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg"
+                      : "text-gray-400 hover:text-white hover:bg-gray-600/50"
+                  }`}
+                >
+                  Crypto News
+                </button>
+                <button
+                  onClick={() => setDataSource("database")}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                    dataSource === "database"
+                      ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg"
+                      : "text-gray-400 hover:text-white hover:bg-gray-600/50"
+                  }`}
+                >
+                  Articles
+                </button>
+              </div>
+
+              {/* Filter Sections */}
+              <div className="flex flex-wrap gap-3">
+                {sections.map((section) => {
+                  const IconComponent = section.icon;
+                  return (
+                    <button
+                      key={section.id}
+                      onClick={() => setSelectedSection(section.id)}
+                      className={`group relative flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105 ${
+                        selectedSection === section.id
+                          ? `bg-gradient-to-r ${section.color} text-white shadow-lg shadow-cyan-500/25`
+                          : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white border border-gray-600/30"
+                      }`}
+                    >
+                      <IconComponent className="w-4 h-4" />
+                      {section.label}
+                      {selectedSection === section.id && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl"></div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* View Mode & Refresh */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => refetch()}
+                  className="p-3 bg-gray-700/50 hover:bg-gray-600/50 border border-gray-600/30 rounded-2xl text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
+                  title="Refresh articles"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                </button>
+
+                <div className="flex bg-gray-700/50 border border-gray-600/30 rounded-2xl p-1">
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-3 rounded-xl transition-all duration-300 ${
+                      viewMode === "grid"
+                        ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                        : "text-gray-400 hover:text-white hover:bg-gray-600/50"
+                    }`}
+                  >
+                    <Grid className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-3 rounded-xl transition-all duration-300 ${
+                      viewMode === "list"
+                        ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                        : "text-gray-400 hover:text-white hover:bg-gray-600/50"
+                    }`}
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
-        )}
+          </div>
+        </div>
 
-        <div className="px-4 sm:px-6 lg:px-8 xl:px-20">
-          {/* Hero Section */}
-          {simpleHeader ? (
-              <div className="text-center py-8">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                  Trobits Articles
-                </h2>
-              </div>
-          ) : (
-              <div className="relative overflow-hidden pt-16 pb-8">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 blur-3xl"></div>
-                <div className="relative">
-                  <div className="max-w-4xl mx-auto text-center">
-                    <div className="flex items-center justify-center gap-3 mb-6">
-                      <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                      <span className="text-green-400 text-sm font-semibold tracking-wider uppercase">
-                    Live Feed
-                  </span>
-                      <span className="text-gray-400 text-sm">
-                    {filteredAndSortedArticles.length} articles
-                  </span>
+        {/* Articles Grid/List */}
+        <div className="mb-16">
+          {filteredAndSortedArticles.length > 0 ? (
+            <div
+              className={`${
+                viewMode === "grid"
+                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                  : "space-y-6"
+              }`}
+            >
+              {filteredAndSortedArticles.map((article, index) => (
+                <React.Fragment key={article.id}>
+                  <div
+                    className={`group transform transition-all duration-500 hover:scale-[1.02] ${
+                      viewMode === "list" ? "w-full" : ""
+                    }`}
+                  >
+                    <NewsCard articleData={article} viewMode={viewMode} />
+                  </div>
+                  {(index + 1) % 8 === 0 && adIndex < adClasses.length && (
+                    <div className={viewMode === "grid" ? "col-span-full" : ""}>
+                      <AdBanner adClass={adClasses[adIndex++]} />
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white via-cyan-200 to-purple-200 bg-clip-text text-transparent mb-6">
-                      Crypto Articles
-                    </h1>
-                    <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-                      Deep insights into crypto markets, blockchain technology, and
-                      the future of digital finance.
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-24">
+              <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-12 max-w-lg mx-auto">
+                <div className="space-y-6">
+                  <div className="w-24 h-24 mx-auto bg-gradient-to-r from-gray-600 to-gray-500 rounded-full flex items-center justify-center">
+                    <Search className="w-12 h-12 text-gray-300" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-semibold text-white mb-2">
+                      No articles found
+                    </h3>
+                    <p className="text-gray-400">
+                      Try adjusting your search or filters to find what you're
+                      looking for
                     </p>
                   </div>
                 </div>
               </div>
+            </div>
           )}
+        </div>
 
-          {/* Enhanced Search & Filter Section */}
-          <div className="mb-12">
-            <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-6">
-              <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-                {/* Search */}
-                <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                      type="text"
-                      placeholder="Search articles..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 bg-gray-700/50 border border-gray-600/50 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
-                  />
-                </div>
+        {/* Enhanced Pagination */}
+        {totalPages > 1 && (
+          <div className="pb-16">
+            <div className="bg-gray-800/40 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-8">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+                <button
+                  onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                  disabled={currentPage === 1}
+                  className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold transition-all duration-300 ${
+                    currentPage === 1
+                      ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-cyan-500 to-purple-500 text-white hover:scale-105 shadow-lg hover:shadow-cyan-500/25"
+                  }`}
+                >
+                  <ChevronDown className="w-4 h-4 rotate-90" />
+                  Previous
+                </button>
 
-                {/* Data Source Selector */}
-                <div className="flex bg-gray-700/50 border border-gray-600/30 rounded-2xl p-1">
-                  <button
-                      onClick={() => setDataSource("mixed")}
-                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                          dataSource === "mixed"
-                              ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
-                              : "text-gray-400 hover:text-white hover:bg-gray-600/50"
-                      }`}
-                  >
-                    Mixed
-                  </button>
-                  <button
-                      onClick={() => setDataSource("crypto")}
-                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                          dataSource === "crypto"
-                              ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg"
-                              : "text-gray-400 hover:text-white hover:bg-gray-600/50"
-                      }`}
-                  >
-                    Crypto News
-                  </button>
-                  <button
-                      onClick={() => setDataSource("database")}
-                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                          dataSource === "database"
-                              ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg"
-                              : "text-gray-400 hover:text-white hover:bg-gray-600/50"
-                      }`}
-                  >
-                    Articles
-                  </button>
-                </div>
-
-                {/* Filter Sections */}
-                <div className="flex flex-wrap gap-3">
-                  {sections.map((section) => {
-                    const IconComponent = section.icon;
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const page = Math.max(
+                      1,
+                      Math.min(currentPage - 2 + i, totalPages)
+                    );
                     return (
-                        <button
-                            key={section.id}
-                            onClick={() => setSelectedSection(section.id)}
-                            className={`group relative flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105 ${
-                                selectedSection === section.id
-                                    ? `bg-gradient-to-r ${section.color} text-white shadow-lg shadow-cyan-500/25`
-                                    : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white border border-gray-600/30"
-                            }`}
-                        >
-                          <IconComponent className="w-4 h-4" />
-                          {section.label}
-                          {selectedSection === section.id && (
-                              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl"></div>
-                          )}
-                        </button>
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={`w-12 h-12 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 ${
+                          currentPage === page
+                            ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                            : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white"
+                        }`}
+                      >
+                        {page}
+                      </button>
                     );
                   })}
                 </div>
 
-                {/* View Mode & Refresh */}
-                <div className="flex items-center gap-3">
-                  <button
-                      onClick={() => refetch()}
-                      className="p-3 bg-gray-700/50 hover:bg-gray-600/50 border border-gray-600/30 rounded-2xl text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
-                      title="Refresh articles"
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                  </button>
-
-                  <div className="flex bg-gray-700/50 border border-gray-600/30 rounded-2xl p-1">
-                    <button
-                        onClick={() => setViewMode("grid")}
-                        className={`p-3 rounded-xl transition-all duration-300 ${
-                            viewMode === "grid"
-                                ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
-                                : "text-gray-400 hover:text-white hover:bg-gray-600/50"
-                        }`}
-                    >
-                      <Grid className="w-4 h-4" />
-                    </button>
-                    <button
-                        onClick={() => setViewMode("list")}
-                        className={`p-3 rounded-xl transition-all duration-300 ${
-                            viewMode === "list"
-                                ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
-                                : "text-gray-400 hover:text-white hover:bg-gray-600/50"
-                        }`}
-                    >
-                      <List className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Articles Grid/List */}
-          <div className="mb-16">
-            {filteredAndSortedArticles.length > 0 ? (
-                <div
-                    className={`${
-                        viewMode === "grid"
-                            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-                            : "space-y-6"
-                    }`}
+                <button
+                  onClick={() =>
+                    handlePageChange(Math.min(currentPage + 1, totalPages))
+                  }
+                  disabled={currentPage === totalPages}
+                  className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold transition-all duration-300 ${
+                    currentPage === totalPages
+                      ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-cyan-500 to-purple-500 text-white hover:scale-105 shadow-lg hover:shadow-cyan-500/25"
+                  }`}
                 >
-                  {filteredAndSortedArticles.map((article, index) => (
-                      <React.Fragment key={article.id}>
-                        <div
-                            className={`group transform transition-all duration-500 hover:scale-[1.02] ${
-                                viewMode === "list" ? "w-full" : ""
-                            }`}
-                        >
-                          <NewsCard articleData={article} viewMode={viewMode} />
-                        </div>
-                        {(index + 1) % 8 === 0 && adIndex < adClasses.length && (
-                            <div className={viewMode === "grid" ? "col-span-full" : ""}>
-                              <AdBanner adClass={adClasses[adIndex++]} />
-                            </div>
-                        )}
-                      </React.Fragment>
-                  ))}
-                </div>
-            ) : (
-                <div className="text-center py-24">
-                  <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-12 max-w-lg mx-auto">
-                    <div className="space-y-6">
-                      <div className="w-24 h-24 mx-auto bg-gradient-to-r from-gray-600 to-gray-500 rounded-full flex items-center justify-center">
-                        <Search className="w-12 h-12 text-gray-300" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-semibold text-white mb-2">
-                          No articles found
-                        </h3>
-                        <p className="text-gray-400">
-                          Try adjusting your search or filters to find what you're looking for
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            )}
-          </div>
+                  Next
+                  <ChevronDown className="w-4 h-4 -rotate-90" />
+                </button>
+              </div>
 
-          {/* Enhanced Pagination */}
-          {totalPages > 1 && (
-              <div className="pb-16">
-                <div className="bg-gray-800/40 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-8">
-                  <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-                    <button
-                        onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                        disabled={currentPage === 1}
-                        className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold transition-all duration-300 ${
-                            currentPage === 1
-                                ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
-                                : "bg-gradient-to-r from-cyan-500 to-purple-500 text-white hover:scale-105 shadow-lg hover:shadow-cyan-500/25"
-                        }`}
-                    >
-                      <ChevronDown className="w-4 h-4 rotate-90" />
-                      Previous
-                    </button>
-
-                    <div className="flex items-center gap-2">
-                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        const page = Math.max(
-                            1,
-                            Math.min(currentPage - 2 + i, totalPages)
-                        );
-                        return (
-                            <button
-                                key={page}
-                                onClick={() => handlePageChange(page)}
-                                className={`w-12 h-12 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 ${
-                                    currentPage === page
-                                        ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
-                                        : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white"
-                                }`}
-                            >
-                              {page}
-                            </button>
-                        );
-                      })}
-                    </div>
-
-                    <button
-                        onClick={() =>
-                            handlePageChange(Math.min(currentPage + 1, totalPages))
-                        }
-                        disabled={currentPage === totalPages}
-                        className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold transition-all duration-300 ${
-                            currentPage === totalPages
-                                ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
-                                : "bg-gradient-to-r from-cyan-500 to-purple-500 text-white hover:scale-105 shadow-lg hover:shadow-cyan-500/25"
-                        }`}
-                    >
-                      Next
-                      <ChevronDown className="w-4 h-4 -rotate-90" />
-                    </button>
-                  </div>
-
-                  <div className="text-center mt-6">
+              <div className="text-center mt-6">
                 <span className="text-sm text-gray-400">
                   Page {currentPage} of {totalPages}
                 </span>
-                  </div>
-
-                  {currentPage !== 1 && (
-                      <div className="text-center mt-4">
-                        <button
-                            onClick={() => handlePageChange(1)}
-                            className="px-6 py-3 rounded-2xl bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white transition-all duration-300 text-sm font-medium"
-                        >
-                          Back to First Page
-                        </button>
-                      </div>
-                  )}
-                </div>
               </div>
-          )}
-        </div>
+
+              {currentPage !== 1 && (
+                <div className="text-center mt-4">
+                  <button
+                    onClick={() => handlePageChange(1)}
+                    className="px-6 py-3 rounded-2xl bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white transition-all duration-300 text-sm font-medium"
+                  >
+                    Back to First Page
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
+    </div>
   );
 };
 
