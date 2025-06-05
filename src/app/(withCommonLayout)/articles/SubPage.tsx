@@ -539,32 +539,57 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         </div>
 
         {/* Articles Grid/List */}
+        {/* Articles Display */}
         <div className="mb-16">
           {filteredAndSortedArticles.length > 0 ? (
-            <div
-              className={`${
-                viewMode === "grid"
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-                  : "space-y-6"
-              }`}
-            >
-              {filteredAndSortedArticles.map((article, index) => (
-                <React.Fragment key={article.id}>
-                  <div
-                    className={`group transform transition-all duration-500 hover:scale-[1.02] ${
-                      viewMode === "list" ? "w-full" : ""
-                    }`}
-                  >
-                    <NewsCard articleData={article} viewMode={viewMode} />
-                  </div>
-                  {(index + 1) % 8 === 0 && adIndex < adClasses.length && (
-                    <div className={viewMode === "grid" ? "col-span-full" : ""}>
-                      <AdBanner adClass={adClasses[adIndex++]} />
+            simpleHeader ? (
+              <div className="overflow-x-auto">
+                <div className="flex gap-6 pb-4 px-2 w-max">
+                  {filteredAndSortedArticles
+                    .sort(
+                      (a, b) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
+                    )
+                    .slice(0, 15)
+                    .map((article) => (
+                      <div
+                        key={article.id}
+                        className="min-w-[300px] max-w-[300px] flex-shrink-0"
+                      >
+                        <NewsCard articleData={article} viewMode="grid" />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`${
+                  viewMode === "grid"
+                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                    : "space-y-6"
+                }`}
+              >
+                {filteredAndSortedArticles.map((article, index) => (
+                  <React.Fragment key={article.id}>
+                    <div
+                      className={`group transform transition-all duration-500 hover:scale-[1.02] ${
+                        viewMode === "list" ? "w-full" : ""
+                      }`}
+                    >
+                      <NewsCard articleData={article} viewMode={viewMode} />
                     </div>
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
+                    {(index + 1) % 8 === 0 && adIndex < adClasses.length && (
+                      <div
+                        className={viewMode === "grid" ? "col-span-full" : ""}
+                      >
+                        <AdBanner adClass={adClasses[adIndex++]} />
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            )
           ) : (
             <div className="text-center py-24">
               <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-12 max-w-lg mx-auto">
