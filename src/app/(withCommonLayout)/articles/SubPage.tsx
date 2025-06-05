@@ -15,6 +15,8 @@ import {
   Globe,
   Zap,
   RefreshCw,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
 import {
@@ -595,9 +597,13 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                     setIsHoveringLeft(false);
                     hoverLeftRef.current = false;
                   }}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-gradient-to-r from-black/80 to-transparent p-2 rounded-r-xl hover:bg-black/90"
+                  className="group absolute left-0 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-black/20 backdrop-blur-sm transition-all duration-300 overflow-hidden"
                 >
-                  <ChevronDown className="w-6 h-6 rotate-180 text-white" />
+                  {/* Gradient hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+
+                  {/* Icon */}
+                  <ChevronLeft className="relative z-10 w-8 h-8 text-white transition-colors duration-300" />
                 </button>
 
                 {/* Right Button */}
@@ -612,9 +618,13 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                     setIsHoveringRight(false);
                     hoverRightRef.current = false;
                   }}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-gradient-to-l from-black/80 to-transparent p-2 rounded-l-xl hover:bg-black/90"
+                  className="group absolute right-0 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-black/20 backdrop-blur-sm transition-all duration-300 overflow-hidden"
                 >
-                  <ChevronDown className="w-6 h-6 text-white" />
+                  {/* Gradient hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+
+                  {/* Icon */}
+                  <ChevronRight className="relative z-10 w-8 h-8 text-white transition-colors duration-300" />
                 </button>
 
                 {/* Scrollable article strip */}
