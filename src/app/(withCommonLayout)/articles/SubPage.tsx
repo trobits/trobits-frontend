@@ -172,7 +172,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (!pauseScroll && scrollRef.current) {
-        scrollRef.current.scrollBy({ left: 320, behavior: "smooth" });
+        scrollRef.current.scrollBy({ left: 420, behavior: "smooth" });
       }
     }, 3000);
 
@@ -183,9 +183,9 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
     const scrollInterval = setInterval(() => {
       if (scrollRef.current) {
         if (hoverLeftRef.current) {
-          scrollRef.current.scrollBy({ left: -320, behavior: "smooth" });
+          scrollRef.current.scrollBy({ left: -450, behavior: "smooth" });
         } else if (hoverRightRef.current) {
-          scrollRef.current.scrollBy({ left: 320, behavior: "smooth" });
+          scrollRef.current.scrollBy({ left: 450, behavior: "smooth" });
         }
       }
     }, 1000);
@@ -584,7 +584,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         <div className="mb-16">
           {filteredAndSortedArticles.length > 0 ? (
             simpleHeader ? (
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden bg-gray-800/30 border border-gray-600/30 rounded-3xl p-6 mb-12">
                 {/* Left Button */}
                 <button
                   onMouseEnter={() => {
