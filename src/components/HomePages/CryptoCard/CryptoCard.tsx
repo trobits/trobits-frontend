@@ -38,7 +38,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
     script.innerHTML = JSON.stringify({
       symbol:
         coin.toUpperCase() === "SHIB" ? "CRYPTO:SHIBUSD" : "CRYPTO:LUNCUSD",
-      width: 400,
+      width: 401,
       height: 50,
       isTransparent: true,
       colorTheme: "dark",
