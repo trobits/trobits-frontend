@@ -83,7 +83,7 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
     script.innerHTML = JSON.stringify({
       symbol:
         coin.toUpperCase() === "SHIB" ? "CRYPTO:SHIBUSD" : "CRYPTO:LUNCUSD",
-      width: 350,
+      width: 300,
       isTransparent: true,
       colorTheme: "dark",
       locale: "en",
@@ -105,9 +105,9 @@ const TransparentCard: React.FC<TransparentCardProps> = ({
   const currentData = getCurrentData();
 
   return (
-    <div className="bg-gray-900/80 border border-gray-800/50 backdrop-blur-xl rounded-3xl p-6 md:p-8 max-w-[320px] md:max-w-[500px] md:w-[450px] min-h-[400px] text-white shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-gray-700/70 group">
+    <div className="bg-gray-900/80 border border-gray-800/50 backdrop-blur-xl rounded-3xl p-6 md:p-8 max-w-[290px] md:max-w-[370px] md:w-[350px] min-h-[400px] text-white shadow-2xl hover:shadow-3xl transition-all duration-500 hover:border-gray-700/70 group">
       {/* TradingView Widget */}
-      <div className="tradingview-widget-container mb-4 text-sm">
+      <div className="tradingview-widget-container mb-0 text-sm">
         <div
           id={`tradingview-widget-${index}`}
           className="tradingview-widget-container__widget"
