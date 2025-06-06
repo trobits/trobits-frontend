@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import script from "next/script";
 
 // ✅ Single inline ad (300x250 below chart)
 function AdBannerF() {
-  const adRef = useRef<HTMLModElement>(null); // or HTMLSpanElement, etc.
+  const adRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const script = document.createElement("script");
     script.async = true;
@@ -24,7 +25,7 @@ function AdBannerF() {
 
   return (
     <div className="flex justify-center">
-      <ins
+      <div
         ref={adRef}
         className="67c24fd7aa72d3d47fc083ad"
         style={{ display: "block", width: "300px", height: "250px" }}
