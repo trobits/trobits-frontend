@@ -100,9 +100,9 @@ const RecommendedAccounts = () => {
   return (
     <Card className="bg-transparent border border-gray-700 hover:border-cyan-600/40 transition-colors duration-300 text-white rounded-2xl shadow-lg">
       <CardHeader>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center mb-4">
           <BadgeCheck className="h-5 w-5 fill-blue-400 text-white" />
-          <h2 className="text-xl font-semibold tracking-wide">
+          <h2 className="text-xl font-semibold tracking-wide ">
             Verified Accounts
           </h2>
         </div>

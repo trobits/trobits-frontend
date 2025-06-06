@@ -99,12 +99,15 @@ const RecommendedAccounts = () => {
   return (
     <Card className="bg-transparent border border-gray-700 hover:border-cyan-600/40 transition-colors duration-300 text-white rounded-2xl shadow-lg">
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <BadgeCheck className="h-5 w-5 fill-blue-400 text-white" />
-          <h2 className="text-xl font-semibold tracking-wide">
-            Recommended Accounts
-          </h2>
+        <div className="flex justify-center mb-4">
+          <div className="flex items-center gap-2">
+            <BadgeCheck className="h-5 w-5 fill-blue-400 text-white" />
+            <h2 className="text-lg font-semibold tracking-wide">
+              Recommended Accounts
+            </h2>
+          </div>
         </div>
+
         <div className="flex items-center bg-black border-2 border-gray-400 px-2 py-1 rounded-md mt-2">
           <Search className="h-5 w-5 text-white" />
           <input

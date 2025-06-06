@@ -171,7 +171,7 @@ export default function Component() {
         </div>
       )}
 
-      <div className="flex gap-6 flex-wrap justify-center px-2">
+      <div className="flex gap-10 flex-wrap justify-center px-2">
         <div className="flex-1 max-w-4xl">
           <h1 className="text-3xl font-bold text-white mb-6 text-center">
             For You
