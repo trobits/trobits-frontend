@@ -41,7 +41,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
         style={{
           top: `calc(8rem - ${Math.min(scrollY * 0.25, 60)}px)`, // dynamic scroll
         }}
-        className={`fixed left-4 w-72 h-[calc(100vh-8em)] z-30 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-between items-center rounded-3xl backdrop-blur-xl overflow-y-auto transition-all duration-300 ease-in-out ${
+        className={`fixed left-4 w-72 h-[calc(100vh-8.5em)] z-30 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-between items-center rounded-3xl backdrop-blur-xl overflow-y-auto transition-all duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >

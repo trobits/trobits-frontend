@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+
 import TopicsCard from "@/components/Cryptohub/TopicsCard";
 import { ITopicInfo } from "@/components/Cryptohub/Types";
 import Loading from "@/components/Shared/Loading";
@@ -27,7 +27,7 @@ const CryptoChatPage = () => {
 
   const allTopics = data?.data || [];
 
-  // Add dummy topics for testing
+  // Dummy topics for testing
   const dummyTopics: ITopicInfo[] = [
     {
       id: "dummy-1",
@@ -55,11 +55,11 @@ const CryptoChatPage = () => {
     },
     {
       id: "dummy-4",
-      title: "Test Topic Three",
+      title: "Test Topic Four",
       description: "Final dummy topic for now.",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      slug: "test-topic-three",
+      slug: "test-topic-four",
     },
   ];
 
@@ -74,7 +74,12 @@ const CryptoChatPage = () => {
       <div className="flex flex-wrap justify-center w-full gap-4 pt-24 lg:pt-4">
         {allRenderedTopics.length ? (
           allRenderedTopics.map((topic: ITopicInfo) => (
-            <TopicsCard key={topic.id} topicInfo={topic} />
+            <div
+              key={topic.id}
+              className="transition-all duration-300 transform hover:scale-[1.02] hover:shadow-[0_0_25px_4px_rgba(59,130,246,0.5)] hover:bg-gradient-to-br hover:from-blue-500/10 hover:to-cyan-500/10 rounded-3xl shadow-[0_0_15px_2px_rgba(59,130,246,0.2)] border border-gray-600/40"
+            >
+              <TopicsCard topicInfo={topic} />
+            </div>
           ))
         ) : (
           <div className="font-bold text-white">No Topics Found</div>
