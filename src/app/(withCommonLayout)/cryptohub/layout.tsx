@@ -26,25 +26,20 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="fixed inset-0 z-0 bg-gradient-to-br from-gray-800 to-gray-700 backdrop-blur-sm">
-      <div className="min-h-[calc(100vh-140px)] w-full  flex flex-col lg:flex-row bg-transparent rounded-b-md mt-14 ml-4 overflow-auto">
+      <div className="min-h-[calc(100vh-140px)] w-full  flex flex-col lg:flex-row bg-transparent rounded-b-md mt-24 ml-4 overflow-auto">
         {/* Fixed Sidebar */}
         <aside
           className={`lg:w-72 w-72 max-h-[calc(100vh-9rem)] mt-8 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-start items-center fixed lg:relative z-20 lg:translate-x-0 transition-transform transform rounded-3xl backdrop-blur-xl ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } mx-2 my-4`}
         >
-          {/* Sidebar Header - Logo only */}
-          <div className="flex flex-col items-center w-full pt-8">
-            <Logo />
-          </div>
-
           {/* Navigation - Centered Vertically */}
           <nav className="flex-1 w-full flex flex-col justify-center items-center">
             {/* Title above buttons */}
-            <h2 className="text-2xl font-extrabold tracking-wide text-cyan-300 drop-shadow-lg mb-8">
+            <h2 className="text-3xl font-extrabold tracking-wide text-cyan-300 drop-shadow-lg mb-28">
               CRYPTO HUB
             </h2>
-            <ul className="flex flex-col gap-4 w-full px-6">
+            <ul className="flex flex-col gap-8 w-full px-6">
               <li>
                 <Link href="/cryptohub/cryptochat" passHref>
                   <Button
