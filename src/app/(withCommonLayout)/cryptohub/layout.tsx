@@ -25,11 +25,11 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-0 bg-gradient-to-br from-gray-800 to-gray-700 backdrop-blur-sm">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-800 to-gray-700 backdrop-blur-sm">
       <div className="min-h-[calc(100vh-140px)] w-full  flex flex-col lg:flex-row bg-transparent rounded-b-md mt-24 ml-4 overflow-auto">
         {/* Fixed Sidebar */}
         <aside
-          className={`lg:w-72 w-72 max-h-[calc(100vh-9rem)] mt-8 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-start items-center fixed lg:relative z-20 lg:translate-x-0 transition-transform transform rounded-3xl backdrop-blur-xl ${
+          className={`fixed overflow-y-auto lg:w-72 w-72 max-h-[calc(100vh-9rem)] mt-8 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-start items-center fixed lg:relative z-20 lg:translate-x-0 transition-transform transform rounded-3xl backdrop-blur-xl ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } mx-2 my-4`}
         >
@@ -149,7 +149,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 ml-2 h-full overflow-y-auto p-4">
+        <main className="flex-1 ml-2 min-h-screen overflow-y-auto p-4">
           {children}
         </main>
       </div>
