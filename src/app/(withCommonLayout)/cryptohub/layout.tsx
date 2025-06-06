@@ -28,7 +28,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
     <div className="min-h-screen w-full bg-gradient-to-br from-gray-800 to-gray-700 text-white relative">
       {/* Fixed Sidebar */}
       <aside
-        className={`fixed top-24 left-4 w-72 h-[calc(100vh-6rem)] z-30 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-between items-center rounded-3xl backdrop-blur-xl overflow-y-auto transition-transform transform ${
+        className={`fixed top-32 left-4 w-72 h-[calc(100vh-10rem)] z-30 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-between items-center rounded-3xl backdrop-blur-xl overflow-y-auto transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
