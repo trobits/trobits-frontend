@@ -33,7 +33,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
-import { baseApi } from './features/api/baseApi';
+import { baseApi, affiliateApi } from './features/api/baseApi';
 import authReducer from './features/slices/authSlice';
 
 // Setup Persist Config
@@ -47,6 +47,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
     auth: authReducer,
     [ baseApi.reducerPath ]: baseApi.reducer,
+    [ affiliateApi.reducerPath ]: affiliateApi.reducer,
 });
 
 // Persist Reducer
@@ -58,7 +59,7 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false,
-        }).concat(baseApi.middleware),
+        }).concat(baseApi.middleware, affiliateApi.middleware),
 });
 
 // Set up Persistor
