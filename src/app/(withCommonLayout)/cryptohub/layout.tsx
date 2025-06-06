@@ -39,12 +39,13 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
       {/* Fixed Sidebar */}
       <aside
         style={{
-          top: `calc(8rem - ${Math.min(scrollY * 0.25, 60)}px)`, // tweak multiplier and cap as needed
+          top: `calc(8rem - ${Math.min(scrollY * 0.25, 60)}px)`, // dynamic scroll
         }}
-        className={`fixed left-4 w-72 h-[calc(100vh-8em)] z-30 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-start items-center rounded-3xl backdrop-blur-xl overflow-y-auto transition-all duration-300 ease-in-out ${
+        className={`fixed left-4 w-72 h-[calc(100vh-8em)] z-30 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-between items-center rounded-3xl backdrop-blur-xl overflow-y-auto transition-all duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
+        {/* Main Nav */}
         <nav className="flex-1 w-full flex flex-col items-center pt-10">
           <h2 className="text-3xl font-extrabold tracking-wide text-cyan-300 drop-shadow-lg mb-12">
             CRYPTO HUB
@@ -125,19 +126,27 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
                 </Button>
               </Link>
             </li>
-            <li>
-              <Link href="/">
-                <Button
-                  onClick={handleLogOut}
-                  className="w-full flex items-center justify-start gap-2 text-lg font-semibold px-4 py-3 rounded-2xl bg-gray-800 text-white hover:bg-red-500"
-                >
-                  <GrLogin className="text-cyan-300" />
-                  Logout
-                </Button>
-              </Link>
-            </li>
           </ul>
         </nav>
+
+        {/* Logout CTA at bottom */}
+        <div className="w-full px-6 pb-6">
+          <Link href="/">
+            <Button
+              onClick={handleLogOut}
+              className="
+        group bg-white text-black px-9 py-6 rounded-3xl font-semibold text-base
+        transition-all duration-300 hover:scale-105
+        hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-500 hover:text-white
+        hover:shadow-[0_0_10px_2px_rgba(59,130,246,0.5)]
+        flex items-center gap-2 w-full justify-center
+      "
+            >
+              <GrLogin className="text-black group-hover:text-white" />
+              Logout
+            </Button>
+          </Link>
+        </div>
       </aside>
 
       {/* Mobile Toggle Button */}
