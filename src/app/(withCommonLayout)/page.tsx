@@ -7,23 +7,18 @@ import React from "react";
 import CryptoNavbar from "../shared/navbar/CryptoNavbar";
 import Footer from "../shared/Footer/Footer";
 import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
-import AffiliateLinksGrid from "@/components/AffiliateLinks/AffiliateLinksGrid";
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const Profile = () => {
   // const dispatch = useAppDispatch();
 
   return (
+    <>
     <div>
       <CryptoNavbar />
       <CryptoData />
 
       <CryptoInfo />
-
-      {/* Affiliate Links Section */}
-      <div className="py-16 px-4">
-        <AffiliateLinksGrid />
-      </div>
 
       <Slider />
       <NewsCompo />
@@ -31,6 +26,7 @@ const Profile = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 

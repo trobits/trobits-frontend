@@ -1,4 +1,4 @@
-import { affiliateApi } from "./baseApi";
+import { baseApi } from "./baseApi";
 
 export interface AffiliateClickData {
   userId: string;
@@ -42,7 +42,7 @@ export interface AffiliateAnalytics {
   }>;
 }
 
-const affiliateApiEndpoints = affiliateApi.injectEndpoints({
+const affiliateApiEndpoints = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // Track affiliate link click
     trackAffiliateClick: build.mutation<AffiliateClickResponse, AffiliateClickData>({

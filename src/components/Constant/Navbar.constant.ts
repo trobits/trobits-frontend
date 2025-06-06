@@ -5,6 +5,5 @@ export const navItems = [
   // { name: "Learn", href: "/learn", value: "learn" },
   { name: "Burn Archive", href: "/articles", value: "articles" },
   { name: "Welcome", href: "/basics", value: "basics" },
-  { name: "Rewards", href: "/rewards", value: "rewards" },
   { name: "Price", href: "/leaderboard", value: "leaderboard" },
 ];

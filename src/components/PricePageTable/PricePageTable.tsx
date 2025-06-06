@@ -180,7 +180,7 @@ function PricePageCompo() {
             <span className="text-sm text-gray-400">Rows per page:</span>
             <Select
               value={itemsPerPage.toString()}
-              onValueChange={(value) => setItemsPerPage(Number(value))}
+              onValueChange={(value: string) => setItemsPerPage(Number(value))}
             >
               <SelectTrigger className="w-[70px]">
                 <SelectValue placeholder={itemsPerPage} />

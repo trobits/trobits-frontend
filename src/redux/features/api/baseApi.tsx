@@ -25,19 +25,6 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-// Separate base query for affiliate tracking service
-const affiliateBaseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3001/api/v1",
-  credentials: "include",
-  prepareHeaders: (headers, {}) => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`);
-    }
-    return headers;
-  },
-});
-
 const baseQueryWithRefreshToken: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -90,13 +77,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ["post", "user", "blog", "lunc-burn", "shiba-burn", "affiliate-analytics", "user-affiliate-history", "top-affiliate-users"],
-  endpoints: () => ({}),
-});
-
-export const affiliateApi = createApi({
-  reducerPath: "affiliateApi",
-  baseQuery: affiliateBaseQuery,
-  tagTypes: ["affiliate-analytics", "user-affiliate-history", "top-affiliate-users"],
+  tagTypes: ["post", "user", "blog", "lunc-burn", "shiba-burn"],
   endpoints: () => ({}),
 });

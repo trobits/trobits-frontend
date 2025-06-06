@@ -56,14 +56,22 @@ ChartJS.register(
   Legend
 );
 
-export default function BurnChartWithCalculator() {
-  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
-  const [allData, setAllData] = useState([]);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [totals, setTotals] = useState(null);
+interface BurnDataRow {
+  date: string;
+  shiba: number;
+  lunc: number;
+}
 
-  const formatDate = (dateStr) => {
+import { ChartData, ChartOptions } from 'chart.js';
+
+export default function BurnChartWithCalculator() {
+  const [chartData, setChartData] = useState<ChartData<'line'>>({ labels: [], datasets: [] });
+  const [allData, setAllData] = useState<BurnDataRow[]>([]);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [totals, setTotals] = useState<{ shiba: number; lunc: number } | null>(null);
+
+  const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString("en-GB", {
       day: "2-digit",
@@ -72,7 +80,7 @@ export default function BurnChartWithCalculator() {
     });
   };
 
-  const fetchBurnData = async () => {
+  const fetchBurnData = async (): Promise<void> => {
     const apiKey = "AIzaSyC_pYUok9r2PD5PmIYyWV4ZCvHy8y_Iug0";
     const sheetId = "10V4FpmrdcoQBCv-TXABSiNgqXx3dSj63qKqw06-3nFY";
     const range = "A:Z";
@@ -87,13 +95,13 @@ export default function BurnChartWithCalculator() {
     }
 
     const headers = data.values[0];
-    const dateIdx = headers.findIndex((h) => h.toLowerCase().includes("date"));
+    const dateIdx = headers.findIndex((h: string) => h.toLowerCase().includes("date"));
     const shibaIdx = 3; // Column D
     const luncIdx = 5;  // Column F
 
-    const rows = data.values.slice(1).filter(row => row.length > luncIdx);
+    const rows = data.values.slice(1).filter((row: string[]) => row.length > luncIdx);
 
-    const parsedData = rows.map(row => {
+    const parsedData: BurnDataRow[] = rows.map((row: string[]) => {
       const date = formatDate(row[dateIdx]);
       const shiba = parseInt(row[shibaIdx]?.replace(/,/g, "") || "0");
       const lunc = parseInt(row[luncIdx]?.replace(/,/g, "") || "0");
@@ -104,11 +112,11 @@ export default function BurnChartWithCalculator() {
 
     const last14 = parsedData.slice(-14);
     setChartData({
-      labels: last14.map(row => row.date),
+      labels: last14.map((row: BurnDataRow) => row.date),
       datasets: [
         {
           label: "Shiba Burns",
-          data: last14.map(row => row.shiba),
+          data: last14.map((row: BurnDataRow) => row.shiba),
           borderColor: "rgba(255, 99, 132, 1)",
           backgroundColor: "rgba(255, 99, 132, 0.2)",
           tension: 0.4,
@@ -117,7 +125,7 @@ export default function BurnChartWithCalculator() {
         },
         {
           label: "LUNC Burns",
-          data: last14.map(row => row.lunc),
+          data: last14.map((row: BurnDataRow) => row.lunc),
           borderColor: "rgba(54, 162, 235, 1)",
           backgroundColor: "rgba(54, 162, 235, 0.2)",
           tension: 0.4,
@@ -142,14 +150,14 @@ export default function BurnChartWithCalculator() {
     const to = new Date(endDate);
     to.setHours(23, 59, 59, 999);
 
-    const filtered = allData.filter(row => {
+    const filtered = allData.filter((row: BurnDataRow) => {
       const [d, m, y] = row.date.split(" ");
       const rowDate = new Date(`20${y}-${m}-` + d);
       return rowDate >= from && rowDate <= to;
     });
 
     const total = filtered.reduce(
-      (acc, row) => {
+      (acc: { shiba: number; lunc: number }, row: BurnDataRow) => {
         acc.shiba += row.shiba;
         acc.lunc += row.lunc;
         return acc;
@@ -160,11 +168,11 @@ export default function BurnChartWithCalculator() {
     setTotals(total);
 
     setChartData({
-      labels: filtered.map(row => row.date),
+      labels: filtered.map((row: BurnDataRow) => row.date),
       datasets: [
         {
           label: "Shiba Burns",
-          data: filtered.map(row => row.shiba),
+          data: filtered.map((row: BurnDataRow) => row.shiba),
           borderColor: "rgba(255, 99, 132, 1)",
           backgroundColor: "rgba(255, 99, 132, 0.2)",
           tension: 0.4,
@@ -173,7 +181,7 @@ export default function BurnChartWithCalculator() {
         },
         {
           label: "LUNC Burns",
-          data: filtered.map(row => row.lunc),
+          data: filtered.map((row: BurnDataRow) => row.lunc),
           borderColor: "rgba(54, 162, 235, 1)",
           backgroundColor: "rgba(54, 162, 235, 0.2)",
           tension: 0.4,
@@ -188,7 +196,7 @@ export default function BurnChartWithCalculator() {
     responsive: true,
     plugins: {
       legend: {
-        position: "top",
+        position: "top" as const,
         labels: {
           color: "#ffffff",
         },
@@ -198,11 +206,11 @@ export default function BurnChartWithCalculator() {
         text: "Shiba & LUNC Burns Over Time",
         color: "#ffffff",
       },
-      tooltip: { mode: "index", intersect: false },
+      tooltip: { mode: "index" as const, intersect: false },
     },
     interaction: {
-      mode: "nearest",
-      axis: "x",
+      mode: "nearest" as const,
+      axis: "x" as const,
       intersect: false,
     },
     scales: {
