@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { FaHashtag, FaUser } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
 import { IoMdNotifications } from "react-icons/io";
@@ -17,6 +17,7 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [scrollY, setScrollY] = useState<number>(0);
   const pathname = usePathname();
 
   const handleLogOut = () => {
@@ -24,11 +25,23 @@ const CryptoLayout = ({ children }: { children: ReactNode }) => {
     router.push("/");
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-gray-800 to-gray-700 text-white relative">
       {/* Fixed Sidebar */}
       <aside
-        className={`fixed top-32 left-4 w-72 h-[calc(100vh-10rem)] z-30 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-between items-center rounded-3xl backdrop-blur-xl overflow-y-auto transition-transform transform ${
+        style={{
+          top: `calc(8rem - ${Math.min(scrollY * 0.25, 60)}px)`, // tweak multiplier and cap as needed
+        }}
+        className={`fixed left-4 w-72 h-[calc(100vh-8em)] z-30 bg-[#000000b9] border border-cyan-300/40 shadow-2xl text-white flex flex-col justify-start items-center rounded-3xl backdrop-blur-xl overflow-y-auto transition-all duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
