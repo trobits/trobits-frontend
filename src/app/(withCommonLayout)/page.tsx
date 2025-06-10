@@ -8,6 +8,7 @@ import CryptoNavbar from "../shared/navbar/CryptoNavbar";
 import Footer from "../shared/Footer/Footer";
 import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
 import SubPage from "./articles/SubPage";
+import CryptoGames from "@/components/HomePages/CryptoGames/CryptoGames";
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const Profile = () => {
@@ -19,6 +20,7 @@ const Profile = () => {
       <CryptoData />
 
       <CryptoInfo />
+      <CryptoGames />
 
       <Slider />
       <div className="mt-20">
