@@ -10,6 +10,8 @@ import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
 import SubPage from "./articles/SubPage";
 import CryptoGames from "@/components/HomePages/CryptoGames/index";
 
+import BurnChartWithCalculator from "@/components/HomePages/Slider/GraphSlider";
+
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const Profile = () => {
@@ -23,6 +25,9 @@ const Profile = () => {
       <CryptoInfo />
       <CryptoGames />
 
+      <div className="mt-20">
+        <BurnChartWithCalculator /> {/* This is your chart and calculator */}
+      </div>
       <Slider />
       <div className="mt-20">
         <SubPage simpleHeader />
