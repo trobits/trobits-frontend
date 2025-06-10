@@ -1,24 +1,27 @@
 import React from "react";
+import Image, { StaticImageData } from "next/image";
 
 interface GameCardProps {
   title: string;
-  image: string;
+  image: string | StaticImageData;
   onPlay: () => void;
 }
 
 const GameCard: React.FC<GameCardProps> = ({ title, image, onPlay }) => (
-  <div className="bg-[#1e293b] text-white p-4 rounded-xl shadow-md w-64 text-center">
-    <img
+  <div className="bg-gradient-to-br from-[#1a2238] to-[#0f172a] text-white border border-cyan-600/20 p-5 rounded-2xl shadow-[0_0_10px_#00ffff33] w-72 text-center hover:scale-105 transition-transform">
+    <Image
       src={image}
       alt={title}
-      className="w-full h-40 object-cover rounded-md"
+      className="w-full h-44 object-cover rounded-xl border border-cyan-400/20"
     />
-    <h3 className="text-lg mt-2">{title}</h3>
+    <h3 className="text-lg font-semibold mt-3 mb-2 bg-gradient-to-r from-white via-cyan-200 to-purple-200 bg-clip-text text-transparent">
+      {title}
+    </h3>
     <button
       onClick={onPlay}
-      className="mt-3 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded w-full"
+      className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium rounded-xl hover:scale-105 transition-transform"
     >
-      Play Now
+      ▶️ Play Now
     </button>
   </div>
 );

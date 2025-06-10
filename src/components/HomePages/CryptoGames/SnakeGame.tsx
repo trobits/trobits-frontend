@@ -94,84 +94,108 @@ const SnakeGame: React.FC = () => {
     setPlaying(true);
   };
 
+  const score = snake.length - 1;
+
   return (
     <div
+      className="flex flex-col items-center"
       style={{
         padding: "1rem",
         backgroundColor: "#0f172a",
         color: "white",
         borderRadius: "10px",
         maxWidth: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
       }}
     >
       <h2 className="text-xl mb-2">🐍 Crypto Snake</h2>
 
-      {!playing && (
-        <div className="mb-4">
-          <p>Use arrow keys to control the snake. Eat the coin to grow!</p>
-          {gameOver && <p className="text-red-400 mt-2">Game Over!</p>}
-          <button
-            onClick={startGame}
-            className="mt-4 px-4 py-2 bg-cyan-600 rounded hover:bg-cyan-500 justify-center"
-          >
-            {gameOver ? "Play Again" : "Play"}
-          </button>
-        </div>
-      )}
-
-      {playing && (
-        <div
-          style={{
-            width: WIDTH,
-            height: HEIGHT,
-            backgroundColor: "#1e293b",
-            position: "relative",
-            border: "3px solid #38bdf8",
-            borderRadius: "10px",
-            marginTop: "1rem",
-            overflow: "hidden",
-          }}
-        >
-          {/* Snake */}
-          {snake.map((segment, idx) => (
+      <div className="flex gap-6 mt-4 flex-wrap justify-center">
+        {/* Left Panel: Game or Instructions */}
+        <div>
+          {!playing ? (
+            <div className="w-[400px] h-[400px] bg-[#1e293b] flex flex-col justify-center items-center rounded-lg border border-cyan-700 text-center px-6">
+              <p>Use arrow keys to control the snake. Eat the coin to grow!</p>
+              {gameOver && <p className="text-red-400 mt-2">Game Over!</p>}
+              <button
+                onClick={startGame}
+                className="mt-4 px-4 py-2 bg-cyan-600 rounded hover:bg-cyan-500"
+              >
+                {gameOver ? "Play Again" : "Play"}
+              </button>
+            </div>
+          ) : (
             <div
-              key={idx}
               style={{
-                width: CELL_SIZE,
-                height: CELL_SIZE,
-                position: "absolute",
-                left: segment.x,
-                top: segment.y,
-                transition: "left 100ms linear, top 100ms linear",
-                backgroundColor:
-                  idx === 0 ? "#facc15" : `hsl(${120 + idx * 5}, 70%, 45%)`,
-                borderRadius: idx === 0 ? "50%" : "8px",
-                boxShadow: idx === 0 ? "0 0 6px #facc15" : "none",
+                width: WIDTH,
+                height: HEIGHT,
+                backgroundColor: "#1e293b",
+                position: "relative",
+                border: "3px solid #38bdf8",
+                borderRadius: "10px",
+                overflow: "hidden",
               }}
-            />
-          ))}
+            >
+              {snake.map((segment, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    width: CELL_SIZE,
+                    height: CELL_SIZE,
+                    position: "absolute",
+                    left: segment.x,
+                    top: segment.y,
+                    transition: "left 100ms linear, top 100ms linear",
+                    backgroundColor:
+                      idx === 0 ? "#facc15" : `hsl(${120 + idx * 5}, 70%, 45%)`,
+                    borderRadius: idx === 0 ? "50%" : "8px",
+                    boxShadow: idx === 0 ? "0 0 6px #facc15" : "none",
+                  }}
+                />
+              ))}
 
-          {/* Food */}
-          <Image
-            src={ShibaIcon}
-            alt="coin"
-            width={CELL_SIZE}
-            height={CELL_SIZE}
-            style={{
-              position: "absolute",
-              left: food.x,
-              top: food.y,
-              transition: "left 100ms linear, top 100ms linear",
-              pointerEvents: "none",
-              borderRadius: "50%",
-              filter: "drop-shadow(0 0 5px gold)",
-            }}
-          />
+              <Image
+                src={ShibaIcon}
+                alt="coin"
+                width={CELL_SIZE}
+                height={CELL_SIZE}
+                style={{
+                  position: "absolute",
+                  left: food.x,
+                  top: food.y,
+                  transition: "left 100ms linear, top 100ms linear",
+                  pointerEvents: "none",
+                  borderRadius: "50%",
+                  filter: "drop-shadow(0 0 5px gold)",
+                }}
+              />
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Right Panel: Score Board */}
+        <div className="w-56 p-4 bg-[#1e293b] rounded-lg text-white border border-cyan-700 shadow-md flex flex-col justify-between">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">🏆 Achievements</h3>
+            <ul className="space-y-2">
+              <li className="flex justify-between">
+                <span>👑 Afaq</span>
+                <span>37</span>
+              </li>
+              <li className="flex justify-between">
+                <span>🔥 Legend</span>
+                <span>24</span>
+              </li>
+              <li className="flex justify-between font-bold text-cyan-400">
+                <span>🚀 You</span>
+                <span>{score}</span>
+              </li>
+            </ul>
+          </div>
+          <p className="text-sm text-gray-400 mt-4">
+            Score updates in real-time.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
