@@ -1,27 +1,24 @@
-// services/cryptoNewsService.ts
 export interface CryptoArticle {
     id: string;
     title: string;
-    content: string;
-    authorId: string;
-    createdAt: Date;
-    updatedAt: Date;
+    text?: string;
+    content?: string;
+    source_name?: string;
+    sourceName?: string;
+    date: string;
+    createdAt: string;
+    tickers?: string[];
+    news_url?: string;
+    sourceUrl?: string;
+    image_url?: string;
     image?: string;
+    sentiment?: 'positive' | 'negative' | 'neutral';
+    kind?: string;
     likeCount: number;
     likers: string[];
     comments: any[];
-    sourceUrl?: string;
-    sourceName?: string;
-    tickers?: string[];
-    sentiment?: string;
-    type: 'crypto_news';
-}
-
-export interface CryptoNewsResponse {
-    data: any[];
-    page?: number;
-    total_pages?: number;
-    total_count?: number;
+    authorId?: string;
+    type: 'crypto_news' | 'blog_post';
 }
 
 export interface FetchOptions {
@@ -31,333 +28,515 @@ export interface FetchOptions {
     keywords?: string[];
 }
 
+interface ApiResponse {
+    success: boolean;
+    articles: any[];
+    total_articles: number;
+    pages_searched?: number;
+    keyword?: string;
+    keywords?: string[];
+    ticker?: string;
+    error?: string;
+    current_page?: number;
+    total_pages?: number;
+}
+
+interface CacheItem {
+    data: ApiResponse;
+    timestamp: number;
+}
+
+interface PaginatedResult {
+    articles: CryptoArticle[];
+    hasMore: boolean;
+    totalItems: number;
+    currentPage: number;
+    totalPages: number;
+}
+
 class CryptoNewsService {
-    private readonly apiToken = "bagck5b260xe3tmck20qzqko9sb16qutzy47wvtr";
-    private readonly baseURL = "https://cryptonews-api.com/api/v1";
-    private readonly cache = new Map<string, { data: any; timestamp: number }>();
-private readonly cacheTimeout = 5 * 60 * 1000; // 5 minutes
+    private cache = new Map<string, CacheItem>();
+    private cacheTimeout = 2 * 60 * 1000; // 2 minutes for faster updates
+    private baseURL = '';
+    private maxPages = 5; // API limit
 
-/**
- * Check if cached data is still valid
- */
-private isCacheValid(timestamp: number): boolean {
-    return Date.now() - timestamp < this.cacheTimeout;
-}
+    private getCacheKey(endpoint: string, params: Record<string, any>): string {
+        const paramString = Object.keys(params)
+            .sort()
+            .map(key => `${key}=${params[key]}`)
+            .join('&');
+        return `${endpoint}?${paramString}`;
+    }
 
-/**
- * Get cache key for request
- */
-private getCacheKey(endpoint: string, params: any): string {
-    return `${endpoint}_${JSON.stringify(params)}`;
-}
+    private async fetchWithCache(endpoint: string, params: Record<string, any> = {}): Promise<ApiResponse> {
+        const cacheKey = this.getCacheKey(endpoint, params);
+        const cached = this.cache.get(cacheKey);
 
-/**
- * Make API request with caching
- */
-private async makeRequest(endpoint: string, params: any): Promise<any> {
-    const cacheKey = this.getCacheKey(endpoint, params);
-    const cached = this.cache.get(cacheKey);
-
-    if (cached && this.isCacheValid(cached.timestamp)) {
-    console.log(`Using cached data for ${endpoint}`);
-    return cached.data;
-}
-
-try {
-    const url = new URL(`${this.baseURL}${endpoint}`);
-
-    // Add parameters to URL
-    Object.keys(params).forEach(key => {
-        if (params[key] !== undefined && params[key] !== null) {
-            url.searchParams.append(key, params[key].toString());
+        if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
+            return cached.data;
         }
-    });
 
-    console.log(`Fetching from: ${url.toString()}`);
+        const url = new URL(`${this.baseURL}${endpoint}`, window.location.origin);
+        Object.keys(params).forEach(key => {
+            if (params[key] !== undefined && params[key] !== null) {
+                url.searchParams.append(key, params[key].toString());
+            }
+        });
 
-    const response = await fetch(url.toString(), {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-    });
+        try {
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-    const data = await response.json();
+            const data: ApiResponse = await response.json();
 
-    // Cache the response
-    this.cache.set(cacheKey, {
-        data,
-        timestamp: Date.now()
-    });
-
-    return data;
-} catch (error) {
-    console.error(`Error fetching ${endpoint}:`, error);
-    throw error;
-}
-}
-
-/**
- * Transform API article to match your Article interface
- */
-private transformArticle(apiArticle: any): CryptoArticle {
-    return {
-        id: `crypto_${apiArticle.news_id || Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        title: apiArticle.title || apiArticle.headline || 'Untitled Article',
-        content: apiArticle.text || apiArticle.summary || 'No content available',
-        authorId: `crypto_news_${apiArticle.source_name || 'unknown'}`,
-        createdAt: new Date(apiArticle.date || Date.now()),
-        updatedAt: new Date(apiArticle.date || Date.now()),
-        image: apiArticle.image_url || apiArticle.image || undefined,
-        likeCount: Math.floor(Math.random() * 50), // Random likes since API doesn't provide this
-        likers: [], // Empty array since API doesn't provide this
-        comments: [], // Empty array since API doesn't provide this
-        sourceUrl: apiArticle.news_url || apiArticle.url,
-        sourceName: apiArticle.source_name || 'CryptoNews',
-        tickers: apiArticle.tickers || [],
-        sentiment: apiArticle.sentiment || undefined,
-        type: 'crypto_news'
-    };
-}
-
-/**
- * Check if article matches keywords
- */
-private articleMatchesKeywords(article: any, keywords: string[] = []): boolean {
-    if (!keywords || keywords.length === 0) {
-        return true;
-    }
-
-    const lowerKeywords = keywords.map(k => k.toLowerCase());
-
-    // Check title
-    const title = article.title || '';
-    if (title && lowerKeywords.some(k => title.toLowerCase().includes(k))) {
-        return true;
-    }
-
-    // Check text content
-    const text = article.text || '';
-    if (text && lowerKeywords.some(k => text.toLowerCase().includes(k))) {
-        return true;
-    }
-
-    // Check tickers
-    if (article.tickers) {
-        if (article.tickers.some((ticker: string) =>
-            lowerKeywords.some(k => k === ticker.toLowerCase())
-        )) {
-            return true;
+            if (data.success) {
+                this.cache.set(cacheKey, {
+                    data,
+                    timestamp: Date.now()
+                });
+                return data;
+            } else {
+                throw new Error(data.error || 'API request failed');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            throw error;
         }
     }
 
-    return false;
-}
+    private transformArticle(article: any): CryptoArticle {
+        const id = article.id ||
+            article.news_url ||
+            `article-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-/**
- * Fetch trending headlines for a specific ticker
- */
-async fetchTickerNews(ticker: string, options: FetchOptions = {}): Promise<CryptoArticle[]> {
-    const { page = 1, limit = 10 } = options;
+        const date = article.date || article.createdAt || new Date().toISOString();
 
-    try {
-        const params = {
-            token: this.apiToken,
-            items: limit,
-            page,
-            ticker: ticker.toUpperCase()
+        return {
+            id,
+            title: article.title || 'Untitled Article',
+            text: article.text || article.content || '',
+            content: article.text || article.content || '',
+            source_name: article.source_name || article.sourceName || 'Unknown Source',
+            sourceName: article.source_name || article.sourceName || 'Unknown Source',
+            date,
+            createdAt: date,
+            tickers: Array.isArray(article.tickers) ? article.tickers : [],
+            news_url: article.news_url || article.sourceUrl,
+            sourceUrl: article.news_url || article.sourceUrl,
+            image_url: article.image_url || article.image,
+            image: article.image_url || article.image,
+            sentiment: article.sentiment || 'neutral',
+            kind: article.kind || 'news',
+            likeCount: article.likeCount || 0,
+            likers: article.likers || [],
+            comments: article.comments || [],
+            authorId: article.authorId,
+            type: (article.type as 'crypto_news' | 'blog_post') || 'crypto_news'
         };
+    }
 
-        const response = await this.makeRequest('/trending', params);
+    async fetchTrendingNews(options: FetchOptions = {}): Promise<PaginatedResult> {
+        const { page = 1, limit = 25 } = options;
 
-        if (!response || !response.data) {
-    return [];
-}
+        // Check if we've exceeded the API limit
+        if (page > this.maxPages) {
+            return {
+                articles: [],
+                hasMore: false,
+                totalItems: 0,
+                currentPage: page,
+                totalPages: this.maxPages
+            };
+        }
 
-return response.data.map((article: any) => this.transformArticle(article));
-} catch (error) {
-    console.error(`Error fetching ${ticker} news:`, error);
-    return [];
-}
-}
+        try {
+            // Calculate items per page based on API limitations
+            const itemsPerPage = Math.min(limit, 100); // API max per page
 
-/**
- * Fetch all tickers news
- */
-async fetchAllTickersNews(options: FetchOptions = {}): Promise<{
-    articles: CryptoArticle[];
-    totalPages: number;
-    totalItems: number;
-}> {
-    const { page = 1, limit = 20, keywords } = options;
+            const result = await this.fetchWithCache('/api/crypto-news/all-tickers', {
+                page: page, // Use actual page parameter
+                items_per_page: itemsPerPage
+            });
 
-    try {
-        const params = {
-            token: this.apiToken,
-            section: "alltickers",
-            items: limit,
-            page
-        };
+            const articles = (result.articles || []).map(article => this.transformArticle(article));
+            const totalPages = Math.min(this.maxPages, Math.ceil((result.total_articles || 0) / itemsPerPage));
 
-        const response = await this.makeRequest('/category', params);
+            return {
+                articles,
+                hasMore: page < totalPages && articles.length === itemsPerPage,
+                totalItems: result.total_articles || articles.length,
+                currentPage: page,
+                totalPages
+            };
+        } catch (error) {
+            console.error('Error fetching trending news:', error);
+            return {
+                articles: [],
+                hasMore: false,
+                totalItems: 0,
+                currentPage: page,
+                totalPages: 0
+            };
+        }
+    }
 
-        if (!response || !response.data) {
-    return { articles: [], totalPages: 0, totalItems: 0 };
-}
+    async fetchAllTickersNews(options: FetchOptions = {}): Promise<PaginatedResult> {
+        const { page = 1, limit = 25, keywords = [] } = options;
 
-let articles = response.data;
+        if (keywords && keywords.length > 0) {
+            return this.searchArticles(keywords.join(','), options);
+        }
 
-// Filter by keywords if provided
-if (keywords && keywords.length > 0) {
-    articles = articles.filter((article: any) =>
-        this.articleMatchesKeywords(article, keywords)
-    );
-}
+        // Check if we've exceeded the API limit
+        if (page > this.maxPages) {
+            return {
+                articles: [],
+                hasMore: false,
+                totalItems: 0,
+                currentPage: page,
+                totalPages: this.maxPages
+            };
+        }
 
-const transformedArticles = articles.map((article: any) =>
-    this.transformArticle(article)
-);
+        try {
+            const itemsPerPage = Math.min(limit, 100);
 
-return {
-    articles: transformedArticles,
-    totalPages: response.total_pages || 1,
-    totalItems: response.total_count || transformedArticles.length
-};
-} catch (error) {
-    console.error('Error fetching all tickers news:', error);
-    return { articles: [], totalPages: 0, totalItems: 0 };
-}
-}
+            const result = await this.fetchWithCache('/api/crypto-news/all-tickers', {
+                page: page,
+                items_per_page: itemsPerPage
+            });
 
-/**
- * Fetch trending news from multiple sources
- */
-async fetchTrendingNews(options: FetchOptions = {}): Promise<{
-    articles: CryptoArticle[];
-    totalPages: number;
-    totalItems: number;
-}> {
-    const { page = 1, limit = 20 } = options;
+            const articles = (result.articles || []).map(article => this.transformArticle(article));
+            const totalPages = Math.min(this.maxPages, Math.ceil((result.total_articles || 0) / itemsPerPage));
 
-    try {
-        // Fetch from multiple sources
-        const [allTickersResult, btcNews, ethNews, shibNews] = await Promise.all([
-            this.fetchAllTickersNews({ page, limit: Math.ceil(limit * 0.6) }),
-            this.fetchTickerNews('BTC', { page: 1, limit: Math.ceil(limit * 0.15) }),
-            this.fetchTickerNews('ETH', { page: 1, limit: Math.ceil(limit * 0.15) }),
-            this.fetchTickerNews('SHIB', { page: 1, limit: Math.ceil(limit * 0.1) })
-        ]);
+            return {
+                articles,
+                hasMore: page < totalPages && articles.length === itemsPerPage,
+                totalItems: result.total_articles || articles.length,
+                currentPage: page,
+                totalPages
+            };
+        } catch (error) {
+            console.error('Error fetching all tickers news:', error);
+            return {
+                articles: [],
+                hasMore: false,
+                totalItems: 0,
+                currentPage: page,
+                totalPages: 0
+            };
+        }
+    }
 
-        // Combine all articles
-        const combinedArticles = [
-            ...allTickersResult.articles,
-            ...btcNews,
-            ...ethNews,
-            ...shibNews
+    async fetchTickerNews(ticker: string, options: FetchOptions = {}): Promise<PaginatedResult> {
+        const { page = 1, limit = 25 } = options;
+
+        if (!ticker || typeof ticker !== 'string') {
+            throw new Error('Invalid ticker provided');
+        }
+
+        // For ticker-specific searches, we might need different pagination handling
+        try {
+            // Fetch multiple pages if needed to get enough articles
+            const maxPages = Math.min(3, this.maxPages);
+
+            const result = await this.fetchWithCache(`/api/crypto-news/ticker/${ticker.toUpperCase()}`, {
+                max_pages: maxPages
+            });
+
+            const allArticles = (result.articles || []).map(article => this.transformArticle(article));
+
+            // Implement client-side pagination for ticker news since API returns all at once
+            const startIndex = (page - 1) * limit;
+            const endIndex = startIndex + limit;
+            const paginatedArticles = allArticles.slice(startIndex, endIndex);
+
+            const totalPages = Math.ceil(allArticles.length / limit);
+
+            return {
+                articles: paginatedArticles,
+                hasMore: endIndex < allArticles.length,
+                totalItems: allArticles.length,
+                currentPage: page,
+                totalPages
+            };
+        } catch (error) {
+            console.error(`Error fetching ticker news for ${ticker}:`, error);
+            return {
+                articles: [],
+                hasMore: false,
+                totalItems: 0,
+                currentPage: page,
+                totalPages: 0
+            };
+        }
+    }
+
+    async searchArticles(query: string, options: FetchOptions = {}): Promise<PaginatedResult> {
+        const { page = 1, limit = 25 } = options;
+
+        if (!query || typeof query !== 'string') {
+            return this.fetchAllTickersNews(options);
+        }
+
+        const keywords = query.split(',')
+            .map(k => k.trim())
+            .filter(k => k.length > 0);
+
+        if (keywords.length === 0) {
+            return this.fetchAllTickersNews(options);
+        }
+
+        try {
+            // Check if it's a single ticker search
+            if (keywords.length === 1) {
+                const keyword = keywords[0].toUpperCase();
+
+                if (/^[A-Z0-9]{2,10}$/.test(keyword)) {
+                    try {
+                        return await this.fetchTickerNews(keyword, options);
+                    } catch (error) {
+                        console.log(`Ticker search failed for ${keyword}, trying keyword search`);
+                    }
+                }
+            }
+
+            // Special handling for known keywords
+            const lowerKeywords = keywords.map(k => k.toLowerCase());
+
+            // Shiba-related search
+            if (lowerKeywords.some(k => ['shib', 'shiba', 'shibainu'].includes(k))) {
+                return this.getCategoryNews('shiba', options);
+            }
+
+            // Terra/Luna-related search
+            if (lowerKeywords.some(k => ['luna', 'terra', 'lunc', 'terraclassic'].includes(k))) {
+                return this.getCategoryNews('terra-luna', options);
+            }
+
+            // Generic keyword search - use all tickers endpoint with pagination
+            const result = await this.fetchAllTickersNews({ ...options, keywords: [] });
+
+            // Client-side filtering for general keywords
+            const filteredArticles = result.articles.filter(article => {
+                return lowerKeywords.some(keyword => {
+                    const title = (article.title || '').toLowerCase();
+                    const content = (article.text || article.content || '').toLowerCase();
+                    const source = (article.source_name || article.sourceName || '').toLowerCase();
+                    const tickers = (article.tickers || []).join(' ').toLowerCase();
+
+                    return title.includes(keyword) ||
+                        content.includes(keyword) ||
+                        source.includes(keyword) ||
+                        tickers.includes(keyword);
+                });
+            });
+
+            return {
+                articles: filteredArticles,
+                hasMore: result.hasMore, // Inherit pagination from base query
+                totalItems: filteredArticles.length,
+                currentPage: page,
+                totalPages: Math.ceil(filteredArticles.length / limit)
+            };
+
+        } catch (error) {
+            console.error('Error in search articles:', error);
+            return {
+                articles: [],
+                hasMore: false,
+                totalItems: 0,
+                currentPage: page,
+                totalPages: 0
+            };
+        }
+    }
+
+    async getPopularTickersNews(options: FetchOptions = {}): Promise<PaginatedResult> {
+        const { page = 1, limit = 25 } = options;
+
+        const popularTickers = [
+            'BTC', 'ETH', 'BNB', 'XRP', 'ADA', 'SOL', 'DOGE', 'SHIB',
+            'AVAX', 'MATIC', 'DOT', 'LUNA', 'ATOM', 'LINK', 'UNI', 'LTC'
         ];
 
-        // Remove duplicates based on title similarity
-        const uniqueArticles = combinedArticles.filter((article, index, self) =>
-                index === self.findIndex(a =>
-                    a.title.toLowerCase() === article.title.toLowerCase()
-                )
-        );
+        try {
+            const result = await this.fetchAllTickersNews(options);
 
-        // Sort by date (newest first)
-        uniqueArticles.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            const popularArticles = result.articles.filter(article => {
+                const hasPopularTicker = article.tickers?.some(ticker =>
+                    popularTickers.includes(ticker.toUpperCase())
+                );
 
-        // Paginate results
-        const startIndex = (page - 1) * limit;
-        const paginatedArticles = uniqueArticles.slice(startIndex, startIndex + limit);
+                const titleMentionsPopular = popularTickers.some(ticker =>
+                    (article.title || '').toLowerCase().includes(ticker.toLowerCase())
+                );
 
+                return hasPopularTicker || titleMentionsPopular;
+            });
+
+            return {
+                articles: popularArticles,
+                hasMore: result.hasMore,
+                totalItems: popularArticles.length,
+                currentPage: page,
+                totalPages: Math.ceil(popularArticles.length / limit)
+            };
+
+        } catch (error) {
+            console.error('Error fetching popular tickers news:', error);
+            return {
+                articles: [],
+                hasMore: false,
+                totalItems: 0,
+                currentPage: page,
+                totalPages: 0
+            };
+        }
+    }
+
+    async getCategoryNews(
+        category: 'shiba' | 'terra-luna',
+        options: FetchOptions = {}
+    ): Promise<PaginatedResult> {
+        const { page = 1, limit = 25 } = options;
+
+        try {
+            const endpoint = category === 'shiba'
+                ? '/api/crypto-news/shiba'
+                : '/api/crypto-news/terra-luna';
+
+            // For category news, fetch based on page if API supports it
+            const result = await this.fetchWithCache(endpoint, {
+                page: page,
+                min_articles: limit,
+                max_pages: Math.min(3, this.maxPages)
+            });
+
+            const allArticles = (result.articles || []).map(article => this.transformArticle(article));
+
+            // If API doesn't support pagination for category, do client-side
+            const startIndex = (page - 1) * limit;
+            const endIndex = startIndex + limit;
+            const paginatedArticles = allArticles.slice(startIndex, endIndex);
+
+            const totalPages = Math.ceil(allArticles.length / limit);
+
+            return {
+                articles: paginatedArticles,
+                hasMore: endIndex < allArticles.length,
+                totalItems: allArticles.length,
+                currentPage: page,
+                totalPages
+            };
+
+        } catch (error) {
+            console.error(`Error fetching ${category} news:`, error);
+            return {
+                articles: [],
+                hasMore: false,
+                totalItems: 0,
+                currentPage: page,
+                totalPages: 0
+            };
+        }
+    }
+
+    clearCache(): void {
+        this.cache.clear();
+    }
+
+    // Enhanced cache management
+    clearPageCache(endpoint?: string): void {
+        if (endpoint) {
+            const keysToDelete = Array.from(this.cache.keys()).filter(key =>
+                key.includes(endpoint)
+            );
+            keysToDelete.forEach(key => this.cache.delete(key));
+        } else {
+            this.cache.clear();
+        }
+    }
+
+    // Get cache stats (useful for debugging)
+    getCacheStats(): { size: number; keys: string[] } {
         return {
-            articles: paginatedArticles,
-            totalPages: Math.ceil(uniqueArticles.length / limit),
-            totalItems: uniqueArticles.length
+            size: this.cache.size,
+            keys: Array.from(this.cache.keys())
         };
-    } catch (error) {
-        console.error('Error fetching trending news:', error);
-        return { articles: [], totalPages: 0, totalItems: 0 };
+    }
+
+    // Method to preload popular data
+    async preloadPopularData(): Promise<void> {
+        try {
+            // Preload first page of trending news
+            await this.fetchTrendingNews({ page: 1, limit: 25 });
+
+            // Preload popular tickers
+            await this.getPopularTickersNews({ page: 1, limit: 20 });
+
+        } catch (error) {
+            console.error('Error preloading data:', error);
+        }
+    }
+
+    // Health check method
+    async healthCheck(): Promise<{ status: 'ok' | 'error'; message?: string }> {
+        try {
+            await this.fetchTrendingNews({ page: 1, limit: 1 });
+            return { status: 'ok' };
+        } catch (error) {
+            return {
+                status: 'error',
+                message: error instanceof Error ? error.message : 'Unknown error'
+            };
+        }
+    }
+
+    // Method to get fresh articles (bypass cache)
+    async getFreshArticles(type: 'trending' | 'all' = 'trending', limit: number = 25): Promise<CryptoArticle[]> {
+        // Clear relevant cache entries
+        this.clearPageCache('/api/crypto-news/all-tickers');
+
+        try {
+            if (type === 'trending') {
+                const result = await this.fetchTrendingNews({ page: 1, limit });
+                return result.articles;
+            } else {
+                const result = await this.fetchAllTickersNews({ page: 1, limit });
+                return result.articles;
+            }
+        } catch (error) {
+            console.error('Error fetching fresh articles:', error);
+            return [];
+        }
+    }
+
+    // Set maximum pages (useful for different API plans)
+    setMaxPages(maxPages: number): void {
+        this.maxPages = Math.max(1, Math.min(maxPages, 10)); // Reasonable limits
+    }
+
+    // Get current pagination limits
+    getPaginationLimits(): { maxPages: number; cacheTimeout: number } {
+        return {
+            maxPages: this.maxPages,
+            cacheTimeout: this.cacheTimeout
+        };
     }
 }
 
-/**
- * Search articles by keywords
- */
-async searchArticles(query: string, options: FetchOptions = {}): Promise<{
-    articles: CryptoArticle[];
-    totalPages: number;
-    totalItems: number;
-}> {
-    const keywords = query.split(',').map(k => k.trim()).filter(k => k.length > 0);
+// Create and export singleton instance
+const cryptoNewsService = new CryptoNewsService();
 
-    return this.fetchAllTickersNews({
-        ...options,
-        keywords
-    });
-}
-
-/**
- * Get popular tickers news
- */
-async getPopularTickersNews(options: FetchOptions = {}): Promise<{
-    articles: CryptoArticle[];
-    totalPages: number;
-    totalItems: number;
-}> {
-    const popularTickers = ['BTC', 'ETH', 'BNB', 'SOL', 'ADA', 'DOGE', 'MATIC', 'AVAX'];
-    const { limit = 20 } = options;
-
-    try {
-        const tickerPromises = popularTickers.map(ticker =>
-            this.fetchTickerNews(ticker, { page: 1, limit: Math.ceil(limit / popularTickers.length) })
-        );
-
-        const results = await Promise.all(tickerPromises);
-        const allArticles = results.flat();
-
-        // Remove duplicates and sort by date
-        const uniqueArticles = allArticles
-            .filter((article, index, self) =>
-                index === self.findIndex(a => a.title.toLowerCase() === article.title.toLowerCase())
-            )
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            .slice(0, limit);
-
-        return {
-            articles: uniqueArticles,
-            totalPages: 1,
-            totalItems: uniqueArticles.length
-        };
-    } catch (error) {
-        console.error('Error fetching popular tickers news:', error);
-        return { articles: [], totalPages: 0, totalItems: 0 };
-    }
-}
-
-/**
- * Clear cache
- */
-clearCache(): void {
-    this.cache.clear();
-}
-
-/**
- * Get cache stats
- */
-getCacheStats(): { size: number; keys: string[] } {
-    return {
-        size: this.cache.size,
-        keys: Array.from(this.cache.keys())
-    };
-}
-}
-
-// Export singleton instance
-export const cryptoNewsService = new CryptoNewsService();
+// Export the class and instance
+export { CryptoNewsService };
 export default cryptoNewsService;

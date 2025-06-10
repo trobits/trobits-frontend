@@ -1,8 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { BadgeCheck, Search } from "lucide-react";
-import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { Users, Search, UserPlus } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   useGetAllRecommendedUsersQuery,
@@ -32,16 +30,14 @@ interface IUser {
 }
 
 const RecommendedAccounts = () => {
-  const { data: allUsersData, isLoading: allUsersDataLoading } =
-    useGetAllRecommendedUsersQuery("");
-  const [toggleFollow, { isLoading: toggleFollowLoading }] =
-    useToggleFollowMutation();
+  const { data: allUsersData, isLoading: allUsersDataLoading } = useGetAllRecommendedUsersQuery("");
+  const [toggleFollow, { isLoading: toggleFollowLoading }] = useToggleFollowMutation();
   const currentUser = useAppSelector((state) => state.auth.user);
 
   const [localUsers, setLocalUsers] = useState<IUser[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [loadingUserId, setLoadingUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (allUsersData?.data) {
@@ -53,7 +49,7 @@ const RecommendedAccounts = () => {
   const debouncedSearch = debounce((term: string) => {
     const lower = term.toLowerCase();
     const filtered = localUsers.filter((user) =>
-      `${user.firstName} ${user.lastName || ""}`.toLowerCase().includes(lower)
+        `${user.firstName} ${user.lastName || ""}`.toLowerCase().includes(lower)
     );
     setFilteredUsers(filtered);
   }, 300);
@@ -66,122 +62,164 @@ const RecommendedAccounts = () => {
 
   const handleFollow = async (followedId: string) => {
     if (!currentUser) return toast.error("Please login first!");
-    const followerId = currentUser?.id;
 
-    setIsButtonDisabled(true);
+    const followerId = currentUser?.id;
+    setLoadingUserId(followedId); // Set loading for specific user
+
     try {
       const response = await toggleFollow({ followerId, followedId });
-      if (response?.error)
-        return toast.error("Failed to follow user! Try again.");
+      if (response?.error) {
+        toast.error("Failed to follow user! Try again.");
+        return;
+      }
 
       const updateUsers = (users: IUser[]) =>
-        users.map((user) =>
-          user.id === followedId
-            ? {
-                ...user,
-                followers: user.followers?.includes(followerId)
-                  ? user.followers.filter((id) => id !== followerId)
-                  : [...(user.followers || []), followerId],
-              }
-            : user
-        );
+          users.map((user) =>
+              user.id === followedId
+                  ? {
+                    ...user,
+                    followers: user.followers?.includes(followerId)
+                        ? user.followers.filter((id) => id !== followerId)
+                        : [...(user.followers || []), followerId],
+                  }
+                  : user
+          );
 
       setLocalUsers((prev) => updateUsers(prev));
       setFilteredUsers((prev) => updateUsers(prev));
-      setTimeout(() => setIsButtonDisabled(false), 1000);
+
+      toast.success(
+          filteredUsers.find(u => u.id === followedId)?.followers?.includes(followerId)
+              ? "Unfollowed successfully!"
+              : "Following successfully!"
+      );
     } catch (error) {
-      setIsButtonDisabled(false);
+      toast.error("Something went wrong! Try again.");
+    } finally {
+      setLoadingUserId(null); // Clear loading state
     }
   };
 
   if (allUsersDataLoading) return <Loading />;
 
   return (
-    <Card className="bg-transparent border border-gray-700 hover:border-cyan-600/40 transition-colors duration-300 text-white rounded-2xl shadow-lg">
-      <CardHeader>
-        <div className="flex justify-center mb-4">
-          <div className="flex items-center gap-2">
-            <BadgeCheck className="h-5 w-5 fill-blue-400 text-white" />
-            <h2 className="text-lg font-semibold tracking-wide">
-              Recommended Accounts
-            </h2>
+      <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/60 hover:border-slate-600/50 transition-all duration-300">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl flex items-center justify-center">
+            <Users className="w-5 h-5 text-green-400" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-white">Recommended</h3>
+            <p className="text-xs text-slate-400">Users you might like</p>
           </div>
         </div>
 
-        <div className="flex items-center bg-black border-2 border-gray-400 px-2 py-1 rounded-md mt-2">
-          <Search className="h-5 w-5 text-white" />
+        {/* Search Bar */}
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Search user ..."
-            className="bg-transparent outline-none text-white placeholder-gray-400 ml-2 w-full"
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="Search users..."
+              className="w-full bg-slate-700/50 border border-slate-600/50 rounded-lg pl-10 pr-4 py-2 text-white placeholder-slate-400 text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200"
           />
         </div>
-      </CardHeader>
 
-      <CardContent className="h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:transparent [&::-webkit-scrollbar-thumb]:bg-gray-600/60">
-        {filteredUsers?.length > 0 ? (
-          filteredUsers.map((user) => {
-            if (user?.id === currentUser?.id) return null;
-            return (
-              <div
-                key={user?.id}
-                className="mb-4 p-1 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1 border border-gray-700 hover:border-cyan-600/30"
-              >
-                <div className="flex items-center justify-between p-3 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <div className="size-9 rounded-full overflow-hidden">
-                      {user?.profileImage ? (
-                        <Link href={`/cryptohub/userProfile/${user?.id}`}>
-                          <Image
-                            width={36}
-                            height={36}
-                            className="rounded-full object-cover w-9 h-9"
-                            src={user?.profileImage}
-                            alt="profile"
-                          />
-                        </Link>
-                      ) : (
-                        <Link href={`/cryptohub/userProfile/${user?.id}`}>
-                          <div className="bg-gray-500 h-9 w-9 text-white rounded-full flex items-center justify-center font-bold">
-                            {user?.firstName[0].toUpperCase()}
+        {/* Users List */}
+        <div className="space-y-3 max-h-80 overflow-y-auto">
+          {filteredUsers?.length > 0 ? (
+              filteredUsers
+                  .filter(user => user?.id !== currentUser?.id)
+                  .slice(0, 5)
+                  .map((user) => (
+                      <div
+                          key={user?.id}
+                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700/40 transition-all duration-200 border border-transparent hover:border-slate-600/30 group"
+                      >
+                        {/* Profile Image */}
+                        <Link href={`/cryptohub/userProfile/${user?.id}`} className="flex-shrink-0">
+                          <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-600 ring-2 ring-transparent group-hover:ring-cyan-400/50 transition-all duration-200">
+                            {user?.profileImage ? (
+                                <Image
+                                    width={40}
+                                    height={40}
+                                    className="w-full h-full object-cover"
+                                    src={user?.profileImage}
+                                    alt="profile"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                                  {user?.firstName[0].toUpperCase()}
+                                </div>
+                            )}
                           </div>
                         </Link>
-                      )}
-                    </div>
-                    <Link
-                      href={`/cryptohub/userProfile/${user?.id}`}
-                      className="hover:text-cyan-500 transition-all text-sm font-medium truncate max-w-[120px]"
-                    >
-                      {user.firstName + " " + (user?.lastName || "")}
-                    </Link>
-                  </div>
-                  <Button
-                    disabled={toggleFollowLoading || isButtonDisabled}
-                    onClick={() => handleFollow(user.id)}
-                    size="sm"
-                    className={`${
-                      user?.followers?.includes(currentUser?.id)
-                        ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
-                        : "bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700"
-                    } text-white font-medium rounded-md px-2 py-0 transition-all duration-200 hover:scale-105 shadow-lg`}
-                  >
-                    {user?.followers?.includes(currentUser?.id)
-                      ? "Unfollow"
-                      : "Follow"}
-                  </Button>
+
+                        {/* User Info */}
+                        <div className="flex-1 min-w-0">
+                          <Link
+                              href={`/cryptohub/userProfile/${user?.id}`}
+                              className="block hover:text-cyan-400 transition-colors duration-200"
+                          >
+                            <p className="font-semibold text-white text-sm truncate">
+                              {user.firstName} {user?.lastName || ""}
+                            </p>
+                          </Link>
+                          <p className="text-xs text-slate-400 truncate">
+                            @{user.firstName.toLowerCase()}{user?.lastName?.toLowerCase() || ""}
+                          </p>
+                          <p className="text-xs text-slate-500 mt-1">
+                            {user.followers?.length || 0} followers
+                          </p>
+                        </div>
+
+                        {/* Follow Button */}
+                        <Button
+                            disabled={loadingUserId === user.id}
+                            onClick={() => handleFollow(user.id)}
+                            size="sm"
+                            className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-lg font-medium transition-all duration-200 hover:scale-105 min-w-[70px] ${
+                                user?.followers?.includes(currentUser?.id)
+                                    ? "bg-slate-600 hover:bg-slate-500 text-white"
+                                    : "bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white"
+                            }`}
+                        >
+                          {loadingUserId === user.id ? (
+                              <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
+                          ) : user?.followers?.includes(currentUser?.id) ? (
+                              "Following"
+                          ) : (
+                              "Follow"
+                          )}
+                        </Button>
+                      </div>
+                  ))
+          ) : (
+              <div className="text-center py-8">
+                <div className="w-12 h-12 bg-slate-700/50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <Users className="w-6 h-6 text-slate-500" />
                 </div>
+                <p className="text-slate-400 text-sm">
+                  {searchTerm ? "No users found" : "No recommended users"}
+                </p>
+                <p className="text-slate-500 text-xs mt-1">
+                  {searchTerm ? "Try a different search term" : "Check back later for suggestions"}
+                </p>
               </div>
-            );
-          })
-        ) : (
-          <p className="text-center text-gray-400">
-            No recommended users found.
-          </p>
+          )}
+        </div>
+
+        {/* View All Link */}
+        {filteredUsers.filter(user => user?.id !== currentUser?.id).length > 5 && (
+            <div className="mt-4 pt-4 border-t border-slate-700/50">
+              <button className="w-full text-center text-cyan-400 hover:text-cyan-300 text-sm font-medium py-2 transition-colors duration-200">
+                View All Recommendations
+              </button>
+            </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
   );
 };
 

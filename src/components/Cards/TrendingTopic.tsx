@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { Flame } from "lucide-react";
+import { Flame, TrendingUp, MessageCircle } from "lucide-react";
 import { useGetAllTopicQuery } from "@/redux/features/api/topicApi";
 import Loading from "../Shared/Loading";
 import Image from "next/image";
@@ -9,66 +8,111 @@ import { ITopic } from "../Cryptohub/Types";
 import Link from "next/link";
 
 const TrendingTopic = () => {
-  const { data: allTopicData, isLoading: allTopicDataLoading } =
-    useGetAllTopicQuery("");
-  if (allTopicDataLoading) return <Loading />;
+    const { data: allTopicData, isLoading: allTopicDataLoading } = useGetAllTopicQuery("");
 
-  const allTopics: ITopic[] = allTopicData?.data || [];
+    if (allTopicDataLoading) return <Loading />;
 
-  return (
-    <Card className="bg-transparent border border-gray-700 hover:border-cyan-600/40 transition-colors duration-300 text-white rounded-2xl shadow-lg">
-      <CardHeader>
-        <div className="flex items-center gap-2 justify-center">
-          <Flame className="text-red-500" fill="red" />
-          <h3 className="text-xl font-semibold tracking-wide">
-            Trending Topics
-          </h3>
-        </div>
-      </CardHeader>
+    const allTopics: ITopic[] = allTopicData?.data || [];
 
-      <CardContent className="h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:transparent [&::-webkit-scrollbar-thumb]:bg-gray-600/60">
-        {allTopics.length > 0 ? (
-          allTopics.map((topic) => (
-            <div
-              key={topic.id}
-              className="mb-4 p-1 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1 border border-gray-700 hover:border-cyan-600/30"
-            >
-              <div className="flex items-center justify-between p-3 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <div className="size-9 rounded-full overflow-hidden">
-                    {topic.image ? (
-                      <Image
-                        height={36}
-                        width={36}
-                        className="rounded-full object-cover w-9 h-9"
-                        alt="topic"
-                        src={topic.image}
-                      />
-                    ) : (
-                      <div className="bg-gray-500 h-9 w-9 text-white rounded-full flex items-center justify-center font-bold">
-                        {topic?.title?.[0]}
-                      </div>
-                    )}
-                  </div>
-                  <h4 className="font-semibold text-sm text-white truncate max-w-[120px]">
-                    {topic.title}
-                  </h4>
+    return (
+        <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/60 hover:border-slate-600/50 transition-all duration-300">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl flex items-center justify-center">
+                    <Flame className="w-5 h-5 text-orange-400" />
                 </div>
-                <Link
-                  href={`/cryptohub/cryptochat/${topic.id}`}
-                  className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white px-2 py-1 rounded-md font-medium transition-all duration-200 hover:scale-105 shadow-lg"
-                >
-                  Details
-                </Link>
-              </div>
+                <div>
+                    <h3 className="text-lg font-bold text-white">Trending Topics</h3>
+                    <p className="text-xs text-slate-400">Popular discussions</p>
+                </div>
             </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-400">No trending topics found.</p>
-        )}
-      </CardContent>
-    </Card>
-  );
+
+            {/* Topics List */}
+            <div className="space-y-3 max-h-80 overflow-y-auto">
+                {allTopics.length > 0 ? (
+                    allTopics.slice(0, 6).map((topic, index) => (
+                        <Link
+                            key={topic.id}
+                            href={`/cryptohub/cryptochat/${topic.id}`}
+                            className="block group"
+                        >
+                            <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-700/40 transition-all duration-200 cursor-pointer border border-transparent hover:border-slate-600/30">
+                                {/* Topic Avatar */}
+                                <div className="relative flex-shrink-0">
+                                    <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-700">
+                                        {topic.image ? (
+                                            <Image
+                                                height={40}
+                                                width={40}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                                alt="topic"
+                                                src={topic.image}
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                                                {topic?.title?.[0]?.toUpperCase()}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Trending indicator */}
+                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center">
+                                        <TrendingUp className="w-2.5 h-2.5 text-white" />
+                                    </div>
+                                </div>
+
+                                {/* Topic Info */}
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-semibold text-white text-sm group-hover:text-cyan-400 transition-colors duration-200 truncate">
+                                        {topic.title}
+                                    </h4>
+                                    <div className="flex items-center gap-3 mt-1">
+                                        <div className="flex items-center gap-1 text-xs text-slate-400">
+                                            <MessageCircle className="w-3 h-3" />
+                                            <span>{Math.floor(Math.random() * 50) + 10} posts</span>
+                                        </div>
+                                        <div className="flex items-center gap-1 text-xs text-slate-400">
+                                            <TrendingUp className="w-3 h-3" />
+                                            <span>#{index + 1}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Arrow indicator */}
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                                        <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    ))
+                ) : (
+                    <div className="text-center py-8">
+                        <div className="w-12 h-12 bg-slate-700/50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                            <Flame className="w-6 h-6 text-slate-500" />
+                        </div>
+                        <p className="text-slate-400 text-sm">No trending topics found</p>
+                        <p className="text-slate-500 text-xs mt-1">Be the first to start a discussion!</p>
+                    </div>
+                )}
+            </div>
+
+            {/* View All Link */}
+            {allTopics.length > 6 && (
+                <div className="mt-4 pt-4 border-t border-slate-700/50">
+                    <Link
+                        href="/cryptohub/cryptochat"
+                        className="block text-center text-cyan-400 hover:text-cyan-300 text-sm font-medium py-2 transition-colors duration-200"
+                    >
+                        View All Topics ({allTopics.length})
+                    </Link>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default TrendingTopic;

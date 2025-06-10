@@ -3,15 +3,29 @@
 
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { useGetAllBlogsQuery } from "@/redux/features/api/articleApi";
-import Loading from "../Shared/Loading";
-import { Article } from "@/app/(withCommonLayout)/articles/SubPage";
-import React, { useEffect, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { setPaths } from "@/redux/features/slices/authSlice";
 import NewsCard from "./NewsCard";
-import { ArrowRight, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, TrendingUp, Globe } from "lucide-react";
+
+interface CryptoArticle {
+    id: string;
+    title: string;
+    text?: string;
+    content?: string;
+    source_name?: string;
+    sourceName?: string;
+    date: string;
+    createdAt?: string;
+    tickers?: string[];
+    news_url?: string;
+    sourceUrl?: string;
+    image_url?: string;
+    image?: string;
+    sentiment?: 'positive' | 'negative' | 'neutral';
+    kind?: string;
+    type?: 'crypto_news';
+}
 
 const adClasses = [
     "67b00b6de904d5920e690b84",
@@ -67,35 +81,76 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
             <ins
                 className={adClass}
                 style={{ display: "inline-block", width: "1px", height: "1px" }}
-            ></ins>
+            />
         </div>
     );
 };
 
 export default function RecommendedArticles() {
-    const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery({
-        page: localStorage.getItem('currentPage') || 1,
-        limit: 8,
-    });
+    const [articles, setArticles] = useState<CryptoArticle[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const previousPath = useAppSelector((state) => state.auth.previousPath);
-    const currentPath = useAppSelector((state) => state.auth.currentPath);
-    const dispatch = useAppDispatch();
     const pathName = usePathname();
-    
+
+    // Fetch recommended crypto news articles
     useEffect(() => {
-        if (!((previousPath?.split("/").includes("articles")) && (previousPath?.split("/").length === 3)) && ((currentPath?.split("/").includes("articles")) && (currentPath?.split("/").length === 3)) || previousPath !== currentPath) {
-            dispatch(setPaths(pathName));
-            window.location.reload();
-        }
-    }, [currentPath, dispatch, pathName, previousPath]);
+        const fetchRecommendedArticles = async () => {
+            try {
+                setLoading(true);
+                console.log('Fetching recommended crypto news articles...');
+
+                // Fetch from our all-tickers API
+                const response = await fetch('/api/crypto-news/all-tickers?page=1&items_per_page=8');
+                const data = await response.json();
+
+                if (data.success && data.articles) {
+                    // Transform articles to match our interface
+                    const transformedArticles: CryptoArticle[] = data.articles.map((article: any) => ({
+                        id: article.news_url || `article-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                        title: article.title || 'Untitled Article',
+                        text: article.text || '',
+                        content: article.text || '',
+                        source_name: article.source_name || 'Crypto News',
+                        date: article.date || new Date().toISOString(),
+                        createdAt: article.date || new Date().toISOString(),
+                        tickers: Array.isArray(article.tickers) ? article.tickers : [],
+                        news_url: article.news_url,
+                        image_url: article.image_url || article.image,
+                        image: article.image_url || article.image,
+                        sentiment: article.sentiment || 'neutral',
+                        type: 'crypto_news' as const
+                    }));
+
+                    setArticles(transformedArticles);
+                    setError(null);
+                } else {
+                    setError('Failed to load articles');
+                }
+            } catch (err) {
+                console.error('Error fetching recommended articles:', err);
+                setError('Failed to load articles');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchRecommendedArticles();
+    }, []);
 
     // Handle loading state
-    if (allBlogsDataLoading) {
-        return <Loading />;
+    if (loading) {
+        return (
+            <section className="relative py-16 bg-black">
+                <div className="container mx-auto px-6">
+                    <div className="text-center">
+                        <div className="w-16 h-16 border-4 border-gray-700 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-gray-400">Loading recommended articles...</p>
+                    </div>
+                </div>
+            </section>
+        );
     }
-
-    const allBlogs: Article[] = allBlogsData?.data || [];
 
     return (
         <section className="relative py-16 bg-black">
@@ -113,18 +168,18 @@ export default function RecommendedArticles() {
                     <div className="flex items-center justify-center gap-2 mb-4">
                         <Sparkles className="w-5 h-5 text-white" />
                         <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">
-                            Curated Content
+                            Latest Crypto News
                         </span>
                     </div>
-                    
+
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                        Recommended Articles
+                        More Articles to Explore
                     </h2>
-                    
+
                     <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                        Discover the latest insights and trends in cryptocurrency and blockchain technology
+                        Stay updated with the latest cryptocurrency news, market analysis, and blockchain developments
                     </p>
-                    
+
                     {/* Decorative line */}
                     <div className="flex items-center justify-center mt-8">
                         <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent w-64" />
@@ -133,14 +188,28 @@ export default function RecommendedArticles() {
 
                 {/* Articles Grid */}
                 <div className="mb-16">
-                    {allBlogs.length > 0 ? (
+                    {error ? (
+                        <div className="text-center py-16">
+                            <div className="space-y-4">
+                                <Globe className="w-16 h-16 text-gray-600 mx-auto" />
+                                <h3 className="text-2xl font-semibold text-gray-400">Unable to load articles</h3>
+                                <p className="text-gray-500">{error}</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                                >
+                                    Try Again
+                                </button>
+                            </div>
+                        </div>
+                    ) : articles.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
-                            {allBlogs.map((article, index) => (
+                            {articles.map((article, index) => (
                                 <React.Fragment key={article.id}>
                                     <div className="transform transition-all duration-500 hover:scale-[1.02]">
                                         <NewsCard articleData={article} viewMode="grid" />
                                     </div>
-                                    
+
                                     {/* Show an ad after every 4 articles */}
                                     {(index + 1) % 4 === 0 && index < adClasses.length && (
                                         <div className="col-span-full">
@@ -155,7 +224,7 @@ export default function RecommendedArticles() {
                             <div className="space-y-4">
                                 <TrendingUp className="w-16 h-16 text-gray-600 mx-auto" />
                                 <h3 className="text-2xl font-semibold text-gray-400">No articles available</h3>
-                                <p className="text-gray-500">Check back later for new content</p>
+                                <p className="text-gray-500">Check back later for new crypto news</p>
                             </div>
                         </div>
                     )}
@@ -173,42 +242,42 @@ export default function RecommendedArticles() {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-3">
                                 <h3 className="text-2xl font-bold text-white">
-                                    Explore More Content
+                                    Stay Updated with Crypto News
                                 </h3>
                                 <p className="text-gray-400">
-                                    Dive deeper into our extensive collection of cryptocurrency articles and insights
+                                    Access our complete collection of cryptocurrency news, market analysis, and blockchain insights
                                 </p>
                             </div>
-                            
+
                             <Link href="/articles">
                                 <Button className="
                                     group bg-white text-black px-8 py-4 rounded-2xl font-semibold text-lg
                                     hover:bg-gray-100 transition-all duration-300 hover:scale-105
                                     flex items-center gap-3 mx-auto shadow-lg hover:shadow-xl
                                 ">
-                                    <span>View All Articles</span>
+                                    <span>Explore All News</span>
                                     <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                                 </Button>
                             </Link>
-                            
+
                             {/* Stats */}
                             <div className="flex items-center justify-center gap-8 mt-8 pt-6 border-t border-gray-800/50">
                                 <div className="text-center">
-                                    <div className="text-2xl font-bold text-white">{allBlogs.length}+</div>
+                                    <div className="text-2xl font-bold text-white">{articles.length}+</div>
                                     <div className="text-sm text-gray-400">Articles</div>
                                 </div>
                                 <div className="w-px h-8 bg-gray-800" />
                                 <div className="text-center">
-                                    <div className="text-2xl font-bold text-white">Daily</div>
+                                    <div className="text-2xl font-bold text-white">Live</div>
                                     <div className="text-sm text-gray-400">Updates</div>
                                 </div>
                                 <div className="w-px h-8 bg-gray-800" />
                                 <div className="text-center">
-                                    <div className="text-2xl font-bold text-white">Expert</div>
-                                    <div className="text-sm text-gray-400">Insights</div>
+                                    <div className="text-2xl font-bold text-white">Real-time</div>
+                                    <div className="text-sm text-gray-400">Data</div>
                                 </div>
                             </div>
                         </div>
