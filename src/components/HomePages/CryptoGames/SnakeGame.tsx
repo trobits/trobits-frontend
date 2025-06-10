@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import ShibaIcon from "@/assets/icons/shiba-inu.png";
-import snakeHead from "@/assets/snakeHead.png";
+import snakeHead from "@/assets/snakeHead.png"; // Assuming you have this path correct
 import { Award } from "lucide-react"; // Import the Award icon for the scoreboard header
 
 const CELL_SIZE = 20;
@@ -52,8 +52,11 @@ const SnakeGame: React.FC = () => {
   const gameIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Memoized callback for generating food, now relies on the external helper
+  // This useCallback is actually not strictly needed here as calculateRandomFoodPosition is external
+  // and called directly with the snake state. Keeping it here is harmless but
+  // if you want to optimize further, you could remove this getRandomFood useCallback
+  // and just use calculateRandomFoodPosition(snake) directly where getRandomFood is called.
   const getRandomFood = useCallback(() => {
-    // This now simply calls the external helper with the current snake state
     return calculateRandomFoodPosition(snake);
   }, [snake]); // Dependency on snake to avoid food spawning on current snake
 
@@ -145,7 +148,7 @@ const SnakeGame: React.FC = () => {
 
         return newSnake;
       });
-    }, 120); // Slightly increased interval for smoother visuals if needed
+    }, 110); // Decreased interval for more frequent updates (smoother feel)
 
     return () => {
       if (gameIntervalRef.current) {
@@ -229,7 +232,7 @@ const SnakeGame: React.FC = () => {
                     position: "absolute",
                     left: segment.x,
                     top: segment.y,
-                    transition: "left 120ms linear, top 120ms linear", // Match interval speed
+                    transition: "left 90ms linear, top 90ms linear", // Match new interval speed
                     borderRadius: idx === 0 ? "50%" : "6px", // Head is round, tail is slightly rounded square
                     zIndex: snake.length - idx, // Ensure head is always on top
                   }}
@@ -237,7 +240,7 @@ const SnakeGame: React.FC = () => {
                   {idx === 0 ? (
                     // Snake Head Image
                     <Image
-                      src={snakeHead} // Placeholder, replace with your actual path
+                      src={snakeHead} // Ensure this path is correct for your project structure
                       alt="Snake Head"
                       layout="fill"
                       objectFit="contain"
@@ -269,7 +272,7 @@ const SnakeGame: React.FC = () => {
                   position: "absolute",
                   left: food.x,
                   top: food.y,
-                  transition: "left 120ms linear, top 120ms linear", // Match interval speed
+                  transition: "left 90ms linear, top 90ms linear", // Match new interval speed
                   pointerEvents: "none",
                   borderRadius: "50%",
                   filter: "drop-shadow(0 0 8px gold)",
