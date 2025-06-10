@@ -1,4 +1,3 @@
-// components/HomePages/CryptoGames/index.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -36,18 +35,21 @@ const CryptoGames: React.FC = () => {
     <section className="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-20 mt-20">
       <div className="w-[calc(100%-20px)] mx-auto bg-gradient-to-br from-[#0c1220] to-[#0a1a3a] border border-cyan-600/30 shadow-[0_0_20px_#00ffff22] rounded-2xl p-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white via-cyan-300 to-purple-300 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-white">
             🎮 Crypto Games
           </h2>
+          <p className="mt-2 text-lg text-gray-400 font-medium">
+            Explore fun ways to engage with crypto!
+          </p>
         </div>
 
         {selectedGame ? (
           <div className="flex flex-col items-center">
             <button
               onClick={() => setSelectedGame(null)}
-              className="mb-6 px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium hover:scale-105 transition-transform"
+              className="mb-6 px-6 py-3 rounded-xl bg-gradient-to-r from-slate-700 to-slate-800 text-cyan-400 font-semibold hover:scale-105 transition-transform border border-cyan-600/50"
             >
-              🔙 Back to Games
+              <span className="mr-2">🔙</span> Back to Games
             </button>
             {renderGame()}
           </div>
