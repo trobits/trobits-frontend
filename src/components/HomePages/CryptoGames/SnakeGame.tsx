@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import ShibaIcon from "@/assets/icons/shiba-inu.png";
 
 const CELL_SIZE = 20;
 const WIDTH = 400;
@@ -13,7 +15,7 @@ const getRandomFood = (): Point => ({
   y: Math.floor(Math.random() * (HEIGHT / CELL_SIZE)) * CELL_SIZE,
 });
 
-const CryptoGames: React.FC = () => {
+const SnakeGame: React.FC = () => {
   const [snake, setSnake] = useState<Point[]>([{ x: 200, y: 200 }]);
   const [food, setFood] = useState<Point>(getRandomFood);
   const [dir, setDir] = useState<Point>({ x: 0, y: 0 });
@@ -25,7 +27,7 @@ const CryptoGames: React.FC = () => {
       if (!playing || gameOver) return;
 
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-        e.preventDefault(); // 👈 This prevents the page from scrolling
+        e.preventDefault();
       }
 
       switch (e.key) {
@@ -57,7 +59,6 @@ const CryptoGames: React.FC = () => {
         head.x += dir.x;
         head.y += dir.y;
 
-        // Collision detection
         const hitWall =
           head.x < 0 || head.y < 0 || head.x >= WIDTH || head.y >= HEIGHT;
         const hitSelf = prev.some(
@@ -80,7 +81,7 @@ const CryptoGames: React.FC = () => {
 
         return newSnake;
       });
-    }, 150);
+    }, 100);
 
     return () => clearInterval(interval);
   }, [dir, food, gameOver, playing]);
@@ -100,18 +101,21 @@ const CryptoGames: React.FC = () => {
         backgroundColor: "#0f172a",
         color: "white",
         borderRadius: "10px",
-        maxWidth: "450px",
+        maxWidth: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <h2 className="text-xl mb-2">🐍 Crypto Snake</h2>
 
       {!playing && (
         <div className="mb-4">
-          <p>Use arrow keys to control the snake. Eat the 🪙 to grow!</p>
+          <p>Use arrow keys to control the snake. Eat the coin to grow!</p>
           {gameOver && <p className="text-red-400 mt-2">Game Over!</p>}
           <button
             onClick={startGame}
-            className="mt-4 px-4 py-2 bg-cyan-600 rounded hover:bg-cyan-500"
+            className="mt-4 px-4 py-2 bg-cyan-600 rounded hover:bg-cyan-500 justify-center"
           >
             {gameOver ? "Play Again" : "Play"}
           </button>
@@ -125,8 +129,10 @@ const CryptoGames: React.FC = () => {
             height: HEIGHT,
             backgroundColor: "#1e293b",
             position: "relative",
-            border: "2px solid #38bdf8",
+            border: "3px solid #38bdf8",
+            borderRadius: "10px",
             marginTop: "1rem",
+            overflow: "hidden",
           }}
         >
           {/* Snake */}
@@ -136,38 +142,38 @@ const CryptoGames: React.FC = () => {
               style={{
                 width: CELL_SIZE,
                 height: CELL_SIZE,
-                backgroundColor: idx === 0 ? "#facc15" : "#22c55e",
                 position: "absolute",
                 left: segment.x,
                 top: segment.y,
-                borderRadius: "3px",
+                transition: "left 100ms linear, top 100ms linear",
+                backgroundColor:
+                  idx === 0 ? "#facc15" : `hsl(${120 + idx * 5}, 70%, 45%)`,
+                borderRadius: idx === 0 ? "50%" : "8px",
+                boxShadow: idx === 0 ? "0 0 6px #facc15" : "none",
               }}
             />
           ))}
 
           {/* Food */}
-          <div
+          <Image
+            src={ShibaIcon}
+            alt="coin"
+            width={CELL_SIZE}
+            height={CELL_SIZE}
             style={{
-              width: CELL_SIZE,
-              height: CELL_SIZE,
-              backgroundColor: "#f43f5e",
               position: "absolute",
               left: food.x,
               top: food.y,
+              transition: "left 100ms linear, top 100ms linear",
+              pointerEvents: "none",
               borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1rem",
-              color: "white",
+              filter: "drop-shadow(0 0 5px gold)",
             }}
-          >
-            🪙
-          </div>
+          />
         </div>
       )}
     </div>
   );
 };
 
-export default CryptoGames;
+export default SnakeGame;

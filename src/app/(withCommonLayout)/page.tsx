@@ -8,7 +8,8 @@ import CryptoNavbar from "../shared/navbar/CryptoNavbar";
 import Footer from "../shared/Footer/Footer";
 import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
 import SubPage from "./articles/SubPage";
-import CryptoGames from "@/components/HomePages/CryptoGames/CryptoGames";
+import CryptoGames from "@/components/HomePages/CryptoGames/index";
+
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const Profile = () => {
