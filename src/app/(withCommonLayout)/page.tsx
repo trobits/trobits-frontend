@@ -1,7 +1,6 @@
 "use client";
 import CryptoData from "@/components/HomePages/CryptoData";
 import Slider from "@/components/HomePages/Slider/Slider";
-import NewsCompo from "@/components/NewsPart/NewsCompo";
 import React from "react";
 // import Footer from "../shared/Footer/Footer";
 import CryptoNavbar from "../shared/navbar/CryptoNavbar";
@@ -11,6 +10,7 @@ import SubPage from "./articles/SubPage";
 import CryptoGames from "@/components/HomePages/CryptoGames/index";
 
 import BurnChartWithCalculator from "@/components/HomePages/Slider/GraphSlider";
+import {GridBackground} from "@/components/ui/gridBackground";
 
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
@@ -19,8 +19,12 @@ const Profile = () => {
 
   return (
     <div>
-      <CryptoNavbar />
-      <CryptoData />
+        <CryptoNavbar />
+
+        <GridBackground>
+            <CryptoData />
+        </GridBackground>
+
 
       <CryptoInfo />
       <CryptoGames />

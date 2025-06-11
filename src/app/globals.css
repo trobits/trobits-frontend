@@ -4,7 +4,8 @@
 
 body {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
-  background: linear-gradient(to bottom right, #111827, #1f2937, #000000);
+  /*background: linear-gradient(to bottom right, #111827, #1f2937, #000000);*/
+  background: black;
   position: relative; /* Required for the overlay positioning */
   z-index: 0; /* Ensure body is behind the overlay */
 }

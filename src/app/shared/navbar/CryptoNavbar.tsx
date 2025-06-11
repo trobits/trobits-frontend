@@ -3,24 +3,25 @@
 import React, { useEffect, useRef } from "react";
 
 export default function CryptoNavbar() {
-  const tickerInitialized = useRef(false);
-  const luncInitialized = useRef(false);
+  const tickerContainerRef = useRef(null);
+  const widgetLoadedRef = useRef(false);
 
   useEffect(() => {
-    const handleClick = (e: any) => {
-      if (e.target.tagName === "A") {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
+    // Prevent duplicate loading
+    if (widgetLoadedRef.current) return;
 
-    if (!tickerInitialized.current) {
-      const tickerTapeScript = document.createElement("script");
-      tickerTapeScript.id = "tickerTapeScript";
-      tickerTapeScript.src =
-        "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
-      tickerTapeScript.async = true;
-      tickerTapeScript.innerHTML = JSON.stringify({
+    const loadTradingViewWidget = () => {
+      const container = tickerContainerRef.current;
+      if (!container) return;
+
+      // Clear any existing content
+      container.innerHTML = '';
+
+      // Create and configure the script
+      const script = document.createElement("script");
+      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
+      script.async = true;
+      script.innerHTML = JSON.stringify({
         symbols: [
           { description: "BTC", proName: "BINANCE:BTCUSD" },
           { description: "ETH", proName: "BINANCE:ETHUSD" },
@@ -29,6 +30,8 @@ export default function CryptoNavbar() {
           { description: "DOGE", proName: "BINANCE:DOGEUSD" },
           { description: "XRP", proName: "BINANCE:XRPUSD" },
           { description: "ADA", proName: "BINANCE:ADAUSD" },
+          { description: "SHIB", proName: "BINANCE:SHIBUSD" },
+          { description: "LUNC", proName: "BINANCE:LUNCUSD" },
         ],
         showSymbolLogo: true,
         isTransparent: true,
@@ -37,58 +40,45 @@ export default function CryptoNavbar() {
         locale: "en",
       });
 
-      const tickerTapeContainer = document.querySelector(
-        ".tradingview-ticker-tape"
-      );
-      if (tickerTapeContainer) {
-        tickerTapeContainer.appendChild(tickerTapeScript);
-        tickerInitialized.current = true;
-        tickerTapeContainer.addEventListener("click", handleClick, true);
-      }
-    }
+      // Add click handler to prevent navigation
+      const handleClick = (e) => {
+        if (e.target.tagName === "A") {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      };
 
-    if (!luncInitialized.current) {
-      const luncScript = document.createElement("script");
-      luncScript.id = "luncScript";
-      luncScript.src =
-        "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
-      luncScript.async = true;
-      luncScript.innerHTML = JSON.stringify({
-        symbol: "CRYPTO:LUNCUSD",
-        width: "100%",
-        isTransparent: true,
-        colorTheme: "dark",
-        locale: "en",
-      });
+      container.addEventListener("click", handleClick, true);
+      container.appendChild(script);
+      widgetLoadedRef.current = true;
 
-      const luncContainer = document.querySelector(".tradingview-lunc");
-      if (luncContainer) {
-        luncContainer.appendChild(luncScript);
-        luncInitialized.current = true;
-      }
-    }
+      return () => {
+        container.removeEventListener("click", handleClick, true);
+      };
+    };
+
+    const timeoutId = setTimeout(loadTradingViewWidget, 100);
 
     return () => {
-      const tickerTapeContainer = document.querySelector(
-        ".tradingview-ticker-tape"
-      );
-      if (tickerTapeContainer) {
-        tickerTapeContainer.removeEventListener("click", handleClick, true);
-      }
-      tickerInitialized.current = false;
-      luncInitialized.current = false;
+      clearTimeout(timeoutId);
+      widgetLoadedRef.current = false;
     };
   }, []);
 
   return (
-    <nav className="w-full px-10 mt-24 z-10 relative animate-slidefade">
-      <div className="max-w-screen-3xl mx-auto items-center">
-        <div className="w-full flex-shrink-0 rounded-2xl border border-blue-400 bg-gradient-to-br from-[#0c1220] to-[#0a1a3a] shadow-[0_0_30px_#00ffff33] p-[2px]">
-          <div className="rounded-[15px] bg-[#0e152c] p-2">
-            <div className="tradingview-ticker-tape w-full"></div>
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-lg border-b border-gray-800/50">
+        <div className="w-full ">
+          <div className="min-w-full">
+            <div className="w-full border border-blue-400/30 bg-gradient-to-br from-[#0c1220]/80 to-[#0a1a3a]/80 shadow-[0_0_20px_#00ffff15] p-[1px]">
+              <div className="rounded-[11px] bg-[#0e152c]/90 backdrop-blur-sm p-1">
+                <div
+                    ref={tickerContainerRef}
+                    className="tradingview-ticker-tape w-full"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </nav>
   );
 }
