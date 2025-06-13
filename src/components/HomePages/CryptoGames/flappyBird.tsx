@@ -39,6 +39,8 @@ const FlappyBird: React.FC = () => {
   const gameFrameRef = useRef<number | null>(null);
   const gameAreaRef = useRef<HTMLDivElement>(null);
 
+  const [loopStarted, setLoopStarted] = useState(false);
+
   const generateNewObstacle = useCallback((): Obstacle => {
     const minHeight = 80;
     const maxHeight = GAME_HEIGHT - PIPE_GAP - minHeight;
@@ -74,17 +76,20 @@ const FlappyBird: React.FC = () => {
     setScore(0);
     setGameOver(false);
     setGameStarted(true);
+    setLoopStarted(false);
     setCollectibles([]);
     gameAreaRef.current?.focus();
+
+    setTimeout(() => {
+      setLoopStarted(true);
+    }, 1000); // 3 seconds
   }, [generateNewObstacle]);
 
   const flap = useCallback(() => {
-    if (gameStarted && !gameOver) {
+    if (gameStarted && loopStarted && !gameOver) {
       setVelocity(JUMP_STRENGTH);
-    } else if (!gameStarted) {
-      startGame();
     }
-  }, [gameStarted, gameOver, startGame]);
+  }, [gameStarted, loopStarted, gameOver]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -98,7 +103,7 @@ const FlappyBird: React.FC = () => {
   }, [flap]);
 
   useEffect(() => {
-    if (!gameStarted || gameOver) {
+    if (!gameStarted || gameOver || !loopStarted) {
       if (gameFrameRef.current) cancelAnimationFrame(gameFrameRef.current);
       return;
     }
