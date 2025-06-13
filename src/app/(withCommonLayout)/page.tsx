@@ -32,7 +32,7 @@ const Profile = () => {
       <div className="mt-20">
         <BurnChartWithCalculator /> {/* This is your chart and calculator */}
       </div>
-      <Slider />
+      {/*<Slider />*/}
       <div className="mt-20">
         <SubPage simpleHeader />
       </div>

@@ -3,12 +3,12 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import ShibaIcon from "@/assets/icons/shiba-inu.png";
-import snakeHead from "@/assets/snakeHead.png"; // Assuming you have this path correct
-import { Award } from "lucide-react"; // Import the Award icon for the scoreboard header
+import snakeHead from "@/assets/snakeHead.png";
+import { Award, Play, RotateCcw, Trophy, Zap } from "lucide-react";
 
 const CELL_SIZE = 20;
-const WIDTH = 400;
-const HEIGHT = 400;
+const WIDTH = 600; // Increased from 400
+const HEIGHT = 500; // Increased from 400
 
 type Point = { x: number; y: number };
 
@@ -33,17 +33,17 @@ const calculateRandomFoodPosition = (currentSnake: Point[]): Point => {
     };
     // Check collision with snake body
     collision = currentSnake.some(
-      (segment) => segment.x === newFood.x && segment.y === newFood.y
+        (segment) => segment.x === newFood.x && segment.y === newFood.y
     );
   } while (collision);
   return newFood;
 };
 
 const SnakeGame: React.FC = () => {
-  const [snake, setSnake] = useState<Point[]>([{ x: 200, y: 200 }]);
+  const [snake, setSnake] = useState<Point[]>([{ x: 300, y: 240 }]); // Centered for new canvas size
   // Initialize food using a function that gets the initial snake
   const [food, setFood] = useState<Point>(() =>
-    calculateRandomFoodPosition([{ x: 200, y: 200 }])
+      calculateRandomFoodPosition([{ x: 300, y: 240 }])
   );
   const [dir, setDir] = useState<Point>({ x: 0, y: 0 }); // Current intended direction
   const [lastDir, setLastDir] = useState<Point>({ x: 0, y: 0 }); // Actual direction after last move
@@ -52,10 +52,6 @@ const SnakeGame: React.FC = () => {
   const gameIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Memoized callback for generating food, now relies on the external helper
-  // This useCallback is actually not strictly needed here as calculateRandomFoodPosition is external
-  // and called directly with the snake state. Keeping it here is harmless but
-  // if you want to optimize further, you could remove this getRandomFood useCallback
-  // and just use calculateRandomFoodPosition(snake) directly where getRandomFood is called.
   const getRandomFood = useCallback(() => {
     return calculateRandomFoodPosition(snake);
   }, [snake]); // Dependency on snake to avoid food spawning on current snake
@@ -120,10 +116,10 @@ const SnakeGame: React.FC = () => {
         setLastDir(dir);
 
         const hitWall =
-          head.x < 0 || head.y < 0 || head.x >= WIDTH || head.y >= HEIGHT;
+            head.x < 0 || head.y < 0 || head.x >= WIDTH || head.y >= HEIGHT;
         const hitSelf = prev.some(
-          (segment, index) =>
-            index !== 0 && segment.x === head.x && segment.y === head.y // Exclude head itself
+            (segment, index) =>
+                index !== 0 && segment.x === head.x && segment.y === head.y // Exclude head itself
         );
 
         if (hitWall || hitSelf) {
@@ -158,7 +154,7 @@ const SnakeGame: React.FC = () => {
   }, [dir, food, gameOver, playing]); // getRandomFood is no longer a direct dependency here, as we call calculateRandomFoodPosition
 
   const startGame = () => {
-    const initialSnake = [{ x: 200, y: 200 }];
+    const initialSnake = [{ x: 300, y: 240 }]; // Centered for new canvas size
     setSnake(initialSnake);
     setFood(calculateRandomFoodPosition(initialSnake)); // Generate food relative to initial snake
     setDir({ x: CELL_SIZE, y: 0 }); // Start moving right automatically
@@ -171,172 +167,212 @@ const SnakeGame: React.FC = () => {
 
   // Combine high scores with the current player's score and sort them
   const allScores = [...HIGH_SCORES, { name: "You", score: score }]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5); // Display top 5 scores
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5); // Display top 5 scores
 
   return (
-    <div
-      className="flex flex-col items-center p-6 bg-slate-900 text-white rounded-lg shadow-2xl border border-cyan-800"
-      style={{
-        maxWidth: "fit-content", // Adjust max-width to fit content
-      }}
-    >
-      <h2 className="text-3xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">
-        🐍 Crypto Snake
-      </h2>
-
-      <div className="flex flex-col lg:flex-row gap-8 mt-4 justify-center items-center lg:items-start">
-        {/* Left Panel: Game or Instructions */}
-        <div>
-          {!playing ? (
-            <div className="w-[400px] h-[400px] bg-slate-800 flex flex-col justify-center items-center rounded-xl border-2 border-cyan-700 text-center px-6 shadow-lg">
-              <p className="text-lg mb-4 text-slate-300">
-                Use <span className="font-bold text-cyan-400">arrow keys</span>{" "}
-                to control the snake. Eat the{" "}
-                <span className="font-bold text-yellow-400">
-                  Shiba Inu coin
-                </span>{" "}
-                to grow!
-              </p>
-              {gameOver && (
-                <p className="text-red-400 text-xl font-semibold mt-2 animate-bounce">
-                  Game Over! Your Score: {score}
-                </p>
-              )}
-              <button
-                onClick={startGame}
-                className="mt-6 px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg shadow-md hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105"
-              >
-                {gameOver ? "Play Again" : "Start Game"}
-              </button>
-            </div>
-          ) : (
-            <div
-              style={{
-                width: WIDTH,
-                height: HEIGHT,
-                backgroundColor: "#1e293b",
-                position: "relative",
-                border: "3px solid #38bdf8",
-                borderRadius: "10px",
-                overflow: "hidden",
-                boxShadow: "0 0 15px rgba(56, 189, 248, 0.5)",
-              }}
-            >
-              {snake.map((segment, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    width: CELL_SIZE,
-                    height: CELL_SIZE,
-                    position: "absolute",
-                    left: segment.x,
-                    top: segment.y,
-                    transition: "left 90ms linear, top 90ms linear", // Match new interval speed
-                    borderRadius: idx === 0 ? "50%" : "6px", // Head is round, tail is slightly rounded square
-                    zIndex: snake.length - idx, // Ensure head is always on top
-                  }}
-                >
-                  {idx === 0 ? (
-                    // Snake Head Image
-                    <Image
-                      src={snakeHead} // Ensure this path is correct for your project structure
-                      alt="Snake Head"
-                      layout="fill"
-                      objectFit="contain"
-                      className="drop-shadow-[0_0_5px_rgba(255,255,255,0.7)]" // Optional: add glowing effect to head
-                    />
-                  ) : (
-                    // Snake Tail Segments (bluish gradient)
-                    <div
-                      className="w-full h-full"
-                      style={{
-                        background: `linear-gradient(to bottom right, hsl(${
-                          200 + idx * 2
-                        }, 80%, ${30 + idx * 2}%), hsl(${220 + idx * 2}, 70%, ${
-                          40 + idx * 2
-                        }%))`,
-                        boxShadow: `0 0 3px rgba(0, 180, 255, 0.5)`, // Subtle glow
-                      }}
-                    />
-                  )}
-                </div>
-              ))}
-
-              <Image
-                src={ShibaIcon}
-                alt="coin"
-                width={CELL_SIZE}
-                height={CELL_SIZE}
-                style={{
-                  position: "absolute",
-                  left: food.x,
-                  top: food.y,
-                  transition: "left 90ms linear, top 90ms linear", // Match new interval speed
-                  pointerEvents: "none",
-                  borderRadius: "50%",
-                  filter: "drop-shadow(0 0 8px gold)",
-                  zIndex: 0,
-                }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Right Panel: Score Board */}
-        <div className="w-64 p-6 bg-slate-800/40 border border-slate-700/50 rounded-2xl shadow-md hover:bg-slate-800/60 hover:border-slate-600/50 transition-all duration-300">
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center">
-              <Award className="w-5 h-5 text-teal-400" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-white">Leaderboard</h3>
-              <p className="text-sm text-slate-400">Top Crypto Snake Players</p>
-            </div>
-          </div>
-
-          {/* Scores List */}
-          <div className="space-y-3">
-            {allScores.map((entry, index) => (
-              <div
-                key={index}
-                className={`flex items-center justify-between p-3 rounded-xl transition-all duration-200 border border-transparent ${
-                  entry.name === "You"
-                    ? "bg-cyan-900/50 border-cyan-700/50 text-cyan-300 font-bold scale-105"
-                    : "hover:bg-slate-700/40 hover:border-slate-600/30 text-white"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`font-mono text-sm w-6 text-center ${
-                      entry.name === "You" ? "text-cyan-400" : "text-slate-400"
-                    }`}
-                  >
-                    #{index + 1}
-                  </span>
-                  <p className="text-base truncate">
-                    {entry.name === "You" ? "🚀 You" : entry.name}
-                  </p>
-                </div>
-                <span
-                  className={`font-bold text-xl ${
-                    entry.name === "You" ? "text-cyan-400" : "text-yellow-400"
-                  }`}
-                >
-                  {entry.score}
-                </span>
+      <div className="w-full max-w-7xl mx-auto">
+        <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8">
+          {/* Game Header */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
+                <span className="text-2xl">🐍</span>
               </div>
-            ))}
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-2">
+              Crypto Snake
+            </h2>
+            <p className="text-gray-400 text-lg">
+              Collect SHIB coins and grow your snake!
+            </p>
           </div>
 
-          <p className="text-sm text-slate-500 text-center mt-6 pt-4 border-t border-slate-700/50">
-            Current Score:{" "}
-            <span className="font-bold text-cyan-400">{score}</span>
-          </p>
+          <div className="flex flex-col lg:flex-row gap-8 justify-center items-start">
+            {/* Game Area */}
+            <div className="flex-1 max-w-4xl">
+              {!playing ? (
+                  <div
+                      className="bg-gray-900/60 border border-gray-700/50 rounded-2xl flex flex-col justify-center items-center text-center p-8 mx-auto"
+                      style={{ width: WIDTH, height: HEIGHT }}
+                  >
+                    <div className="space-y-6">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center mx-auto">
+                        <span className="text-4xl">🐍</span>
+                      </div>
+
+                      <div className="space-y-3">
+                        <p className="text-lg text-gray-300">
+                          Use <span className="font-bold text-green-400">arrow keys</span>{" "}
+                          to control the snake. Eat the{" "}
+                          <span className="font-bold text-yellow-400">
+                        Shiba Inu coin
+                      </span>{" "}
+                          to grow!
+                        </p>
+                      </div>
+
+                      {gameOver && (
+                          <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl p-4">
+                            <p className="text-red-400 text-xl font-semibold">
+                              Game Over! Your Score: {score}
+                            </p>
+                          </div>
+                      )}
+
+                      <button
+                          onClick={startGame}
+                          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 hover:scale-105 flex items-center gap-2 mx-auto"
+                      >
+                        {gameOver ? <RotateCcw className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                        {gameOver ? "Play Again" : "Start Game"}
+                      </button>
+                    </div>
+                  </div>
+              ) : (
+                  <div
+                      className="mx-auto border border-gray-700/50 rounded-xl overflow-hidden"
+                      style={{
+                        width: WIDTH,
+                        height: HEIGHT,
+                        backgroundColor: "#1e293b",
+                        position: "relative",
+                        boxShadow: "inset 0 0 20px rgba(0,0,0,0.5)",
+                      }}
+                  >
+                    {snake.map((segment, idx) => (
+                        <div
+                            key={idx}
+                            style={{
+                              width: CELL_SIZE,
+                              height: CELL_SIZE,
+                              position: "absolute",
+                              left: segment.x,
+                              top: segment.y,
+                              transition: "left 90ms linear, top 90ms linear", // Match new interval speed
+                              borderRadius: idx === 0 ? "50%" : "6px", // Head is round, tail is slightly rounded square
+                              zIndex: snake.length - idx, // Ensure head is always on top
+                            }}
+                        >
+                          {idx === 0 ? (
+                              // Snake Head Image
+                              <Image
+                                  src={snakeHead} // Ensure this path is correct for your project structure
+                                  alt="Snake Head"
+                                  layout="fill"
+                                  objectFit="contain"
+                                  className="drop-shadow-[0_0_5px_rgba(255,255,255,0.7)]" // Optional: add glowing effect to head
+                              />
+                          ) : (
+                              // Snake Tail Segments (greenish gradient to match theme)
+                              <div
+                                  className="w-full h-full"
+                                  style={{
+                                    background: `linear-gradient(to bottom right, hsl(${
+                                        160 + idx * 2
+                                    }, 80%, ${30 + idx * 2}%), hsl(${180 + idx * 2}, 70%, ${
+                                        40 + idx * 2
+                                    }%))`,
+                                    boxShadow: `0 0 3px rgba(34, 197, 94, 0.5)`, // Green glow
+                                  }}
+                              />
+                          )}
+                        </div>
+                    ))}
+
+                    <Image
+                        src={ShibaIcon}
+                        alt="coin"
+                        width={CELL_SIZE}
+                        height={CELL_SIZE}
+                        style={{
+                          position: "absolute",
+                          left: food.x,
+                          top: food.y,
+                          transition: "left 90ms linear, top 90ms linear", // Match new interval speed
+                          pointerEvents: "none",
+                          borderRadius: "50%",
+                          filter: "drop-shadow(0 0 8px gold)",
+                          zIndex: 0,
+                        }}
+                    />
+                  </div>
+              )}
+            </div>
+
+            {/* Right Panel: Score Board */}
+            <div className="w-80 space-y-6">
+              {/* Current Score */}
+              <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-6 text-center">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <Zap className="w-5 h-5 text-yellow-400" />
+                  <span className="text-lg font-semibold text-yellow-300">Current Score</span>
+                </div>
+                <div className="text-4xl font-bold text-white mb-2">{score}</div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-sm text-green-400">
+                  {playing ? "Playing" : "Ready"}
+                </span>
+                </div>
+              </div>
+
+              {/* Leaderboard */}
+              <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-6">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
+                    <Trophy className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Leaderboard</h3>
+                    <p className="text-sm text-gray-400">Top Crypto Snake Players</p>
+                  </div>
+                </div>
+
+                {/* Scores List */}
+                <div className="space-y-3">
+                  {allScores.map((entry, index) => (
+                      <div
+                          key={index}
+                          className={`flex items-center justify-between p-3 rounded-xl transition-all duration-200 border ${
+                              entry.name === "You"
+                                  ? "bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20 text-green-300 font-bold"
+                                  : "bg-gray-800/30 border-gray-700/30 text-white hover:bg-gray-800/50"
+                          }`}
+                      >
+                        <div className="flex items-center gap-3">
+                      <span
+                          className={`font-mono text-sm w-6 text-center ${
+                              entry.name === "You" ? "text-green-400" : "text-gray-400"
+                          }`}
+                      >
+                        #{index + 1}
+                      </span>
+                          <p className="text-base truncate">
+                            {entry.name === "You" ? "🚀 You" : entry.name}
+                          </p>
+                        </div>
+                        <span
+                            className={`font-bold text-xl ${
+                                entry.name === "You" ? "text-green-400" : "text-yellow-400"
+                            }`}
+                        >
+                      {entry.score}
+                    </span>
+                      </div>
+                  ))}
+                </div>
+
+                <p className="text-sm text-gray-500 text-center mt-6 pt-4 border-t border-gray-700/50">
+                  Current Score:{" "}
+                  <span className="font-bold text-green-400">{score}</span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 

@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  Newspaper,
 } from "lucide-react";
 import {
   useTrendingNews,
@@ -435,8 +436,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   ];
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
-
+      <div className={`min-h-screen ${simpleHeader ? '' : 'bg-gradient-to-br from-gray-900 via-gray-800 to-black'} relative`}>
 
         {/* Overlay spinner on refetch */}
         {isFetching && !isLoading && (
@@ -457,11 +457,97 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         <div className="px-4 sm:px-6 lg:px-8 xl:px-20">
           {/* Hero Section */}
           {simpleHeader ? (
-              <div className="text-center py-8">
-                <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-white via-cyan-200 to-purple-200 bg-clip-text text-transparent mb-6">
-                  Latest Crypto News
-                </h2>
-              </div>
+              <section className="container mx-auto mt-28 px-0">
+                <div className="flex justify-center items-center">
+                  <div className="w-full max-w-7xl mx-auto px-6">
+                    <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8">
+
+                      {/* Header */}
+                      <div className="text-center mb-8">
+                        <div className="flex items-center justify-center gap-3 mb-4">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
+                            <Newspaper className="w-6 h-6 text-blue-400" />
+                          </div>
+                        </div>
+                        <h2 className="text-3xl font-bold text-white mb-2">
+                          Latest Crypto News
+                        </h2>
+                        <p className="text-gray-400 text-lg">
+                          Stay updated with the latest cryptocurrency news and market insights
+                        </p>
+
+                        {/* Status indicator */}
+                        <div className="flex items-center justify-center gap-2 mt-4">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                          <span className="text-sm text-green-400 font-medium">
+                            Live Feed • {totalItems} articles
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* News Feed Container */}
+                      <div className="bg-gray-900/60 border border-gray-700/50 rounded-2xl p-6">
+                        <div className="relative overflow-hidden">
+                          {/* Left Button */}
+                          <button
+                              onMouseEnter={() => {
+                                setPauseScroll(true);
+                                hoverLeftRef.current = true;
+                              }}
+                              onMouseLeave={() => {
+                                setPauseScroll(false);
+                                hoverLeftRef.current = false;
+                              }}
+                              className="group absolute left-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gray-700/80 hover:scale-110"
+                          >
+                            <ChevronLeft className="w-5 h-5 text-white" />
+                          </button>
+
+                          {/* Right Button */}
+                          <button
+                              onMouseEnter={() => {
+                                setPauseScroll(true);
+                                hoverRightRef.current = true;
+                              }}
+                              onMouseLeave={() => {
+                                setPauseScroll(false);
+                                hoverRightRef.current = false;
+                              }}
+                              className="group absolute right-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gray-700/80 hover:scale-110"
+                          >
+                            <ChevronRight className="w-5 h-5 text-white" />
+                          </button>
+
+                          {/* Scrollable article strip */}
+                          <div
+                              ref={scrollRef}
+                              onMouseEnter={() => setPauseScroll(true)}
+                              onMouseLeave={() => setPauseScroll(false)}
+                              className="overflow-x-auto no-scrollbar scroll-smooth"
+                              style={{
+                                display: "flex",
+                                gap: "1.5rem",
+                                paddingBottom: "1rem",
+                                paddingLeft: "3rem",
+                                paddingRight: "3rem",
+                                paddingTop: "0.5rem",
+                              }}
+                          >
+                            {filteredArticles.slice(0, 20).map((article, i) => (
+                                <div
+                                    key={`${article.id}-${i}`}
+                                    className="flex-shrink-0 w-80"
+                                >
+                                  <NewsCard articleData={article} viewMode="grid" />
+                                </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
           ) : (
               <div className="relative overflow-hidden pt-16 pb-8">
                 <div className="relative">
@@ -595,61 +681,8 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
           <div className="mb-16">
             {filteredArticles.length > 0 ? (
                 simpleHeader ? (
-                    <div className="relative overflow-hidden bg-gray-800/30 border border-gray-600/30 rounded-3xl p-6 mb-12">
-                      {/* Left Button */}
-                      <button
-                          onMouseEnter={() => {
-                            setPauseScroll(true);
-                            hoverLeftRef.current = true;
-                          }}
-                          onMouseLeave={() => {
-                            setPauseScroll(false);
-                            hoverLeftRef.current = false;
-                          }}
-                          className="group absolute left-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/40 backdrop-blur-sm transition-all duration-300 hover:bg-black/60"
-                      >
-                        <ChevronLeft className="w-6 h-6 text-white" />
-                      </button>
-
-                      {/* Right Button */}
-                      <button
-                          onMouseEnter={() => {
-                            setPauseScroll(true);
-                            hoverRightRef.current = true;
-                          }}
-                          onMouseLeave={() => {
-                            setPauseScroll(false);
-                            hoverRightRef.current = false;
-                          }}
-                          className="group absolute right-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/40 backdrop-blur-sm transition-all duration-300 hover:bg-black/60"
-                      >
-                        <ChevronRight className="w-6 h-6 text-white" />
-                      </button>
-
-                      {/* Scrollable article strip */}
-                      <div
-                          ref={scrollRef}
-                          onMouseEnter={() => setPauseScroll(true)}
-                          onMouseLeave={() => setPauseScroll(false)}
-                          className="overflow-x-auto no-scrollbar scroll-smooth"
-                          style={{
-                            display: "flex",
-                            gap: "1.5rem",
-                            paddingBottom: "1rem",
-                            paddingLeft: "1rem",
-                            paddingRight: "1rem",
-                          }}
-                      >
-                        {filteredArticles.slice(0, 20).map((article, i) => (
-                            <div
-                                key={`${article.id}-${i}`}
-                                className="flex-shrink-0 w-80"
-                            >
-                              <NewsCard articleData={article} viewMode="grid" />
-                            </div>
-                        ))}
-                      </div>
-                    </div>
+                    // Simple header articles are already rendered above in the container
+                    null
                 ) : (
                     <div className="space-y-6">
                       {filteredArticles.map((article, index) => (

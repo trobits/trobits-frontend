@@ -12,15 +12,16 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { Calendar, TrendingUp, Flame, BarChart3 } from "lucide-react";
 
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
 );
 
 interface BurnDataRow {
@@ -40,7 +41,7 @@ export default function BurnChartWithCalculator() {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [totals, setTotals] = useState<{ shiba: number; lunc: number } | null>(
-    null
+      null
   );
 
   const formatDate = (dateStr: string) => {
@@ -75,14 +76,14 @@ export default function BurnChartWithCalculator() {
 
       const headers = data.values[0];
       const dateIdx = headers.findIndex((h: string) =>
-        h.toLowerCase().includes("date")
+          h.toLowerCase().includes("date")
       );
       const shibaIdx = 3; // Column D
       const luncIdx = 5; // Column F
 
       const rows = data.values
-        .slice(1)
-        .filter((row: string[]) => row.length > luncIdx);
+          .slice(1)
+          .filter((row: string[]) => row.length > luncIdx);
 
       const parsedData: BurnDataRow[] = rows.map((row: string[]) => {
         const date = formatDate(row[dateIdx]);
@@ -100,32 +101,33 @@ export default function BurnChartWithCalculator() {
           {
             label: "Shiba Burns",
             data: last14.map((row: BurnDataRow) => row.shiba),
-            borderColor: "rgba(255, 99, 132, 1)", // Reddish
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(34, 197, 94, 1)", // Green for SHIB
+            backgroundColor: "rgba(34, 197, 94, 0.1)",
             tension: 0.4,
             fill: true,
-            pointRadius: 2,
-            pointBackgroundColor: "rgba(255, 99, 132, 1)",
+            pointRadius: 3,
+            pointBackgroundColor: "rgba(34, 197, 94, 1)",
             pointBorderColor: "#fff",
-            pointHoverRadius: 5,
+            pointHoverRadius: 6,
+            borderWidth: 2,
           },
           {
             label: "LUNC Burns",
             data: last14.map((row: BurnDataRow) => row.lunc),
-            borderColor: "rgba(54, 162, 235, 1)", // Bluish
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgba(59, 130, 246, 1)", // Blue for LUNC
+            backgroundColor: "rgba(59, 130, 246, 0.1)",
             tension: 0.4,
             fill: true,
-            pointRadius: 2,
-            pointBackgroundColor: "rgba(54, 162, 235, 1)",
+            pointRadius: 3,
+            pointBackgroundColor: "rgba(59, 130, 246, 1)",
             pointBorderColor: "#fff",
-            pointHoverRadius: 5,
+            pointHoverRadius: 6,
+            borderWidth: 2,
           },
         ],
       });
     } catch (error) {
       console.error("Failed to fetch burn data:", error);
-      // You might want to set an error state here to display a message to the user
     }
   };
 
@@ -135,8 +137,7 @@ export default function BurnChartWithCalculator() {
 
   useEffect(() => {
     if (!startDate || !endDate) {
-      setTotals(null); // Clear totals if dates are not fully selected
-      // Revert chart to show last 14 days if dates are cleared
+      setTotals(null);
       if (allData.length > 0) {
         const last14 = allData.slice(-14);
         setChartData({
@@ -145,26 +146,28 @@ export default function BurnChartWithCalculator() {
             {
               label: "Shiba Burns",
               data: last14.map((row: BurnDataRow) => row.shiba),
-              borderColor: "rgba(255, 99, 132, 1)",
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(34, 197, 94, 1)",
+              backgroundColor: "rgba(34, 197, 94, 0.1)",
               tension: 0.4,
               fill: true,
-              pointRadius: 2,
-              pointBackgroundColor: "rgba(255, 99, 132, 1)",
+              pointRadius: 3,
+              pointBackgroundColor: "rgba(34, 197, 94, 1)",
               pointBorderColor: "#fff",
-              pointHoverRadius: 5,
+              pointHoverRadius: 6,
+              borderWidth: 2,
             },
             {
               label: "LUNC Burns",
               data: last14.map((row: BurnDataRow) => row.lunc),
-              borderColor: "rgba(54, 162, 235, 1)",
-              backgroundColor: "rgba(54, 162, 235, 0.2)",
+              borderColor: "rgba(59, 130, 246, 1)",
+              backgroundColor: "rgba(59, 130, 246, 0.1)",
               tension: 0.4,
               fill: true,
-              pointRadius: 2,
-              pointBackgroundColor: "rgba(54, 162, 235, 1)",
+              pointRadius: 3,
+              pointBackgroundColor: "rgba(59, 130, 246, 1)",
               pointBorderColor: "#fff",
-              pointHoverRadius: 5,
+              pointHoverRadius: 6,
+              borderWidth: 2,
             },
           ],
         });
@@ -174,28 +177,25 @@ export default function BurnChartWithCalculator() {
 
     const from = new Date(startDate);
     const to = new Date(endDate);
-    to.setHours(23, 59, 59, 999); // Set to end of the day
+    to.setHours(23, 59, 59, 999);
 
     const filtered = allData.filter((row: BurnDataRow) => {
-      // Re-parse date from 'DD Mon YY' to 'YYYY-MM-DD' for accurate comparison
-      // The original formatDate returns 'DD Mon YY', so we need to parse it back reliably.
-      // Example: "01 Jan 23" -> new Date("2023-01-01")
       const parts = row.date.split(" ");
       const day = parseInt(parts[0]);
-      const month = new Date(Date.parse(parts[1] + " 1, 2000")).getMonth(); // Get month index
-      const year = parseInt(parts[2]) + 2000; // Assuming 'YY' means '20YY'
+      const month = new Date(Date.parse(parts[1] + " 1, 2000")).getMonth();
+      const year = parseInt(parts[2]) + 2000;
       const rowDate = new Date(year, month, day);
 
       return rowDate >= from && rowDate <= to;
     });
 
     const total = filtered.reduce(
-      (acc: { shiba: number; lunc: number }, row: BurnDataRow) => {
-        acc.shiba += row.shiba;
-        acc.lunc += row.lunc;
-        return acc;
-      },
-      { shiba: 0, lunc: 0 }
+        (acc: { shiba: number; lunc: number }, row: BurnDataRow) => {
+          acc.shiba += row.shiba;
+          acc.lunc += row.lunc;
+          return acc;
+        },
+        { shiba: 0, lunc: 0 }
     );
 
     setTotals(total);
@@ -206,73 +206,71 @@ export default function BurnChartWithCalculator() {
         {
           label: "Shiba Burns",
           data: filtered.map((row: BurnDataRow) => row.shiba),
-          borderColor: "rgba(255, 99, 132, 1)",
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
+          borderColor: "rgba(34, 197, 94, 1)",
+          backgroundColor: "rgba(34, 197, 94, 0.1)",
           tension: 0.4,
           fill: true,
-          pointRadius: 2,
-          pointBackgroundColor: "rgba(255, 99, 132, 1)",
+          pointRadius: 3,
+          pointBackgroundColor: "rgba(34, 197, 94, 1)",
           pointBorderColor: "#fff",
-          pointHoverRadius: 5,
+          pointHoverRadius: 6,
+          borderWidth: 2,
         },
         {
           label: "LUNC Burns",
           data: filtered.map((row: BurnDataRow) => row.lunc),
-          borderColor: "rgba(54, 162, 235, 1)",
-          backgroundColor: "rgba(54, 162, 235, 0.2)",
+          borderColor: "rgba(59, 130, 246, 1)",
+          backgroundColor: "rgba(59, 130, 246, 0.1)",
           tension: 0.4,
           fill: true,
-          pointRadius: 2,
-          pointBackgroundColor: "rgba(54, 162, 235, 1)",
+          pointRadius: 3,
+          pointBackgroundColor: "rgba(59, 130, 246, 1)",
           pointBorderColor: "#fff",
-          pointHoverRadius: 5,
+          pointHoverRadius: 6,
+          borderWidth: 2,
         },
       ],
     });
-  }, [startDate, endDate, allData]); // Added allData to dependencies to re-filter if data changes
+  }, [startDate, endDate, allData]);
 
   const chartOptions: ChartOptions<"line"> = {
     responsive: true,
-    maintainAspectRatio: false, // Allows flexible height based on parent
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top" as const,
         labels: {
-          color: "#E0E0E0", // Lighter gray for better contrast
+          color: "#E5E7EB",
           font: {
             size: 14,
-            weight: "bold",
+            weight: "600",
           },
-          boxWidth: 20,
-          boxHeight: 10,
+          boxWidth: 12,
+          boxHeight: 12,
           padding: 20,
+          usePointStyle: true,
         },
       },
       title: {
-        display: true,
-        text: "Shiba & LUNC Burns Over Time",
-        color: "#F0F0F0", // Almost white for main title
-        font: {
-          size: 24,
-          weight: "bold",
-        },
-        padding: {
-          top: 10,
-          bottom: 30,
-        },
+        display: false,
       },
       tooltip: {
         mode: "index" as const,
         intersect: false,
-        backgroundColor: "rgba(31, 41, 55, 0.9)", // bg-gray-800 with transparency
+        backgroundColor: "rgba(17, 24, 39, 0.95)",
         titleColor: "#FFFFFF",
-        bodyColor: "#E0E0E0",
-        borderColor: "rgba(75, 85, 99, 0.5)", // border-gray-600 with transparency
+        bodyColor: "#E5E7EB",
+        borderColor: "rgba(75, 85, 99, 0.5)",
         borderWidth: 1,
-        cornerRadius: 8,
-        padding: 12,
-        titleFont: { weight: "bold" },
-        bodyFont: { size: 14 },
+        cornerRadius: 12,
+        padding: 16,
+        titleFont: { weight: "bold", size: 14 },
+        bodyFont: { size: 13 },
+        callbacks: {
+          label: function(context) {
+            return `${context.dataset.label}: ${context.parsed.y.toLocaleString()}`;
+          }
+        }
       },
     },
     interaction: {
@@ -284,12 +282,11 @@ export default function BurnChartWithCalculator() {
       y: {
         beginAtZero: true,
         ticks: {
-          color: "#BBBBBB", // Light gray for ticks
+          color: "#9CA3AF",
           font: {
             size: 12,
           },
           callback: function (value: string | number) {
-            // Format large numbers
             if (typeof value === "number") {
               return value.toLocaleString();
             }
@@ -297,92 +294,178 @@ export default function BurnChartWithCalculator() {
           },
         },
         grid: {
-          color: "rgba(75, 85, 99, 0.3)", // Subtle grid lines (gray-600)
-          // Darker gray for axis line
+          color: "rgba(75, 85, 99, 0.2)",
+        },
+        border: {
+          color: "rgba(75, 85, 99, 0.3)",
         },
       },
       x: {
         ticks: {
-          color: "#BBBBBB", // Light gray for ticks
+          color: "#9CA3AF",
           font: {
             size: 12,
           },
         },
         grid: {
-          color: "rgba(75, 85, 99, 0.3)", // Subtle grid lines
-          // Darker gray for axis line
+          color: "rgba(75, 85, 99, 0.2)",
+        },
+        border: {
+          color: "rgba(75, 85, 99, 0.3)",
         },
       },
     },
   };
 
+  const formatNumber = (value: number) => {
+    if (!value) return "0";
+    return Number(value).toLocaleString();
+  };
+
   return (
-    // Outer container matching the overall app background and padding
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black p-4 sm:p-8 pt-20">
-      <div className="max-w-6xl mx-auto">
-        {/* Main title */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-10 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-          Crypto Burn Analytics
-        </h1>
+      <section className="container mx-auto mt-28 px-0">
+        <div className="flex justify-center items-center">
+          <div className="w-full max-w-7xl mx-auto px-6">
+            <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8">
 
-        {/* Date range selection and totals card */}
-        <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-6 shadow-xl mb-12 max-w-2xl mx-auto">
-          <h2 className="text-2xl font-semibold text-white mb-6 text-center">
-            Select Burn Range
-          </h2>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 items-center justify-center">
-            <label className="flex items-center text-gray-300 text-base font-medium">
-              📅 Start Date:
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="ml-3 px-4 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-300"
-              />
-            </label>
-            <label className="flex items-center text-gray-300 text-base font-medium">
-              📅 End Date:
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="ml-3 px-4 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-300"
-              />
-            </label>
-          </div>
-
-          {totals && (
-            <div className="mt-8 pt-6 border-t border-gray-700/50">
-              <h3 className="text-xl font-bold text-white mb-4 text-center">
-                Total Burns for Selected Range
-              </h3>
-              <div className="flex justify-around flex-wrap gap-4 text-center">
-                <p className="text-lg text-gray-200">
-                  Shiba:{" "}
-                  <strong className="text-red-400 text-2xl">
-                    {totals.shiba.toLocaleString()}
-                  </strong>
-                </p>
-                <p className="text-lg text-gray-200">
-                  LUNC:{" "}
-                  <strong className="text-blue-400 text-2xl">
-                    {totals.lunc.toLocaleString()}
-                  </strong>
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center">
+                    <BarChart3 className="w-6 h-6 text-orange-400" />
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-2">
+                  Crypto Burn Analytics
+                </h2>
+                <p className="text-gray-400 text-lg">
+                  Track SHIB and LUNC burn statistics over time
                 </p>
               </div>
-            </div>
-          )}
-        </div>
 
-        {/* Chart Container */}
-        <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-6 shadow-xl relative min-h-[400px] md:min-h-[550px] lg:min-h-[650px] flex items-center justify-center">
-          {allData.length > 0 ? (
-            <Line options={chartOptions} data={chartData} />
-          ) : (
-            <div className="text-gray-400 text-lg">Loading burn data...</div>
-          )}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                {/* Date Selection & Totals */}
+                <div className="lg:col-span-1 space-y-6">
+
+                  {/* Date Range Selection */}
+                  <div className="bg-gray-900/60 border border-gray-700/50 rounded-2xl p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center">
+                        <Calendar className="w-5 h-5 text-blue-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white">Date Range</h3>
+                        <p className="text-sm text-gray-400">Select period to analyze</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Start Date
+                        </label>
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          End Date
+                        </label>
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Totals Display */}
+                  {totals && (
+                      <div className="space-y-4">
+
+                        {/* SHIB Total */}
+                        <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-6">
+                          <div className="flex items-center justify-center gap-2 mb-2">
+                            <Flame className="w-5 h-5 text-green-400" />
+                            <span className="text-lg font-medium text-green-300">SHIB Burns</span>
+                          </div>
+                          <div className="text-center text-2xl font-bold text-white">
+                            {formatNumber(totals.shiba)}
+                          </div>
+                        </div>
+
+                        {/* LUNC Total */}
+                        <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-6">
+                          <div className="flex items-center justify-center gap-2 mb-2">
+                            <TrendingUp className="w-5 h-5 text-blue-400" />
+                            <span className="text-lg font-medium text-blue-300">LUNC Burns</span>
+                          </div>
+                          <div className="text-center text-2xl font-bold text-white">
+                            {formatNumber(totals.lunc)}
+                          </div>
+                        </div>
+
+                      </div>
+                  )}
+
+                  {/* Status Indicator */}
+                  <div className="bg-gray-900/60 border border-gray-700/50 rounded-xl p-4 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <span className="text-sm text-green-400 font-medium">
+                      {allData.length > 0 ? "Data Loaded" : "Loading..."}
+                    </span>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {totals ? "Custom Range" : "Last 14 Days"}
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* Chart Area */}
+                <div className="lg:col-span-2">
+                  <div className="bg-gray-900/60 border border-gray-700/50 rounded-2xl p-6">
+
+                    {/* Chart Header */}
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white">Burn Chart</h3>
+                        <p className="text-sm text-gray-400">Burns over time comparison</p>
+                      </div>
+                    </div>
+
+                    {/* Chart Container */}
+                    <div className="bg-gray-800/30 border border-gray-700/30 rounded-xl p-4" style={{ height: '400px' }}>
+                      {allData.length > 0 ? (
+                          <Line options={chartOptions} data={chartData} />
+                      ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <div className="text-center">
+                              <div className="w-12 h-12 border-4 border-gray-600 border-t-blue-400 rounded-full animate-spin mx-auto mb-4"></div>
+                              <div className="text-gray-400 text-lg">Loading burn data...</div>
+                            </div>
+                          </div>
+                      )}
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
   );
 }
