@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import GameCard from "./GameCard";
 import SnakeGame from "@/components/HomePages/CryptoGames/SnakeGame";
+import FlappyBird from "@/components/HomePages/CryptoGames/flappyBird"; // Import the new game component
 import SnakeThumb from "@/assets/snake-thumb.png";
+import FlappyThumb from "@/assets/flappythumb.png"; // Placeholder for Flappy Bird thumbnail
 
 const games = [
   {
@@ -11,12 +13,11 @@ const games = [
     title: "Crypto Snake",
     image: SnakeThumb,
   },
-  // you can add more games here, e.g.:
-  // {
-  //   id: "flappy",
-  //   title: "Flappy Coin",
-  //   image: FlappyThumb,
-  // },
+  {
+    id: "flappy",
+    title: "Flappy Coin",
+    image: FlappyThumb, // You'll need to create this image
+  },
 ];
 
 const CryptoGames: React.FC = () => {
@@ -26,6 +27,8 @@ const CryptoGames: React.FC = () => {
     switch (selectedGame) {
       case "snake":
         return <SnakeGame />;
+      case "flappy": // Add the new case for Flappy Bird
+        return <FlappyBird />;
       default:
         return null;
     }
