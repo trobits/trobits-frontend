@@ -3,10 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Award } from "lucide-react";
-import BitcoinCoin from "@/assets/bitcoin.png";
-import BlockObstacle from "@/assets/bitcoin.png";
-import BlockObstacleBottom from "@/assets/crypto-computer.png";
-import SmallCoin from "@/assets/bitcoin.png";
+import BitcoinCoin from "@/assets/bird.png";
+import SmallCoin from "@/assets/pipe_bottom.png"; // Coin image
 
 const GAME_WIDTH = 400;
 const GAME_HEIGHT = 600;
@@ -18,7 +16,7 @@ const PIPE_GAP = 180;
 const PIPE_SPEED = 3;
 const COIN_SIZE = 25;
 
-type Obstacle = { x: number; height: number; id: string };
+type Obstacle = { x: number; height: number; id: string; passed?: boolean };
 type CollectibleCoin = { x: number; y: number; id: string; collected: boolean };
 
 const HIGH_SCORES = [
@@ -26,7 +24,7 @@ const HIGH_SCORES = [
   { name: "VitalikB", score: 90 },
   { name: "ElonMusk", score: 75 },
   { name: "CryptoWhale", score: 60 },
-  { name: "DAOLeader", score: 45 },
+  { name: "DAOLeader", score: 5 },
 ];
 
 const FlappyBird: React.FC = () => {
@@ -51,6 +49,7 @@ const FlappyBird: React.FC = () => {
       x: GAME_WIDTH,
       height: topPipeHeight,
       id: Math.random().toString(),
+      passed: false,
     };
   }, []);
 
@@ -120,8 +119,19 @@ const FlappyBird: React.FC = () => {
       setVelocity(localVelocity);
 
       setObstacles((prevObstacles) => {
-        let updated = prevObstacles
-          .map((obs) => ({ ...obs, x: obs.x - PIPE_SPEED }))
+        let updated: Obstacle[] = prevObstacles
+
+          .map((obs) => {
+            const newX = obs.x - PIPE_SPEED;
+            const birdX = GAME_WIDTH / 2 - BIRD_SIZE / 2;
+            const justPassed = !obs.passed && newX + PIPE_WIDTH < birdX;
+
+            if (justPassed) {
+              setScore((s) => s + 2);
+            }
+
+            return { ...obs, x: newX, passed: obs.passed || justPassed };
+          })
           .filter((obs) => obs.x + PIPE_WIDTH > 0);
 
         const lastObstacle = updated[updated.length - 1];
@@ -276,6 +286,7 @@ const FlappyBird: React.FC = () => {
               {/* Pipes */}
               {obstacles.map((obs) => (
                 <React.Fragment key={obs.id}>
+                  {/* Top Wall */}
                   <div
                     style={{
                       position: "absolute",
@@ -283,11 +294,12 @@ const FlappyBird: React.FC = () => {
                       top: 0,
                       width: PIPE_WIDTH,
                       height: obs.height,
-                      overflow: "hidden",
+                      backgroundColor: "#60a5fa", // light blue
+                      borderRadius: "8px",
+                      border: "2px solid #3b82f6", // blue outline
                     }}
-                  >
-                    <Image src={BlockObstacle} alt="Top Pipe" layout="fill" />
-                  </div>
+                  />
+                  {/* Bottom Wall */}
                   <div
                     style={{
                       position: "absolute",
@@ -295,15 +307,11 @@ const FlappyBird: React.FC = () => {
                       top: obs.height + PIPE_GAP,
                       width: PIPE_WIDTH,
                       height: GAME_HEIGHT - obs.height - PIPE_GAP,
-                      overflow: "hidden",
+                      backgroundColor: "#60a5fa",
+                      borderRadius: "8px",
+                      border: "2px solid #3b82f6",
                     }}
-                  >
-                    <Image
-                      src={BlockObstacleBottom}
-                      alt="Bottom Pipe"
-                      layout="fill"
-                    />
-                  </div>
+                  />
                 </React.Fragment>
               ))}
 

@@ -5,7 +5,7 @@ import GameCard from "./GameCard";
 import SnakeGame from "@/components/HomePages/CryptoGames/SnakeGame";
 import FlappyBird from "@/components/HomePages/CryptoGames/flappyBird"; // Import the new game component
 import SnakeThumb from "@/assets/snake-thumb.png";
-import FlappyThumb from "@/assets/bitcoin.png"; // Placeholder for Flappy Bird thumbnail
+import FlappyThumb from "@/assets/flappythumb.png"; // Placeholder for Flappy Bird thumbnail
 
 const games = [
   {
