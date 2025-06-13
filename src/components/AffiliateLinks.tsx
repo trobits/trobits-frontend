@@ -29,8 +29,8 @@ export const AffiliateLinks = () => {
                   src="//a.impactradius-go.com/display-ad/17020-1453720" 
                   alt="Printrendy Online Sale - Get 3.75% commission on first-time purchases" 
                   width="188" 
-                  height="309"
-                  className="rounded-lg w-full h-[309px] object-cover"
+                  height="350"
+                  className="rounded-lg w-full h-[350px] object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
@@ -72,8 +72,8 @@ export const AffiliateLinks = () => {
                   src="//a.impactradius-go.com/display-ad/11829-2794807" 
                   alt="Gemini Exchange - Get $10 commission on first-time trades" 
                   width="564" 
-                  height="309"
-                  className="rounded-lg w-full h-[309px] object-cover"
+                  height="350"
+                  className="rounded-lg w-full h-[350px] object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
@@ -115,8 +115,8 @@ export const AffiliateLinks = () => {
                   src="//a.impactradius-go.com/display-ad/16384-2889438" 
                   alt="Ursime Online Sale - Get 0.5% commission on first-time purchases" 
                   width="188" 
-                  height="309"
-                  className="rounded-lg w-full h-[309px] object-cover"
+                  height="350"
+                  className="rounded-lg w-full h-[350px] object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
