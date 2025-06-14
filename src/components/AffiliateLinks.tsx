@@ -59,7 +59,7 @@ export const AffiliateLinks = () => {
           </div>
 
           {/* Gemini Affiliate */}
-          <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 md:col-span-3">
+          <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 md:col-span-4">
             <div className="flex flex-col items-center gap-1">
               <a 
                 rel="sponsored"
@@ -71,7 +71,7 @@ export const AffiliateLinks = () => {
                 <img 
                   src="//a.impactradius-go.com/display-ad/11829-2794807" 
                   alt="Gemini Exchange - Get $10 commission on first-time trades" 
-                  width="564" 
+                  width="752" 
                   height="350"
                   className="rounded-lg w-full h-[350px] object-cover"
                   onError={(e) => {
