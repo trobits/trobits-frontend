@@ -27,7 +27,7 @@ export const AffiliateLinks = () => {
                   className="block w-full relative"
                 >
                   <img 
-                    src="//a.impactradius-go.com/display-ad/17020-1453720" 
+                    src="https://a.impactradius-go.com/display-ad/17020-1453720" 
                     alt="Printrendy Online Sale - Get 3.75% commission on first-time purchases" 
                     width="235" 
                     height="300"
@@ -38,7 +38,7 @@ export const AffiliateLinks = () => {
                     }}
                   />
                   <div className="hidden absolute inset-0 bg-slate-700 rounded-lg flex items-center justify-center p-4">
-                    <p className="text-white text-center">Printrendy Online Sale<br/>3.75% Commission</p>
+                    <p className="text-white text-center font-semibold">Printrendy Online Sale<br/>3.75% Commission on First Purchase</p>
                   </div>
                 </a>
                 <img 
@@ -69,7 +69,7 @@ export const AffiliateLinks = () => {
                   className="block w-full relative"
                 >
                   <img 
-                    src="//a.impactradius-go.com/display-ad/11829-2794807" 
+                    src="https://a.impactradius-go.com/display-ad/11829-2794807" 
                     alt="Gemini Exchange - Get $10 commission on first-time trades" 
                     width="470" 
                     height="300"
@@ -80,7 +80,7 @@ export const AffiliateLinks = () => {
                     }}
                   />
                   <div className="hidden absolute inset-0 bg-slate-700 rounded-lg flex items-center justify-center p-4">
-                    <p className="text-white text-center">Gemini Exchange<br/>$10 Commission</p>
+                    <p className="text-white text-center font-semibold">Gemini Exchange<br/>$10 Commission on First Trade</p>
                   </div>
                 </a>
                 <img 
@@ -111,7 +111,7 @@ export const AffiliateLinks = () => {
                   className="block w-full relative"
                 >
                   <img 
-                    src="//a.impactradius-go.com/display-ad/16384-2889438" 
+                    src="https://a.impactradius-go.com/display-ad/16384-2889438" 
                     alt="Ursime Online Sale - Get 0.5% commission on first-time purchases" 
                     width="235" 
                     height="300"
@@ -122,7 +122,7 @@ export const AffiliateLinks = () => {
                     }}
                   />
                   <div className="hidden absolute inset-0 bg-slate-700 rounded-lg flex items-center justify-center p-4">
-                    <p className="text-white text-center">Ursime Online Sale<br/>0.5% Commission</p>
+                    <p className="text-white text-center font-semibold">Ursime Online Sale<br/>0.5% Commission on First Purchase</p>
                   </div>
                 </a>
                 <img 
