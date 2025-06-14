@@ -14,9 +14,9 @@ export const AffiliateLinks = () => {
   return (
     <div className="w-full bg-slate-900/50 py-1">
       <div className="max-w-7xl mx-auto px-1">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-1">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-1">
           {/* Printrendy Affiliate */}
-          <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700">
+          <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 md:col-span-1">
             <div className="flex flex-col items-center gap-1">
               <a 
                 rel="sponsored"
@@ -59,7 +59,7 @@ export const AffiliateLinks = () => {
           </div>
 
           {/* Gemini Affiliate */}
-          <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 md:col-span-4">
+          <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 md:col-span-3">
             <div className="flex flex-col items-center gap-1">
               <a 
                 rel="sponsored"
@@ -71,7 +71,7 @@ export const AffiliateLinks = () => {
                 <img 
                   src="//a.impactradius-go.com/display-ad/11829-2794807" 
                   alt="Gemini Exchange - Get $10 commission on first-time trades" 
-                  width="752" 
+                  width="470" 
                   height="350"
                   className="rounded-lg w-full h-[350px] object-cover"
                   onError={(e) => {
@@ -102,7 +102,7 @@ export const AffiliateLinks = () => {
           </div>
 
           {/* Ursime Affiliate */}
-          <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700">
+          <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 md:col-span-2">
             <div className="flex flex-col items-center gap-1">
               <a 
                 rel="sponsored"
