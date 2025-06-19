@@ -72,14 +72,16 @@ const CoinColumn = ({ cryptoData, index, isLast }) => {
         {/* Price Widget */}
         <div className="mb-6">
           <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-3">
-            <div ref={widgetRef} className="w-full h-[100px]" />
+            <div ref={widgetRef} className="w-full h-[90px]" />
           </div>
         </div>
 
         {/* Burn Stats */}
-        <div className="space-y-4">
-          <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-4">
-            <div className="flex items-center justify-center gap-2 mb-2">
+        {/* Combined Burn Stats Card */}
+        <div className="bg-gradient-to-br from-orange-500/10 to-purple-500/10 border border-orange-500/20 rounded-xl p-4 space-y-4">
+          {/* 1 Day Burn */}
+          <div>
+            <div className="flex items-center justify-center gap-2 mb-1">
               <Flame className="w-4 h-4 text-orange-400" />
               <span className="text-sm font-medium text-orange-300">
                 1 Day Burn
@@ -90,8 +92,9 @@ const CoinColumn = ({ cryptoData, index, isLast }) => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-4">
-            <div className="flex items-center justify-center gap-2 mb-2">
+          {/* Lifetime Burn */}
+          <div>
+            <div className="flex items-center justify-center gap-2 mb-1">
               <TrendingUp className="w-4 h-4 text-purple-400" />
               <span className="text-sm font-medium text-purple-300">
                 Lifetime Burn
