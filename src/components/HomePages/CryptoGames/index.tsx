@@ -6,6 +6,7 @@ import SnakeGame from "@/components/HomePages/CryptoGames/SnakeGame";
 import BrickBreaker from "@/components/HomePages/CryptoGames/brickbreaker";
 import CoinHunter from "@/components/HomePages/CryptoGames/CoinHunter";
 import SpaceShooter from "@/components/HomePages/CryptoGames/SpaceShooter";
+import FlappyBird from "@/components/HomePages/CryptoGames/flappyBird";
 import SnakeThumb from "@/assets/snake-thumb.png";
 import { BackgroundGradient } from "@/components/ui/backgroundGradient";
 import Image from "next/image";
@@ -135,6 +136,8 @@ const CryptoGames: React.FC = () => {
     switch (selectedGame) {
       case "snake":
         return <SnakeGame />;
+      case "flappy":
+        return <FlappyBird />;
       case "brickbreaker":
         return <BrickBreaker />;
       case "coinhunter":
