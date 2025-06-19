@@ -10,7 +10,7 @@ import SubPage from "./articles/SubPage";
 import CryptoGames from "@/components/HomePages/CryptoGames/index";
 
 import BurnChartWithCalculator from "@/components/HomePages/Slider/GraphSlider";
-import {GridBackground} from "@/components/ui/gridBackground";
+import { GridBackground } from "@/components/ui/gridBackground";
 
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
@@ -19,19 +19,15 @@ const Profile = () => {
 
   return (
     <div>
-        <CryptoNavbar />
+      <CryptoNavbar />
 
-        <GridBackground>
-            <CryptoData />
-        </GridBackground>
-
+      <GridBackground>
+        <CryptoData />
+      </GridBackground>
 
       <CryptoInfo />
       <CryptoGames />
 
-      <div className="mt-20">
-        <BurnChartWithCalculator /> {/* This is your chart and calculator */}
-      </div>
       {/*<Slider />*/}
       <div className="mt-20">
         <SubPage simpleHeader />
