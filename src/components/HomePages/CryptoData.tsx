@@ -72,7 +72,7 @@ const CoinColumn = ({ cryptoData, index, isLast }) => {
         {/* Price Widget */}
         <div className="mb-6">
           <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-3">
-            <div ref={widgetRef} className="w-full h-[50px]" />
+            <div ref={widgetRef} className="w-full h-[100px]" />
           </div>
         </div>
 
