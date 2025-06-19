@@ -50,7 +50,8 @@
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.8.1",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.177.0"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.41",
