@@ -27,13 +27,17 @@ const Profile = () => {
       <CryptoNavbar />
 
       {/* Printrendy above grid */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <GeminiCard />
-      </div>
+      <div className="pt-24">
+        {/* Gemini Card in centered container */}
+        <div className="max-w-4xl mx-auto px-4 py-2 mt-32">
+          <GeminiCard />
+        </div>
 
-      <GridBackground>
-        <CryptoData />
-      </GridBackground>
+        {/* Full-width GridBackground + CryptoData as originally intended */}
+        <GridBackground>
+          <CryptoData />
+        </GridBackground>
+      </div>
 
       {/* Gemini below grid */}
       {/* Multiple affiliate cards in a single row */}
@@ -52,19 +56,17 @@ const Profile = () => {
       </div>
 
       {/* Full-width wrapper with inner constrained content */}
-      <div className="w-full bg-slate-900/40 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-4 lg:px-12">
-          {/* Left: SubPage */}
-          <div className="lg:col-span-2">
-            <SubPage simpleHeader />
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 lg:px-12">
+        {/* SubPage takes 3/4 of space now */}
+        <div className="lg:col-span-3">
+          <SubPage simpleHeader />
+        </div>
 
-          {/* Right: All 3 stacked cards */}
-          <div className="space-y-4">
-            <GeminiCard />
-            <PrintrendyCard />
-            <UrsimeCard />
-          </div>
+        {/* Sidebar takes 1/4 */}
+        <div className="space-y-4">
+          <GeminiCard />
+          <PrintrendyCard />
+          <UrsimeCard />
         </div>
       </div>
 
