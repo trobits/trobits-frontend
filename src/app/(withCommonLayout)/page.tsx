@@ -26,7 +26,6 @@ const Profile = () => {
       </GridBackground>
 
       <CryptoInfo />
-      <CryptoGames />
 
       {/*<Slider />*/}
       <div className="mt-20">
