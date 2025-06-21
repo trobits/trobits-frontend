@@ -28,13 +28,13 @@ const Profile = () => {
     <div>
       <CryptoNavbar />
 
-      <div className="pt-20 ">
-        <div className="w-[95vw] mx-auto px-4 py-4 mt-12 h-40 overflow-clip">
-          <div className="w-full">
-            <GeminiCard />
-          </div>
-        </div>
-      </div>
+      <div className="pt-20">
+  <div className="w-[95vw] max-w-6xl mx-auto px-4 py-4 mt-12">
+    <GeminiCard compact />
+  </div>
+</div>
+
+
 
       <GridBackground>
         <CryptoData />

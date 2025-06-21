@@ -52,7 +52,7 @@ export const PrintrendyCard = () => {
   );
 };
 
-export const GeminiCard = () => {
+export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
   return (
     <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full">
       <div className="flex flex-col items-center gap-1">
@@ -67,12 +67,15 @@ export const GeminiCard = () => {
             alt="Gemini Exchange"
             width="470"
             height="300"
-            className="rounded-lg w-full h-[300px] object-cover"
+            className={`rounded-lg w-full object-cover ${
+              compact ? "h-20" : "h-[300px]"
+            }`}
             onError={(e) => {
               e.currentTarget.style.display = "none";
               e.currentTarget.nextElementSibling?.classList.remove("hidden");
             }}
           />
+          {/* fallback overlay */}
           <div className="hidden absolute inset-0 bg-slate-700 rounded-lg flex items-center justify-center p-4">
             <p className="text-white text-center font-semibold">
               Gemini Exchange
@@ -81,6 +84,7 @@ export const GeminiCard = () => {
             </p>
           </div>
         </a>
+
         <img
           height="0"
           width="0"
@@ -88,17 +92,32 @@ export const GeminiCard = () => {
           style={{ position: "absolute", visibility: "hidden" }}
           alt=""
         />
-        <div className="text-center w-full">
-          <h3 className="text-base font-semibold text-cyan-300">Gemini</h3>
-          <div className="bg-slate-700/50 p-1 rounded-lg">
-            <p className="text-sm text-slate-300">First-time Commission</p>
-            <p className="text-green-400 font-bold text-base">$10.00</p>
-          </div>
+
+        <div className="text-center w-full px-2">
+          {compact ? (
+            <div className="flex justify-center items-center gap-2 bg-slate-700/50 px-2 py-1 rounded-lg">
+              <h3 className="text-sm font-semibold text-cyan-300">Gemini</h3>
+              <p className="text-sm text-slate-300">First-time Commission</p>
+              <span className="text-green-400 font-bold text-sm">$10.00</span>
+            </div>
+          ) : (
+            <>
+              <h3 className="text-base font-semibold text-cyan-300">Gemini</h3>
+              <div className="bg-slate-700/50 p-1 rounded-lg">
+                <p className="text-sm text-slate-300">First-time Commission</p>
+                <p className="text-green-400 font-bold text-base">$10.00</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
+
+
+
 
 export const UrsimeCard = () => {
   const base = 2,
