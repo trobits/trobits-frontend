@@ -1,6 +1,6 @@
 import React from "react";
 
-export const PrintrendyCard = () => {
+export const PrintrendyCard = ({ compact = false }: { compact?: boolean }) => {
   const base = 15,
     bonus = 25;
   const total = (base * bonus) / 100;
@@ -19,7 +19,7 @@ export const PrintrendyCard = () => {
             alt="Printrendy Online Sale"
             width="235"
             height="300"
-            className="rounded-lg w-full h-[300px] object-cover"
+            className={`rounded-lg w-full object-cover ${compact ? "h-20" : "h-[300px]"}`}
             onError={(e) => {
               e.currentTarget.style.display = "none";
               e.currentTarget.nextElementSibling?.classList.remove("hidden");
@@ -40,12 +40,22 @@ export const PrintrendyCard = () => {
           style={{ position: "absolute", visibility: "hidden" }}
           alt=""
         />
-        <div className="text-center w-full">
-          <h3 className="text-base font-semibold text-cyan-300">Printrendy</h3>
-          <div className="bg-slate-700/50 p-1 rounded-lg">
-            <p className="text-sm text-slate-300">First-time Commission</p>
-            <p className="text-green-400 font-bold text-base">{total}%</p>
-          </div>
+        <div className="text-center w-full px-2">
+          {compact ? (
+            <div className="flex justify-center items-center gap-2 bg-slate-700/50 px-2 py-1 rounded-lg">
+              <h3 className="text-sm font-semibold text-cyan-300">Printrendy</h3>
+              <p className="text-sm text-slate-300">First-time Commission</p>
+              <span className="text-green-400 font-bold text-sm">{total}%</span>
+            </div>
+          ) : (
+            <>
+              <h3 className="text-base font-semibold text-cyan-300">Printrendy</h3>
+              <div className="bg-slate-700/50 p-1 rounded-lg">
+                <p className="text-sm text-slate-300">First-time Commission</p>
+                <p className="text-green-400 font-bold text-base">{total}%</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -67,15 +77,12 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
             alt="Gemini Exchange"
             width="470"
             height="300"
-            className={`rounded-lg w-full object-cover ${
-              compact ? "h-20" : "h-[300px]"
-            }`}
+            className={`rounded-lg w-full object-cover ${compact ? "h-20" : "h-[300px]"}`}
             onError={(e) => {
               e.currentTarget.style.display = "none";
               e.currentTarget.nextElementSibling?.classList.remove("hidden");
             }}
           />
-          {/* fallback overlay */}
           <div className="hidden absolute inset-0 bg-slate-700 rounded-lg flex items-center justify-center p-4">
             <p className="text-white text-center font-semibold">
               Gemini Exchange
@@ -84,7 +91,6 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
             </p>
           </div>
         </a>
-
         <img
           height="0"
           width="0"
@@ -92,7 +98,6 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
           style={{ position: "absolute", visibility: "hidden" }}
           alt=""
         />
-
         <div className="text-center w-full px-2">
           {compact ? (
             <div className="flex justify-center items-center gap-2 bg-slate-700/50 px-2 py-1 rounded-lg">
@@ -115,11 +120,7 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
   );
 };
 
-
-
-
-
-export const UrsimeCard = () => {
+export const UrsimeCard = ({ compact = false }: { compact?: boolean }) => {
   const base = 2,
     bonus = 25;
   const total = (base * bonus) / 100;
@@ -138,7 +139,7 @@ export const UrsimeCard = () => {
             alt="Ursime Online Sale"
             width="235"
             height="300"
-            className="rounded-lg w-full h-[300px] object-cover"
+            className={`rounded-lg w-full object-cover ${compact ? "h-20" : "h-[300px]"}`}
             onError={(e) => {
               e.currentTarget.style.display = "none";
               e.currentTarget.nextElementSibling?.classList.remove("hidden");
@@ -159,12 +160,22 @@ export const UrsimeCard = () => {
           style={{ position: "absolute", visibility: "hidden" }}
           alt=""
         />
-        <div className="text-center w-full">
-          <h3 className="text-base font-semibold text-cyan-300">Ursime</h3>
-          <div className="bg-slate-700/50 p-1 rounded-lg">
-            <p className="text-sm text-slate-300">First-time Commission</p>
-            <p className="text-green-400 font-bold text-base">{total}%</p>
-          </div>
+        <div className="text-center w-full px-2">
+          {compact ? (
+            <div className="flex justify-center items-center gap-2 bg-slate-700/50 px-2 py-1 rounded-lg">
+              <h3 className="text-sm font-semibold text-cyan-300">Ursime</h3>
+              <p className="text-sm text-slate-300">First-time Commission</p>
+              <span className="text-green-400 font-bold text-sm">{total}%</span>
+            </div>
+          ) : (
+            <>
+              <h3 className="text-base font-semibold text-cyan-300">Ursime</h3>
+              <div className="bg-slate-700/50 p-1 rounded-lg">
+                <p className="text-sm text-slate-300">First-time Commission</p>
+                <p className="text-green-400 font-bold text-base">{total}%</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

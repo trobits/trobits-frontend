@@ -455,14 +455,14 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
             </div>
         )}
 
-        <div className="px-4 sm:px-6 lg:px-8 xl:px-20">
+        <div className="px-0 sm:px-0 lg:px-0 xl:px-20">
           {/* Hero Section */}
           {simpleHeader ? (
-              <section className="container mx-auto mt-28 px-0">
-  <div className="flex justify-center items-center">
-    <div className="w-full max-w-6xl mx-auto px-6">
-      <BackgroundGradient className="rounded-3xl bg-gradient-to-br from-slate-950/80 to-gray-900/80 border border-gray-800/60 hover:shadow-[0_0_40px_#38bdf8]/40 transition-all duration-300">
-        <div className="bg-gray-900/50 border border-gray-800/40 rounded-3xl p-8">
+              <section className="w-full mt-20 px-0">
+  <div className="w-full mx-0">
+
+    <BackgroundGradient className="rounded-3xl bg-gradient-to-br from-slate-950/80 to-gray-900/80 border border-gray-800/60 hover:shadow-[0_0_40px_#38bdf8]/40 transition-all duration-300">
+      <div className="bg-gray-900/50 border border-gray-800/40 rounded-3xl p-8">
 
           {/* Header */}
           <div className="text-center mb-8">
@@ -541,7 +541,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         </div>
       </BackgroundGradient>
     </div>
-  </div>
+  
 </section>
           ) : (
               <div className="relative overflow-hidden pt-16 pb-8">

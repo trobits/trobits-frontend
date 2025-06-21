@@ -43,26 +43,39 @@ const Profile = () => {
       </GridBackground>
       <div className="w-[95vw] max-w-6xl mx-auto px-4 py-6">
   <CardCarousel />
+
+
+
+
+
 </div>
 
 
       <CryptoInfo />
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <UrsimeCard />
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 px-4 lg:px-12">
-        <div className="lg:col-span-3">
-          <SubPage simpleHeader />
-        </div>
+      <div className="relative z-20 pt-0">
+  <div className="w-[95vw] max-w-6xl mx-auto px-4 py-4 mt-6 mb-12">
+    <PrintrendyCard compact />
+  </div>
+</div>
 
-        <div className="space-y-4">
-          <GeminiCard />
-          <PrintrendyCard />
-          <UrsimeCard />
-        </div>
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 px-2 sm:px-4 lg:px-12">
+  {/* Main content area (wider) */}
+  <div className="lg:col-span-10">
+    <SubPage simpleHeader />
+  </div>
+
+  {/* Side cards area (narrower) */}
+  <div className="lg:col-span-2 space-y-4">
+    <div className="p-2">
+      <GeminiCard  />
+    </div>
+    <div className="p-2">
+      <PrintrendyCard  />
+    </div>
+  </div>
+</div>
 
       <Footer />
     </div>
