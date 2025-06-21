@@ -8,6 +8,7 @@ import Footer from "../shared/Footer/Footer";
 import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
 import SubPage from "./articles/SubPage";
 import CryptoGames from "@/components/HomePages/CryptoGames/index";
+import { BackgroundGradient } from "@/components/ui/backgroundGradient";
 
 import BurnChartWithCalculator from "@/components/HomePages/Slider/GraphSlider";
 import { GridBackground } from "@/components/ui/gridBackground";
@@ -28,20 +29,22 @@ const Profile = () => {
     <div>
       <CryptoNavbar />
 
-      <div className="pt-20">
-  <div className="w-[95vw] max-w-6xl mx-auto px-4 py-4 mt-12">
+      <div className="relative z-20 pt-20">
+  <div className="w-[95vw] max-w-6xl mx-auto px-4 py-4 mt-6 -mb-36">
     <GeminiCard compact />
   </div>
 </div>
 
 
 
+
       <GridBackground>
         <CryptoData />
       </GridBackground>
-      <div className="w-[95vw] px-4 sm:px-8 py-6 -mx-4 sm:-mx-8">
-        <CardCarousel />
-      </div>
+      <div className="w-[95vw] max-w-6xl mx-auto px-4 py-6">
+  <CardCarousel />
+</div>
+
 
       <CryptoInfo />
 

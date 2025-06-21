@@ -23,6 +23,7 @@ import {
 } from "@/hooks/useCryptoNews";
 import { usePathname } from "next/navigation";
 import Loading from "@/components/Shared/Loading";
+import { BackgroundGradient } from "@/components/ui/backgroundGradient"; // Ensure this is imported
 
 
 const InfiniteLoader: React.FC<{
@@ -458,96 +459,90 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
           {/* Hero Section */}
           {simpleHeader ? (
               <section className="container mx-auto mt-28 px-0">
-                <div className="flex justify-center items-center">
-                  <div className="w-full max-w-7xl mx-auto px-6">
-                    <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8">
+  <div className="flex justify-center items-center">
+    <div className="w-full max-w-6xl mx-auto px-6">
+      <BackgroundGradient className="rounded-3xl bg-gradient-to-br from-slate-950/80 to-gray-900/80 border border-gray-800/60 hover:shadow-[0_0_40px_#38bdf8]/40 transition-all duration-300">
+        <div className="bg-gray-900/50 border border-gray-800/40 rounded-3xl p-8">
 
-                      {/* Header */}
-                      <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
-                            <Newspaper className="w-6 h-6 text-blue-400" />
-                          </div>
-                        </div>
-                        <h2 className="text-3xl font-bold text-white mb-2">
-                          Latest Crypto News
-                        </h2>
-                        <p className="text-gray-400 text-lg">
-                          Stay updated with the latest cryptocurrency news and market insights
-                        </p>
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-2">
+              Latest Crypto News
+            </h2>
+            
 
-                        {/* Status indicator */}
-                        <div className="flex items-center justify-center gap-2 mt-4">
-                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                          <span className="text-sm text-green-400 font-medium">
-                            Live Feed • {totalItems} articles
-                          </span>
-                        </div>
-                      </div>
+            {/* Status indicator */}
+            
+          </div>
 
-                      {/* News Feed Container */}
-                      <div className="bg-gray-900/60 border border-gray-700/50 rounded-2xl p-6">
-                        <div className="relative overflow-hidden">
-                          {/* Left Button */}
-                          <button
-                              onMouseEnter={() => {
-                                setPauseScroll(true);
-                                hoverLeftRef.current = true;
-                              }}
-                              onMouseLeave={() => {
-                                setPauseScroll(false);
-                                hoverLeftRef.current = false;
-                              }}
-                              className="group absolute left-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gray-700/80 hover:scale-110"
-                          >
-                            <ChevronLeft className="w-5 h-5 text-white" />
-                          </button>
+          {/* News Feed Container */}
+          <div className="bg-gray-900/60 border border-gray-700/50 rounded-2xl p-6">
+            <div className="relative overflow-hidden">
+              {/* Left Button */}
+              <button
+                onMouseEnter={() => {
+                  setPauseScroll(true);
+                  hoverLeftRef.current = true;
+                }}
+                onMouseLeave={() => {
+                  setPauseScroll(false);
+                  hoverLeftRef.current = false;
+                }}
+                className="group absolute left-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gray-700/80 hover:scale-110"
+              >
+                <ChevronLeft className="w-5 h-5 text-white" />
+              </button>
 
-                          {/* Right Button */}
-                          <button
-                              onMouseEnter={() => {
-                                setPauseScroll(true);
-                                hoverRightRef.current = true;
-                              }}
-                              onMouseLeave={() => {
-                                setPauseScroll(false);
-                                hoverRightRef.current = false;
-                              }}
-                              className="group absolute right-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gray-700/80 hover:scale-110"
-                          >
-                            <ChevronRight className="w-5 h-5 text-white" />
-                          </button>
+              {/* Right Button */}
+              <button
+                onMouseEnter={() => {
+                  setPauseScroll(true);
+                  hoverRightRef.current = true;
+                }}
+                onMouseLeave={() => {
+                  setPauseScroll(false);
+                  hoverRightRef.current = false;
+                }}
+                className="group absolute right-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gray-700/80 hover:scale-110"
+              >
+                <ChevronRight className="w-5 h-5 text-white" />
+              </button>
 
-                          {/* Scrollable article strip */}
-                          <div
-                              ref={scrollRef}
-                              onMouseEnter={() => setPauseScroll(true)}
-                              onMouseLeave={() => setPauseScroll(false)}
-                              className="overflow-x-auto no-scrollbar scroll-smooth"
-                              style={{
-                                display: "flex",
-                                gap: "1.5rem",
-                                paddingBottom: "1rem",
-                                paddingLeft: "3rem",
-                                paddingRight: "3rem",
-                                paddingTop: "0.5rem",
-                              }}
-                          >
-                            {filteredArticles.slice(0, 20).map((article, i) => (
-                                <div
-                                    key={`${article.id}-${i}`}
-                                    className="flex-shrink-0 w-80"
-                                >
-                                  <NewsCard articleData={article} viewMode="grid" />
-                                </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+              {/* Scrollable article strip */}
+              <div
+                ref={scrollRef}
+                onMouseEnter={() => setPauseScroll(true)}
+                onMouseLeave={() => setPauseScroll(false)}
+                className="overflow-x-auto no-scrollbar scroll-smooth"
+                style={{
+                  display: "flex",
+                  gap: "1.5rem",
+                  paddingBottom: "1rem",
+                  paddingLeft: "3rem",
+                  paddingRight: "3rem",
+                  paddingTop: "0.5rem",
+                }}
+              >
+                {filteredArticles.slice(0, 20).map((article, i) => (
+                  <div
+                    key={`${article.id}-${i}`}
+                    className="flex-shrink-0 w-80"
+                  >
+                    <NewsCard articleData={article} viewMode="grid" />
                   </div>
-                </div>
-              </section>
+                ))}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </BackgroundGradient>
+    </div>
+  </div>
+</section>
           ) : (
               <div className="relative overflow-hidden pt-16 pb-8">
                 <div className="relative">
