@@ -17,6 +17,8 @@ import {
   UrsimeCard,
 } from "@/components/AffiliateLinks";
 
+import CardCarousel from "@/components/HomePages/Affiliate/AffilliateCarousel";
+
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const Profile = () => {
@@ -26,21 +28,19 @@ const Profile = () => {
     <div>
       <CryptoNavbar />
 
-      <div className="pt-24">
-        <div className="max-w-4xl mx-auto px-4 py-2 mt-32">
-          <GeminiCard />
+      <div className="pt-20 ">
+        <div className="w-[95vw] mx-auto px-4 py-4 mt-12 h-40 overflow-clip">
+          <div className="w-full">
+            <GeminiCard />
+          </div>
         </div>
-
-        <GridBackground>
-          <CryptoData />
-        </GridBackground>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <GeminiCard />
-          <UrsimeCard />
-        </div>
+      <GridBackground>
+        <CryptoData />
+      </GridBackground>
+      <div className="w-[95vw] px-4 sm:px-8 py-6 -mx-4 sm:-mx-8">
+        <CardCarousel />
       </div>
 
       <CryptoInfo />
@@ -49,7 +49,7 @@ const Profile = () => {
         <UrsimeCard />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 lg:px-12">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 px-4 lg:px-12">
         <div className="lg:col-span-3">
           <SubPage simpleHeader />
         </div>
