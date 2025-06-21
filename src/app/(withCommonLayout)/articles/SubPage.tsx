@@ -527,13 +527,14 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                 }}
               >
                 {filteredArticles.slice(0, 20).map((article, i) => (
-                  <div
-                    key={`${article.id}-${i}`}
-                    className="flex-shrink-0 w-80"
-                  >
-                    <NewsCard articleData={article} viewMode="grid" />
-                  </div>
-                ))}
+  <div
+    key={`${article.id}-${i}`}
+    className="flex-shrink-0 w-64" // or w-60
+  >
+    <NewsCard articleData={article} viewMode="grid" />
+  </div>
+))}
+
               </div>
             </div>
           </div>
