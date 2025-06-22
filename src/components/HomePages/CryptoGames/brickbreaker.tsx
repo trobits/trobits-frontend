@@ -4,10 +4,27 @@ import React, { useState, useEffect, useRef } from "react";
 const BALL_SPEED = 3;
 const PADDLE_SPEED = 12; // Increased the speed for faster paddle movement
 
-// Create a random coin generator function
-const generateCoins = () => {
+// Power-up types
+enum PowerUpType {
+  SCORE = "score",
+}
+
+interface PowerUp {
+  x: number;
+  y: number;
+  type: PowerUpType;
+  dy: number; // Vertical speed of the power-up
+}
+
+// Create a random coin and power-up generator function
+const generateBrickContent = () => {
   const rand = Math.random();
-  return rand > 0.7; // 30% chance for a brick to have a coin
+  if (rand < 0.1) {
+    return 3; // 10% chance for a power-up brick
+  } else if (rand < 0.4) {
+    return 1; // 30% chance for a coin brick
+  }
+  return 2; // 60% chance for a regular brick
 };
 
 const BrickBreaker: React.FC = () => {
@@ -20,10 +37,16 @@ const BrickBreaker: React.FC = () => {
   });
   const [paddle, setPaddle] = useState({ x: 100, width: 100 });
   const [coins, setCoins] = useState<number>(0);
+  const [score, setScore] = useState<number>(0); // Added score state
+  const [powerUps, setPowerUps] = useState<PowerUp[]>([]); // Added power-ups state
   const [gameOver, setGameOver] = useState(false); // Added gameOver state
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMovingLeft = useRef(false);
   const isMovingRight = useRef(false);
+  const [gameStarted, setGameStarted] = useState(false); 
+
+  const [gameLoopStarted, setGameLoopStarted] = useState(false);
+
 
   // Initialize game with bricks
   useEffect(() => {
@@ -37,7 +60,7 @@ const BrickBreaker: React.FC = () => {
     for (let row = 0; row < 5; row++) {
       const brickRow: number[] = [];
       for (let col = 0; col < 7; col++) {
-        brickRow.push(generateCoins() ? 1 : 2); // 1 means a coin, 2 means a regular brick (not 0)
+        brickRow.push(generateBrickContent()); // 1: coin, 2: regular, 3: power-up
       }
       initialBricks.push(brickRow);
     }
@@ -69,12 +92,32 @@ const BrickBreaker: React.FC = () => {
         if (brick > 0) {
           ctx.beginPath();
           ctx.rect(j * 60 + 35, i * 20 + 30, 50, 15);
-          ctx.fillStyle = brick === 1 ? "#ff0" : "#0095DD"; // Yellow for coin brick, blue for regular
+          if (brick === 1) {
+            ctx.fillStyle = "#ff0"; // Yellow for coin brick
+          } else if (brick === 3) {
+            ctx.fillStyle = "#f0f"; // Magenta for power-up brick
+          } else {
+            ctx.fillStyle = "#0095DD"; // Blue for regular brick
+          }
           ctx.fill();
           ctx.closePath();
         }
       });
     });
+
+    // Draw power-ups
+    powerUps.forEach((powerUp) => {
+      ctx.beginPath();
+      ctx.rect(powerUp.x, powerUp.y, 20, 20); // Power-up size
+      ctx.fillStyle = "lime"; // Green for power-ups
+      ctx.fill();
+      ctx.closePath();
+    });
+
+    // Draw score
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#000";
+    ctx.fillText(`Score: ${score}`, ctx.canvas.width - 100, 20); // Display score
   };
 
   // Function to update ball position and handle interactions
@@ -142,59 +185,87 @@ const BrickBreaker: React.FC = () => {
     });
   };
 
+  // Update power-up positions and check for paddle collision
+  const updatePowerUps = () => {
+    setPowerUps((prevPowerUps) => {
+      const newPowerUps = prevPowerUps
+        .map((powerUp) => ({
+          ...powerUp,
+          y: powerUp.y + powerUp.dy,
+        }))
+        .filter((powerUp) => {
+          // Remove power-ups that go off-screen
+          if (powerUp.y > canvasRef.current!.height) {
+            return false;
+          }
+
+          // Check for collision with paddle
+          if (
+            powerUp.y + 20 > canvasRef.current!.height - 30 && // Power-up bottom overlaps paddle top
+            powerUp.y < canvasRef.current!.height - 20 && // Power-up top overlaps paddle bottom
+            powerUp.x < paddle.x + paddle.width && // Power-up left is within paddle width
+            powerUp.x + 20 > paddle.x // Power-up right is within paddle width
+          ) {
+            // Power-up caught!
+            if (powerUp.type === PowerUpType.SCORE) {
+              setScore((prevScore) => prevScore + 50); // Increase score
+            }
+            return false; // Remove power-up
+          }
+          return true; // Keep power-up
+        });
+      return newPowerUps;
+    });
+  };
+
   // Collision detection for breaking bricks
-  const checkBrickCollisions = () => {
+ const checkBrickCollisions = () => {
     setBall((prevBall) => {
       let newBall = { ...prevBall };
-      const newBricks = bricks.map((row) => [...row]); // Create a new array to modify
+      const newBricks = bricks.map((row) => [...row]);
+      let rowCleared = false;
 
-      let bottomRowCleared = false; // Flag to check if the bottom row is cleared
-
-      // Check collision with bricks
       for (let i = 0; i < newBricks.length; i++) {
         for (let j = 0; j < newBricks[i].length; j++) {
           if (newBricks[i][j] > 0) {
-            // Calculate brick position and dimensions
             const brickX = j * 60 + 35;
             const brickY = i * 20 + 30;
             const brickWidth = 50;
             const brickHeight = 15;
 
-            // Check for collision with the current brick
             if (
               newBall.x > brickX &&
               newBall.x < brickX + brickWidth &&
               newBall.y > brickY &&
               newBall.y < brickY + brickHeight
             ) {
-              newBall.dy = -newBall.dy; // Reverse ball's vertical direction
-              if (newBricks[i][j] === 1) {
-                setCoins((prevCoins) => prevCoins + 1); // Collect coin
-              }
-              newBricks[i][j] = 0; // Break the brick
+              newBall.dy = -newBall.dy;
 
-              // Check if the bottom row (last row) was cleared
-              if (i === newBricks.length - 1) {
-                bottomRowCleared = true;
+              if (newBricks[i][j] === 1) {
+                setCoins((prevCoins) => prevCoins + 1);
+              } else if (newBricks[i][j] === 3) {
+                setPowerUps((prevPowerUps) => [
+                  ...prevPowerUps,
+                  { x: brickX + brickWidth / 2 - 10, y: brickY, type: PowerUpType.SCORE, dy: 2 },
+                ]);
               }
-              break; // Only break one brick per ball collision
+              newBricks[i][j] = 0;
+              break;
             }
           }
         }
-        if (newBall.dy !== prevBall.dy) break; // If ball direction changed, a brick was hit, exit outer loop
+        if (newBall.dy !== prevBall.dy) break;
       }
 
-      // If the bottom row was cleared, move all rows down and add a new row at the top
-      if (
-        bottomRowCleared &&
-        newBricks[newBricks.length - 1].every((brick) => brick === 0)
-      ) {
-        // Shift all existing rows down
-        for (let i = newBricks.length - 1; i > 0; i--) {
-          newBricks[i] = newBricks[i - 1];
+      // Check for any cleared row
+      for (let i = 0; i < newBricks.length; i++) {
+        if (newBricks[i].every((brick) => brick === 0)) {
+          rowCleared = true;
+          for (let k = i; k > 0; k--) {
+            newBricks[k] = newBricks[k - 1];
+          }
+          newBricks[0] = generateNewRow();
         }
-        // Add a new row at the top
-        newBricks[0] = generateNewRow();
       }
 
       setBricks(newBricks);
@@ -206,47 +277,85 @@ const BrickBreaker: React.FC = () => {
   const generateNewRow = () => {
     const row: number[] = [];
     for (let col = 0; col < 7; col++) {
-      row.push(generateCoins() ? 1 : 2); // 1 for coin, 2 for regular brick
+      row.push(generateBrickContent()); // 1: coin, 2: regular, 3: power-up
     }
     return row;
   };
 
   // Game loop
-  const gameLoop = () => {
-    const ctx = canvasRef.current!.getContext("2d")!;
-    draw(ctx);
+const gameLoop = () => {
+  if (gameOver) return;
+
+  const ctx = canvasRef.current!.getContext("2d")!;
+  draw(ctx);
+
+  if (gameLoopStarted) {
     updateBall();
     checkBrickCollisions();
-    movePaddleWithKeys(); // Add paddle movement based on keys
-  };
+    movePaddleWithKeys();
+    updatePowerUps();
+  }
+};
+
+
 
   // Start the game loop on each frame
-  useEffect(() => {
-    const interval = setInterval(gameLoop, 10);
-    return () => clearInterval(interval);
-  }, [bricks, ball]);
+useEffect(() => {
+  if (!gameStarted || !gameLoopStarted || gameOver) return;
+
+  const interval = setInterval(gameLoop, 10);
+  return () => clearInterval(interval);
+}, [bricks, ball, paddle, powerUps, gameOver, gameStarted, gameLoopStarted]);
+
+useEffect(() => {
+  if (!gameStarted || gameLoopStarted || gameOver) return;
+
+  const ctx = canvasRef.current?.getContext("2d");
+  if (!ctx) return;
+
+  draw(ctx); // Draw static game screen once
+
+  const idleInterval = setInterval(() => {
+    draw(ctx);
+  }, 30); // Repeatedly draw bricks, paddle, ball position
+
+  return () => clearInterval(idleInterval);
+}, [gameStarted, gameLoopStarted, gameOver]);
+
+// Added powerUps and gameOver to dependencies
 
   // Event listener for mouse movement and keyboard arrow keys
   useEffect(() => {
-    canvasRef.current!.addEventListener("mousemove", movePaddleWithMouse);
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+  if (!gameStarted) return;
 
-    return () => {
-      canvasRef.current!.removeEventListener("mousemove", movePaddleWithMouse);
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+
+  canvas.addEventListener("mousemove", movePaddleWithMouse);
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("keyup", handleKeyUp);
+
+  return () => {
+    canvas.removeEventListener("mousemove", movePaddleWithMouse);
+    window.removeEventListener("keydown", handleKeyDown);
+    window.removeEventListener("keyup", handleKeyUp);
+  };
+}, [gameStarted]);
+
 
   // Handle keydown event to set continuous movement
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "ArrowLeft") {
-      isMovingLeft.current = true;
-    } else if (e.key === "ArrowRight") {
-      isMovingRight.current = true;
-    }
-  };
+const handleKeyDown = (e: KeyboardEvent) => {
+  if (!gameLoopStarted) {
+    setGameLoopStarted(true); // Start the loop on first key press
+  }
+
+  if (e.key === "ArrowLeft") {
+    isMovingLeft.current = true;
+  } else if (e.key === "ArrowRight") {
+    isMovingRight.current = true;
+  }
+};
+
 
   // Handle keyup event to stop movement when key is released
   const handleKeyUp = (e: KeyboardEvent) => {
@@ -263,34 +372,53 @@ const BrickBreaker: React.FC = () => {
     setBall({ x: 150, y: 290, dx: BALL_SPEED, dy: BALL_SPEED }); // Reset ball position
     setPaddle({ x: 100, width: 100 }); // Reset paddle position
     setCoins(0); // Reset coins
+    setScore(0); // Reset score
+    setPowerUps([]); // Clear any lingering power-ups
     setBricks(generateInitialBricks()); // Reset bricks
+    setGameLoopStarted(false); // Reset loop trigger
+
   };
 
   return (
-    <div className="game-container" style={{ textAlign: "center" }}>
-      {gameOver ? (
-        <div className="game-over-screen">
-          <h2>Game Over!</h2>
-          <button onClick={restartGame}>Play Again</button>
-        </div>
-      ) : (
-        <>
-          <h1>BrickBreaker - Coins Collected: {coins}</h1>
-          <canvas
-            ref={canvasRef}
-            width="480"
-            height="320"
-            style={{
-              border: "1px solid #0095DD",
-              backgroundColor: "#eee",
-              display: "block",
-              margin: "0 auto",
-            }}
-          />
-        </>
-      )}
-    </div>
-  );
+  <div className="game-container" style={{ textAlign: "center" }}>
+    {!gameStarted ? (
+      <div className="home-screen text-white">
+        <h1>Welcome to BrickBreaker</h1>
+        <p>🟦 Break bricks to score points</p>
+        <p>🟨 Yellow bricks = coins</p>
+        <p>🟪 Magenta bricks = drop power-ups</p>
+        <p>🎮 Use Arrow Keys or Mouse to move the paddle</p>
+        <button onClick={() => setGameStarted(true)}>Start Game</button>
+        <br />
+        
+      </div>
+    ) : gameOver ? (
+      <div className="game-over-screen text-white">
+        <h2>Game Over!</h2>         
+        <p>Coins Collected: {score/200}</p>
+        <p>Final Score: {score}</p>
+        <button onClick={restartGame}>Play Again</button>
+        <br />
+        <button onClick={() => {setGameStarted(false);  setGameLoopStarted(false);}}>Back to Home</button>
+      </div>
+    ) : (
+      <>
+        <h1>BrickBreaker - Coins: {coins}</h1>
+        <canvas
+          ref={canvasRef}
+          width="480"
+          height="320"
+          style={{
+            border: "1px solid #0095DD",
+            backgroundColor: "#eee",
+            display: "block",
+            margin: "0 auto",
+          }}
+        />
+      </>
+    )}
+  </div>
+);
 };
 
 export default BrickBreaker;
