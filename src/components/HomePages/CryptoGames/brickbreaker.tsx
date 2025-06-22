@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Play, RotateCcw, Trophy, Zap, Home } from "lucide-react";
-import powerUpImageSrc from "../../../assets/icons/shiba-inu.png"; // Rename to avoid confusion with the Image object
+import powerUpImageSrc from "./../../../assets/icons/shiba-inu.png"; // Assuming the path
 
 const BALL_SPEED = 3;
 const PADDLE_SPEED = 12;
@@ -27,9 +27,9 @@ const HIGH_SCORES = [
 
 const generateBrickContent = () => {
   const rand = Math.random();
-  if (rand < 0.1) return 3;
-  else if (rand < 0.4) return 1;
-  return 2;
+  if (rand < 0.1) return 3; // Power-up brick
+  else if (rand < 0.4) return 1; // Coin brick (yellow in your original code, can be light blue now)
+  return 2; // Regular brick (blue in your original code, can be light blue now)
 };
 
 const BrickBreaker: React.FC = () => {
@@ -39,7 +39,6 @@ const BrickBreaker: React.FC = () => {
   const powerUpsRef = useRef<PowerUp[]>([]);
   const bricksRef = useRef<number[][]>([]);
 
-  // State to hold the loaded image object
   const [powerUpImage, setPowerUpImage] = useState<HTMLImageElement | null>(null);
 
   const [coins, setCoins] = useState(0);
@@ -71,53 +70,100 @@ const BrickBreaker: React.FC = () => {
   useEffect(() => {
     generateInitialBricks();
 
-    // Load the power-up image once when the component mounts
     const img = new Image();
-    img.src = powerUpImageSrc.src; // Access the src property of the imported module
+    img.src = powerUpImageSrc.src;
     img.onload = () => {
-      setPowerUpImage(img); // Set the loaded image to state
+      setPowerUpImage(img);
     };
     img.onerror = () => {
         console.error("Failed to load power-up image:", powerUpImageSrc.src);
     };
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
-  const draw = (ctx: CanvasRenderingContext2D) => {
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+const draw = (ctx: CanvasRenderingContext2D) => {
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    const ball = ballRef.current;
+  const ball = ballRef.current;
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, 10, 0, Math.PI * 2);
+  ctx.fillStyle = "#00FFFF"; // Cyan ball
+  ctx.fill();
+  ctx.closePath();
+
+  const paddle = paddleRef.current;
+  ctx.beginPath();
+  ctx.rect(paddle.x, CANVAS_HEIGHT - 30, paddle.width, 10);
+  ctx.fillStyle = "#8B00FF"; // Neon purple paddle
+  ctx.shadowColor = "#8B00FF";
+  ctx.shadowBlur = 12;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.closePath();
+
+  const drawRoundedRect = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radius: number
+  ) => {
     ctx.beginPath();
-    ctx.arc(ball.x, ball.y, 10, 0, Math.PI * 2);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
     ctx.closePath();
-
-    const paddle = paddleRef.current;
-    ctx.beginPath();
-    ctx.rect(paddle.x, CANVAS_HEIGHT - 30, paddle.width, 10);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    ctx.closePath();
-
-    bricksRef.current.forEach((row, i) => {
-      row.forEach((brick, j) => {
-        if (brick > 0) {
-          ctx.beginPath();
-          ctx.rect(j * 60 + 35, i * 20 + 30, 50, 15);
-          ctx.fillStyle = brick === 1 ? "#ff0" : brick === 3 ? "#f0f" : "#0095DD";
-          ctx.fill();
-          ctx.closePath();
-        }
-      });
-    });
-
-    // Only draw power-ups if the image has loaded
-    if (powerUpImage) {
-      powerUpsRef.current.forEach((powerUp) => {
-        ctx.drawImage(powerUpImage, powerUp.x, powerUp.y, 20, 20);
-      });
-    }
   };
+
+  bricksRef.current.forEach((row, i) => {
+    row.forEach((brick, j) => {
+      if (brick > 0) {
+        const bx = j * 60 + 35;
+        const by = i * 20 + 30;
+
+        const radius = 4;
+
+        // Brick color selection
+        let fillColor = "#1E90FF"; // Regular
+        if (brick === 1) fillColor = "#1E90FF"; // Coin
+        else if (brick === 3) fillColor = "#87CEFA"; // Power-up (light blue)
+
+        // Outline / neon glow
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#8B00FF"; // Neon purple
+        ctx.shadowColor = "#8B00FF";
+        ctx.shadowBlur = 15;
+
+        drawRoundedRect(ctx, bx, by, 50, 15, radius);
+        ctx.stroke();
+
+        // Reset shadow and draw fill
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "transparent";
+        ctx.fillStyle = fillColor;
+        drawRoundedRect(ctx, bx, by, 50, 15, radius);
+        ctx.fill();
+      }
+    });
+  });
+
+  // Draw power-ups
+  ctx.shadowBlur = 0;
+  ctx.shadowColor = "transparent";
+  if (powerUpImage) {
+    powerUpsRef.current.forEach((powerUp) => {
+      ctx.drawImage(powerUpImage, powerUp.x, powerUp.y, 20, 20);
+    });
+  }
+};
+
+
 
   const updateGame = () => {
     const ball = ballRef.current;
@@ -186,14 +232,13 @@ const BrickBreaker: React.FC = () => {
 
     const loop = () => {
       if (!gameOver && gameStarted && gameLoopStarted) updateGame();
-      // Pass powerUpImage as a dependency to redraw when it loads
       draw(ctx);
       frameId = requestAnimationFrame(loop);
     };
 
     frameId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frameId);
-  }, [gameStarted, gameLoopStarted, gameOver, powerUpImage]); // Add powerUpImage to dependencies
+  }, [gameStarted, gameLoopStarted, gameOver, powerUpImage]);
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (gameStarted && !gameLoopStarted && !gameOver) setGameLoopStarted(true);
@@ -228,11 +273,10 @@ const BrickBreaker: React.FC = () => {
               <span className="text-4xl">🧱</span>
             </div>
             <h2 className="text-3xl font-bold text-white">Brick Breaker</h2>
-            <p className="text-gray-400">Break bricks, collect coins, and power-ups!</p>
+            <p className="text-gray-400">Break bricks, collect coins!</p>
             <ul className="text-gray-300 space-y-1">
               <li>🎮 Use <span className="text-cyan-400">Arrow Keys</span> or <span className="text-cyan-400">Mouse</span> to move paddle</li>
 
-              <li>⚡ <span className="text-fuchsia-400">Magenta bricks</span> = power-ups</li>
             </ul>
             <button
               onClick={() => setGameStarted(true)}
