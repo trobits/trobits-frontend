@@ -1,6 +1,6 @@
-// Optimized BrickBreaker with UI
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Play, RotateCcw, Trophy, Zap, Home } from "lucide-react";
+import powerUpImageSrc from "../../../assets/icons/shiba-inu.png"; // Rename to avoid confusion with the Image object
 
 const BALL_SPEED = 3;
 const PADDLE_SPEED = 12;
@@ -39,6 +39,9 @@ const BrickBreaker: React.FC = () => {
   const powerUpsRef = useRef<PowerUp[]>([]);
   const bricksRef = useRef<number[][]>([]);
 
+  // State to hold the loaded image object
+  const [powerUpImage, setPowerUpImage] = useState<HTMLImageElement | null>(null);
+
   const [coins, setCoins] = useState(0);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -57,7 +60,6 @@ const BrickBreaker: React.FC = () => {
     bricksRef.current = initialBricks;
   };
 
-  // New function to generate a single random row of bricks
   const generateRandomBrickRow = () => {
     const newRow = [];
     for (let col = 0; col < 7; col++) {
@@ -68,7 +70,17 @@ const BrickBreaker: React.FC = () => {
 
   useEffect(() => {
     generateInitialBricks();
-  }, []);
+
+    // Load the power-up image once when the component mounts
+    const img = new Image();
+    img.src = powerUpImageSrc.src; // Access the src property of the imported module
+    img.onload = () => {
+      setPowerUpImage(img); // Set the loaded image to state
+    };
+    img.onerror = () => {
+        console.error("Failed to load power-up image:", powerUpImageSrc.src);
+    };
+  }, []); // Empty dependency array means this runs once on mount
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -99,13 +111,12 @@ const BrickBreaker: React.FC = () => {
       });
     });
 
-    powerUpsRef.current.forEach((powerUp) => {
-      ctx.beginPath();
-      ctx.rect(powerUp.x, powerUp.y, 20, 20);
-      ctx.fillStyle = "lime";
-      ctx.fill();
-      ctx.closePath();
-    });
+    // Only draw power-ups if the image has loaded
+    if (powerUpImage) {
+      powerUpsRef.current.forEach((powerUp) => {
+        ctx.drawImage(powerUpImage, powerUp.x, powerUp.y, 20, 20);
+      });
+    }
   };
 
   const updateGame = () => {
@@ -139,7 +150,6 @@ const BrickBreaker: React.FC = () => {
             }
 
             bricks[i][j] = 0;
-            // Check if the current row is cleared
             if (bricks[i].every(b => b === 0)) {
               rowCleared = true;
             }
@@ -149,12 +159,10 @@ const BrickBreaker: React.FC = () => {
       }
     }
 
-    // New feature: If a row is cleared, shift existing rows down and add a new one on top
     if (rowCleared) {
-      bricksRef.current.pop(); // Remove the last row (or a placeholder if you want to keep the same number of rows)
-      bricksRef.current.unshift(generateRandomBrickRow()); // Add a new row at the beginning
+      bricksRef.current.pop();
+      bricksRef.current.unshift(generateRandomBrickRow());
     }
-
 
     powerUpsRef.current = powerUpsRef.current
       .map((p) => ({ ...p, y: p.y + p.dy }))
@@ -162,7 +170,6 @@ const BrickBreaker: React.FC = () => {
         if (p.y > CANVAS_HEIGHT) return false;
         if (p.y + 20 > CANVAS_HEIGHT - 30 && p.y < CANVAS_HEIGHT - 20 && p.x < paddle.x + paddle.width && p.x + 20 > paddle.x) {
           if (p.type === PowerUpType.SCORE) setScore((s) => s + 200);
-
           return false;
         }
         return true;
@@ -179,13 +186,14 @@ const BrickBreaker: React.FC = () => {
 
     const loop = () => {
       if (!gameOver && gameStarted && gameLoopStarted) updateGame();
+      // Pass powerUpImage as a dependency to redraw when it loads
       draw(ctx);
       frameId = requestAnimationFrame(loop);
     };
 
     frameId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frameId);
-  }, [gameStarted, gameLoopStarted, gameOver]);
+  }, [gameStarted, gameLoopStarted, gameOver, powerUpImage]); // Add powerUpImage to dependencies
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (gameStarted && !gameLoopStarted && !gameOver) setGameLoopStarted(true);
@@ -267,8 +275,6 @@ const BrickBreaker: React.FC = () => {
             </div>
 
             <div className="w-80 space-y-6">
-
-
               <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
