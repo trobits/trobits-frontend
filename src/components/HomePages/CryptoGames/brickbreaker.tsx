@@ -57,6 +57,15 @@ const BrickBreaker: React.FC = () => {
     bricksRef.current = initialBricks;
   };
 
+  // New function to generate a single random row of bricks
+  const generateRandomBrickRow = () => {
+    const newRow = [];
+    for (let col = 0; col < 7; col++) {
+      newRow.push(generateBrickContent());
+    }
+    return newRow;
+  };
+
   useEffect(() => {
     generateInitialBricks();
   }, []);
@@ -114,6 +123,7 @@ const BrickBreaker: React.FC = () => {
     if (isMovingLeft.current) paddle.x = Math.max(paddle.x - PADDLE_SPEED, 0);
     if (isMovingRight.current) paddle.x = Math.min(paddle.x + PADDLE_SPEED, CANVAS_WIDTH - paddle.width);
 
+    let rowCleared = false;
     outer: for (let i = 0; i < bricks.length; i++) {
       for (let j = 0; j < bricks[i].length; j++) {
         const brick = bricks[i][j];
@@ -123,17 +133,28 @@ const BrickBreaker: React.FC = () => {
           if (ball.x + 10 > bx && ball.x - 10 < bx + 50 && ball.y + 10 > by && ball.y - 10 < by + 15) {
             ball.dy = -ball.dy;
             if (brick === 1) {
-  setCoins((c) => c + 1);
-} else if (brick === 3) {
-  powerUpsRef.current.push({ x: bx + 25 - 10, y: by, type: PowerUpType.SCORE, dy: 2 });
-}
+              setCoins((c) => c + 1);
+            } else if (brick === 3) {
+              powerUpsRef.current.push({ x: bx + 25 - 10, y: by, type: PowerUpType.SCORE, dy: 2 });
+            }
 
             bricks[i][j] = 0;
+            // Check if the current row is cleared
+            if (bricks[i].every(b => b === 0)) {
+              rowCleared = true;
+            }
             break outer;
           }
         }
       }
     }
+
+    // New feature: If a row is cleared, shift existing rows down and add a new one on top
+    if (rowCleared) {
+      bricksRef.current.pop(); // Remove the last row (or a placeholder if you want to keep the same number of rows)
+      bricksRef.current.unshift(generateRandomBrickRow()); // Add a new row at the beginning
+    }
+
 
     powerUpsRef.current = powerUpsRef.current
       .map((p) => ({ ...p, y: p.y + p.dy }))
@@ -191,104 +212,104 @@ const BrickBreaker: React.FC = () => {
     .slice(0, 5);
 
   return (
-  <div className="w-full max-w-7xl mx-auto font-sans p-4">
-    <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8">
-      {!gameStarted ? (
-        <div className="flex flex-col items-center text-center space-y-6">
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-500/30 flex items-center justify-center">
-            <span className="text-4xl">🧱</span>
+    <div className="w-full max-w-7xl mx-auto font-sans p-4">
+      <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8">
+        {!gameStarted ? (
+          <div className="flex flex-col items-center text-center space-y-6">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-500/30 flex items-center justify-center">
+              <span className="text-4xl">🧱</span>
+            </div>
+            <h2 className="text-3xl font-bold text-white">Brick Breaker</h2>
+            <p className="text-gray-400">Break bricks, collect coins, and power-ups!</p>
+            <ul className="text-gray-300 space-y-1">
+              <li>🎮 Use <span className="text-cyan-400">Arrow Keys</span> or <span className="text-cyan-400">Mouse</span> to move paddle</li>
+
+              <li>⚡ <span className="text-fuchsia-400">Magenta bricks</span> = power-ups</li>
+            </ul>
+            <button
+              onClick={() => setGameStarted(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-lg"
+            >
+              <Play className="inline w-4 h-4 mr-2" /> Start Game
+            </button>
           </div>
-          <h2 className="text-3xl font-bold text-white">Brick Breaker</h2>
-          <p className="text-gray-400">Break bricks, collect coins, and power-ups!</p>
-          <ul className="text-gray-300 space-y-1">
-            <li>🎮 Use <span className="text-cyan-400">Arrow Keys</span> or <span className="text-cyan-400">Mouse</span> to move paddle</li>
-            
-            <li>⚡ <span className="text-fuchsia-400">Magenta bricks</span> = power-ups</li>
-          </ul>
-          <button
-            onClick={() => setGameStarted(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-lg"
-          >
-            <Play className="inline w-4 h-4 mr-2" /> Start Game
-          </button>
-        </div>
-      ) : (
-        <div className="flex flex-col lg:flex-row gap-8 justify-center items-start">
-          <div className="flex flex-col gap-4 items-center">
-            <div
-              className="border border-gray-700/50 rounded-xl overflow-hidden"
-              style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT, backgroundColor: "#1e293b" }}>
-              <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
+        ) : (
+          <div className="flex flex-col lg:flex-row gap-8 justify-center items-start">
+            <div className="flex flex-col gap-4 items-center">
+              <div
+                className="border border-gray-700/50 rounded-xl overflow-hidden"
+                style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT, backgroundColor: "#1e293b" }}>
+                <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
+              </div>
+
+              {gameOver && (
+                <div className="text-center mt-4 space-y-3">
+                  <p className="text-red-400 text-xl font-semibold">Game Over!</p>
+                  <p className="text-lg text-gray-300">Score: <span className="text-cyan-400 font-bold">{score}</span></p>
+                  <button
+                    onClick={() => {
+                      setGameOver(false);
+                      setCoins(0);
+                      setScore(0);
+                      setGameLoopStarted(false);
+                      generateInitialBricks();
+                      ballRef.current = { x: 240, y: 290, dx: BALL_SPEED, dy: BALL_SPEED };
+                      paddleRef.current = { x: 190, width: 100 };
+                      powerUpsRef.current = [];
+                      setTimeout(() => setGameLoopStarted(true), 300);
+                    }}
+                    className="bg-green-600 text-white px-6 py-2 rounded-xl text-lg"
+                  >
+                    <RotateCcw className="inline w-4 h-4 mr-2" /> Try Again
+                  </button>
+                </div>
+              )}
             </div>
 
-            {gameOver && (
-              <div className="text-center mt-4 space-y-3">
-                <p className="text-red-400 text-xl font-semibold">Game Over!</p>
-                <p className="text-lg text-gray-300">Coins: <span className="text-yellow-400 font-bold">{coins}</span></p>
-                <p className="text-lg text-gray-300">Score: <span className="text-cyan-400 font-bold">{score}</span></p>
-                <button
-                  onClick={() => {
-                    setGameOver(false);
-                    setCoins(0);
-                    setScore(0);
-                    setGameLoopStarted(false);
-                    generateInitialBricks();
-                    ballRef.current = { x: 240, y: 290, dx: BALL_SPEED, dy: BALL_SPEED };
-                    paddleRef.current = { x: 190, width: 100 };
-                    powerUpsRef.current = [];
-                    setTimeout(() => setGameLoopStarted(true), 300);
-                  }}
-                  className="bg-green-600 text-white px-6 py-2 rounded-xl text-lg"
-                >
-                  <RotateCcw className="inline w-4 h-4 mr-2" /> Try Again
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="w-80 space-y-6">
+            <div className="w-80 space-y-6">
 
 
-            <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
-                  <Trophy className="w-5 h-5 text-purple-400" />
+              <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
+                    <Trophy className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Leaderboard</h3>
+                    <p className="text-sm text-gray-400">Top Brick Breakers</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Leaderboard</h3>
-                  <p className="text-sm text-gray-400">Top Brick Breakers</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                {[...HIGH_SCORES, { name: "You", score, coins }]
-                  .sort((a, b) => b.score - a.score)
-                  .slice(0, 5)
-                  .map((entry, index) => (
-                    <div
-                      key={index}
-                      className={`flex items-center justify-between p-3 rounded-xl border transition-all duration-200 ${
-                        entry.name === "You"
-                          ? "bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20 text-blue-300 font-bold"
-                          : "bg-gray-800/30 border-gray-700/30 text-white hover:bg-gray-800/50"
-                      }`}>
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-sm w-6 text-center">#{index + 1}</span>
-                        <p className="text-base truncate">{entry.name === "You" ? "🚀 You" : entry.name}</p>
+                <div className="space-y-3">
+                  {[...HIGH_SCORES, { name: "You", score, coins }]
+                    .sort((a, b) => b.score - a.score)
+                    .slice(0, 5)
+                    .map((entry, index) => (
+                      <div
+                        key={index}
+                        className={`flex items-center justify-between p-3 rounded-xl border transition-all duration-200 ${
+                          entry.name === "You"
+                            ? "bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20 text-blue-300 font-bold"
+                            : "bg-gray-800/30 border-gray-700/30 text-white hover:bg-gray-800/50"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono text-sm w-6 text-center">#{index + 1}</span>
+                          <p className="text-base truncate">{entry.name === "You" ? "🚀 You" : entry.name}</p>
+                        </div>
+                        <span className="font-bold text-xl">{entry.score}</span>
                       </div>
-                      <span className="font-bold text-xl">{entry.score}</span>
-                    </div>
-                  ))}
+                    ))}
+                </div>
+                <p className="text-sm text-gray-500 text-center mt-6 pt-4 border-t border-gray-700/50">
+                  Current Score: <span className="font-bold text-cyan-400">{score}</span>
+                </p>
               </div>
-              <p className="text-sm text-gray-500 text-center mt-6 pt-4 border-t border-gray-700/50">
-                Current Score: <span className="font-bold text-cyan-400">{score}</span>
-              </p>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default BrickBreaker;
