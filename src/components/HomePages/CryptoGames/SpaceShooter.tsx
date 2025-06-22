@@ -80,26 +80,34 @@ const SpaceShooterGame: React.FC = () => {
     sceneRef.current = scene;
     return scene;
   }, []);
-
+  // Get container dimensions
+  const getContainerDimensions = useCallback(() => {
+    if (!mountRef.current) return { width: 800, height: 600 };
+    const rect = mountRef.current.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
+  }, []);
+  
   // Initialize camera
   const initCamera = useCallback((): THREE.PerspectiveCamera => {
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const { width, height } = getContainerDimensions();
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.set(0, 8, 12);
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
     return camera;
-  }, []);
+  }, [getContainerDimensions]);
 
   // Initialize renderer
   const initRenderer = useCallback((): THREE.WebGLRenderer => {
+    const { width, height } = getContainerDimensions();
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setClearColor(0x0a0e1a);
     rendererRef.current = renderer;
     return renderer;
-  }, []);
+  }, [getContainerDimensions]);
 
   // Create crypto-themed spaceship
   const createSpaceship = useCallback((): THREE.Group => {
@@ -501,14 +509,18 @@ const SpaceShooterGame: React.FC = () => {
     gameLoop();
   }, [gameLoop]);
 
-  // Handle window resize
+  // Handle container resize
   const handleResize = useCallback((): void => {
-    if (!cameraRef.current || !rendererRef.current) return;
+    if (!cameraRef.current || !rendererRef.current || !mountRef.current) return;
     
-    cameraRef.current.aspect = window.innerWidth / window.innerHeight;
+    const { width, height } = getContainerDimensions();
+    
+    cameraRef.current.aspect = width / height;
     cameraRef.current.updateProjectionMatrix();
-    rendererRef.current.setSize(window.innerWidth, window.innerHeight);
-  }, []);
+    rendererRef.current.setSize(width, height);
+  }, [getContainerDimensions]);
+
+  
 
   // Initialize game
   useEffect(() => {

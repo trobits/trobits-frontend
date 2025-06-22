@@ -26,6 +26,7 @@ const CoinBombGame = () => {
   const lastClickTimeRef = useRef(0);
   const spawnIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const gameTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
   
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -47,6 +48,13 @@ const CoinBombGame = () => {
   const INVISIBLE_OBJECT_CHANCE = 0.05;
   const DECOY_BOMB_COUNT = 2;
   const CAMERA_SHAKE_INTENSITY = 0.2;
+
+  // Get container dimensions
+  const getContainerDimensions = useCallback(() => {
+    if (!mountRef.current) return { width: 800, height: 600 };
+    const rect = mountRef.current.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
+  }, []);
 
   const createCryptoGrid = useCallback(() => {
     const gridGroup = new THREE.Group();
@@ -152,13 +160,14 @@ const CoinBombGame = () => {
     scene.fog = new THREE.Fog(bgColor, 10, 35);
     sceneRef.current = scene;
 
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const { width, height } = getContainerDimensions();
+    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
     camera.position.set(0, 12, 10);
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setClearColor(0x0a0f1c);
@@ -199,16 +208,25 @@ const CoinBombGame = () => {
       mountRef.current.appendChild(renderer.domElement);
     }
 
+    // Handle container resize using ResizeObserver
     const handleResize = () => {
       if (camera && renderer) {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const { width, height } = getContainerDimensions();
+        camera.aspect = width / height;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(width, height);
       }
     };
-    window.addEventListener('resize', handleResize);
 
-    const handleClick = (event: { clientX: number; clientY: number; }) => {
+    // Set up ResizeObserver to watch container size changes
+    if (window.ResizeObserver && mountRef.current) {
+      resizeObserverRef.current = new ResizeObserver(() => {
+        handleResize();
+      });
+      resizeObserverRef.current.observe(mountRef.current);
+    }
+
+    const handleClick = (event: MouseEvent) => {
       if (gameStateRef.current !== 'playing') return;
 
       const currentTime = Date.now();
@@ -222,28 +240,52 @@ const CoinBombGame = () => {
       
       lastClickTimeRef.current = currentTime;
 
-      mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      // Get container bounds for correct mouse position calculation
+      if (!mountRef.current) return;
+      const rect = mountRef.current.getBoundingClientRect();
+      const { width, height } = getContainerDimensions();
+
+      // Calculate mouse position relative to the container
+      mouseRef.current.x = ((event.clientX - rect.left) / width) * 2 - 1;
+      mouseRef.current.y = -((event.clientY - rect.top) / height) * 2 + 1;
 
       raycasterRef.current.setFromCamera(mouseRef.current, camera);
-      const intersects = raycasterRef.current.intersectObjects(activeObjectsRef.current);
+      // Include all children in raycast detection (recursive = true)
+      const intersects = raycasterRef.current.intersectObjects(activeObjectsRef.current, true);
 
       if (intersects.length > 0) {
-        const clickedObject = intersects[0].object;
-        handleObjectClick(clickedObject);
+        let clickedObject = intersects[0].object;
+        
+        // If we hit a child object, find the parent game object
+        while (clickedObject.parent && !activeObjectsRef.current.includes(clickedObject as any)) {
+          clickedObject = clickedObject.parent;
+        }
+        
+        // Make sure we found a valid game object
+        if (activeObjectsRef.current.includes(clickedObject as any)) {
+          handleObjectClick(clickedObject);
+        } else {
+          setScore(prev => Math.max(0, prev - 1));
+          streakRef.current = 0;
+          setStreak(0);
+        }
       } else {
         setScore(prev => Math.max(0, prev - 1));
         streakRef.current = 0;
         setStreak(0);
       }
     };
-    window.addEventListener('click', handleClick);
+
+    // Add click listener to the renderer's canvas
+    renderer.domElement.addEventListener('click', handleClick);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('click', handleClick);
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+      }
+      renderer.domElement.removeEventListener('click', handleClick);
     };
-  }, [createCryptoGrid, createCryptoBackground]);
+  }, [createCryptoGrid, createCryptoBackground, getContainerDimensions]);
 
   const animateCryptoBackground = useCallback(() => {
     const time = Date.now() * 0.001;
@@ -714,7 +756,6 @@ const CoinBombGame = () => {
     
     gameTimerRef.current = setInterval(() => {
       if (gameStateRef.current !== 'playing') {
-        // clearInterval(gameTimerRef.current);
         return;
       }
       
@@ -727,7 +768,6 @@ const CoinBombGame = () => {
       }
       
       if (timeRemaining <= 0) {
-        // clearInterval(gameTimerRef.current);
         gameStateRef.current = 'gameOver';
         setGameOver(true);
       }
@@ -820,6 +860,9 @@ const CoinBombGame = () => {
       }
       if (spawnIntervalRef.current) {
         clearTimeout(spawnIntervalRef.current);
+      }
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
       }
       if (mountRef.current && rendererRef.current) {
         mountRef.current.removeChild(rendererRef.current.domElement);
