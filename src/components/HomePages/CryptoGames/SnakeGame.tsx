@@ -5,6 +5,8 @@ import Image from "next/image";
 import ShibaIcon from "@/assets/icons/shiba-inu.png";
 import snakeHead from "@/assets/snakeHead.png";
 import { Award, Play, RotateCcw, Trophy, Zap } from "lucide-react";
+import { useGameHighscore } from "@/hooks/useGameHighscore";
+import { useAppSelector } from "@/redux/hooks";
 
 const CELL_SIZE = 20;
 const WIDTH = 600; // Increased from 400
@@ -12,13 +14,7 @@ const HEIGHT = 500; // Increased from 400
 
 type Point = { x: number; y: number };
 
-// Dummy high scores for demonstration
-const HIGH_SCORES = [
-  { name: "Afaq", score: 37 },
-  { name: "Legend", score: 24 },
-  { name: "ProGamer", score: 18 },
-  { name: "NoobMaster", score: 12 },
-];
+// Leaderboard state will be fetched from backend
 
 // Helper function for random food position, defined outside the component
 // It takes the current snake array as an argument
@@ -41,6 +37,16 @@ const calculateRandomFoodPosition = (currentSnake: Point[]): Point => {
 
 const SnakeGame: React.FC = () => {
   const [snake, setSnake] = useState<Point[]>([{ x: 300, y: 240 }]); // Centered for new canvas size
+  const user = useAppSelector((state) => state.auth.user);
+  const { highscore, loading, submitHighscore } = useGameHighscore({
+    gameId: "snakegame",
+    gameName: "Snake Game"
+  });
+  // Debug: log user and highscore when loaded
+  React.useEffect(() => {
+    console.log("[SnakeGame] User:", user);
+    console.log("[SnakeGame] Loaded highscore:", highscore);
+  }, [user, highscore]);
   // Initialize food using a function that gets the initial snake
   const [food, setFood] = useState<Point>(() =>
       calculateRandomFoodPosition([{ x: 300, y: 240 }])
@@ -125,6 +131,13 @@ const SnakeGame: React.FC = () => {
         if (hitWall || hitSelf) {
           setGameOver(true);
           setPlaying(false);
+          // Submit highscore if this run is higher
+          const currentScore = prev.length - 1;
+          console.log("[SnakeGame] Game Over! Current Score:", currentScore);
+          console.log("[SnakeGame] Previous Highscore:", highscore);
+          submitHighscore(currentScore).then(() => {
+            console.log("[SnakeGame] submitHighscore called with:", currentScore);
+          });
           if (gameIntervalRef.current) {
             clearInterval(gameIntervalRef.current);
             gameIntervalRef.current = null;
@@ -165,10 +178,38 @@ const SnakeGame: React.FC = () => {
 
   const score = snake.length - 1;
 
-  // Combine high scores with the current player's score and sort them
-  const allScores = [...HIGH_SCORES, { name: "You", score: score }]
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 5); // Display top 5 scores
+  // Leaderboard state
+  const [leaderboard, setLeaderboard] = useState<{ name: string; score: number; userId: string }[]>([]);
+
+  // Fetch leaderboard from backend
+  const fetchLeaderboard = useCallback(() => {
+    fetch("http://localhost:3000/api/v1/games/snakegame/getallscores")
+      .then(res => res.json())
+      .then(data => {
+        const scoresObj = data.scores || {};
+        // Convert to array and sort descending
+        const arr = Object.values(scoresObj)
+          .map((entry: any) => ({
+            name: entry.user_id === user?.id
+              ? "You"
+              : (entry.first_name ? entry.first_name : entry.user_id),
+            score: entry.highscore,
+            userId: entry.user_id
+          }))
+          .sort((a, b) => b.score - a.score);
+        setLeaderboard(arr);
+        console.log("[SnakeGame] Leaderboard fetched (names only):", arr.map(e => ({ name: e.name, score: e.score, userId: e.userId })));
+      })
+      .catch(err => {
+        setLeaderboard([]);
+        console.error("[SnakeGame] Failed to fetch leaderboard", err);
+      });
+  }, [user?.id]);
+
+  // Fetch leaderboard on mount and after game over
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard, gameOver]);
 
   return (
       <div className="w-full max-w-7xl mx-auto">
@@ -315,6 +356,9 @@ const SnakeGame: React.FC = () => {
                   {playing ? "Playing" : "Ready"}
                 </span>
                 </div>
+                <div className="mt-4 text-base text-purple-300">
+                  Highscore: {loading ? "..." : highscore}
+                </div>
               </div>
 
               {/* Leaderboard */}
@@ -332,35 +376,38 @@ const SnakeGame: React.FC = () => {
 
                 {/* Scores List */}
                 <div className="space-y-3">
-                  {allScores.map((entry, index) => (
-                      <div
-                          key={index}
-                          className={`flex items-center justify-between p-3 rounded-xl transition-all duration-200 border ${
-                              entry.name === "You"
-                                  ? "bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20 text-green-300 font-bold"
-                                  : "bg-gray-800/30 border-gray-700/30 text-white hover:bg-gray-800/50"
-                          }`}
-                      >
-                        <div className="flex items-center gap-3">
-                      <span
-                          className={`font-mono text-sm w-6 text-center ${
-                              entry.name === "You" ? "text-green-400" : "text-gray-400"
-                          }`}
-                      >
-                        #{index + 1}
-                      </span>
-                          <p className="text-base truncate">
-                            {entry.name === "You" ? "🚀 You" : entry.name}
-                          </p>
-                        </div>
+                  {leaderboard.length === 0 && (
+                    <div className="text-gray-400 text-center">No scores yet.</div>
+                  )}
+                  {leaderboard.map((entry, index) => (
+                    <div
+                      key={entry.userId}
+                      className={`flex items-center justify-between p-3 rounded-xl transition-all duration-200 border ${
+                        entry.name === "You"
+                          ? "bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20 text-green-300 font-bold"
+                          : "bg-gray-800/30 border-gray-700/30 text-white hover:bg-gray-800/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
                         <span
-                            className={`font-bold text-xl ${
-                                entry.name === "You" ? "text-green-400" : "text-yellow-400"
-                            }`}
+                          className={`font-mono text-sm w-6 text-center ${
+                            entry.name === "You" ? "text-green-400" : "text-gray-400"
+                          }`}
                         >
-                      {entry.score}
-                    </span>
+                          #{index + 1}
+                        </span>
+                        <p className="text-base truncate">
+                          {entry.name === "You" ? "🚀 You" : entry.name}
+                        </p>
                       </div>
+                      <span
+                        className={`font-bold text-xl ${
+                          entry.name === "You" ? "text-green-400" : "text-yellow-400"
+                        }`}
+                      >
+                        {entry.score}
+                      </span>
+                    </div>
                   ))}
                 </div>
 

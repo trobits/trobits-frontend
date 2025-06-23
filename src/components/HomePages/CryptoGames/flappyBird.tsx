@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Award } from "lucide-react";
+import { useGameHighscore } from "@/hooks/useGameHighscore";
+import { useAppSelector } from "@/redux/hooks";
 import BitcoinCoin from "@/assets/bird.png";
 import SmallCoin from "@/assets/pipe_bottom.png"; // Coin image
 
@@ -19,13 +21,7 @@ const COIN_SIZE = 25;
 type Obstacle = { x: number; height: number; id: string; passed?: boolean };
 type CollectibleCoin = { x: number; y: number; id: string; collected: boolean };
 
-const HIGH_SCORES = [
-  { name: "SatoshiNakamoto", score: 120 },
-  { name: "VitalikB", score: 90 },
-  { name: "ElonMusk", score: 75 },
-  { name: "CryptoWhale", score: 60 },
-  { name: "DAOLeader", score: 5 },
-];
+// Leaderboard state will be fetched from backend
 
 const FlappyBird: React.FC = () => {
   const [birdY, setBirdY] = useState(GAME_HEIGHT / 2 - BIRD_SIZE / 2);
@@ -35,6 +31,48 @@ const FlappyBird: React.FC = () => {
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [collectibles, setCollectibles] = useState<CollectibleCoin[]>([]);
+
+  // Highscore and leaderboard logic
+  const user = useAppSelector((state) => state.auth.user);
+  const { highscore, loading, submitHighscore } = useGameHighscore({
+    gameId: "flappybird",
+    gameName: "Flappy Bird"
+  });
+  // Debug: log user and highscore when loaded
+  React.useEffect(() => {
+    console.log("[FlappyBird] User:", user);
+    console.log("[FlappyBird] Loaded highscore:", highscore);
+  }, [user, highscore]);
+  // Leaderboard state
+  const [leaderboard, setLeaderboard] = useState<{ name: string; score: number; userId: string }[]>([]);
+  // Fetch leaderboard from backend
+  const fetchLeaderboard = React.useCallback(() => {
+    fetch("http://localhost:3000/api/v1/games/flappybird/getallscores")
+      .then(res => res.json())
+      .then(data => {
+        const scoresObj = data.scores || {};
+        // Convert to array and sort descending
+        const arr = Object.values(scoresObj)
+          .map((entry: any) => ({
+            name: entry.user_id === user?.id
+              ? "You"
+              : (entry.first_name ? entry.first_name : entry.user_id),
+            score: entry.highscore,
+            userId: entry.user_id
+          }))
+          .sort((a, b) => b.score - a.score);
+        setLeaderboard(arr);
+        console.log("[FlappyBird] Leaderboard fetched (names only):", arr.map(e => ({ name: e.name, score: e.score, userId: e.userId })));
+      })
+      .catch(err => {
+        setLeaderboard([]);
+        console.error("[FlappyBird] Failed to fetch leaderboard", err);
+      });
+  }, [user?.id]);
+  // Fetch leaderboard on mount and after game over
+  React.useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard, gameOver]);
 
   const gameFrameRef = useRef<number | null>(null);
   const gameAreaRef = useRef<HTMLDivElement>(null);
@@ -117,6 +155,12 @@ const FlappyBird: React.FC = () => {
 
       if (localBirdY + BIRD_SIZE >= GAME_HEIGHT) {
         setGameOver(true);
+        // Submit highscore if this run is higher
+        console.log("[FlappyBird] Game Over! Current Score:", score);
+        console.log("[FlappyBird] Previous Highscore:", highscore);
+        submitHighscore(score).then(() => {
+          console.log("[FlappyBird] submitHighscore called with:", score);
+        });
         return;
       }
 
@@ -173,8 +217,14 @@ const FlappyBird: React.FC = () => {
             birdRect.bottom > pipeBottom;
 
           if (collideTop || collideBottom) {
-            setGameOver(true);
-            return prevObstacles;
+          setGameOver(true);
+          // Submit highscore if this run is higher
+          console.log("[FlappyBird] Game Over! Current Score:", score);
+          console.log("[FlappyBird] Previous Highscore:", highscore);
+          submitHighscore(score).then(() => {
+          console.log("[FlappyBird] submitHighscore called with:", score);
+          });
+          return prevObstacles;
           }
         }
 
@@ -228,9 +278,7 @@ const FlappyBird: React.FC = () => {
     generateCollectibleCoin,
   ]);
 
-  const allScores = [...HIGH_SCORES, { name: "You", score }]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
+  // Leaderboard is now dynamic
 
   return (
     <div
@@ -362,9 +410,12 @@ const FlappyBird: React.FC = () => {
           </div>
 
           <div className="space-y-3">
-            {allScores.map((entry, index) => (
+            {leaderboard.length === 0 && (
+              <div className="text-gray-400 text-center">No scores yet.</div>
+            )}
+            {leaderboard.map((entry, index) => (
               <div
-                key={index}
+                key={entry.userId}
                 className={`flex items-center justify-between p-3 rounded-xl transition-all duration-200 border border-transparent ${
                   entry.name === "You"
                     ? "bg-yellow-900/50 border-yellow-700/50 text-yellow-300 font-bold scale-105"
