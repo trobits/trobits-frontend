@@ -411,7 +411,7 @@ class CryptoNewsService {
 
         try {
             const endpoint = category === 'shiba'
-                ? '/api/crypto-news/shiba'
+                ? '/api/crypto-news/shib'
                 : '/api/crypto-news/terra-luna';
 
             // For category news, fetch based on page if API supports it

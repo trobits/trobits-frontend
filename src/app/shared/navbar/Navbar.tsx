@@ -383,6 +383,54 @@ export default function Navbar() {
                                   ></div>
                                   LUNC
                                 </Link>
+                                <Link
+                                    href="/archive/pepe"
+                                    className="group/item block px-4 py-3 rounded-xl text-sm font-medium
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                                    onClick={() => {
+                                      closeAllDropdowns();
+                                    }}
+                                >
+                                  <div
+                                      className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100
+                                transition-opacity duration-300"
+                                  ></div>
+                                  PEPE
+                                </Link>
+                                <Link
+                                    href="/archive/floki"
+                                    className="group/item block px-4 py-3 rounded-xl text-sm font-medium
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                                    onClick={() => {
+                                      closeAllDropdowns();
+                                    }}
+                                >
+                                  <div
+                                      className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100
+                                transition-opacity duration-300"
+                                  ></div>
+                                  FLOKI
+                                </Link>
+                                <Link
+                                    href="/archive/bonk"
+                                    className="group/item block px-4 py-3 rounded-xl text-sm font-medium
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                                    onClick={() => {
+                                      closeAllDropdowns();
+                                    }}
+                                >
+                                  <div
+                                      className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100
+                                transition-opacity duration-300"
+                                  ></div>
+                                  BONK
+                                </Link>
                               </div>
                             </div>
                           </div>

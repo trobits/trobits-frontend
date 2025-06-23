@@ -74,7 +74,7 @@ export async function GET(request) {
         });
 
     } catch (error) {
-        console.error('Error in shiba API:', error);
+        console.error('Error in shib API:', error);
         return Response.json(
             { error: 'Internal server error' },
             { status: 500 }

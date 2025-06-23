@@ -3,22 +3,22 @@
 import React, { useEffect, useRef } from "react";
 import { TrendingUp, DollarSign, BarChart3, Newspaper } from "lucide-react";
 
-const LuncHeader = () => (
+const ShibHeader = () => (
     <div className="text-center mb-8">
       <h1 className="text-4xl font-bold text-white mb-2">
-        Terra Classic Analytics
+        Shiba Inu Analytics
       </h1>
       <p className="text-gray-400 text-lg mb-6">
-        Comprehensive LUNC market analysis and insights
+        Comprehensive SHIB market analysis and insights
       </p>
 
-      {/* LUNC Data Button */}
+      {/* SHIB Burn Button */}
       <div className="flex justify-center">
         <a
-            href="/archive/lunc"
-            className="inline-block bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-6 rounded-xl text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25"
+            href="/archive/shiba"
+            className="inline-block bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-6 rounded-xl text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-orange-500/25"
         >
-          🌙 LUNC Data
+          🔥 SHIB Burn
         </a>
       </div>
     </div>
@@ -34,7 +34,7 @@ const PriceGraph = () => {
     script.async = true;
     script.innerHTML = JSON.stringify({
       autosize: true,
-      symbol: "CRYPTO:LUNCUSD",
+      symbol: "CRYPTO:SHIBUSD",
       interval: "D",
       timezone: "Etc/UTC",
       theme: "dark",
@@ -85,7 +85,7 @@ const SymbolInfo = () => {
         "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
     script.async = true;
     script.innerHTML = JSON.stringify({
-      symbol: "CRYPTO:LUNCUSD",
+      symbol: "CRYPTO:SHIBUSD",
       width: "100%",
       locale: "en",
       colorTheme: "dark",
@@ -136,7 +136,7 @@ const ArticleFeed = () => {
       height: 500,
       colorTheme: "dark",
       locale: "en",
-      filter: "terra-luna",
+      filter: "shib-inu",
     });
 
     if (feedRef.current) {
@@ -153,7 +153,7 @@ const ArticleFeed = () => {
           </div>
           <div>
             <h3 className="text-xl font-bold text-white">News Feed</h3>
-            <p className="text-sm text-gray-400">Latest LUNC updates</p>
+            <p className="text-sm text-gray-400">Latest SHIB updates</p>
           </div>
         </div>
         <div
@@ -178,7 +178,7 @@ const TechnicalAnalysis = () => {
       width: "100%",
       isTransparent: true,
       height: 400,
-      symbol: "CRYPTO:LUNCUSD",
+      symbol: "CRYPTO:SHIBUSD",
       showIntervalTabs: true,
       locale: "en",
       colorTheme: "dark",
@@ -221,7 +221,7 @@ export default function Page() {
               <div className="bg-gray-950/60 backdrop-blur-sm border border-gray-800/70 rounded-3xl p-8 shadow-2xl">
 
                 {/* Header */}
-                <LuncHeader />
+                <ShibHeader />
 
                 {/* Main Grid Layout */}
                 <div className="space-y-8">
