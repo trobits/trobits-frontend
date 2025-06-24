@@ -7,6 +7,7 @@ import CryptoNavbar from "../shared/navbar/CryptoNavbar";
 import Footer from "../shared/Footer/Footer";
 import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
 import SubPage from "./articles/SubPage";
+import HeroSection from "@/components/HomePages/HeroSection";
 import CryptoGames from "@/components/HomePages/CryptoGames/index";
 import {BackgroundGradient} from "@/components/ui/backgroundGradient";
 
@@ -31,7 +32,7 @@ const Profile = () => {
 
             <div className="relative z-20 pt-20">
                 <div className="w-[95vw] max-w-6xl mx-auto px-4 py-4 mt-6 -mb-36">
-                    <GeminiCard compact/>
+                    <HeroSection/>
                 </div>
             </div>
 
@@ -62,7 +63,7 @@ const Profile = () => {
                 </div>
 
                 {/* Side cards area (narrower) */}
-                <div className="lg:col-span-2 space-y-4">
+                <div className="lg:col-span-2 space-y-4 pt-10">
                     <div className="p-2">
                         <GeminiCard/>
                     </div>
