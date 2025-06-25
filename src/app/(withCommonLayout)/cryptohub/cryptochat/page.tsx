@@ -33,38 +33,7 @@ const CryptoChatPage = () => {
 
   // Dummy topics for testing
   const dummyTopics: ITopicInfo[] = [
-    {
-      id: "dummy-1",
-      title: "Test Topic One",
-      description: "This is a dummy topic for testing purposes.",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      slug: "test-topic-one",
-    },
-    {
-      id: "dummy-2",
-      title: "Test Topic Two",
-      description: "Another test topic just for layout check.",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      slug: "test-topic-two",
-    },
-    {
-      id: "dummy-3",
-      title: "Test Topic Three",
-      description: "Final dummy topic for now.",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      slug: "test-topic-three",
-    },
-    {
-      id: "dummy-4",
-      title: "Test Topic Four",
-      description: "Final dummy topic for now.",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      slug: "test-topic-four",
-    },
+   
   ];
 
   const allRenderedTopics = [...allTopics, ...dummyTopics];
@@ -80,7 +49,7 @@ const CryptoChatPage = () => {
   }
 
   return (
-      <div className="min-h-screen pb-10 w-full">
+      <div className="min-h-screen pb-10 w-full mt-8">
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col gap-6">
