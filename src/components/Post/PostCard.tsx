@@ -277,6 +277,7 @@ const PostCard = ({ post }: { post: Post }) => {
           target.closest("a");
 
         if (!isInteractive && !showComments) {
+            
           window.location.href = `/cryptohub/cryptochat/${currentPost?.topicId}/${currentPost?.id}`;
         }
       }}
@@ -370,7 +371,7 @@ const PostCard = ({ post }: { post: Post }) => {
           <div className="relative overflow-hidden rounded-xl">
             <Image
               ref={imageRef}
-              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/1729510849776-man.png`}
+              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/post_${currentPost?.id}.png`}
               alt="Post Image"
               width={600}
               height={400}
