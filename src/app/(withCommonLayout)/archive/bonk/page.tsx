@@ -1,8 +1,8 @@
 "use client";
-import React, {useState, useEffect, useRef} from "react";
-import {Flame, Calendar, Hash, ExternalLink, TrendingDown} from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Flame, Calendar, Hash, ExternalLink, TrendingDown } from "lucide-react";
 
-interface ShibaBurnRecord {
+interface BonkBurnRecord {
     id: string;
     currency: string;
     date: string;
@@ -17,9 +17,9 @@ const adClasses = [
     "67d2d0c56f9479aa015d006a",
 ];
 
-const ShibaBurnsPage: React.FC = () => {
-    const [records, setRecords] = useState<ShibaBurnRecord[]>([]);
-    const [allRecords, setAllRecords] = useState<ShibaBurnRecord[]>([]);
+const BonkBurnsPage: React.FC = () => {
+    const [records, setRecords] = useState<BonkBurnRecord[]>([]);
+    const [allRecords, setAllRecords] = useState<BonkBurnRecord[]>([]);
     const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
     const [loading, setLoading] = useState(true);
 
@@ -40,7 +40,7 @@ const ShibaBurnsPage: React.FC = () => {
         return new Date(dateStr);
     };
 
-    const fetchShibBurnData = async () => {
+    const fetchBonkBurnData = async () => {
         // Google Sheets API configuration
         const apiKey = "AIzaSyC_pYUok9r2PD5PmIYyWV4ZCvHy8y_Iug0";
         const sheetId = "10V4FpmrdcoQBCv-TXABSiNgqXx3dSj63qKqw06-3nFY";
@@ -63,15 +63,15 @@ const ShibaBurnsPage: React.FC = () => {
             const headers = data.values[0];
             const rows = data.values.slice(1).filter((row: string[]) => row.length > 1);
 
-            // Based on your other components, let's use known column positions
+            // Column positions for BONK data - adjust based on your sheet structure
             const finalDateIdx = 0; // Column A
             const finalCurrencyIdx = 1; // Column B
             const finalTransactionIdx = 2; // Column C
-            const finalBurnCountIdx = 3; // Column D (SHIB burns)
+            const finalBurnCountIdx = 9; // Column J (BONK burns - adjust as needed)
 
-            const parsedRecords: ShibaBurnRecord[] = rows.map((row: string[], index: number) => {
+            const parsedRecords: BonkBurnRecord[] = rows.map((row: string[], index: number) => {
                 // Parse date - handle various date formats
-                const dateValue = row[finalDateIdx] || "";
+                let dateValue = row[finalDateIdx] || "";
                 let formattedDate: string;
 
                 try {
@@ -96,7 +96,7 @@ const ShibaBurnsPage: React.FC = () => {
                     formattedDate = new Date().toISOString();
                 }
 
-                const currency = row[finalCurrencyIdx] || "SHIB";
+                const currency = row[finalCurrencyIdx] || "BONK";
                 const transactionRef = row[finalTransactionIdx] || `tx_${index}`;
                 const burnCountStr = row[finalBurnCountIdx] || "0";
                 const burnCount = parseInt(burnCountStr.toString().replace(/,/g, "").replace(/[^0-9]/g, "")) || 0;
@@ -126,13 +126,13 @@ const ShibaBurnsPage: React.FC = () => {
             }
 
         } catch (error) {
-            console.error("Failed to fetch SHIB burn data:", error);
+            console.error("Failed to fetch BONK burn data:", error);
         } finally {
             setLoading(false);
         }
     };
 
-    const filterRecordsByMonth = (allRecords: ShibaBurnRecord[], targetMonth: Date) => {
+    const filterRecordsByMonth = (allRecords: BonkBurnRecord[], targetMonth: Date) => {
         const targetYear = targetMonth.getFullYear();
         const targetMonthNum = targetMonth.getMonth();
 
@@ -146,7 +146,7 @@ const ShibaBurnsPage: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchShibBurnData();
+        fetchBonkBurnData();
     }, []);
 
     useEffect(() => {
@@ -159,9 +159,8 @@ const ShibaBurnsPage: React.FC = () => {
         return (
             <div className="min-h-screen bg-black text-white flex items-center justify-center">
                 <div className="text-center">
-                    <div
-                        className="w-12 h-12 border-4 border-gray-600 border-t-orange-400 rounded-full animate-spin mx-auto mb-4"></div>
-                    <div className="text-gray-400 text-lg">Loading SHIB burn data...</div>
+                    <div className="w-12 h-12 border-4 border-gray-600 border-t-purple-400 rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="text-gray-400 text-lg">Loading BONK burn data...</div>
                 </div>
             </div>
         );
@@ -180,7 +179,7 @@ const ShibaBurnsPage: React.FC = () => {
             <div className="w-full py-4">
                 <div className="flex flex-wrap justify-center gap-2 mx-auto">
                     {adClasses.map((adClass) => (
-                        <AdBanner key={adClass} adClass={adClass}/>
+                        <AdBanner key={adClass} adClass={adClass} />
                     ))}
                 </div>
             </div>
@@ -189,56 +188,53 @@ const ShibaBurnsPage: React.FC = () => {
                 {/* Header Section */}
                 <div className="text-center mb-16">
                     <div className="flex items-center justify-center gap-2 mb-4">
-                        <Flame className="w-5 h-5 text-orange-400"/>
+                        <Flame className="w-5 h-5 text-purple-400" />
                         <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">
               Burn Archive
             </span>
                     </div>
 
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                        SHIB Burn Data
+                        BONK Burn Data
                     </h1>
 
                     <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                        Track Shiba Inu token burns with detailed transaction records and historical data
+                        Track BONK token burns with detailed transaction records and historical data
                     </p>
                 </div>
 
                 {/* Stats Overview */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div
-                        className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+                    <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
                         <div className="flex items-center justify-center mb-3">
-                            <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center">
-                                <Flame className="w-6 h-6 text-orange-400"/>
+                            <div className="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center">
+                                <Flame className="w-6 h-6 text-purple-400" />
                             </div>
                         </div>
                         <h3 className="text-lg font-semibold text-white mb-1">Total Burns</h3>
-                        <p className="text-2xl font-bold text-orange-400">
+                        <p className="text-2xl font-bold text-purple-400">
                             {totalBurns.toLocaleString()}
                         </p>
                         <p className="text-sm text-gray-400 mt-1">This month</p>
                     </div>
 
-                    <div
-                        className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+                    <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
                         <div className="flex items-center justify-center mb-3">
-                            <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
-                                <Hash className="w-6 h-6 text-blue-400"/>
+                            <div className="w-12 h-12 bg-pink-600/20 rounded-xl flex items-center justify-center">
+                                <Hash className="w-6 h-6 text-pink-400" />
                             </div>
                         </div>
                         <h3 className="text-lg font-semibold text-white mb-1">Transactions</h3>
-                        <p className="text-2xl font-bold text-blue-400">
+                        <p className="text-2xl font-bold text-pink-400">
                             {sortedRecords.length}
                         </p>
                         <p className="text-sm text-gray-400 mt-1">Burn events</p>
                     </div>
 
-                    <div
-                        className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+                    <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
                         <div className="flex items-center justify-center mb-3">
                             <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
-                                <TrendingDown className="w-6 h-6 text-green-400"/>
+                                <TrendingDown className="w-6 h-6 text-green-400" />
                             </div>
                         </div>
                         <h3 className="text-lg font-semibold text-white mb-1">Avg. Burn</h3>
@@ -251,7 +247,7 @@ const ShibaBurnsPage: React.FC = () => {
 
                 <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 mb-8">
                     <div className="flex items-center justify-center gap-4">
-                        <Calendar className="w-5 h-5 text-gray-400"/>
+                        <Calendar className="w-5 h-5 text-gray-400" />
                         <span className="text-lg font-medium text-white">Select Month:</span>
                         <MonthPicker
                             selectedMonth={selectedMonth}
@@ -280,10 +276,9 @@ const ShibaBurnsPage: React.FC = () => {
                                 <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
                                     Date
                                 </th>
-                                <th className=" p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                                <th className="p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
                                     Burn Count
                                 </th>
-
                             </tr>
                             </thead>
                             <tbody>
@@ -298,37 +293,33 @@ const ShibaBurnsPage: React.FC = () => {
                                     >
                                         <td className="p-6">
                                             <div className="flex items-center gap-3">
-                                                <div
-                                                    className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                                                    <Calendar className="w-4 h-4 text-blue-400"/>
+                                                <div className="w-8 h-8 bg-pink-600/20 rounded-lg flex items-center justify-center">
+                                                    <Calendar className="w-4 h-4 text-pink-400" />
                                                 </div>
                                                 <span className="text-white font-medium">
-                                                    {formatDate(parseISOString(record.date))}
-                                                </span>
+                            {formatDate(parseISOString(record.date))}
+                          </span>
                                             </div>
                                         </td>
-                                        <td className="p-6 text-center ">
+                                        <td className="p-6 text-center">
                                             <div className="flex items-center justify-center gap-2">
-                                              <span className="text-xl font-bold text-orange-400">
-                                                {record.burnCount.toLocaleString()}
-                                              </span>
-                                                <Flame className="w-4 h-4 text-orange-400"/>
+                          <span className="text-xl font-bold text-purple-400">
+                            {record.burnCount.toLocaleString()}
+                          </span>
+                                                <Flame className="w-4 h-4 text-purple-400" />
                                             </div>
                                         </td>
-
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={3} className="p-12 text-center">
+                                    <td colSpan={2} className="p-12 text-center">
                                         <div className="space-y-4">
-                                            <Flame className="w-12 h-12 text-gray-600 mx-auto"/>
+                                            <Flame className="w-12 h-12 text-gray-600 mx-auto" />
                                             <div>
-                                                <h3 className="text-lg font-medium text-gray-400 mb-1">No burn data
-                                                    found</h3>
+                                                <h3 className="text-lg font-medium text-gray-400 mb-1">No burn data found</h3>
                                                 <p className="text-gray-500 text-sm">
-                                                    No burn transactions recorded
-                                                    for {formatDate(selectedMonth, "month-year")}
+                                                    No burn transactions recorded for {formatDate(selectedMonth, "month-year")}
                                                 </p>
                                             </div>
                                         </div>
@@ -345,7 +336,7 @@ const ShibaBurnsPage: React.FC = () => {
 };
 
 // Simple Month Picker Component (without external dependencies)
-const MonthPicker = ({selectedMonth, onChange}: any) => {
+const MonthPicker = ({ selectedMonth, onChange }: any) => {
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
@@ -355,9 +346,7 @@ const MonthPicker = ({selectedMonth, onChange}: any) => {
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
 
-    // Get available months with data from allRecords (we'll need to pass this as prop or get from context)
-    // For now, we'll calculate based on years from data
-    const years = Array.from({length: 5}, (_, i) => currentYear - 2 + i);
+    const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
 
     const isMonthDisabled = (monthIndex: number, year: number) => {
         // Disable future months
@@ -391,7 +380,7 @@ const MonthPicker = ({selectedMonth, onChange}: any) => {
             <select
                 value={selectedMonth.getMonth()}
                 onChange={(e) => handleMonthChange(parseInt(e.target.value))}
-                className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
                 {months.map((month, index) => (
                     <option
@@ -408,7 +397,7 @@ const MonthPicker = ({selectedMonth, onChange}: any) => {
             <select
                 value={selectedMonth.getFullYear()}
                 onChange={(e) => handleYearChange(parseInt(e.target.value))}
-                className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
                 {years.map((year) => (
                     <option key={year} value={year} className="bg-gray-800">
@@ -421,7 +410,7 @@ const MonthPicker = ({selectedMonth, onChange}: any) => {
 };
 
 // Ad Banner Component
-const AdBanner = ({adClass}: { adClass: string }) => {
+const AdBanner = ({ adClass }: { adClass: string }) => {
     const adContainerRef = useRef<HTMLDivElement>(null);
 
     const injectAdScript = () => {
@@ -465,10 +454,10 @@ const AdBanner = ({adClass}: { adClass: string }) => {
         <div ref={adContainerRef} className="w-full flex justify-center">
             <ins
                 className={adClass}
-                style={{display: "inline-block", width: "1px", height: "1px"}}
+                style={{ display: "inline-block", width: "1px", height: "1px" }}
             ></ins>
         </div>
     );
 };
 
-export default ShibaBurnsPage;
+export default BonkBurnsPage;

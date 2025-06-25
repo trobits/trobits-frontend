@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { clearUser, setPaths } from "@/redux/features/slices/authSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
+import { GeminiCard } from "@/components/AffiliateLinks";
 
 const AdBannerHeader = ({ adClass }: { adClass: string }) => {
   const adContainerRef = useRef<HTMLDivElement>(null);
@@ -147,13 +148,21 @@ export default function Navbar() {
 
   if (userFromDbLoading) return <p>Loading...</p>;
 
+  const isHomePage = window.location.pathname === "/";
+
   return (
       <>
+      {
+        isHomePage &&
+          <div className="w-[100vw] max-w-6xl flex flex-col items-center justify-between mx-auto px-4 py-4">
+            <GeminiCard compact/>
+          </div>
+      }
         {/* Island Navbar - positioned below CryptoNavbar */}
         <nav
             id="main-navbar"
             className={`
-          fixed top-[10px] left-1/2 transform -translate-x-1/2 z-40 
+          fixed ${isHomePage ? 'top-[65px]' : 'top-[10px]'} left-1/2 transform -translate-x-1/2 z-40 
           transition-all duration-500 ease-in-out
           ${
                 isVisible
@@ -382,6 +391,54 @@ export default function Navbar() {
                                 transition-opacity duration-300"
                                   ></div>
                                   LUNC
+                                </Link>
+                                <Link
+                                    href="/archive/pepe"
+                                    className="group/item block px-4 py-3 rounded-xl text-sm font-medium
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                                    onClick={() => {
+                                      closeAllDropdowns();
+                                    }}
+                                >
+                                  <div
+                                      className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100
+                                transition-opacity duration-300"
+                                  ></div>
+                                  PEPE
+                                </Link>
+                                <Link
+                                    href="/archive/floki"
+                                    className="group/item block px-4 py-3 rounded-xl text-sm font-medium
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                                    onClick={() => {
+                                      closeAllDropdowns();
+                                    }}
+                                >
+                                  <div
+                                      className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100
+                                transition-opacity duration-300"
+                                  ></div>
+                                  FLOKI
+                                </Link>
+                                <Link
+                                    href="/archive/bonk"
+                                    className="group/item block px-4 py-3 rounded-xl text-sm font-medium
+                                text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-cyan-600/20
+                                transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                                flex items-center gap-3"
+                                    onClick={() => {
+                                      closeAllDropdowns();
+                                    }}
+                                >
+                                  <div
+                                      className="w-2 h-2 rounded-full bg-teal-400 opacity-0 group-hover/item:opacity-100
+                                transition-opacity duration-300"
+                                  ></div>
+                                  BONK
                                 </Link>
                               </div>
                             </div>

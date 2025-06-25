@@ -3,17 +3,12 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import NewsCard from "@/components/NewsPart/NewsCard";
 import {
   Search,
-  TrendingUp,
-  Clock,
-  Star,
   Loader2,
-  Globe,
-  Zap,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
   Sparkles,
-  Newspaper,
+  Globe,
 } from "lucide-react";
 import {
   useTrendingNews,
@@ -23,8 +18,6 @@ import {
 } from "@/hooks/useCryptoNews";
 import { usePathname } from "next/navigation";
 import Loading from "@/components/Shared/Loading";
-import { BackgroundGradient } from "@/components/ui/backgroundGradient"; // Ensure this is imported
-
 
 const InfiniteLoader: React.FC<{
   isLoading: boolean;
@@ -45,7 +38,6 @@ const InfiniteLoader: React.FC<{
               </div>
             </div>
         ) : (
-            // Debug indicator - shows even when not loading
             <div className="text-center py-4">
               <div className="text-xs text-gray-600 bg-gray-800/50 rounded-lg px-4 py-2 inline-block">
                 📍 Infinite Scroll Trigger • HasMore: {hasNextPage ? '✅' : '❌'} • Page: {currentPage}/{totalPages}
@@ -56,65 +48,24 @@ const InfiniteLoader: React.FC<{
   );
 };
 
-// Ad Banner Component
-const AdBanner: React.FC<{ adClass: string }> = ({ adClass }) => {
-  const adContainerRef = useRef<HTMLDivElement>(null);
-
-  const injectAdScript = useCallback(() => {
-    if (!adContainerRef.current) return;
-
-    const existingScript = document.querySelector(
-        `script[data-ad-class="${adClass}"]`
-    );
-    if (existingScript) {
-      existingScript.remove();
-    }
-
-    const script = document.createElement("script");
-    script.innerHTML = `
-      !function(e,n,c,t,o,r,d){
-        !function e(n,c,t,o,r,m,d,s,a){
-          s=c.getElementsByTagName(t)[0],
-          (a=c.createElement(t)).async=!0,
-          a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-          a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-          s.parentNode.insertBefore(a,s)
-        }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
-      }();
-    `;
-    script.setAttribute("data-ad-class", adClass);
-    document.body.appendChild(script);
-  }, [adClass]);
-
-  useEffect(() => {
-    injectAdScript();
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        injectAdScript();
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [injectAdScript]);
-
+// Vertical Ad Placeholder Component
+const VerticalAdPlaceholder: React.FC = () => {
   return (
-      <div ref={adContainerRef} className="w-full flex justify-center my-12">
-        <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm border border-gray-600/30 rounded-2xl p-8 text-center max-w-md">
-          <div className="space-y-3">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center">
-              <Zap className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-white">
-              Sponsored Content
-            </h3>
-            <p className="text-gray-400 text-sm">Advertisement</p>
+      <div className="sticky top-4 bg-gray-900 border border-gray-700 rounded-2xl p-6 text-center h-fit">
+        <div className="space-y-4">
+          <div className="w-12 h-12 mx-auto bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center">
+            <span className="text-white font-bold text-lg">AD</span>
           </div>
-          <ins
-              className={adClass}
-              style={{ display: "inline-block", width: "1px", height: "1px" }}
-          ></ins>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-white">Advertisement</h3>
+            <p className="text-gray-400 text-sm">Sponsored Content</p>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-8 h-96 flex items-center justify-center">
+            <span className="text-gray-500 text-sm">300 x 600 Ad Space</span>
+          </div>
+          <div className="text-xs text-gray-600">
+            Ad placement area
+          </div>
         </div>
       </div>
   );
@@ -124,29 +75,35 @@ interface SubPageProps {
   simpleHeader?: boolean;
 }
 
-interface FilterSection {
-  id: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-}
-
 const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
-  const [selectedSection, setSelectedSection] = useState<string>("all");
   const [dataSource, setDataSource] = useState<"crypto" | "trending">("trending");
 
-  // Scroll refs for simple header mode
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [pauseScroll, setPauseScroll] = useState<boolean>(false);
-  const hoverLeftRef = useRef<boolean>(false);
-  const hoverRightRef = useRef<boolean>(false);
+  // Carousel state and refs
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [cardsPerView, setCardsPerView] = useState(4);
 
   // Infinite scroll ref
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const pathName = usePathname();
+
+  // Update cards per view based on screen size
+  useEffect(() => {
+    const updateCardsPerView = () => {
+      if (window.innerWidth >= 1280) setCardsPerView(4); // xl
+      else if (window.innerWidth >= 1024) setCardsPerView(3); // lg
+      else if (window.innerWidth >= 768) setCardsPerView(2); // md
+      else setCardsPerView(1); // sm
+    };
+
+    updateCardsPerView();
+    window.addEventListener('resize', updateCardsPerView);
+    return () => window.removeEventListener('resize', updateCardsPerView);
+  }, []);
 
   // Debounce search query
   useEffect(() => {
@@ -156,35 +113,6 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
-
-  // Auto scroll logic for simple header
-  useEffect(() => {
-    if (!simpleHeader) return;
-
-    const interval = setInterval(() => {
-      if (!pauseScroll && scrollRef.current) {
-        scrollRef.current.scrollBy({ left: 420, behavior: "smooth" });
-      }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [pauseScroll, simpleHeader]);
-
-  useEffect(() => {
-    if (!simpleHeader) return;
-
-    const scrollInterval = setInterval(() => {
-      if (scrollRef.current) {
-        if (hoverLeftRef.current) {
-          scrollRef.current.scrollBy({ left: -450, behavior: "smooth" });
-        } else if (hoverRightRef.current) {
-          scrollRef.current.scrollBy({ left: 450, behavior: "smooth" });
-        }
-      }
-    }, 1000);
-
-    return () => clearInterval(scrollInterval);
-  }, [simpleHeader]);
 
   // Determine which hook to use based on search and data source
   const searchKeywords = debouncedSearchQuery
@@ -197,17 +125,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   const shouldUseSearch = searchKeywords.length > 0;
   const shouldUseTrending = dataSource === "trending" && !shouldUseSearch;
 
-  // Debug: Log which hook should be used
-  useEffect(() => {
-    console.log('🔄 Hook selection:', {
-      shouldUseSearch,
-      shouldUseTrending,
-      searchKeywords,
-      dataSource
-    });
-  }, [shouldUseSearch, shouldUseTrending, searchKeywords, dataSource]);
-
-  // Crypto news queries
+  // Crypto news queries - For simple header, only use trending with limit of 10
   const {
     data: trendingData,
     isLoading: trendingLoading,
@@ -220,8 +138,8 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
     currentPage: trendingCurrentPage,
     totalPages: trendingTotalPages,
   } = useTrendingNews({
-    enabled: shouldUseTrending,
-    initialLimit: 25,
+    enabled: simpleHeader || shouldUseTrending,
+    initialLimit: simpleHeader ? 10 : 25,
   });
 
   const {
@@ -236,7 +154,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
     currentPage: allTickersCurrentPage,
     totalPages: allTickersTotalPages,
   } = useAllTickersNews({
-    enabled: dataSource === "crypto" && !shouldUseSearch,
+    enabled: !simpleHeader && dataSource === "crypto" && !shouldUseSearch,
     initialLimit: 25,
   });
 
@@ -252,7 +170,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
     currentPage: searchCurrentPage,
     totalPages: searchTotalPages,
   } = useSearchNews(searchKeywords, {
-    enabled: shouldUseSearch,
+    enabled: !simpleHeader && shouldUseSearch,
     initialLimit: 25,
   });
 
@@ -268,7 +186,19 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   let currentPage = 1;
   let totalPages = 0;
 
-  if (shouldUseSearch) {
+  if (simpleHeader) {
+    // For simple header, always use trending data only
+    currentArticles = trendingData.slice(0, 10); // Ensure max 10 articles
+    isLoading = trendingLoading;
+    isFetching = trendingFetching;
+    error = trendingError;
+    hasNextPage = false; // No pagination for simple header
+    fetchNextPage = async () => {};
+    refetch = trendingRefetch;
+    totalItems = Math.min(trendingTotalItems, 10);
+    currentPage = trendingCurrentPage;
+    totalPages = 1; // Only one page for simple header
+  } else if (shouldUseSearch) {
     currentArticles = searchData;
     isLoading = searchLoading;
     isFetching = searchFetching;
@@ -303,141 +233,82 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
     totalPages = allTickersTotalPages;
   }
 
-  // Debug logging
-  useEffect(() => {
-    console.log('📊 Current state:', {
-      articlesCount: currentArticles.length,
-      hasNextPage,
-      isFetching,
-      isLoading,
-      currentPage,
-      totalPages,
-      totalItems,
-      activeHook: shouldUseSearch ? 'search' : shouldUseTrending ? 'trending' : 'allTickers'
-    });
-  }, [currentArticles.length, hasNextPage, isFetching, isLoading, currentPage, totalPages, totalItems, shouldUseSearch, shouldUseTrending]);
-
-  // Filter articles based on selected section
+  // Filter articles (no section filtering needed anymore)
   let filteredArticles = [...currentArticles];
 
-  if (selectedSection !== "all") {
-    if (selectedSection === "popular") {
-      filteredArticles = filteredArticles.filter(
-          (article) => (article.tickers?.length || 0) > 0
-      );
+  // Carousel functionality
+  const totalSlides = Math.max(0, filteredArticles.length - cardsPerView + 1);
+
+  const nextSlide = useCallback(() => {
+    if (currentSlide < totalSlides - 1) {
+      setCurrentSlide(prev => prev + 1);
+    } else {
+      setCurrentSlide(0); // Loop back to start
     }
-    if (selectedSection === "latest") {
-      filteredArticles = filteredArticles.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
+  }, [currentSlide, totalSlides]);
+
+  const prevSlide = useCallback(() => {
+    if (currentSlide > 0) {
+      setCurrentSlide(prev => prev - 1);
+    } else {
+      setCurrentSlide(totalSlides - 1); // Loop to end
     }
-    if (selectedSection === "trending") {
-      // Show articles with major tickers
-      const majorTickers = ['BTC', 'ETH', 'BNB', 'XRP', 'ADA', 'SOL', 'DOGE'];
-      filteredArticles = filteredArticles.filter(
-          (article) => article.tickers?.some(ticker =>
-              majorTickers.includes(ticker.toUpperCase())
-          )
-      );
-    }
-  }
+  }, [currentSlide, totalSlides]);
+
+  const goToSlide = useCallback((slideIndex: number) => {
+    setCurrentSlide(slideIndex);
+  }, []);
+
+  // Auto-play functionality
+  useEffect(() => {
+    if (!isAutoPlaying || !simpleHeader || filteredArticles.length <= cardsPerView) return;
+
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 4000); // 4 seconds
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, simpleHeader, nextSlide, filteredArticles.length, cardsPerView]);
 
   // Enhanced infinite scroll setup with debugging
   useEffect(() => {
     if (!loadMoreRef.current || simpleHeader) {
-      console.log('⚠️ Infinite scroll not setup:', { hasRef: !!loadMoreRef.current, simpleHeader });
       return;
     }
-
-    console.log('🔍 Setting up intersection observer...');
 
     const observer = new IntersectionObserver(
         (entries) => {
           const first = entries[0];
-          console.log('👁️ Intersection observed:', {
-            isIntersecting: first.isIntersecting,
-            intersectionRatio: first.intersectionRatio,
-            hasNextPage,
-            isFetching,
-            isLoading
-          });
-
           if (first.isIntersecting && hasNextPage && !isFetching && !isLoading) {
-            console.log('🚀 TRIGGERING fetchNextPage!');
             fetchNextPage();
-          } else {
-            console.log('⏸️ Not triggering fetchNextPage:', {
-              intersecting: first.isIntersecting,
-              hasNext: hasNextPage,
-              fetching: isFetching,
-              loading: isLoading
-            });
           }
         },
         {
           threshold: 0.1,
-          rootMargin: '100px' // Start loading 100px before the element is visible
+          rootMargin: '100px'
         }
     );
 
     if (loadMoreRef.current) {
       observer.observe(loadMoreRef.current);
-      console.log('✅ Observer attached to loadMoreRef');
     }
 
     return () => {
       observer.disconnect();
-      console.log('🧹 Observer disconnected');
     };
   }, [hasNextPage, isFetching, isLoading, fetchNextPage, simpleHeader]);
 
   // First-time load
   if (isLoading) {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+        <div className="min-h-screen bg-black">
           <Loading />
         </div>
     );
   }
 
-  const sections: FilterSection[] = [
-    {
-      id: "all",
-      label: "All News",
-      icon: Globe,
-      color: "from-blue-500 to-cyan-500",
-    },
-    {
-      id: "latest",
-      label: "Latest",
-      icon: Clock,
-      color: "from-green-500 to-emerald-500",
-    },
-    {
-      id: "trending",
-      label: "Major Coins",
-      icon: TrendingUp,
-      color: "from-orange-500 to-red-500",
-    },
-    {
-      id: "popular",
-      label: "With Tickers",
-      icon: Star,
-      color: "from-purple-500 to-pink-500",
-    },
-  ];
-
-  const adClasses = [
-    "67b00b6de904d5920e690b84",
-    "67b3b8a41b3a7f15c72fcc94",
-    "67b3b9181b3a7f15c72fce5d",
-    "67b3b9469a62fcbf1eeb65df",
-    "67b3c7949a62fcbf1eeb83a6",
-    "67b3c7d89a62fcbf1eeb842e",
-  ];
-
   return (
-      <div className={`min-h-screen ${simpleHeader ? '' : 'bg-gradient-to-br from-gray-900 via-gray-800 to-black'} relative`}>
+      <div className={`${simpleHeader ? 'h-[550px] mb-20' : 'min-h-screen bg-black'} relative`}>
 
         {/* Overlay spinner on refetch */}
         {isFetching && !isLoading && (
@@ -456,95 +327,98 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
         )}
 
         <div className="px-0 sm:px-0 lg:px-0 xl:px-20">
-          {/* Hero Section */}
+          {/* Simple Header - Clean Carousel */}
           {simpleHeader ? (
-              <section className="w-full mt-20 px-0">
-  <div className="w-full mx-0">
+              <section className="w-full mt-8 px-6">
+                <div className="relative">
+                  {/* Carousel Container */}
+                  <div
+                      className="relative overflow-hidden h-[550px] rounded-2xl pb-12"
+                      onMouseEnter={() => setIsAutoPlaying(false)}
+                      onMouseLeave={() => setIsAutoPlaying(true)}
+                  >
+                    {/* Navigation Buttons */}
+                    {filteredArticles.length > cardsPerView && (
+                        <>
+                          <button
+                              onClick={prevSlide}
+                              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110 group"
+                          >
+                            <ChevronLeft className="w-5 h-5 text-white group-hover:text-cyan-400 transition-colors" />
+                          </button>
 
-    <BackgroundGradient className="rounded-3xl bg-gradient-to-br from-slate-950/80 to-gray-900/80 border border-gray-800/60 hover:shadow-[0_0_40px_#38bdf8]/40 transition-all duration-300">
-      <div className="bg-gray-900/50 border border-gray-800/40 rounded-3xl p-8">
+                          <button
+                              onClick={nextSlide}
+                              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110 group"
+                          >
+                            <ChevronRight className="w-5 h-5 text-white group-hover:text-cyan-400 transition-colors" />
+                          </button>
+                        </>
+                    )}
 
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              
-            </div>
-            <h2 className="text-3xl font-bold text-white mb-2">
-              Latest Crypto News
-            </h2>
-            
+                    {/* Articles Carousel */}
+                    <div
+                        ref={carouselRef}
+                        className="flex transition-transform duration-500 ease-out pb-8"
+                        style={{
+                          transform: `translateX(-${currentSlide * (100 / cardsPerView)}%)`,
+                        }}
+                    >
+                      {filteredArticles.map((article, index) => (
+                          <div
+                              key={`${article.id}-${index}`}
+                              className="flex-shrink-0 px-2 py-3"
+                              style={{ width: `${100 / cardsPerView}%` }}
+                          >
+                            <div className="h-full">
+                              <div className="w-full max-w-xs mx-auto h-48">
+                                <NewsCard articleData={article} viewMode="grid" />
+                              </div>
+                            </div>
+                          </div>
+                      ))}
+                    </div>
 
-            {/* Status indicator */}
-            
-          </div>
+                    {/* Pagination Dots - Positioned at bottom with proper spacing */}
+                    {filteredArticles.length > cardsPerView && (
+                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex space-x-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2">
+                          {Array.from({ length: totalSlides }, (_, index) => (
+                              <button
+                                  key={index}
+                                  onClick={() => goToSlide(index)}
+                                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                      index === currentSlide
+                                          ? 'bg-cyan-400 w-6'
+                                          : 'bg-white/30 hover:bg-white/50'
+                                  }`}
+                              />
+                          ))}
+                        </div>
+                    )}
 
-          {/* News Feed Container */}
-          <div className="bg-gray-900/60 border border-gray-700/50 rounded-2xl p-6">
-            <div className="relative overflow-hidden">
-              {/* Left Button */}
-              <button
-                onMouseEnter={() => {
-                  setPauseScroll(true);
-                  hoverLeftRef.current = true;
-                }}
-                onMouseLeave={() => {
-                  setPauseScroll(false);
-                  hoverLeftRef.current = false;
-                }}
-                className="group absolute left-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gray-700/80 hover:scale-110"
-              >
-                <ChevronLeft className="w-5 h-5 text-white" />
-              </button>
+                    {/* Loading State for Carousel */}
+                    {filteredArticles.length === 0 && (
+                        <div className="flex items-center justify-center h-52 bg-gray-900/20 rounded-2xl">
+                          <div className="text-center space-y-4">
+                            <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mx-auto" />
+                            <p className="text-gray-400">Loading trending news...</p>
+                          </div>
+                        </div>
+                    )}
+                  </div>
 
-              {/* Right Button */}
-              <button
-                onMouseEnter={() => {
-                  setPauseScroll(true);
-                  hoverRightRef.current = true;
-                }}
-                onMouseLeave={() => {
-                  setPauseScroll(false);
-                  hoverRightRef.current = false;
-                }}
-                className="group absolute right-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-gray-800/60 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gray-700/80 hover:scale-110"
-              >
-                <ChevronRight className="w-5 h-5 text-white" />
-              </button>
-
-              {/* Scrollable article strip */}
-              <div
-                ref={scrollRef}
-                onMouseEnter={() => setPauseScroll(true)}
-                onMouseLeave={() => setPauseScroll(false)}
-                className="overflow-x-auto no-scrollbar scroll-smooth"
-                style={{
-                  display: "flex",
-                  gap: "1.5rem",
-                  paddingBottom: "1rem",
-                  paddingLeft: "3rem",
-                  paddingRight: "3rem",
-                  paddingTop: "0.5rem",
-                }}
-              >
-                {filteredArticles.slice(0, 20).map((article, i) => (
-  <div
-    key={`${article.id}-${i}`}
-    className="flex-shrink-0 w-64" // or w-60
-  >
-    <NewsCard articleData={article} viewMode="grid" />
-  </div>
-))}
-
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </BackgroundGradient>
-    </div>
-  
-</section>
+                  {/* Article count indicator - Positioned below carousel */}
+                  {filteredArticles.length > 0 && (
+                      <div className="text-center mt-2">
+                      <span className="text-xs text-gray-500">
+                        {filteredArticles.length} trending articles
+                      </span>
+                      </div>
+                  )}
+                </div>
+              </section>
           ) : (
+              // Full Page Header
               <div className="relative overflow-hidden pt-16 pb-8">
                 <div className="relative">
                   <div className="max-w-4xl mx-auto text-center mt-20">
@@ -568,10 +442,10 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
               </div>
           )}
 
-          {/* Enhanced Search & Filter Section */}
+          {/* Enhanced Search & Data Source Section - Only for full page */}
           {!simpleHeader && (
               <div className="mb-12">
-                <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-6">
+                <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-6">
                   <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
                     {/* Search */}
                     <div className="relative flex-1 max-w-md">
@@ -581,7 +455,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                           placeholder="Search crypto news, tickers (BTC, ETH, SHIB)..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full pl-12 pr-4 py-4 bg-gray-700/50 border border-gray-600/50 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
+                          className="w-full pl-12 pr-4 py-4 bg-gray-800/50 border border-gray-600/50 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
                       />
                       {searchQuery && (
                           <button
@@ -594,7 +468,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                     </div>
 
                     {/* Data Source Selector */}
-                    <div className="flex bg-gray-700/50 border border-gray-600/30 rounded-2xl p-1">
+                    <div className="flex bg-gray-800/50 border border-gray-600/30 rounded-2xl p-1">
                       <button
                           onClick={() => setDataSource("trending")}
                           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
@@ -619,35 +493,11 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                       </button>
                     </div>
 
-                    {/* Filter Sections */}
-                    <div className="flex flex-wrap gap-3">
-                      {sections.map((section) => {
-                        const IconComponent = section.icon;
-                        return (
-                            <button
-                                key={section.id}
-                                onClick={() => setSelectedSection(section.id)}
-                                className={`group relative flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 hover:scale-105 ${
-                                    selectedSection === section.id
-                                        ? `bg-gradient-to-r ${section.color} text-white shadow-lg shadow-cyan-500/25`
-                                        : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:text-white border border-gray-600/30"
-                                }`}
-                            >
-                              <IconComponent className="w-4 h-4" />
-                              {section.label}
-                              {selectedSection === section.id && (
-                                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl"></div>
-                              )}
-                            </button>
-                        );
-                      })}
-                    </div>
-
                     {/* Refresh Button */}
                     <button
                         onClick={() => refetch()}
                         disabled={isFetching}
-                        className="p-3 bg-gray-700/50 hover:bg-gray-600/50 border border-gray-600/30 rounded-2xl text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-3 bg-gray-800/50 hover:bg-gray-700/50 border border-gray-600/30 rounded-2xl text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Refresh articles"
                     >
                       <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
@@ -673,95 +523,92 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
               </div>
           )}
 
-          {/* Articles Display */}
-          <div className="mb-16">
-            {filteredArticles.length > 0 ? (
-                simpleHeader ? (
-                    // Simple header articles are already rendered above in the container
-                    null
-                ) : (
-                    <div className="space-y-6">
-                      {filteredArticles.map((article, index) => (
-                          <React.Fragment key={article.id}>
-                            <div className="transform transition-all duration-300 hover:scale-[1.01]">
+          {/* Main Content Layout - News + Ad - Only for full page */}
+          {!simpleHeader && (
+              <div className="flex gap-8 mb-16">
+                {/* News Section - Scrollable */}
+                <div className="flex-1">
+                  {filteredArticles.length > 0 ? (
+                      <div className="max-h-[800px] overflow-y-auto pr-4 space-y-6 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                        {filteredArticles.map((article, index) => (
+                            <div key={article.id} className="transform transition-all duration-300 hover:scale-[1.01]">
                               <NewsCard articleData={article} viewMode="list" />
                             </div>
-                            {/* Insert ads every 8 articles */}
-                            {(index + 1) % 8 === 0 && (
-                                <AdBanner
-                                    adClass={adClasses[(Math.floor(index / 8)) % adClasses.length]}
-                                />
-                            )}
-                          </React.Fragment>
-                      ))}
+                        ))}
 
-                      {/* Infinite scroll trigger - ALWAYS RENDER when not in simple header mode */}
-                      <div ref={loadMoreRef} className="h-20">
-                        <InfiniteLoader
-                            isLoading={isFetching}
-                            hasNextPage={hasNextPage}
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                        />
+                        {/* Infinite scroll trigger */}
+                        <div ref={loadMoreRef} className="h-20">
+                          <InfiniteLoader
+                              isLoading={isFetching}
+                              hasNextPage={hasNextPage}
+                              currentPage={currentPage}
+                              totalPages={totalPages}
+                          />
+                        </div>
+
+                        {/* End of results message */}
+                        {!hasNextPage && filteredArticles.length > 0 && (
+                            <div className="text-center py-12">
+                              <div className="bg-gray-900/30 backdrop-blur-xl border border-gray-700/30 rounded-2xl p-8 max-w-md mx-auto">
+                                <h3 className="text-lg font-semibold text-white mb-2">
+                                  You've reached the end!
+                                </h3>
+                                <p className="text-gray-400 text-sm mb-4">
+                                  {searchQuery
+                                      ? `Found ${totalItems} articles for "${searchQuery}"`
+                                      : `Showing all ${totalItems} latest articles`
+                                  }
+                                </p>
+                                <button
+                                    onClick={() => {
+                                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }}
+                                    className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-xl text-sm font-medium hover:scale-105 transition-transform"
+                                >
+                                  Back to Top
+                                </button>
+                              </div>
+                            </div>
+                        )}
                       </div>
-
-                      {/* End of results message */}
-                      {!hasNextPage && filteredArticles.length > 0 && (
-                          <div className="text-center py-12">
-                            <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-2xl p-8 max-w-md mx-auto">
-                              <h3 className="text-lg font-semibold text-white mb-2">
-                                You've reached the end!
+                  ) : (
+                      <div className="text-center py-24">
+                        <div className="bg-gray-900/30 backdrop-blur-xl border border-gray-700/30 rounded-3xl p-12 max-w-lg mx-auto">
+                          <div className="space-y-6">
+                            <div className="w-24 h-24 mx-auto bg-gradient-to-r from-gray-600 to-gray-500 rounded-full flex items-center justify-center">
+                              <Search className="w-12 h-12 text-gray-300" />
+                            </div>
+                            <div>
+                              <h3 className="text-2xl font-semibold text-white mb-2">
+                                {searchQuery ? 'No matching articles found' : 'No articles available'}
                               </h3>
-                              <p className="text-gray-400 text-sm mb-4">
+                              <p className="text-gray-400">
                                 {searchQuery
-                                    ? `Found ${totalItems} articles for "${searchQuery}"`
-                                    : `Showing all ${totalItems} latest articles`
+                                    ? `Try different keywords or search terms`
+                                    : 'Please check back later for new crypto news'
                                 }
                               </p>
-                              <button
-                                  onClick={() => {
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                  }}
-                                  className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-xl text-sm font-medium hover:scale-105 transition-transform"
-                              >
-                                Back to Top
-                              </button>
                             </div>
+                            {searchQuery && (
+                                <button
+                                    onClick={() => setSearchQuery('')}
+                                    className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-xl font-medium hover:scale-105 transition-transform"
+                                >
+                                  Clear Search
+                                </button>
+                            )}
                           </div>
-                      )}
-                    </div>
-                )
-            ) : (
-                <div className="text-center py-24">
-                  <div className="bg-gray-800/30 backdrop-blur-xl border border-gray-600/30 rounded-3xl p-12 max-w-lg mx-auto">
-                    <div className="space-y-6">
-                      <div className="w-24 h-24 mx-auto bg-gradient-to-r from-gray-600 to-gray-500 rounded-full flex items-center justify-center">
-                        <Search className="w-12 h-12 text-gray-300" />
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-2xl font-semibold text-white mb-2">
-                          {searchQuery ? 'No matching articles found' : 'No articles available'}
-                        </h3>
-                        <p className="text-gray-400">
-                          {searchQuery
-                              ? `Try different keywords or search terms`
-                              : 'Please check back later for new crypto news'
-                          }
-                        </p>
-                      </div>
-                      {searchQuery && (
-                          <button
-                              onClick={() => setSearchQuery('')}
-                              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-xl font-medium hover:scale-105 transition-transform"
-                          >
-                            Clear Search
-                          </button>
-                      )}
-                    </div>
-                  </div>
+                  )}
                 </div>
-            )}
-          </div>
+
+                {/* Vertical Ad Section */}
+                <div className="w-80 flex-shrink-0">
+                  <VerticalAdPlaceholder />
+                </div>
+              </div>
+          )}
         </div>
       </div>
   );

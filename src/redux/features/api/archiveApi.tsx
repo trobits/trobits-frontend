@@ -12,7 +12,7 @@ const archiveApi = baseApi.injectEndpoints({
       },
     }),
 
-    //shiba api starts here
+    //shib api starts here
     getAllShibaBurns: build.query({
       query: (data) => {
         return {
@@ -20,7 +20,7 @@ const archiveApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["shiba-burn"],
+      providesTags: ["shib-burn"],
     }),
 
     createShibaBurn: build.mutation({
@@ -35,7 +35,7 @@ const archiveApi = baseApi.injectEndpoints({
           },
         };
       },
-      invalidatesTags: ["shiba-burn"],
+      invalidatesTags: ["shib-burn"],
     }),
 
     updateShibaBurn: build.mutation({
@@ -47,7 +47,7 @@ const archiveApi = baseApi.injectEndpoints({
           body: rest,
         };
       },
-      invalidatesTags: ["shiba-burn"],
+      invalidatesTags: ["shib-burn"],
     }),
     deleteShibaBurn: build.mutation({
       query: (id) => {
@@ -56,9 +56,9 @@ const archiveApi = baseApi.injectEndpoints({
           method: "DELETE",
         };
       },
-      invalidatesTags: ["shiba-burn"],
+      invalidatesTags: ["shib-burn"],
     }),
-    //shiba api ends here
+    //shib api ends here
 
     //lunc api starts here
     getAllLuncBurns: build.query({
@@ -111,7 +111,7 @@ const archiveApi = baseApi.injectEndpoints({
 });
 
 export const {
-  //shiba burns apis
+  //shib burns apis
   useGetAllArchiveQuery,
   useGetAllShibaBurnsQuery,
   useCreateShibaBurnMutation,
