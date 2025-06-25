@@ -281,7 +281,13 @@ const FlappyBird: React.FC = () => {
   // Leaderboard is now dynamic
 
   return (
+    <div className="min-h-screen flex items-center justify-center bg-black">
     <div
+      className="flex flex-col items-center p-6 bg-slate-900 text-white rounded-lg shadow-2xl border border-yellow-700"
+      style={{ maxWidth: "fit-content" }}
+    >
+      {/* ...your entire existing Flappy Bird content stays inside here... */}
+      <div
       className="flex flex-col items-center p-6 bg-slate-900 text-white rounded-lg shadow-2xl border border-yellow-700"
       style={{ maxWidth: "fit-content" }}
     >
@@ -454,6 +460,8 @@ const FlappyBird: React.FC = () => {
         </div>
       </div>
     </div>
+    </div>
+  </div>
   );
 };
 
