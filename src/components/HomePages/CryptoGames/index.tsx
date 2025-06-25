@@ -8,6 +8,10 @@ import CoinHunter from "@/components/HomePages/CryptoGames/CoinHunter";
 import SpaceShooter from "@/components/HomePages/CryptoGames/SpaceShooter";
 import FlappyBird from "@/components/HomePages/CryptoGames/flappyBird";
 import SnakeThumb from "@/assets/snake-thumb.png";
+import flappythumb from "@/assets/flappythumb.png"
+import brickbreakerthumb from "@/assets/brickbreakerthumb.png";
+import spaceshooterthumb from "@/assets/spaceshooterthumb.png";
+import coinhunterthumb from "@/assets/coinhunterthumb.png";
 import { BackgroundGradient } from "@/components/ui/backgroundGradient";
 import { useNavbarVisibility } from "@/provider/navbarVisibility";
 import Image from "next/image";
@@ -40,7 +44,7 @@ const games: Game[] = [
     id: "flappy",
     title: "Flappy Coin",
     subtitle: "Navigate Through Market Volatility",
-    image: SnakeThumb,
+    image: flappythumb,
     difficulty: "Hard",
     players: "8.2K",
     gradient: "from-blue-500/20 to-cyan-500/20",
@@ -51,7 +55,7 @@ const games: Game[] = [
     id: "brickbreaker",
     title: "Crypto BrickBreaker",
     subtitle: "Smash Bricks, Collect Coins!",
-    image: SnakeThumb,
+    image: brickbreakerthumb,
     difficulty: "Medium",
     players: "5.7K",
     gradient: "from-orange-500/20 to-yellow-500/20",
@@ -62,7 +66,7 @@ const games: Game[] = [
     id: "coinhunter",
     title: "Coin Hunter 3D",
     subtitle: "Tap Fast, Avoid Bombs!",
-    image: SnakeThumb,
+    image: coinhunterthumb,
     difficulty: "Medium",
     players: "9.4K",
     gradient: "from-purple-500/20 to-pink-500/20",
@@ -73,7 +77,7 @@ const games: Game[] = [
     id: "spaceshooter",
     title: "Crypto Blaster",
     subtitle: "Shoot Asteroids in the Digital Void",
-    image: SnakeThumb,
+    image: spaceshooterthumb,
     difficulty: "Hard",
     players: "7.9K",
     gradient: "from-red-500/20 to-rose-500/20",
