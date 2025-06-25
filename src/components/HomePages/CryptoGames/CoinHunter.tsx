@@ -1,5 +1,8 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { useGameHighscore } from '@/hooks/useGameHighscore';
+import { useAppSelector } from '@/redux/hooks';
+import { Trophy } from 'lucide-react';
 
 const CoinBombGame = () => {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -28,6 +31,19 @@ const CoinBombGame = () => {
   const gameTimerRef = useRef<NodeJS.Timeout | null>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
   
+  // Backend integration - same pattern as SnakeGame
+  const user = useAppSelector((state) => state.auth.user);
+  const { highscore, loading, submitHighscore } = useGameHighscore({
+    gameId: "coinhuntergame",
+    gameName: "Coin Hunter Game"
+  });
+
+  // Debug: log user and highscore when loaded
+  React.useEffect(() => {
+    console.log("[CoinBombGame] User:", user);
+    console.log("[CoinBombGame] Loaded highscore:", highscore);
+  }, [user, highscore]);
+
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
@@ -35,6 +51,39 @@ const CoinBombGame = () => {
   const [streak, setStreak] = useState(0);
   const [difficulty, setDifficulty] = useState(1);
   const [lives, setLives] = useState(3);
+
+  // Leaderboard state - same pattern as SnakeGame
+  const [leaderboard, setLeaderboard] = useState<{ name: string; score: number; userId: string }[]>([]);
+
+  // Fetch leaderboard from backend
+  const fetchLeaderboard = useCallback(() => {
+    fetch("http://localhost:3000/api/v1/games/coinhuntergame/getallscores")
+      .then(res => res.json())
+      .then(data => {
+        const scoresObj = data.scores || {};
+        // Convert to array and sort descending
+        const arr = Object.values(scoresObj)
+          .map((entry: any) => ({
+            name: entry.user_id === user?.id
+              ? "You"
+              : (entry.first_name ? entry.first_name : entry.user_id),
+            score: entry.highscore,
+            userId: entry.user_id
+          }))
+          .sort((a, b) => b.score - a.score);
+        setLeaderboard(arr);
+        console.log("[CoinBombGame] Leaderboard fetched:", arr.map(e => ({ name: e.name, score: e.score, userId: e.userId })));
+      })
+      .catch(err => {
+        setLeaderboard([]);
+        console.error("[CoinBombGame] Failed to fetch leaderboard", err);
+      });
+  }, [user?.id]);
+
+  // Fetch leaderboard on mount and after game over
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard, gameOver]);
 
   // CRYPTO THEMED BALANCED CONSTANTS
   const GRID_SIZE = 8;
@@ -770,6 +819,12 @@ const CoinBombGame = () => {
       if (timeRemaining <= 0) {
         gameStateRef.current = 'gameOver';
         setGameOver(true);
+        // Submit highscore when time runs out
+        console.log("[CoinBombGame] Time's up! Final Score:", score);
+        console.log("[CoinBombGame] Previous Highscore:", highscore);
+        submitHighscore(score).then(() => {
+          console.log("[CoinBombGame] submitHighscore called with:", score);
+        });
       }
     }, 1000);
 
@@ -873,6 +928,17 @@ const CoinBombGame = () => {
     };
   }, [initializeScene, animateCryptoBackground, spawnObjects]);
 
+  // Add game over effect to submit score when lives reach 0
+  useEffect(() => {
+    if (gameOver && gameStateRef.current === 'gameOver') {
+      console.log("[CoinBombGame] Game Over! Final Score:", score);
+      console.log("[CoinBombGame] Previous Highscore:", highscore);
+      submitHighscore(score).then(() => {
+        console.log("[CoinBombGame] submitHighscore called with:", score);
+      });
+    }
+  }, [gameOver, score, highscore, submitHighscore]);
+
   return (
     <div className="relative w-full h-screen" style={{
       background: 'linear-gradient(135deg, #0a0f1c 0%, #1e293b 50%, #0f172a 100%)'
@@ -908,12 +974,75 @@ const CoinBombGame = () => {
                 <p className="text-2xl font-bold text-red-400">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</p>
               </div>
             )}
+            {/* Add highscore display */}
+            <div className="col-span-2 bg-slate-900/50 rounded-lg p-2 text-center">
+              <p className="text-purple-400 font-semibold">Highscore</p>
+              <p className="text-lg font-bold text-purple-300">{loading ? "..." : highscore}</p>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Leaderboard Panel - similar to SnakeGame */}
+      <div className="absolute top-4 right-4 w-80 text-white">
+        <div className="bg-gradient-to-r from-slate-800/90 to-slate-700/90 backdrop-blur-md rounded-xl p-4 border border-purple-400/30 shadow-2xl">
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-purple-400" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white">Leaderboard</h3>
+              <p className="text-sm text-gray-400">Top Coin Hunter Players</p>
+            </div>
+          </div>
+
+          {/* Scores List */}
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {leaderboard.length === 0 && (
+              <div className="text-gray-400 text-center text-sm">No scores yet.</div>
+            )}
+            {leaderboard.slice(0, 10).map((entry, index) => (
+              <div
+                key={entry.userId}
+                className={`flex items-center justify-between p-2 rounded-lg transition-all duration-200 border text-sm ${
+                  entry.name === "You"
+                    ? "bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20 text-green-300 font-bold"
+                    : "bg-gray-800/30 border-gray-700/30 text-white hover:bg-gray-800/50"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`font-mono text-xs w-6 text-center ${
+                      entry.name === "You" ? "text-green-400" : "text-gray-400"
+                    }`}
+                  >
+                    #{index + 1}
+                  </span>
+                  <p className="truncate">
+                    {entry.name === "You" ? "🚀 You" : entry.name}
+                  </p>
+                </div>
+                <span
+                  className={`font-bold ${
+                    entry.name === "You" ? "text-green-400" : "text-yellow-400"
+                  }`}
+                >
+                  {entry.score}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs text-gray-500 text-center mt-4 pt-3 border-t border-gray-700/50">
+            Current Score:{" "}
+            <span className="font-bold text-green-400">{score}</span>
+          </p>
+        </div>
+      </div>
+
       {/* Game stats */}
-      <div className="absolute top-4 right-4 text-white max-w-xs">
+      <div className="absolute bottom-4 right-4 text-white max-w-xs">
         <div className="bg-slate-800/90 backdrop-blur-md rounded-lg p-3 border border-orange-400/30">
           <h3 className="text-orange-400 font-bold mb-2">🎯 Game Info</h3>
           <div className="text-xs space-y-1">
@@ -964,6 +1093,7 @@ const CoinBombGame = () => {
               </div>
               <div className="mt-4 pt-4 border-t border-slate-600">
                 <p className="text-orange-400 font-semibold">Coin:Bomb Ratio = 2:5 (More bombs, stay alert!)</p>
+                <p className="text-purple-400 font-semibold mt-2">Your Best: {loading ? "..." : highscore} points</p>
               </div>
             </div>
             
@@ -1000,6 +1130,11 @@ const CoinBombGame = () => {
                   <p className="text-slate-300">Level Reached</p>
                   <p className="text-2xl font-bold text-purple-400">{difficulty}</p>
                 </div>
+              </div>
+
+              <div className="bg-slate-900/50 rounded-lg p-3">
+                <p className="text-slate-300">Your Best</p>
+                <p className="text-2xl font-bold text-purple-300">{loading ? "..." : highscore}</p>
               </div>
             </div>
             
