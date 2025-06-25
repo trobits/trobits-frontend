@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Gamepad2, ArrowLeft, Play, Trophy } from "lucide-react";
 import SnakeGame from "@/components/HomePages/CryptoGames/SnakeGame";
 import BrickBreaker from "@/components/HomePages/CryptoGames/brickbreaker";
@@ -9,6 +9,7 @@ import SpaceShooter from "@/components/HomePages/CryptoGames/SpaceShooter";
 import FlappyBird from "@/components/HomePages/CryptoGames/flappyBird";
 import SnakeThumb from "@/assets/snake-thumb.png";
 import { BackgroundGradient } from "@/components/ui/backgroundGradient";
+import { useNavbarVisibility } from "@/provider/navbarVisibility";
 import Image from "next/image";
 
 interface Game {
@@ -131,6 +132,15 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
 
 const CryptoGames: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
+  const { setIsVisible } = useNavbarVisibility();
+
+  useEffect(() => {
+    setIsVisible(!selectedGame); // Hide navbar if a game is selected
+  }, [selectedGame]);
+
+  useEffect(() => {
+    return () => setIsVisible(true); // Reset visibility when component unmounts
+  }, []);
 
   const renderGame = (): React.ReactNode => {
     switch (selectedGame) {
@@ -152,7 +162,7 @@ const CryptoGames: React.FC = () => {
   const selectedGameData = games.find((game) => game.id === selectedGame);
 
   return (
-    <section className="container mx-auto mt-28 px-0">
+    <section className="w-full max-w-screen mx-auto mt-28 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
       <div className="flex justify-center items-center">
         <div className="w-full max-w-7xl mx-auto px-6">
           <BackgroundGradient className="rounded-3xl bg-black">
