@@ -1,6 +1,11 @@
+"use client";
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Play, RotateCcw, Trophy, Zap, Home } from "lucide-react";
 import powerUpImageSrc from "./../../../assets/icons/shiba-inu.png"; // Assuming the path
+import { useGameHighscore } from "@/hooks/useGameHighscore";
+import { useAppSelector } from "@/redux/hooks";
+
 
 const BALL_SPEED = 3;
 const PADDLE_SPEED = 12;
@@ -17,13 +22,6 @@ interface PowerUp {
   type: PowerUpType;
   dy: number;
 }
-
-const HIGH_SCORES = [
-  { name: "BrickMaster", score: 1250, coins: 15 },
-  { name: "ProBreaker", score: 980, coins: 12 },
-  { name: "Ace", score: 720, coins: 8 },
-  { name: "Newbie", score: 450, coins: 5 },
-];
 
 const generateBrickContent = () => {
   const rand = Math.random();
@@ -48,6 +46,18 @@ const BrickBreaker: React.FC = () => {
   const [gameLoopStarted, setGameLoopStarted] = useState(false);
   const isMovingLeft = useRef(false);
   const isMovingRight = useRef(false);
+
+  const user = useAppSelector((state) => state.auth.user);
+  const { highscore, loading, submitHighscore } = useGameHighscore({
+    gameId: "brickbreaker",
+    gameName: "Brick Breaker"
+  });
+
+  // Debug: log user and highscore when loaded
+  React.useEffect(() => {
+    console.log("[BrickBreaker] User:", user);
+    console.log("[BrickBreaker] Loaded highscore:", highscore);
+  }, [user, highscore]);
 
   const generateInitialBricks = () => {
     const initialBricks = [];
@@ -173,8 +183,18 @@ const draw = (ctx: CanvasRenderingContext2D) => {
     if (ball.x + ball.dx > CANVAS_WIDTH - 10 || ball.x + ball.dx < 10) ball.dx = -ball.dx;
     if (ball.y + ball.dy < 10) ball.dy = -ball.dy;
     else if (ball.y + ball.dy > CANVAS_HEIGHT - 30) {
-      if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) ball.dy = -ball.dy;
-      else return setGameOver(true);
+      if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+        ball.dy = -ball.dy;
+        setScore(prevScore => prevScore + 10); // Add score for hitting paddle
+      }
+      else {
+        setGameOver(true);
+        setGameLoopStarted(false); // Stop the game loop
+        submitHighscore(score).then(() => {
+          console.log("[BrickBreaker] submitHighscore called with:", score);
+        });
+        return;
+      }
     }
 
     if (isMovingLeft.current) paddle.x = Math.max(paddle.x - PADDLE_SPEED, 0);
@@ -189,8 +209,10 @@ const draw = (ctx: CanvasRenderingContext2D) => {
           const by = i * 20 + 30;
           if (ball.x + 10 > bx && ball.x - 10 < bx + 50 && ball.y + 10 > by && ball.y - 10 < by + 15) {
             ball.dy = -ball.dy;
+            setScore(prevScore => prevScore + 50); // Add score for breaking a brick
             if (brick === 1) {
               setCoins((c) => c + 1);
+              setScore(prevScore => prevScore + 20); // Additional score for coin brick
             } else if (brick === 3) {
               powerUpsRef.current.push({ x: bx + 25 - 10, y: by, type: PowerUpType.SCORE, dy: 2 });
             }
@@ -238,7 +260,7 @@ const draw = (ctx: CanvasRenderingContext2D) => {
 
     frameId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frameId);
-  }, [gameStarted, gameLoopStarted, gameOver, powerUpImage]);
+  }, [gameStarted, gameLoopStarted, gameOver, powerUpImage, score]); // Added score to dependencies
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (gameStarted && !gameLoopStarted && !gameOver) setGameLoopStarted(true);
@@ -260,9 +282,39 @@ const draw = (ctx: CanvasRenderingContext2D) => {
     };
   }, [handleKeyDown, handleKeyUp]);
 
-  const allScores = [...HIGH_SCORES, { name: "You", score, coins }]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
+  // Leaderboard state
+  const [leaderboard, setLeaderboard] = useState<{ name: string; score: number; userId: string }[]>([]);
+
+  // Fetch leaderboard from backend
+  const fetchLeaderboard = useCallback(() => {
+    fetch("http://localhost:3000/api/v1/games/brickbreaker/getallscores")
+      .then(res => res.json())
+      .then(data => {
+        const scoresObj = data.scores || {};
+        // Convert to array and sort descending
+        const arr = Object.values(scoresObj)
+          .map((entry: any) => ({
+            name: entry.user_id === user?.id
+              ? "You"
+              : (entry.first_name ? entry.first_name : entry.user_id),
+            score: entry.highscore,
+            userId: entry.user_id
+          }))
+          .sort((a, b) => b.score - a.score);
+        setLeaderboard(arr);
+        console.log("[BrickBreaker] Leaderboard fetched (names only):", arr.map(e => ({ name: e.name, score: e.score, userId: e.userId })));
+      })
+      .catch(err => {
+        setLeaderboard([]);
+        console.error("[BrickBreaker] Failed to fetch leaderboard", err);
+      });
+  }, [user?.id]);
+
+  // Fetch leaderboard on mount and after game over
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard, gameOver]);
+
 
   return (
     <div className="w-full max-w-7xl mx-auto font-sans p-4">
@@ -319,7 +371,27 @@ const draw = (ctx: CanvasRenderingContext2D) => {
             </div>
 
             <div className="w-80 space-y-6">
+              {/* Current Score */}
+              <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-6 text-center">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <Zap className="w-5 h-5 text-yellow-400" />
+                  <span className="text-lg font-semibold text-yellow-300">Current Score</span>
+                </div>
+                <div className="text-4xl font-bold text-white mb-2">{score}</div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-sm text-green-400">
+                  {gameLoopStarted && !gameOver ? "Playing" : "Ready"}
+                </span>
+                </div>
+                <div className="mt-4 text-base text-purple-300">
+                  Highscore: {loading ? "..." : highscore}
+                </div>
+              </div>
+
+              {/* Leaderboard */}
               <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-6">
+                {/* Header */}
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
                     <Trophy className="w-5 h-5 text-purple-400" />
@@ -330,25 +402,35 @@ const draw = (ctx: CanvasRenderingContext2D) => {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  {[...HIGH_SCORES, { name: "You", score, coins }]
-                    .sort((a, b) => b.score - a.score)
-                    .slice(0, 5)
-                    .map((entry, index) => (
-                      <div
-                        key={index}
-                        className={`flex items-center justify-between p-3 rounded-xl border transition-all duration-200 ${
-                          entry.name === "You"
-                            ? "bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20 text-blue-300 font-bold"
-                            : "bg-gray-800/30 border-gray-700/30 text-white hover:bg-gray-800/50"
+                  {leaderboard.length === 0 && (
+                    <div className="text-gray-400 text-center">No scores yet.</div>
+                  )}
+                  {leaderboard.map((entry, index) => (
+                    <div
+                      key={entry.userId}
+                      className={`flex items-center justify-between p-3 rounded-xl border ${
+                        entry.name === "You"
+                          ? "bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20 text-blue-300 font-bold"
+                          : "bg-gray-800/30 border-gray-700/30 text-white hover:bg-gray-800/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={`font-mono text-sm w-6 text-center ${
+                            entry.name === "You" ? "text-blue-400" : "text-gray-400"
+                          }`}
+                        >
+                          #{index + 1}
+                        </span>
+                        <p className="text-base truncate">{entry.name === "You" ? "🚀 You" : entry.name}</p>
+                      </div>
+                      <span className={`font-bold text-xl ${
+                          entry.name === "You" ? "text-blue-400" : "text-yellow-400"
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="font-mono text-sm w-6 text-center">#{index + 1}</span>
-                          <p className="text-base truncate">{entry.name === "You" ? "🚀 You" : entry.name}</p>
-                        </div>
-                        <span className="font-bold text-xl">{entry.score}</span>
-                      </div>
-                    ))}
+                        {entry.score}
+                      </span>
+                    </div>
+                  ))}
                 </div>
                 <p className="text-sm text-gray-500 text-center mt-6 pt-4 border-t border-gray-700/50">
                   Current Score: <span className="font-bold text-cyan-400">{score}</span>
