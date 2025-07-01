@@ -326,10 +326,10 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
             </div>
         )}
 
-        <div className="px-0 sm:px-0 lg:px-0 xl:px-20">
+        <div className="px-0 sm:px-0 lg:px-0 xl:px-0">
           {/* Simple Header - Clean Carousel */}
           {simpleHeader ? (
-              <section className="w-full mt-8 px-6">
+              <section className="w-full mt-8">
                 <div className="relative">
                   {/* Carousel Container */}
                   <div
@@ -342,14 +342,14 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                         <>
                           <button
                               onClick={prevSlide}
-                              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110 group"
+                              className="absolute left-0 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110 group"
                           >
                             <ChevronLeft className="w-5 h-5 text-white group-hover:text-cyan-400 transition-colors" />
                           </button>
 
                           <button
                               onClick={nextSlide}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110 group"
+                              className="absolute right-0 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-110 group"
                           >
                             <ChevronRight className="w-5 h-5 text-white group-hover:text-cyan-400 transition-colors" />
                           </button>
@@ -371,7 +371,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                               style={{ width: `${100 / cardsPerView}%` }}
                           >
                             <div className="h-full">
-                              <div className="w-full max-w-xs mx-auto h-48">
+                              <div className="w-full max-w-sm mx-auto h-48">
                                 <NewsCard articleData={article} viewMode="grid" />
                               </div>
                             </div>

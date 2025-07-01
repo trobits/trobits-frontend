@@ -8,6 +8,7 @@ body {
   background: black;
   position: relative; /* Required for the overlay positioning */
   z-index: 0; /* Ensure body is behind the overlay */
+  overflow-x: hidden;
 }
 
 body::before {
@@ -207,4 +208,8 @@ body::before {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.js-symbol-last, .apply-overflow-tooltip, .tv-ticker-item-last__last {
+  font-size: 20px !important;
 }
