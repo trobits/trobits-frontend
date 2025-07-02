@@ -17,6 +17,7 @@ import AnimatedButton from "@/components/Shared/AnimatedButton";
 import TrendingTopic from "@/components/Cards/TrendingTopic";
 import VerifiedAccounts from "@/components/Cards/VerifiedAccounts";
 import RecommendedAccounts from "@/components/Cards/RecommendedAccounts";
+import UserSearch from "@/components/Cryptohub/UserSearch";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 import { User } from "../videoPost/page";
 import { usePathname } from "next/navigation";
@@ -120,34 +121,48 @@ const FeedPage = () => {
             <div className="hidden lg:block lg:col-span-3 animate-slide-in-left">
               <div className="sticky top-6 space-y-6">
                 {/* User Profile Card */}
-                <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-500 hover:scale-105 group">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300">
-                      {userFromDb?.firstName?.[0] || "U"}
+                {user && (
+                  <a href={userFromDb?.id ? `/cryptohub/userProfile/${userFromDb.id}` : undefined} className="block">
+                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-500 hover:scale-105 group cursor-pointer">
+                      <div className="flex items-center space-x-4 mb-4">
+                        {userFromDb?.profileImage ? (
+                          <img
+                            src={userFromDb.profileImage}
+                            alt="Profile"
+                            className="w-12 h-12 rounded-full object-cover border-2 border-cyan-500 group-hover:scale-110 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300">
+                            {userFromDb?.firstName?.[0] || "U"}{userFromDb.lastName?.[0]?.toUpperCase()}
+                          </div>
+                        )}
+                        <div>
+                          <h3 className="text-white font-semibold group-hover:text-cyan-400 transition-colors duration-300">
+                            {userFromDb?.firstName || "User"} {userFromDb?.lastName || ""}
+                          </h3>
+                          <p className="text-slate-400 text-sm">@{userFromDb?.firstName?.toLowerCase() || "user"}{userFromDb.lastName?.toLowerCase()}</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 text-center">
+                        <div className="hover:scale-110 transition-transform duration-300">
+                          <p className="text-white font-bold">{userFromDb.posts?.length ?? 0}</p>
+                          <p className="text-slate-400 text-xs">Posts</p>
+                        </div>
+                        <div className="hover:scale-110 transition-transform duration-300">
+                          <p className="text-white font-bold">{userFromDb?.following?.length || 0}</p>
+                          <p className="text-slate-400 text-xs">Following</p>
+                        </div>
+                        <div className="hover:scale-110 transition-transform duration-300">
+                          <p className="text-white font-bold">{userFromDb?.followers?.length || 0}</p>
+                          <p className="text-slate-400 text-xs">Followers</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-white font-semibold group-hover:text-cyan-400 transition-colors duration-300">
-                        {userFromDb?.firstName || "User"} {userFromDb?.lastName || ""}
-                      </h3>
-                      <p className="text-slate-400 text-sm">@{userFromDb?.firstName?.toLowerCase() || "user"}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div className="hover:scale-110 transition-transform duration-300">
-                      <p className="text-white font-bold">142</p>
-                      <p className="text-slate-400 text-xs">Posts</p>
-                    </div>
-                    <div className="hover:scale-110 transition-transform duration-300">
-                      <p className="text-white font-bold">{userFromDb?.following?.length || 0}</p>
-                      <p className="text-slate-400 text-xs">Following</p>
-                    </div>
-                    <div className="hover:scale-110 transition-transform duration-300">
-                      <p className="text-white font-bold">{userFromDb?.followers?.length || 0}</p>
-                      <p className="text-slate-400 text-xs">Followers</p>
-                    </div>
-                  </div>
-                </div>
+                  </a>
+                )}
 
+                {/* User Search */}
+                <UserSearch />
                 {/* Trending Topics */}
                 <div className="hover:scale-[1.02] transition-transform duration-500 hover:shadow-lg hover:shadow-cyan-500/20 rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: "200ms" }}>
                   <TrendingTopic />
@@ -292,7 +307,7 @@ const FeedPage = () => {
                 </div>
 
                 {/* Quick Stats */}
-                <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-500 hover:scale-105 animate-fade-in-up" style={{ animationDelay: "800ms" }}>
+                {/* <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-500 hover:scale-105 animate-fade-in-up" style={{ animationDelay: "800ms" }}>
                   <h3 className="text-white font-bold mb-4">Community Stats</h3>
                   <div className="space-y-4">
                     {[
@@ -306,7 +321,7 @@ const FeedPage = () => {
                         </div>
                     ))}
                   </div>
-                </div>
+                </div> */}
 
                 {/* Footer Links */}
                 <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-500 animate-fade-in-up" style={{ animationDelay: "1000ms" }}>

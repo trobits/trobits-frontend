@@ -162,7 +162,7 @@ export default function Navbar() {
         <nav
             id="main-navbar"
             className={`
-          fixed ${isHomePage ? 'top-[65px]' : 'top-[10px]'} left-1/2 transform -translate-x-1/2 z-40 
+          fixed ${isHomePage ? 'top-[130px]' : 'top-[10px]'} left-1/2 transform -translate-x-1/2 z-40 
           transition-all duration-500 ease-in-out
           ${
                 isVisible

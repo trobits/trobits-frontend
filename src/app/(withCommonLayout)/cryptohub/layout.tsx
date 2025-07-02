@@ -9,7 +9,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { clearUser } from "@/redux/features/slices/authSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 
 const CryptoLayout = ({ children }) => {
   const dispatch = useAppDispatch();
@@ -17,6 +18,11 @@ const CryptoLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const pathname = usePathname();
+
+  // Get user from Redux and fetch full user info
+  const user = useAppSelector((state) => state.auth.user);
+  const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
+  const userFromDb = userFromDbData?.data;
 
   const handleLogOut = () => {
     dispatch(clearUser());
@@ -61,6 +67,7 @@ const CryptoLayout = ({ children }) => {
   ];
 
   return (
+    console.log("User id:", user?.id),
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 to-slate-800 text-white relative pt-24">
         {/* Fixed Sidebar */}
         <aside
@@ -111,44 +118,66 @@ const CryptoLayout = ({ children }) => {
           </nav>
 
           {/* User Profile Section */}
-          <div className="px-4 pb-4">
-            <div className="bg-slate-800/50 rounded-xl p-4 mb-4 border border-slate-700/50">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                  JD
-                </div>
-                <div>
-                  <p className="text-white font-medium text-sm">John Doe</p>
-                  <p className="text-slate-400 text-xs">@johndoe</p>
-                </div>
+          {user && (
+            <div className="px-4 pb-4">
+              <div className="bg-slate-800/50 rounded-xl p-4 mb-4 border border-slate-700/50">
+                {userFromDbLoading ? (
+                  <div className="flex items-center gap-3 mb-3 animate-pulse">
+                    <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
+                    <div>
+                      <div className="h-4 bg-slate-700 rounded w-24 mb-1" />
+                      <div className="h-3 bg-slate-800 rounded w-16" />
+                    </div>
+                  </div>
+                ) : userFromDb && user ? (
+                  <>
+                    <div className="flex items-center gap-3 mb-3">
+                      {userFromDb?.profileImage ? (
+                        <img
+                          src={userFromDb.profileImage}
+                          alt="Profile"
+                          className="w-10 h-10 rounded-full object-cover border-2 border-cyan-500"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                          {userFromDb.firstName?.[0]?.toUpperCase()}{userFromDb.lastName?.[0]?.toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-white font-medium text-sm">{userFromDb.firstName} {userFromDb.lastName}</p>
+                        <p className="text-slate-400 text-xs">@{userFromDb.firstName?.toLowerCase()}{userFromDb.lastName?.toLowerCase()}</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div>
+                        <p className="text-white font-semibold text-sm">{userFromDb.posts?.length ?? 0}</p>
+                        <p className="text-slate-400 text-xs">Posts</p>
+                      </div>
+                      <div>
+                        <p className="text-white font-semibold text-sm">{userFromDb.following?.length ?? 0}</p>
+                        <p className="text-slate-400 text-xs">Following</p>
+                      </div>
+                      <div>
+                        <p className="text-white font-semibold text-sm">{userFromDb.followers?.length ?? 0}</p>
+                        <p className="text-slate-400 text-xs">Followers</p>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
               </div>
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div>
-                  <p className="text-white font-semibold text-sm">142</p>
-                  <p className="text-slate-400 text-xs">Posts</p>
-                </div>
-                <div>
-                  <p className="text-white font-semibold text-sm">1.2K</p>
-                  <p className="text-slate-400 text-xs">Following</p>
-                </div>
-                <div>
-                  <p className="text-white font-semibold text-sm">3.4K</p>
-                  <p className="text-slate-400 text-xs">Followers</p>
-                </div>
-              </div>
-            </div>
 
-            {/* Logout Button */}
-            <Link href="/">
-              <Button
-                  onClick={handleLogOut}
-                  className="group bg-white text-slate-900 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 hover:text-white px-4 py-3 rounded-xl font-medium text-sm transition-all duration-300 w-full flex items-center justify-center gap-2 hover:shadow-lg"
-              >
-                <GrLogin className="w-4 h-4 transition-transform duration-200 group-hover:rotate-12" />
-                Logout
-              </Button>
-            </Link>
-          </div>
+              {/* Logout Button */}
+              <Link href="/">
+                <Button
+                    onClick={handleLogOut}
+                    className="group bg-white text-slate-900 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 hover:text-white px-4 py-3 rounded-xl font-medium text-sm transition-all duration-300 w-full flex items-center justify-center gap-2 hover:shadow-lg"
+                >
+                  <GrLogin className="w-4 h-4 transition-transform duration-200 group-hover:rotate-12" />
+                  Logout
+                </Button>
+              </Link>
+            </div>
+          )}
         </aside>
 
         {/* Mobile Toggle Button */}
