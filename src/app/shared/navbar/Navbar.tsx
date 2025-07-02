@@ -154,7 +154,7 @@ export default function Navbar() {
       <>
       {
         isHomePage &&
-          <div className="w-[100vw] max-w-6xl flex flex-col items-center justify-between mx-auto px-4 py-4">
+          <div className="w-[100vw] max-w-6xl flex flex-col items-center justify-between mx-auto px-4 ">
             <GeminiCard compact/>
           </div>
       }
@@ -162,7 +162,7 @@ export default function Navbar() {
         <nav
             id="main-navbar"
             className={`
-          fixed ${isHomePage ? 'top-[65px]' : 'top-[10px]'} left-1/2 transform -translate-x-1/2 z-40 
+          fixed ${isHomePage ? 'top-[130px]' : 'top-[10px]'} left-1/2 transform -translate-x-1/2 z-40 
           transition-all duration-500 ease-in-out
           ${
                 isVisible
