@@ -42,7 +42,7 @@ export default function NotificationPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [visibleCount, setVisibleCount] = useState(20); // Initially show 20 notifications
   const user = useAppSelector((state) => state.auth.user);
-  const { data: allNotificationData, isLoading: allNotificationDataLoading } =
+  const { data: allNotificationData, isLoading: allNotificationDataLoading, error: notificationError } =
     useGetNotificationByUseridQuery(user?.id);
   const dispatch = useAppDispatch();
   const previousPath = useAppSelector((state) => state.auth.previousPath);
@@ -86,6 +86,20 @@ export default function NotificationPage() {
   
   if (allNotificationDataLoading) {
     return <Loading />;
+  }
+
+  if (notificationError) {
+    let errorMsg = "";
+    if (typeof notificationError.data === "object" && notificationError.data?.message) {
+      errorMsg = notificationError.data.message;
+    }
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-slate-800/80 text-white p-8 rounded-xl shadow-lg text-center">
+          <h2 className="text-2xl font-bold mb-4">{errorMsg}</h2>
+        </div>
+      </div>
+    );
   }
   
   const handleShowMore = () => {
