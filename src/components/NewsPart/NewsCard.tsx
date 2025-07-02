@@ -300,17 +300,7 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
                                     <Calendar className="w-3 h-3" />
                                     <span>{articleSource}</span>
                                 </div>
-                                <div className="flex items-center gap-1 text-blue-400">
-                                    <ExternalLink className="w-3 h-3" />
-                                    <span>External Link</span>
-                                </div>
-                            </div>
-                            <div className="
-                  flex items-center gap-2 text-cyan-400 hover:text-cyan-300
-                  transition-colors duration-300 text-xs font-medium
-                ">
-                                <span>Read article</span>
-                                <ExternalLink className="w-3 h-3" />
+                                
                             </div>
                         </div>
                     </div>

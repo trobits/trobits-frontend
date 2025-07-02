@@ -100,7 +100,7 @@ const Footer = () => {
           {/* Social Section */}
           <div className="flex flex-col ">
             <h2 className="text-lg font-semibold mb-2 text-center">Socials</h2>
-            <div className="grid grid-cols-1 space-y-2 justify-items-center">
+            <div className="grid grid-cols-4 space-y-2 justify-items-center">
               <Link
                 target="_blank"
                 href="https://www.facebook.com/profile.php?id=61564695827270"

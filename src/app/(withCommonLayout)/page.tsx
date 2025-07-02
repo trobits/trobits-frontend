@@ -30,7 +30,7 @@ const Profile = () => {
         <div className="container mx-auto min-h-screen px-[5vw] 3xl:px-[1vw]">
             <CryptoNavbar/>
 
-            <div className="pt-[14vh] flex items-center justify-center">
+            <div className="pt-[16vh] flex items-center justify-center">
                 <div className="">
                     <HeroSection/>
                 </div>

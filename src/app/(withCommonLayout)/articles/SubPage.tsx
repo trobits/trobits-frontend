@@ -361,14 +361,14 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                         ref={carouselRef}
                         className="flex transition-transform duration-500 ease-out pb-8"
                         style={{
-                          transform: `translateX(-${currentSlide * (100 / cardsPerView)}%)`,
+                          transform: `translateX(-${currentSlide * (133 / cardsPerView)}%)`,
                         }}
                     >
                       {filteredArticles.map((article, index) => (
                           <div
                               key={`${article.id}-${index}`}
                               className="flex-shrink-0 px-2 py-3"
-                              style={{ width: `${100 / cardsPerView}%` }}
+                              style={{ width: `${133 / cardsPerView}%` }}
                           >
                             <div className="h-full">
                               <div className="w-full max-w-sm mx-auto h-48">
