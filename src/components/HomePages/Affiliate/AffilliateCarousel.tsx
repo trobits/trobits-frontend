@@ -6,38 +6,90 @@ import {
   UrsimeCard,
 } from "@/components/AffiliateLinks";
 
-const CardCarousel = () => {
+const CardCarousel: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [pauseScroll, setPauseScroll] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const hoverLeftRef = useRef(false);
   const hoverRightRef = useRef(false);
+
+  // Card data for easier management
+  const cards = [
+    { id: 1, component: <GeminiCard /> },
+    { id: 2, component: <UrsimeCard /> },
+    { id: 3, component: <PrintrendyCard /> },
+    { id: 4, component: <GeminiCard /> },
+    { id: 5, component: <UrsimeCard /> },
+    { id: 6, component: <PrintrendyCard /> },
+    { id: 7, component: <GeminiCard /> },
+    { id: 8, component: <UrsimeCard /> },
+  ];
+
+  const totalCards = cards.length;
+
+  // Calculate scroll distance (33.333% of container width)
+  const getScrollDistance = (): number => {
+    if (scrollRef.current) {
+      return scrollRef.current.clientWidth / 3;
+    }
+    return 0;
+  };
+
+  // Scroll to specific card
+  const scrollToCard = (index: number): void => {
+    if (scrollRef.current) {
+      const scrollDistance = getScrollDistance() * index;
+      scrollRef.current.scrollTo({ left: scrollDistance, behavior: "smooth" });
+      setCurrentIndex(index);
+    }
+  };
+
+  // Move to next card
+  const moveNext = (): void => {
+    const nextIndex = currentIndex >= totalCards - 3 ? 0 : currentIndex + 1;
+    scrollToCard(nextIndex);
+  };
+
+  // Move to previous card
+  const movePrev = (): void => {
+    const prevIndex = currentIndex <= 0 ? totalCards - 3 : currentIndex - 1;
+    scrollToCard(prevIndex);
+  };
 
   // Auto-scroll logic
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!pauseScroll && scrollRef.current) {
-        scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+      if (!pauseScroll) {
+        moveNext();
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, [pauseScroll]);
+  }, [pauseScroll, currentIndex]);
 
   // Manual hover scroll
   useEffect(() => {
     const interval = setInterval(() => {
-      if (scrollRef.current) {
-        if (hoverLeftRef.current) {
-          scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
-        } else if (hoverRightRef.current) {
-          scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
-        }
+      if (hoverLeftRef.current) {
+        movePrev();
+      } else if (hoverRightRef.current) {
+        moveNext();
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [currentIndex]);
+
+  // Handle scroll event to update current index
+  const handleScroll = (): void => {
+    if (scrollRef.current) {
+      const scrollLeft = scrollRef.current.scrollLeft;
+      const cardWidth = getScrollDistance();
+      const newIndex = Math.round(scrollLeft / cardWidth);
+      setCurrentIndex(newIndex);
+    }
+  };
 
   return (
-    <div className="relative w-full max-w-7xl mx-auto px-4 py-10">
+    <div className="relative">
       {/* Left Scroll Button */}
       <button
         onMouseEnter={() => {
@@ -48,7 +100,9 @@ const CardCarousel = () => {
           setPauseScroll(false);
           hoverLeftRef.current = false;
         }}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-gray-800/60 backdrop-blur-md border border-gray-700 hover:bg-gray-700/80 hover:scale-110 transition"
+        onClick={movePrev}
+        className="absolute left-2 top-[40%] -translate-y-1/2 z-20 p-2 rounded-full bg-gray-800/60 backdrop-blur-md border border-gray-700 hover:bg-gray-700/80 hover:scale-110 transition-all duration-200"
+        aria-label="Previous card"
       >
         <ChevronLeft className="text-white w-5 h-5" />
       </button>
@@ -63,43 +117,57 @@ const CardCarousel = () => {
           setPauseScroll(false);
           hoverRightRef.current = false;
         }}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-gray-800/60 backdrop-blur-md border border-gray-700 hover:bg-gray-700/80 hover:scale-110 transition"
+        onClick={moveNext}
+        className="absolute right-2 top-[40%] -translate-y-1/2 z-20 p-2 rounded-full bg-gray-800/60 backdrop-blur-md border border-gray-700 hover:bg-gray-700/80 hover:scale-110 transition-all duration-200"
+        aria-label="Next card"
       >
         <ChevronRight className="text-white w-5 h-5" />
       </button>
 
-      {/* Scrollable Cards */}
+      {/* Scrollable Cards Container */}
       <div
         ref={scrollRef}
-        className="overflow-x-auto no-scrollbar scroll-smooth flex gap-6 px-10 py-4"
+        className="overflow-x-auto no-scrollbar scroll-smooth flex"
+        style={{
+          scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch'
+        }}
         onMouseEnter={() => setPauseScroll(true)}
         onMouseLeave={() => setPauseScroll(false)}
+        onScroll={handleScroll}
       >
-        {/* Repeat your cards */}
-        <div className="flex-shrink-0 w-72">
-          <GeminiCard />
-        </div>
-        <div className="flex-shrink-0 w-72">
-          <UrsimeCard />
-        </div>
-        <div className="flex-shrink-0 w-72">
-          <PrintrendyCard />
-        </div>
-        <div className="flex-shrink-0 w-72">
-          <GeminiCard />
-        </div>
-        <div className="flex-shrink-0 w-72">
-          <UrsimeCard />
-        </div>
-        <div className="flex-shrink-0 w-72">
-          <PrintrendyCard />
-        </div>
-        <div className="flex-shrink-0 w-72">
-          <GeminiCard />
-        </div>
-        <div className="flex-shrink-0 w-72">
-          <UrsimeCard />
-        </div>
+        {cards.map((card, index) => (
+          <div
+            key={card.id}
+            className="flex-shrink-0"
+            style={{
+              width: 'calc(33.333% - 1rem)',
+              marginLeft: index === 0 ? '2.5rem' : '0.5rem',
+              marginRight: index === cards.length - 1 ? '2.5rem' : '0.5rem',
+              scrollSnapAlign: 'start'
+            }}
+          >
+            <div className="h-full">
+              {card.component}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Dots Indicator */}
+      <div className="flex justify-center mt-4 space-x-2">
+        {Array.from({ length: totalCards - 2 }).map((_, index) => (
+          <button
+            key={index}
+            onClick={() => scrollToCard(index)}
+            className={`w-2 h-2 rounded-full transition-all duration-200 ${
+              currentIndex === index
+                ? 'bg-white scale-125'
+                : 'bg-gray-600 hover:bg-gray-400'
+            }`}
+            aria-label={`Go to card ${index + 1}`}
+          />
+        ))}
       </div>
     </div>
   );

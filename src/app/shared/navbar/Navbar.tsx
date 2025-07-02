@@ -154,7 +154,7 @@ export default function Navbar() {
       <>
       {
         isHomePage &&
-          <div className="w-[100vw] max-w-6xl flex flex-col items-center justify-between mx-auto px-4 ">
+          <div className="w-[100vw] max-w-[1380px] flex flex-col items-center justify-between mx-auto px-4 py-4">
             <GeminiCard compact/>
           </div>
       }
@@ -175,7 +175,7 @@ export default function Navbar() {
               className="
           bg-black/90 backdrop-blur-xl border border-white/10
           rounded-2xl px-6 py-3 shadow-2xl
-          w-[95vw] max-w-6xl
+          w-[95vw] max-w-[1350px]
         "
           >
             <div className="flex items-center justify-between md:gap-8">
