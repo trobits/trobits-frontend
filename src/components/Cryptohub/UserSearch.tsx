@@ -3,10 +3,16 @@ import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { useAllUserQuery } from "@/redux/features/api/authApi";
 import Link from "next/link";
+import { useAppSelector } from "@/redux/hooks";
+import { useToggleFollowMutation } from "@/redux/features/api/authApi";
+import { Button } from "@/components/ui/button";
 
 export default function UserSearch() {
   const { data, isLoading } = useAllUserQuery();
   const [search, setSearch] = useState("");
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const [toggleFollow, { isLoading: followLoading }] = useToggleFollowMutation();
+  const [followedIds, setFollowedIds] = useState<string[]>([]);
 
   const users = data?.data || [];
 
@@ -18,6 +24,16 @@ export default function UserSearch() {
         user.lastName?.toLowerCase().includes(search.toLowerCase())
     );
   }, [search, users]);
+
+  const handleFollow = async (targetId: string) => {
+    if (!currentUser?.id || followLoading) return;
+    try {
+      await toggleFollow({ followerId: currentUser.id, followedId: targetId }).unwrap();
+      setFollowedIds((prev) => [...prev, targetId]);
+    } catch (e) {
+      // Optionally handle error
+    }
+  };
 
   return (
     <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4 mb-6">
@@ -33,10 +49,10 @@ export default function UserSearch() {
       )}
       <ul className="max-h-60 overflow-y-auto divide-y divide-slate-700">
         {filteredUsers.map((user) => (
-          <li key={user.id}>
+          <li key={user.id} className="flex items-center gap-2 py-2 px-2">
             <Link
               href={`/cryptohub/userProfile/${user.id}`}
-              className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-cyan-900/30 transition-colors"
+              className="flex items-center gap-3 flex-1 rounded-lg hover:bg-cyan-900/30 transition-colors"
             >
               {user.profileImage ? (
                 <img
@@ -53,6 +69,16 @@ export default function UserSearch() {
                 {user.firstName} {user.lastName}
               </span>
             </Link>
+            {currentUser && currentUser.id !== user.id && (
+              <Button
+                size="sm"
+                className="ml-2 px-3 py-1 text-xs bg-cyan-600 hover:bg-cyan-700 text-white rounded"
+                disabled={followLoading || followedIds.includes(user.id)}
+                onClick={() => handleFollow(user.id)}
+              >
+                {followedIds.includes(user.id) ? "Followed" : "Follow"}
+              </Button>
+            )}
           </li>
         ))}
       </ul>
