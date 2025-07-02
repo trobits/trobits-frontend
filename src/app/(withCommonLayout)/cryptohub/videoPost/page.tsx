@@ -38,6 +38,7 @@ export interface User {
   otpExpiry?: Date;
   refreshToken?: string;
   comments: Comment[];
+  posts?: any[];
 }
 
 function useDebounce(value: string, delay: number) {

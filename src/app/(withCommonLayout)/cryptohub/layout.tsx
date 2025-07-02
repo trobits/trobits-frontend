@@ -67,6 +67,7 @@ const CryptoLayout = ({ children }) => {
   ];
 
   return (
+    console.log("User id:", user?.id),
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 to-slate-800 text-white relative pt-24">
         {/* Fixed Sidebar */}
         <aside
@@ -130,9 +131,17 @@ const CryptoLayout = ({ children }) => {
               ) : userFromDb && user ? (
                 <>
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                      {userFromDb.firstName?.[0]?.toUpperCase()}{userFromDb.lastName?.[0]?.toUpperCase()}
-                    </div>
+                    {userFromDb?.profileImage ? (
+                      <img
+                        src={userFromDb.profileImage}
+                        alt="Profile"
+                        className="w-10 h-10 rounded-full object-cover border-2 border-cyan-500"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {userFromDb.firstName?.[0]?.toUpperCase()}{userFromDb.lastName?.[0]?.toUpperCase()}
+                      </div>
+                    )}
                     <div>
                       <p className="text-white font-medium text-sm">{userFromDb.firstName} {userFromDb.lastName}</p>
                       <p className="text-slate-400 text-xs">@{userFromDb.firstName?.toLowerCase()}{userFromDb.lastName?.toLowerCase()}</p>
