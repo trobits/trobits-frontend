@@ -17,6 +17,7 @@ import AnimatedButton from "@/components/Shared/AnimatedButton";
 import TrendingTopic from "@/components/Cards/TrendingTopic";
 import VerifiedAccounts from "@/components/Cards/VerifiedAccounts";
 import RecommendedAccounts from "@/components/Cards/RecommendedAccounts";
+import UserSearch from "@/components/Cryptohub/UserSearch";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 import { User } from "../videoPost/page";
 import { usePathname } from "next/navigation";
@@ -160,6 +161,8 @@ const FeedPage = () => {
                   </a>
                 )}
 
+                {/* User Search */}
+                <UserSearch />
                 {/* Trending Topics */}
                 <div className="hover:scale-[1.02] transition-transform duration-500 hover:shadow-lg hover:shadow-cyan-500/20 rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: "200ms" }}>
                   <TrendingTopic />
