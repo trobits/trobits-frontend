@@ -100,7 +100,7 @@ const Footer = () => {
           {/* Social Section */}
           <div className="flex flex-col ">
             <h2 className="text-lg font-semibold mb-2 text-center">Socials</h2>
-            <div className="grid grid-cols-3 space-y-2 justify-items-center">
+            <div className="grid grid-cols-1 space-y-2 justify-items-center">
               <Link
                 target="_blank"
                 href="https://www.facebook.com/profile.php?id=61564695827270"
@@ -126,39 +126,6 @@ const Footer = () => {
                 <FaReddit size={20} />
               </Link>
 
-              <Link
-                target="_blank"
-                href="https://www.youtube.com/@TrobitsCommunity"
-                aria-label="Youtube"
-                className="text-white hover:text-blue-500"
-              >
-                <FaYoutube size={20} />
-              </Link>
-
-              <Link
-                target="_blank"
-                href="https://www.tiktok.com/@trobits_community"
-                aria-label="Tiktok"
-                className="text-white hover:text-blue-500"
-              >
-                <FaTiktok size={20} />
-              </Link>
-              <Link
-                target="_blank"
-                href="https://linkedin.com/company/trobits"
-                aria-label="LinkedIn"
-                className="text-white hover:text-blue-500"
-              >
-                <FaLinkedin size={20} />
-              </Link>
-              <Link
-                target="_blank"
-                href="https://t.me/Trobits1"
-                aria-label="Telegram"
-                className="text-white hover:text-blue-500"
-              >
-                <FaTelegram size={20} />
-              </Link>
               <Link
                 target="_blank"
                 href="https://www.instagram.com/trobits_inc/"

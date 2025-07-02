@@ -19,7 +19,7 @@ export default function HeroSection() {
                 <div className="text-white flex flex-col justify-between gap-16 py-5">
                     <div>
                         <h1 className="text-4xl font-bold mb-4">Welcome to Trobbits</h1>
-                        <TextGenerateEffect words="Trobits is a platform that aims to increase the value of selected cryptocurrencies by reducing their circulating supply through permanent coin burns, funded by revenue from affiliates and advertisers." className="text-white" />
+                        <TextGenerateEffect words="Trobits seeks to boost the value of select cryptocurrencies by permanently burning coins using revenue from affiliates and advertisers, reducing their circulating supply." className="text-white" />
                         {/* <p className="text-lg mb-6 max-w-[600px]">Trobits is a platform that aims to increase the value of selected cryptocurrencies by reducing their circulating supply through permanent coin burns, funded by revenue from affiliates and advertisers.</p> */}
                     </div>
                     <div>

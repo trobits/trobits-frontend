@@ -214,7 +214,7 @@ const TechnicalAnalysis = () => {
 
 export default function Page() {
   return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-black ">
         <section className="container mx-auto mt-32 px-0">
           <div className="flex justify-center items-center">
             <div className="w-full max-w-7xl mx-auto px-6">
