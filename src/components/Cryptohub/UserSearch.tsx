@@ -8,9 +8,10 @@ import { useToggleFollowMutation } from "@/redux/features/api/authApi";
 import { Button } from "@/components/ui/button";
 
 export default function UserSearch() {
+  const currentUser = useAppSelector((state) => state.auth.user);
+  if (!currentUser) return null;
   const { data, isLoading } = useAllUserQuery();
   const [search, setSearch] = useState("");
-  const currentUser = useAppSelector((state) => state.auth.user);
   const [toggleFollow, { isLoading: followLoading }] = useToggleFollowMutation();
   const [followedIds, setFollowedIds] = useState<string[]>([]);
 
