@@ -1,72 +1,73 @@
 "use client";
 import CryptoData from "@/components/HomePages/CryptoData";
-import Slider from "@/components/HomePages/Slider/Slider";
 import React from "react";
-// import Footer from "../shared/Footer/Footer";
 import CryptoNavbar from "../shared/navbar/CryptoNavbar";
 import Footer from "../shared/Footer/Footer";
-import CryptoInfo from "@/components/HomePages/cryptoInfo/CryptoInfo";
 import SubPage from "./articles/SubPage";
 import HeroSection from "@/components/HomePages/HeroSection";
-import CryptoGames from "@/components/HomePages/CryptoGames/index";
-import {BackgroundGradient} from "@/components/ui/backgroundGradient";
-
-import BurnChartWithCalculator from "@/components/HomePages/Slider/GraphSlider";
 import {GridBackground} from "@/components/ui/gridBackground";
 import {
     PrintrendyCard,
-    GeminiCard,
-    UrsimeCard,
+    GeminiCard, UrsimeCard,
 } from "@/components/AffiliateLinks";
 
 import CardCarousel from "@/components/HomePages/Affiliate/AffilliateCarousel";
 
-// import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-
 const Profile = () => {
-    // const dispatch = useAppDispatch();
-
     return (
-        <div className="container mx-auto min-h-screen px-[5vw] 3xl:px-[1vw]">
+        <div className="container mx-auto min-h-screen px-[5vw] 3xl:px-[1vw] space-y-20">
+            {/* Navigation */}
             <CryptoNavbar/>
 
-            <div className="pt-[16vh] flex items-center justify-center">
-                <div className="">
-                    <HeroSection/>
-                </div>
+            {/* Hero Section - with top spacing after navbar */}
+            <div className="pt-[12vh]">
+                <HeroSection/>
             </div>
 
+            {/* Crypto Data Section */}
+            <CryptoData/>
 
-            <GridBackground>
-                <CryptoData/>
-            </GridBackground>
+            {/* Market Card Carousel Section */}
+            <CardCarousel/>
 
-            <div className="">
-                <div className="">
-                    <CardCarousel/>
-                </div>
+            {/* Horizontal Affiliate Link */}
+            <div className="w-full">
+                <PrintrendyCard compact/>
             </div>
 
-            <div className="flex flex-row w-full">
-                {/* Main content area (wider) */}
-                <div className="max-w-[80%]">
+            {/* SubPage + Vertical Affiliate Section */}
+            <div className="flex flex-row w-full gap-5">
+                {/* Main SubPage content (80%) */}
+                <div className="w-[80%] flex flex-col gap-5 -mt-11">
                     <SubPage simpleHeader/>
+                    <GeminiCard/>
+                    <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-6'>
+                        <div className="space-y-4">
+                            <h2 className="text-2xl font-bold text-white">One Big Market/Trobits Article</h2>
+                            <div className="text-gray-300 space-y-3">
+                                <p>This is a featured article section that showcases important market analysis, Trobits
+                                    updates, or trending cryptocurrency news. This section takes up 80% of the width and
+                                    provides detailed content.</p>
+                                <p>The article content can include market insights, burn statistics, partnership
+                                    announcements, or educational content about cryptocurrency burning mechanisms.</p>
+                                <p>This layout provides a prominent space for high-value content while maintaining the
+                                    affiliate monetization structure on the side.</p>
+                            </div>
+                            <div className="flex items-center gap-4 pt-4 border-t border-gray-700/50">
+                                <span className="text-sm text-gray-400">Published: Today</span>
+                                <span className="text-sm text-gray-400">•</span>
+                                <span className="text-sm text-gray-400">5 min read</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                {/* Side cards area (narrower) */}
-                <div className="pt-10 w-[20%]">
-                    <div className="p-2">
-                        <GeminiCard/>
-                    </div>
-                    <div className="p-2">
-                        <PrintrendyCard/>
-                    </div>
-                </div>
-            </div>
-
-            <div className="pt-10">
-                <div className="">
-                    <PrintrendyCard compact/>
+                {/* Vertical Affiliate card (20%) */}
+                <div className="w-[20%] flex flex-col gap-5">
+                    <GeminiCard/>
+                    <PrintrendyCard/>
+                    <GeminiCard/>
                 </div>
             </div>
 

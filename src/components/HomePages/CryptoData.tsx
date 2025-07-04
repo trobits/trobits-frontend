@@ -24,7 +24,7 @@ interface BurnData {
 }
 
 // Individual Coin Column Component
-const CoinColumn: React.FC<CoinColumnProps> = ({ cryptoData, index, isLast }) => {
+const   CoinColumn: React.FC<CoinColumnProps> = ({ cryptoData, index, isLast }) => {
   const widgetRef = useRef<HTMLDivElement>(null);
   const { coin, burns, burns30Day } = cryptoData;
 
@@ -58,19 +58,21 @@ const CoinColumn: React.FC<CoinColumnProps> = ({ cryptoData, index, isLast }) =>
         colorTheme: "dark",
         locale: "en",
         showSymbolLogo: true,
-        fontSize: "10",
       });
       widgetRef.current.appendChild(script);
+
     }
+
   }, [coin, index]);
+
 
   return (
       <>
         <div className="flex-1 p-4 hover:bg-gray-900/20 transition-all duration-300 group">
           {/* Price Widget */}
           <div className="mb-6">
-            <div className="bg-gray-900/40 border border-gray-800/50 rounded-xl p-3">
-              <div ref={widgetRef} className="w-full h-[90px]" />
+            <div  className=" custom-scale bg-gray-900/40 border border-gray-800/50 rounded-xl p-3 !text-[10px]">
+              <div  ref={widgetRef}  />
             </div>
           </div>
 

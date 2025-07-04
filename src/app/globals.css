@@ -11,6 +11,10 @@ body {
   overflow-x: hidden;
 }
 
+html.theme-dark .tv-ticker-item-last__last{
+  color: purple !important;
+}
+
 body::before {
   content: "";
   position: fixed;
