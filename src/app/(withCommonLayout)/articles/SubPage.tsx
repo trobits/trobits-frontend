@@ -18,6 +18,7 @@ import {
 } from "@/hooks/useCryptoNews";
 import { usePathname } from "next/navigation";
 import Loading from "@/components/Shared/Loading";
+import { FanaticsCard, NordVPNCard } from "@/components/AffiliateLinks";
 
 const InfiniteLoader: React.FC<{
   isLoading: boolean;
@@ -605,8 +606,13 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                 </div>
 
                 {/* Vertical Ad Section */}
-                <div className="w-80 flex-shrink-0">
-                  <VerticalAdPlaceholder />
+                <div className="w-80 flex-shrink-0 flex flex-col gap-5">
+                  <div className="max-h-[350px]">
+                    <NordVPNCard />
+                  </div>
+                  <div className="max-h-[350px]">
+                    <FanaticsCard />
+                  </div>
                 </div>
               </div>
           )}

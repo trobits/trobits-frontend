@@ -44,31 +44,30 @@ const Profile = () => {
                     <GeminiCard/>
                     <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-6'>
                         <div className="space-y-4">
-                            <h2 className="text-2xl font-bold text-white">One Big Market/Trobits Article</h2>
+                            <h2 className="text-2xl font-bold text-white">SHIB and LUNC: Community-Driven Comebacks in a Changing Market</h2>
                             <div className="text-gray-300 space-y-3">
-                                <p>This is a featured article section that showcases important market analysis, Trobits
-                                    updates, or trending cryptocurrency news. This section takes up 80% of the width and
-                                    provides detailed content.</p>
-                                <p>The article content can include market insights, burn statistics, partnership
-                                    announcements, or educational content about cryptocurrency burning mechanisms.</p>
-                                <p>This layout provides a prominent space for high-value content while maintaining the
-                                    affiliate monetization structure on the side.</p>
+                            <p><strong>Shiba Inu (SHIB)</strong> and <strong>Terra Classic (LUNC)</strong> continue to capture the attention of crypto traders and enthusiasts in 2025. Despite their contrasting origins — one as a meme token and the other from a collapsed ecosystem — both coins are seeing renewed interest due to strong community backing and ambitious burn mechanisms.</p>
+
+                            <p>SHIB's recent integration into Shibarium, its Layer 2 blockchain, has driven up on-chain activity. Over 410 trillion SHIB tokens have been burned since inception, with the community accelerating weekly burns to reduce the circulating supply and boost scarcity-driven demand.</p>
+
+                            <p>LUNC, once part of the infamous Terra ecosystem collapse, is finding new life through community governance. The recent 1.2% tax burn proposal and validator upgrades have helped restore some confidence. Active development efforts are also targeting interoperability and ecosystem revival.</p>
+
+                            <p>While both coins face volatility, their value now stems more from sustained ecosystem development and community-driven utility than hype alone — a sign of maturity in the meme and recovery coin space.</p>
                             </div>
                             <div className="flex items-center gap-4 pt-4 border-t border-gray-700/50">
-                                <span className="text-sm text-gray-400">Published: Today</span>
-                                <span className="text-sm text-gray-400">•</span>
-                                <span className="text-sm text-gray-400">5 min read</span>
+                            <span className="text-sm text-gray-400">Published: Today</span>
+                            <span className="text-sm text-gray-400">•</span>
+                            <span className="text-sm text-gray-400">4 min read</span>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 {/* Vertical Affiliate card (20%) */}
                 <div className="w-[20%] flex flex-col gap-3">
-                <CPRCareCard/>
-                <FanaticsCard/>
-                <UrsimeCard/>
+                    <CPRCareCard/>
+                    <FanaticsCard/>
+                    <UrsimeCard/>
                 </div>
             </div>
 
