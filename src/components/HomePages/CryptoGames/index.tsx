@@ -234,7 +234,7 @@ const CryptoGames: React.FC = () => {
                       />
                     ))}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                  {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
                     <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-4 text-center">
                       <div className="text-2xl font-bold text-white mb-1">
                         44.7K
@@ -257,7 +257,7 @@ const CryptoGames: React.FC = () => {
                         Rewards Earned
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               )}
             </div>
