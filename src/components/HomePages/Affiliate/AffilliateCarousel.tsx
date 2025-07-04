@@ -4,6 +4,16 @@ import {
   PrintrendyCard,
   GeminiCard,
   UrsimeCard,
+  NordVPNCard,
+  PreplyCard,
+  FanaticsCard,
+  RemitlyCard,
+  StockMarketGuidesCard,
+  TicketNetworkCard,
+  CPRCareCard,
+  GolfPartnerCard,
+  Wwwm8xcomCard,
+
 } from "@/components/AffiliateLinks";
 
 const CardCarousel: React.FC = () => {
@@ -18,11 +28,15 @@ const CardCarousel: React.FC = () => {
     { id: 1, component: <GeminiCard /> },
     { id: 2, component: <UrsimeCard /> },
     { id: 3, component: <PrintrendyCard /> },
-    { id: 4, component: <GeminiCard /> },
-    { id: 5, component: <UrsimeCard /> },
-    { id: 6, component: <PrintrendyCard /> },
-    { id: 7, component: <GeminiCard /> },
-    { id: 8, component: <UrsimeCard /> },
+    { id: 4, component: <NordVPNCard /> },
+    { id: 5, component: <PreplyCard /> },
+    { id: 6, component: <FanaticsCard /> },
+    { id: 7, component: <RemitlyCard /> },
+    { id: 8, component: <StockMarketGuidesCard /> },
+    { id: 9, component: <TicketNetworkCard /> },
+    { id: 10, component: <CPRCareCard /> },
+    { id: 11, component: <GolfPartnerCard /> },
+    { id: 12, component: <Wwwm8xcomCard /> }
   ];
 
   const totalCards = cards.length;

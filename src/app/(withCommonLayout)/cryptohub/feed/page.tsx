@@ -133,30 +133,34 @@ const FeedPage = () => {
                           />
                         ) : (
                           <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300">
-                            {userFromDb?.firstName?.[0] || "U"}{userFromDb.lastName?.[0]?.toUpperCase()}
+                            {(userFromDb?.firstName?.[0]?.toUpperCase() || "U") + (userFromDb?.lastName?.[0]?.toUpperCase() || "")}
                           </div>
                         )}
-                        <div>
-                          <h3 className="text-white font-semibold group-hover:text-cyan-400 transition-colors duration-300">
-                            {userFromDb?.firstName || "User"} {userFromDb?.lastName || ""}
-                          </h3>
-                          <p className="text-slate-400 text-sm">@{userFromDb?.firstName?.toLowerCase() || "user"}{userFromDb.lastName?.toLowerCase()}</p>
-                        </div>
+                        {userFromDb && (
+                          <div>
+                            <h3 className="text-white font-semibold group-hover:text-cyan-400 transition-colors duration-300">
+                              {userFromDb.firstName || "User"} {userFromDb.lastName || ""}
+                            </h3>
+                            <p className="text-slate-400 text-sm">@{userFromDb.firstName?.toLowerCase() || "user"}{userFromDb.lastName?.toLowerCase() || ""}</p>
+                          </div>
+                        )}
                       </div>
+                      {userFromDb && (
                       <div className="grid grid-cols-3 gap-4 text-center">
-                        <div className="hover:scale-110 transition-transform duration-300">
-                          <p className="text-white font-bold">{userFromDb.posts?.length ?? 0}</p>
-                          <p className="text-slate-400 text-xs">Posts</p>
-                        </div>
-                        <div className="hover:scale-110 transition-transform duration-300">
-                          <p className="text-white font-bold">{userFromDb?.following?.length || 0}</p>
-                          <p className="text-slate-400 text-xs">Following</p>
-                        </div>
-                        <div className="hover:scale-110 transition-transform duration-300">
-                          <p className="text-white font-bold">{userFromDb?.followers?.length || 0}</p>
-                          <p className="text-slate-400 text-xs">Followers</p>
-                        </div>
+                      <div className="hover:scale-110 transition-transform duration-300">
+                      <p className="text-white font-bold">{userFromDb.posts?.length ?? 0}</p>
+                      <p className="text-slate-400 text-xs">Posts</p>
                       </div>
+                      <div className="hover:scale-110 transition-transform duration-300">
+                      <p className="text-white font-bold">{userFromDb.following?.length || 0}</p>
+                      <p className="text-slate-400 text-xs">Following</p>
+                      </div>
+                      <div className="hover:scale-110 transition-transform duration-300">
+                      <p className="text-white font-bold">{userFromDb.followers?.length || 0}</p>
+                      <p className="text-slate-400 text-xs">Followers</p>
+                      </div>
+                      </div>
+                      )}
                     </div>
                   </a>
                 )}
