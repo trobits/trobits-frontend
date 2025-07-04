@@ -21,7 +21,7 @@ const Profile = () => {
             <CryptoNavbar/>
 
             {/* Hero Section - with top spacing after navbar */}
-            <div className="pt-[12vh]">
+            <div className="pt-[12vh] flex items-center justify-center">
                 <HeroSection/>
             </div>
 
