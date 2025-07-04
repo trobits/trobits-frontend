@@ -68,6 +68,7 @@ const VerticalAdPlaceholder: React.FC = () => {
           </div>
         </div>
       </div>
+      
   );
 };
 

@@ -8,7 +8,8 @@ import HeroSection from "@/components/HomePages/HeroSection";
 import {GridBackground} from "@/components/ui/gridBackground";
 import {
     PrintrendyCard,
-    GeminiCard, UrsimeCard,NordVPNCard
+    GeminiCard, UrsimeCard,NordVPNCard,
+    CPRCareCard,FanaticsCard
 } from "@/components/AffiliateLinks";
 
 import CardCarousel from "@/components/HomePages/Affiliate/AffilliateCarousel";
@@ -64,11 +65,10 @@ const Profile = () => {
                 </div>
 
                 {/* Vertical Affiliate card (20%) */}
-                <div className="w-[20%] flex flex-col gap-10">
-                    <GeminiCard/>
-                    <PrintrendyCard/>
-                    <UrsimeCard/>
-                    <NordVPNCard/>
+                <div className="w-[20%] flex flex-col gap-3">
+                <CPRCareCard/>
+                <FanaticsCard/>
+                <UrsimeCard/>
                 </div>
             </div>
 
