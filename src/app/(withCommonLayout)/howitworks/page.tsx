@@ -2,7 +2,7 @@
 import { Flame, TrendingUp, Wallet, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import imagesCoin from "../../../assets/how-trobits-work.png";
+import imagesCoin from "../../../assets/how-trobits-work.jpeg";
 import Footer from "@/app/shared/Footer/Footer";
 import { setPaths } from "@/redux/features/slices/authSlice";
 import { usePathname } from "next/navigation";
