@@ -305,7 +305,7 @@ const BrickBreaker: React.FC = () => {
 
   // Fetch leaderboard from backend
   const fetchLeaderboard = useCallback(() => {
-    fetch("http://localhost:3000/api/v1/games/brickbreaker/getallscores")
+    fetch("https://api.trobits.com/api/v1/games/brickbreaker/getallscores")
       .then((res) => res.json())
       .then((data) => {
         const scoresObj = data.scores || {};

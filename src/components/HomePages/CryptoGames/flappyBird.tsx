@@ -46,7 +46,7 @@ const FlappyBird: React.FC = () => {
   >([]);
 
   const fetchLeaderboard = React.useCallback(() => {
-    fetch("http://localhost:3000/api/v1/games/flappybird/getallscores")
+    fetch("https://api.trobits.com/api/v1/games/flappybird/getallscores")
       .then((res) => res.json())
       .then((data) => {
         const scoresObj = data.scores || {};
