@@ -18,7 +18,7 @@ const ShibHeader = () => (
             href="/archive/shiba"
             className="inline-block bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-6 rounded-xl text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-orange-500/25"
         >
-          🔥 SHIB Burn
+          SHIB Burn
         </a>
       </div>
     </div>

@@ -18,7 +18,7 @@ const FlokiHeader = () => (
                 href="/archive/floki"
                 className="inline-block bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold py-3 px-6 rounded-xl text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-yellow-500/25"
             >
-                🐕 FLOKI Data
+                FLOKI Burn
             </a>
         </div>
     </div>
