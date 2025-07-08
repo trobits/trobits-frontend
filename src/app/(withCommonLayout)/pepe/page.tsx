@@ -18,7 +18,7 @@ const PepeHeader = () => (
                 href="/archive/pepe"
                 className="inline-block bg-gradient-to-r from-green-500 to-lime-500 hover:from-green-600 hover:to-lime-600 text-white font-semibold py-3 px-6 rounded-xl text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-green-500/25"
             >
-                🐸 PEPE Data
+                PEPE Burn
             </a>
         </div>
     </div>

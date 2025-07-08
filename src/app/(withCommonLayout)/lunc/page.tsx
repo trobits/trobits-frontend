@@ -18,7 +18,7 @@ const LuncHeader = () => (
             href="/archive/lunc"
             className="inline-block bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-6 rounded-xl text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25"
         >
-          🌙 LUNC Data
+          LUNC Burn
         </a>
       </div>
     </div>
