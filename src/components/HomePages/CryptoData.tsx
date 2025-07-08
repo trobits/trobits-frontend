@@ -3,6 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { TrendingUp, Flame } from "lucide-react";
 import Link from "next/link";
 
+import shibCoin from "@/assets/icons/shiba-inu.png";
+import luncCoin from "@/assets/icons/lunc.png";
+import pepeCoin from "@/assets/icons/pepe.png";
+import flokiCoin from "@/assets/icons/floki.png";
+import bonkCoin from "@/assets/icons/bonk.png";
+
 // Types for better TypeScript support
 interface CryptoData {
   coin: string;
@@ -24,7 +30,7 @@ interface BurnData {
 }
 
 // Individual Coin Column Component
-const   CoinColumn: React.FC<CoinColumnProps> = ({ cryptoData, index, isLast }) => {
+const CoinColumn: React.FC<CoinColumnProps> = ({ cryptoData, index, isLast }) => {
   const widgetRef = useRef<HTMLDivElement>(null);
   const { coin, burns, burns30Day } = cryptoData;
 
@@ -33,94 +39,73 @@ const   CoinColumn: React.FC<CoinColumnProps> = ({ cryptoData, index, isLast }) 
     return Number(value).toLocaleString();
   };
 
-  const getTradingViewSymbol = (coin: string): string => {
-    const symbols: Record<string, string> = {
-      'SHIB': 'CRYPTO:SHIBUSD',
-      'LUNC': 'CRYPTO:LUNCUSD',
-      'PEPE': 'CRYPTO:PEPEUSD',
-      'FLOKI': 'CRYPTO:FLOKIUSD',
-      'BONK': 'CRYPTO:BONKUSD'
-    };
-    return symbols[coin.toUpperCase()] || 'CRYPTO:BTCUSD';
-  };
-
-  useEffect(() => {
-    if (widgetRef.current && !widgetRef.current.hasChildNodes()) {
-      const script = document.createElement("script");
-      script.src =
-          "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
-      script.async = true;
-      script.innerHTML = JSON.stringify({
-        symbol: getTradingViewSymbol(coin),
-        width: "100%",
-        height: 60,
-        isTransparent: true,
-        colorTheme: "dark",
-        locale: "en",
-        showSymbolLogo: true,
-      });
-      widgetRef.current.appendChild(script);
-
-    }
-
-  }, [coin, index]);
+  // TradingView widget logic removed. Only coin name and icon will be shown in the widget area.
 
 
   return (
-      <>
-        <div className="flex-1 p-4 hover:bg-gray-900/20 transition-all duration-300 group">
-          {/* Price Widget */}
-          <div className="mb-6">
-            <div  className=" custom-scale bg-gray-900/40 border border-gray-800/50 rounded-xl p-3 !text-[10px]">
-              <div  ref={widgetRef}  />
-            </div>
-          </div>
+    <>
+      <div className="flex-1 p-4 hover:bg-gray-900/20 transition-all duration-300 group">
+        {/* Price Widget: Only Coin Name and Icon */}
+        <div className="mb-6">
+          <div className="custom-scale bg-gray-900/40 border border-gray-800/50 rounded-xl p-3 flex items-center justify-center gap-2 !text-[16px] font-semibold text-white">
+            {/* Example icon logic, replace with actual icons as needed */}
+            <div ref={widgetRef} className="flex items-center gap-4">
+              {coin === 'SHIB' && <img src={shibCoin.src} alt="SHIB" className="w-8 h-8" />}
+              {coin === 'LUNC' && <img src={luncCoin.src} alt="LUNC" className="w-8 h-8" />}
+              {coin === 'PEPE' && <img src={pepeCoin.src} alt="PEPE" className="w-8 h-8" />}
+              {coin === 'FLOKI' && <img src={flokiCoin.src} alt="FLOKI" className="w-8 h-8" />}
+              {coin === 'BONK' && <img src={bonkCoin.src} alt="BONK" className="w-8 h-8" />}
+              <span className="text-xl font-bold">{coin}</span>
 
-          {/* Burn Stats */}
-          <div className="bg-gradient-to-br from-slate-800/30 to-slate-700/20 border border-slate-600/30 rounded-xl p-4 space-y-4 hover:border-slate-500/40 transition-all duration-300">
-            {/* 1 Day Burn */}
-            <div>
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <Flame className="w-4 h-4 text-slate-400" />
-                <span className="text-sm font-medium text-slate-300">
-                  1 Day Burn
-                </span>
-              </div>
-              <div className="text-center text-lg font-bold text-white">
-                {formatNumber(burns)}
-              </div>
-            </div>
-
-            {/* Lifetime Burn */}
-            <div>
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <TrendingUp className="w-4 h-4 text-slate-400" />
-                <span className="text-sm font-medium text-slate-300">
-                  Lifetime Burn
-                </span>
-              </div>
-              <div className="text-center text-lg font-bold text-white">
-                {formatNumber(burns30Day)}
-              </div>
-            </div>
-          </div>
-
-          {/* Action Button */}
-          <div className="mt-6">
-            <div className="space-y-2">
-              <Link
-                  href={`/${coin.toLowerCase()}`}
-                  className="block w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white font-semibold py-2 px-3 rounded-xl text-center transition-all duration-300 hover:scale-105 text-sm shadow-lg hover:shadow-slate-500/25"
-              >
-                Details
-              </Link>
             </div>
           </div>
         </div>
 
-        {/* Vertical Divider */}
-        {!isLast && <div className="w-px bg-gray-800/50 my-4" />}
-      </>
+        {/* Burn Stats */}
+        <div className="bg-gradient-to-br from-slate-800/30 to-slate-700/20 border border-slate-600/30 rounded-xl p-4 space-y-4 hover:border-slate-500/40 transition-all duration-300">
+          {/* 1 Day Burn */}
+          <div>
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Flame className="w-4 h-4 text-slate-400" />
+              <span className="text-sm font-medium text-slate-300">
+                1 Day Burn
+              </span>
+            </div>
+            <div className="text-center text-lg font-bold text-white">
+              {formatNumber(burns)}
+            </div>
+          </div>
+
+          {/* Lifetime Burn */}
+          <div>
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <TrendingUp className="w-4 h-4 text-slate-400" />
+              <span className="text-sm font-medium text-slate-300">
+                Lifetime Burn
+              </span>
+            </div>
+            <div className="text-center text-lg font-bold text-white">
+              {formatNumber(burns30Day)}
+            </div>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <div className="mt-6">
+          <div className="space-y-2">
+            <Link
+              href={`/${coin.toLowerCase()}`}
+              className="block w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white font-semibold py-2 px-3 rounded-xl text-center transition-all duration-300 hover:scale-105 text-sm shadow-lg hover:shadow-slate-500/25"
+            >
+              Details
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Vertical Divider */}
+      {!isLast && <div className="w-px bg-gray-800/50 my-4" />}
+    </>
   );
 };
 
@@ -174,8 +159,8 @@ const CryptoData: React.FC = () => {
         }
 
         const coinData = rows
-            .map((row: string[]) => parseInt(row[colIndex]?.replace(/,/g, "") || "0"))
-            .filter((value: number) => value > 0);
+          .map((row: string[]) => parseInt(row[colIndex]?.replace(/,/g, "") || "0"))
+          .filter((value: number) => value > 0);
 
         processedData[coin] = {
           dailyBurn: coinData.length > 0 ? coinData[coinData.length - 1] : 0,
@@ -197,20 +182,20 @@ const CryptoData: React.FC = () => {
 
   if (loading) {
     return (
-        <section className="">
-          <div className="flex justify-center items-center">
-            <div className="">
-              <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8">
-                <div className="flex items-center justify-center h-64">
-                  <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-gray-600 border-t-slate-400 rounded-full animate-spin mx-auto mb-4"></div>
-                    <div className="text-gray-400 text-lg">Loading crypto data...</div>
-                  </div>
+      <section className="">
+        <div className="flex justify-center items-center">
+          <div className="">
+            <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8">
+              <div className="flex items-center justify-center h-64">
+                <div className="text-center">
+                  <div className="w-12 h-12 border-4 border-gray-600 border-t-slate-400 rounded-full animate-spin mx-auto mb-4"></div>
+                  <div className="text-gray-400 text-lg">Loading crypto data...</div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
     );
   }
 
@@ -223,24 +208,24 @@ const CryptoData: React.FC = () => {
   }));
 
   return (
-      <section className="">
-        <div className="flex justify-center items-center">
-          <div className="">
-            <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl overflow-hidden shadow-2xl">
-              <div className="flex divide-x divide-gray-800/30">
-                {cardData.map((card: CryptoData, index: number) => (
-                    <CoinColumn
-                        key={card.coin}
-                        cryptoData={card}
-                        index={index}
-                        isLast={index === cardData.length - 1}
-                    />
-                ))}
-              </div>
+    <section className="">
+      <div className="flex justify-center items-center">
+        <div className="">
+          <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl overflow-hidden shadow-2xl">
+            <div className="flex divide-x divide-gray-800/30">
+              {cardData.map((card: CryptoData, index: number) => (
+                <CoinColumn
+                  key={card.coin}
+                  cryptoData={card}
+                  index={index}
+                  isLast={index === cardData.length - 1}
+                />
+              ))}
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   );
 };
 
