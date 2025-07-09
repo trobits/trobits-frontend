@@ -121,7 +121,7 @@ const ArticleFeed = () => {
         const fetchNews = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`/api/crypto-news/coinDetailNews/shib?page=1&items_per_page=20`);
+                const res = await fetch("/api/crypto-news/coinDetailNews?coin=SHIB&page=1&items=20");
                 if (!res.ok) throw new Error("Failed to fetch SHIB news");
                 const data = await res.json();
                 setArticles(data.articles || []);
