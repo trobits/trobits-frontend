@@ -216,7 +216,9 @@ const CryptoGames: React.FC = () => {
                       >
                         <ArrowLeft className="w-4 h-4" />
                         Back to Games
-                      </button>
+                        </button>
+                        
+                         
                       {!isFullscreen ? (
                         <button
                           onClick={handleGoFullscreen}

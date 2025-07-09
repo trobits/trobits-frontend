@@ -384,8 +384,21 @@ const SpaceShooterGame: React.FC = () => {
   // Key event handlers
   const handleKeyDown = useCallback((event: KeyboardEvent): void => {
     keysRef.current[event.code] = true;
-    if (event.code === 'Space') {
+    // Prevent default for game navigation keys to avoid page scroll
+    if (
+      event.code === 'Space' ||
+      event.code === 'ArrowUp' ||
+      event.code === 'ArrowDown' ||
+      event.code === 'ArrowLeft' ||
+      event.code === 'ArrowRight' ||
+      event.code === 'KeyW' ||
+      event.code === 'KeyA' ||
+      event.code === 'KeyS' ||
+      event.code === 'KeyD'
+    ) {
       event.preventDefault();
+    }
+    if (event.code === 'Space') {
       shoot();
     }
   }, [shoot]);

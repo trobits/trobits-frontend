@@ -9,7 +9,7 @@ import BitcoinCoin from "@/assets/bird.png";
 import SmallCoin from "@/assets/icons/lunc.png"; // Coin image
 
 // Increased Canvas WIDTH for a horizontally rectangular game
-const GAME_WIDTH = 900;
+const GAME_WIDTH = 700;
 const GAME_HEIGHT = 600; // Height remains the same
 const BIRD_SIZE = 40;
 const GRAVITY = 0.5; // Slightly increased gravity for faster feel
