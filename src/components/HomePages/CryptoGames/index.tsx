@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Gamepad2, ArrowLeft, Play, Trophy } from "lucide-react";
 import SnakeGame from "@/components/HomePages/CryptoGames/SnakeGame";
 import BrickBreaker from "@/components/HomePages/CryptoGames/brickbreaker";
@@ -137,6 +137,8 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
 const CryptoGames: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const { setIsVisible } = useNavbarVisibility();
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const gameCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsVisible(!selectedGame); // Hide navbar if a game is selected
@@ -145,6 +147,39 @@ const CryptoGames: React.FC = () => {
   useEffect(() => {
     return () => setIsVisible(true); // Reset visibility when component unmounts
   }, []);
+
+  // Fullscreen API handlers
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const fsElement = document.fullscreenElement || (document as any).webkitFullscreenElement;
+      setIsFullscreen(!!fsElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  // Exit fullscreen when going back to games
+  useEffect(() => {
+    if (!selectedGame && isFullscreen) {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen();
+    }
+  }, [selectedGame, isFullscreen]);
+
+  const handleGoFullscreen = () => {
+    const el = gameCardRef.current;
+    if (!el) return;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if ((el as any).webkitRequestFullscreen) (el as any).webkitRequestFullscreen();
+  };
+  const handleExitFullscreen = () => {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen();
+  };
 
   const renderGame = (): React.ReactNode => {
     switch (selectedGame) {
@@ -174,13 +209,30 @@ const CryptoGames: React.FC = () => {
               {selectedGame ? (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <button
-                      onClick={() => setSelectedGame(null)}
-                      className="flex items-center gap-2 px-4 py-2 bg-gray-800 border border-gray-700 text-white font-semibold rounded-xl hover:bg-gray-700 transition-all duration-300 hover:scale-105"
-                    >
-                      <ArrowLeft className="w-4 h-4" />
-                      Back to Games
-                    </button>
+                    <div className="flex items-center gap-2"> {/* New flex container for back and fullscreen buttons */}
+                      <button
+                        onClick={() => setSelectedGame(null)}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-800 border border-gray-700 text-white font-semibold rounded-xl hover:bg-gray-700 transition-all duration-300 hover:scale-105"
+                      >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to Games
+                      </button>
+                      {!isFullscreen ? (
+                        <button
+                          onClick={handleGoFullscreen}
+                          className="px-3 py-1.5 bg-yellow-500/90 text-white font-semibold rounded-lg shadow hover:bg-yellow-600 transition-all text-sm"
+                        >
+                          Go Full Screen
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleExitFullscreen}
+                          className="px-3 py-1.5 bg-gray-700/90 text-white font-semibold rounded-lg shadow hover:bg-gray-800 transition-all text-sm"
+                        >
+                          Exit Full Screen
+                        </button>
+                      )}
+                    </div>
                     {selectedGameData && (
                       <div className="flex items-center gap-3">
                         <div
@@ -206,7 +258,8 @@ const CryptoGames: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <div className="bg-gray-900/40 border border-gray-800/50 rounded-2xl p-6">
+                  <div ref={gameCardRef} className="bg-gray-900/40 border border-gray-800/50 rounded-2xl p-6 relative">
+                    {/* The fullscreen buttons are no longer here */}
                     {renderGame()}
                   </div>
                 </div>
@@ -234,30 +287,6 @@ const CryptoGames: React.FC = () => {
                       />
                     ))}
                   </div>
-                  {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-                    <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-4 text-center">
-                      <div className="text-2xl font-bold text-white mb-1">
-                        44.7K
-                      </div>
-                      <div className="text-sm text-green-400">
-                        Total Players
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-4 text-center">
-                      <div className="text-2xl font-bold text-white mb-1">
-                        302K
-                      </div>
-                      <div className="text-sm text-blue-400">Games Played</div>
-                    </div>
-                    <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-4 text-center">
-                      <div className="text-2xl font-bold text-white mb-1">
-                        5.1M
-                      </div>
-                      <div className="text-sm text-purple-400">
-                        Rewards Earned
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
               )}
             </div>
