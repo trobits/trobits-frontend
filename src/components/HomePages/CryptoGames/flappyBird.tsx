@@ -319,11 +319,13 @@ const FlappyBird: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div
-        className="flex flex-col items-center p-6 bg-slate-900 text-white rounded-xl shadow-2xl border border-yellow-700/70"
+        className="flex flex-col items-center p-6 bg-slate-900 text-white rounded-xl shadow-2xl border border-blue-700/70" // Changed border color
         style={{ maxWidth: "fit-content" }}
       >
-        <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 tracking-wide text-center">
-          🪙 Flappy Coin
+        <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 tracking-wide text-center">
+          {" "}
+          {/* Adjusted gradient for title */}
+          💧 Flappy Coin
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-8 mt-4 justify-center items-center lg:items-start">
@@ -337,27 +339,28 @@ const FlappyBird: React.FC = () => {
                   height: GAME_HEIGHT,
                   boxShadow: "inset 0 0 30px rgba(0,0,0,0.6)",
                   backgroundImage:
-                    "radial-gradient(circle at top right, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%), radial-gradient(circle at bottom left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%), linear-gradient(to bottom, #3b82f6, #1e40af)", // Better gradient for background
+                    "radial-gradient(circle at top right, rgba(0,255,255,0.15) 0%, rgba(0,255,255,0) 70%), radial-gradient(circle at bottom left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%), linear-gradient(to bottom, #1e3a8a, #0c4a6e)", // Crypto-themed blue gradient background
                 }}
               >
                 <p className="text-xl sm:text-2xl mb-4 text-white font-medium drop-shadow-md px-4">
-                  Press <span className="font-bold text-yellow-300">Space</span>{" "}
-                  to flap! Collect coins for bonus points!
+                  Press{" "}
+                  <span className="font-bold text-teal-300">Space</span> to
+                  flap! Collect coins for bonus points!
                 </p>
                 {gameOver && (
                   <div className="mt-6">
-                    <p className="text-red-400 text-3xl sm:text-4xl font-extrabold animate-pulse mb-2">
+                    <p className="text-purple-400 text-3xl sm:text-4xl font-extrabold animate-pulse mb-2">
                       Game Over!
                     </p>
                     <p className="text-white text-2xl sm:text-3xl font-bold">
                       Your Score:{" "}
-                      <span className="text-yellow-300">{score}</span>
+                      <span className="text-teal-300">{score}</span>
                     </p>
                   </div>
                 )}
                 <button
                   onClick={startGame}
-                  className="mt-10 px-12 py-5 bg-gradient-to-r from-yellow-500 to-orange-600 text-white font-bold text-xl rounded-full shadow-lg hover:from-yellow-600 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 active:scale-95 ring-4 ring-yellow-300/50"
+                  className="mt-10 px-12 py-5 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold text-xl rounded-full shadow-lg hover:from-teal-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 ring-4 ring-teal-300/50" // Button gradient and ring changed
                 >
                   {gameOver ? "Play Again" : "Start Game"}
                 </button>
@@ -373,7 +376,7 @@ const FlappyBird: React.FC = () => {
                   height: GAME_HEIGHT,
                   boxShadow: "inset 0 0 30px rgba(0,0,0,0.6)",
                   backgroundImage:
-                    "linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)",
+                    "linear-gradient(135deg, #1a5276 0%, #0c344b 100%)", // Darker, more consistent blue gradient for in-game
                   cursor: "pointer",
                 }}
               >
@@ -409,10 +412,11 @@ const FlappyBird: React.FC = () => {
                         top: 0,
                         width: PIPE_WIDTH,
                         height: obs.height,
-                        background: "linear-gradient(180deg, #fbbf24 0%, #b45309 100%)", // Gold gradient
+                        background:
+                          "linear-gradient(180deg, #60a5fa 0%, #2563eb 100%)", // Blue gradient
                         borderRadius: "8px",
-                        border: "3px solid #eab308", // Yellow border (yellow-500)
-                        boxShadow: "3px 3px 10px rgba(234,179,8,0.25)", // Yellow shadow
+                        border: "3px solid #1e40af", // Darker blue border
+                        boxShadow: "3px 3px 10px rgba(37,99,235,0.25)", // Blue shadow
                       }}
                     >
                       {/* Pipe Top Cap */}
@@ -423,10 +427,11 @@ const FlappyBird: React.FC = () => {
                           left: -5, // Extend slightly beyond pipe width
                           width: PIPE_WIDTH + 10, // Cap width
                           height: 20, // Cap height
-                          background: "linear-gradient(180deg, #fbbf24 0%, #b45309 100%)", // Gold gradient for cap
+                          background:
+                            "linear-gradient(180deg, #3b82f6 0%, #1e40af 100%)", // Darker blue gradient for cap
                           borderRadius: "5px",
-                          border: "2px solid #eab308",
-                          boxShadow: "inset 0 -3px 5px rgba(234,179,8,0.18)",
+                          border: "2px solid #173273", // Even darker blue border
+                          boxShadow: "inset 0 -3px 5px rgba(30,64,175,0.18)",
                         }}
                       />
                     </div>
@@ -438,10 +443,11 @@ const FlappyBird: React.FC = () => {
                         top: obs.height + PIPE_GAP,
                         width: PIPE_WIDTH,
                         height: GAME_HEIGHT - obs.height - PIPE_GAP,
-                        background: "linear-gradient(180deg, #fbbf24 0%, #b45309 100%)",
+                        background:
+                          "linear-gradient(180deg, #60a5fa 0%, #2563eb 100%)", // Blue gradient
                         borderRadius: "8px",
-                        border: "3px solid #eab308",
-                        boxShadow: "3px 3px 10px rgba(234,179,8,0.25)",
+                        border: "3px solid #1e40af", // Darker blue border
+                        boxShadow: "3px 3px 10px rgba(37,99,235,0.25)",
                       }}
                     >
                       {/* Pipe Bottom Cap */}
@@ -452,10 +458,11 @@ const FlappyBird: React.FC = () => {
                           left: -5, // Extend slightly beyond pipe width
                           width: PIPE_WIDTH + 10, // Cap width
                           height: 20, // Cap height
-                          background: "linear-gradient(180deg, #fbbf24 0%, #b45309 100%)",
+                          background:
+                            "linear-gradient(180deg, #3b82f6 0%, #1e40af 100%)", // Darker blue gradient for cap
                           borderRadius: "5px",
-                          border: "2px solid #eab308",
-                          boxShadow: "inset 0 3px 5px rgba(234,179,8,0.18)",
+                          border: "2px solid #173273", // Even darker blue border
+                          boxShadow: "inset 0 3px 5px rgba(30,64,175,0.18)",
                         }}
                       />
                     </div>
@@ -497,7 +504,7 @@ const FlappyBird: React.FC = () => {
                 `}</style>
 
                 {/* Score Display */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-5xl font-extrabold text-yellow-300 text-shadow-xl z-10 drop-shadow-lg">
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-5xl font-extrabold text-teal-300 text-shadow-xl z-10 drop-shadow-lg">
                   {score}
                 </div>
               </div>
@@ -505,10 +512,15 @@ const FlappyBird: React.FC = () => {
           </div>
 
           {/* Right Panel: Leaderboard */}
-          <div className="w-72 p-6 bg-slate-800/40 border border-yellow-700/50 rounded-2xl shadow-md hover:bg-slate-800/60 hover:border-yellow-600/50 transition-all duration-300">
+          <div className="w-72 p-6 bg-slate-800/40 border border-blue-700/50 rounded-2xl shadow-md hover:bg-slate-800/60 hover:border-blue-600/50 transition-all duration-300">
+            {" "}
+            {/* Adjusted border colors */}
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-xl flex items-center justify-center">
-                <Award className="w-5 h-5 text-yellow-400" />
+              <div className="w-10 h-10 bg-gradient-to-r from-teal-500/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                {" "}
+                {/* Adjusted gradient for icon background */}
+                <Award className="w-5 h-5 text-teal-400" />{" "}
+                {/* Adjusted icon color */}
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">Leaderboard</h3>
@@ -527,7 +539,7 @@ const FlappyBird: React.FC = () => {
                   key={entry.userId}
                   className={`flex items-center justify-between p-3 rounded-xl transition-all duration-200 border border-transparent ${
                     entry.name === "You"
-                      ? "bg-yellow-900/50 border-yellow-700/50 text-yellow-300 font-bold scale-105 shadow-md"
+                      ? "bg-blue-900/50 border-blue-700/50 text-teal-300 font-bold scale-105 shadow-md" // Adjusted "You" colors
                       : "hover:bg-slate-700/40 hover:border-slate-600/30 text-white"
                   }`}
                 >
@@ -535,7 +547,7 @@ const FlappyBird: React.FC = () => {
                     <span
                       className={`font-mono text-base w-8 text-center ${
                         entry.name === "You"
-                          ? "text-yellow-400"
+                          ? "text-teal-400" // Adjusted "You" rank color
                           : "text-slate-400"
                       }`}
                     >
@@ -547,7 +559,7 @@ const FlappyBird: React.FC = () => {
                   </div>
                   <span
                     className={`font-bold text-xl ${
-                      entry.name === "You" ? "text-yellow-400" : "text-orange-400"
+                      entry.name === "You" ? "text-teal-400" : "text-blue-400"
                     }`}
                   >
                     {entry.score}
@@ -558,7 +570,7 @@ const FlappyBird: React.FC = () => {
 
             <p className="text-sm text-slate-500 text-center mt-6 pt-4 border-t border-slate-700/50">
               Current Score:{" "}
-              <span className="font-bold text-yellow-400">{score}</span>
+              <span className="font-bold text-teal-400">{score}</span>
             </p>
           </div>
         </div>
