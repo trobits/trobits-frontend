@@ -46,7 +46,9 @@ const CryptoLayout = ({ children }) => {
   ];
 
   const maxRewards = 10000;
+  // Hardcoding for testing - revert to userFromDb?.rewards ?? 0; for production
   const currentRewards = userFromDb?.rewards ?? 0;
+
   // Ensure rewardProgress is between 0 and 100
   const rewardProgress = Math.max(0, Math.min(100, (currentRewards / maxRewards) * 100));
 
@@ -142,13 +144,14 @@ const CryptoLayout = ({ children }) => {
 
                   {/* Rewards Progress Bar */}
                   <div className="mb-4">
-                    <p className="text-slate-400 text-xs mb-1">Rewards</p>
+                    <p className="text-slate-400 text-xs mb-1">
+                      Rewards: <span className="text-white font-semibold">{currentRewards}</span>
+                    </p>
                     <div className="w-full bg-slate-700 rounded-full h-2.5 relative group">
                       <div
                         className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2.5 rounded-full transition-all duration-300 relative"
                         style={{ width: `${rewardProgress}%` }}
                       >
-                        
                         
                       </div>
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
