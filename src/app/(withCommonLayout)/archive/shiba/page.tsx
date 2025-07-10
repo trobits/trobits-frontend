@@ -177,13 +177,13 @@ const ShibaBurnsPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-black text-white">
             {/* Ad Banner */}
-            <div className="w-full py-4">
-                <div className="flex flex-wrap justify-center gap-2 mx-auto">
-                    {adClasses.map((adClass) => (
-                        <AdBanner key={adClass} adClass={adClass}/>
-                    ))}
-                </div>
-            </div>
+            {/*<div className="w-full py-4">*/}
+            {/*    <div className="flex flex-wrap justify-center gap-2 mx-auto">*/}
+            {/*        {adClasses.map((adClass) => (*/}
+            {/*            <AdBanner key={adClass} adClass={adClass}/>*/}
+            {/*        ))}*/}
+            {/*    </div>*/}
+            {/*</div>*/}
 
             <div className="container mt-10 mx-auto px-6 py-16">
                 {/* Header Section */}

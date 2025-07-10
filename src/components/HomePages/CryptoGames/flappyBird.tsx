@@ -6,17 +6,18 @@ import { Award } from "lucide-react";
 import { useGameHighscore } from "@/hooks/useGameHighscore";
 import { useAppSelector } from "@/redux/hooks";
 import BitcoinCoin from "@/assets/bird.png";
-import SmallCoin from "@/assets/pipe_bottom.png"; // Coin image
+import SmallCoin from "@/assets/icons/lunc.png"; // Coin image
 
-const GAME_WIDTH = 400;
-const GAME_HEIGHT = 600;
+// Increased Canvas WIDTH for a horizontally rectangular game
+const GAME_WIDTH = 700;
+const GAME_HEIGHT = 600; // Height remains the same
 const BIRD_SIZE = 40;
-const GRAVITY = 0.5;
-const JUMP_STRENGTH = -9;
-const PIPE_WIDTH = 60;
-const PIPE_GAP = 180;
-const PIPE_SPEED = 3;
-const COIN_SIZE = 25;
+const GRAVITY = 0.5; // Slightly increased gravity for faster feel
+const JUMP_STRENGTH = -9; // Slightly adjusted jump strength
+const PIPE_WIDTH = 65; // Slightly adjusted pipe width
+const PIPE_GAP = 210; // Slightly reduced gap for a bit more challenge with speed
+const PIPE_SPEED = 4; // Increased pipe speed for a faster game
+const COIN_SIZE = 20; // Slightly adjusted coin size
 
 type Obstacle = { x: number; height: number; id: string; passed?: boolean };
 type CollectibleCoin = { x: number; y: number; id: string; collected: boolean };
@@ -36,17 +37,12 @@ const FlappyBird: React.FC = () => {
     gameName: "Flappy Bird",
   });
 
-  React.useEffect(() => {
-    console.log("[FlappyBird] User:", user);
-    console.log("[FlappyBird] Loaded highscore:", highscore);
-  }, [user, highscore]);
-
   const [leaderboard, setLeaderboard] = useState<
     { name: string; score: number; userId: string }[]
   >([]);
 
-  const fetchLeaderboard = React.useCallback(() => {
-    fetch("https://api.trobits.com/api/v1/games/flappybird/getallscores")
+  const fetchLeaderboard = useCallback(() => {
+    fetch("http://localhost:3000/api/v1/games/flappybird/getallscores")
       .then((res) => res.json())
       .then((data) => {
         const scoresObj = data.scores || {};
@@ -63,10 +59,6 @@ const FlappyBird: React.FC = () => {
           }))
           .sort((a, b) => b.score - a.score);
         setLeaderboard(arr);
-        console.log(
-          "[FlappyBird] Leaderboard fetched (names only):",
-          arr.map((e) => ({ name: e.name, score: e.score, userId: e.userId }))
-        );
       })
       .catch((err) => {
         setLeaderboard([]);
@@ -74,7 +66,7 @@ const FlappyBird: React.FC = () => {
       });
   }, [user?.id]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchLeaderboard();
   }, [fetchLeaderboard, gameOver]);
 
@@ -97,10 +89,44 @@ const FlappyBird: React.FC = () => {
     };
   }, []);
 
+  // --- New / Modified Coin Generation Functionality ---
   const generateCollectibleCoin = useCallback(
-    (obstacleX: number, obstacleHeight: number): CollectibleCoin => {
-      const coinY = obstacleHeight + PIPE_GAP / 2 - COIN_SIZE / 2;
-      const coinX = obstacleX + PIPE_WIDTH / 2 - COIN_SIZE / 2;
+    (obstacleHeight: number): CollectibleCoin => {
+      // Minimum distance from the top/bottom game boundaries
+      const topBoundaryOffset = 50;
+      const bottomBoundaryOffset = 50;
+
+      // Calculate the available vertical range for the coin within the game boundaries
+      const gameSafeMinY = topBoundaryOffset;
+      const gameSafeMaxY = GAME_HEIGHT - COIN_SIZE - bottomBoundaryOffset;
+
+      // Calculate the open vertical space within the current pipe gap
+      const pipeGapTop = obstacleHeight;
+      const pipeGapBottom = obstacleHeight + PIPE_GAP;
+
+      // Determine the actual usable vertical range for the coin
+      const coinMinY = Math.max(pipeGapTop + COIN_SIZE / 2, gameSafeMinY); // Ensure coin is below top pipe and within game bounds
+      const coinMaxY = Math.min(
+        pipeGapBottom - COIN_SIZE * 1.5,
+        gameSafeMaxY
+      ); // Ensure coin is above bottom pipe and within game bounds
+
+      let coinY;
+      if (coinMinY >= coinMaxY) {
+        // Fallback: If the calculated range is invalid (e.g., gap too small for coin + offsets),
+        // place it roughly in the center of the available game area, respecting boundaries.
+        coinY =
+          Math.floor(Math.random() * (gameSafeMaxY - gameSafeMinY + 1)) +
+          gameSafeMinY;
+      } else {
+        // Randomly choose a Y position within the valid range
+        coinY =
+          Math.floor(Math.random() * (coinMaxY - coinMinY + 1)) + coinMinY;
+      }
+
+      // Coin will spawn horizontally aligned with the pipe, appearing just before or at its start
+      const coinX = GAME_WIDTH + PIPE_WIDTH / 2 - COIN_SIZE / 2; // Spawns where the pipe would be, or slightly before. Adjust as needed.
+
       return {
         x: coinX,
         y: coinY,
@@ -110,6 +136,7 @@ const FlappyBird: React.FC = () => {
     },
     []
   );
+  // --- End New / Modified Coin Functionality ---
 
   const startGame = useCallback(() => {
     setBirdY(GAME_HEIGHT / 2 - BIRD_SIZE / 2);
@@ -119,7 +146,7 @@ const FlappyBird: React.FC = () => {
     setGameOver(false);
     setGameStarted(true);
     setLoopStarted(false);
-    setCollectibles([]);
+    setCollectibles([]); // Ensure collectibles are reset
     gameAreaRef.current?.focus();
 
     setTimeout(() => {
@@ -158,13 +185,8 @@ const FlappyBird: React.FC = () => {
       localBirdY += localVelocity;
 
       if (localBirdY + BIRD_SIZE >= GAME_HEIGHT || localBirdY < 0) {
-        // Added ceiling collision
         setGameOver(true);
-        console.log("[FlappyBird] Game Over! Current Score:", score);
-        console.log("[FlappyBird] Previous Highscore:", highscore);
-        submitHighscore(score).then(() => {
-          console.log("[FlappyBird] submitHighscore called with:", score);
-        });
+        submitHighscore(score);
         return;
       }
 
@@ -172,28 +194,40 @@ const FlappyBird: React.FC = () => {
       setVelocity(localVelocity);
 
       setObstacles((prevObstacles) => {
-        let updated: Obstacle[] = prevObstacles
-          .map((obs) => {
-            const newX = obs.x - PIPE_SPEED;
-            const birdX = GAME_WIDTH / 2 - BIRD_SIZE / 2;
-            const justPassed = !obs.passed && newX + PIPE_WIDTH < birdX;
+        const updatedObstacles: Obstacle[] = [];
+        // Determine if a coin should be generated. Only if no coin currently exists.
+        // And give it a 60% chance to appear for a new pipe
+        const shouldGenerateCoin =
+          collectibles.length === 0 && Math.random() < 0.6;
 
+        for (let i = 0; i < prevObstacles.length; i++) {
+          const obs = prevObstacles[i];
+          const newX = obs.x - PIPE_SPEED;
+          const birdX = GAME_WIDTH / 2 - BIRD_SIZE / 2;
+
+          if (newX + PIPE_WIDTH > 0) {
+            const justPassed = !obs.passed && newX + PIPE_WIDTH < birdX;
             if (justPassed) {
               setScore((s) => s + 2);
             }
+            updatedObstacles.push({
+              ...obs,
+              x: newX,
+              passed: obs.passed || justPassed,
+            });
+          }
+        }
 
-            return { ...obs, x: newX, passed: obs.passed || justPassed };
-          })
-          .filter((obs) => obs.x + PIPE_WIDTH > 0);
-
-        const lastObstacle = updated[updated.length - 1];
-        if (!lastObstacle || lastObstacle.x < GAME_WIDTH - 250) {
+        const lastObstacle = updatedObstacles[updatedObstacles.length - 1];
+        if (!lastObstacle || lastObstacle.x < GAME_WIDTH - 280) {
           const newObs = generateNewObstacle();
-          updated.push(newObs);
-          setCollectibles((prev) => [
-            ...prev,
-            generateCollectibleCoin(newObs.x, newObs.height),
-          ]);
+          updatedObstacles.push(newObs);
+
+          // Generate a single collectible coin randomly with a new pipe, if conditions met
+          if (shouldGenerateCoin) {
+            // Pass the new obstacle's height for coin vertical placement calculation
+            setCollectibles([generateCollectibleCoin(newObs.height)]);
+          }
         }
 
         const birdRect = {
@@ -203,7 +237,7 @@ const FlappyBird: React.FC = () => {
           bottom: localBirdY + BIRD_SIZE,
         };
 
-        for (let obs of updated) {
+        for (let obs of updatedObstacles) {
           const pipeLeft = obs.x;
           const pipeRight = obs.x + PIPE_WIDTH;
           const pipeTop = obs.height;
@@ -221,47 +255,45 @@ const FlappyBird: React.FC = () => {
 
           if (collideTop || collideBottom) {
             setGameOver(true);
-            console.log("[FlappyBird] Game Over! Current Score:", score);
-            console.log("[FlappyBird] Previous Highscore:", highscore);
-            submitHighscore(score).then(() => {
-              console.log("[FlappyBird] submitHighscore called with:", score);
-            });
+            submitHighscore(score);
             return prevObstacles;
           }
         }
 
-        return updated;
+        return updatedObstacles;
       });
 
       setCollectibles((prevCoins) => {
-        return prevCoins
-          .map((coin) => {
-            const birdRect = {
-              left: GAME_WIDTH / 2 - BIRD_SIZE / 2,
-              right: GAME_WIDTH / 2 + BIRD_SIZE / 2,
-              top: localBirdY,
-              bottom: localBirdY + BIRD_SIZE,
-            };
-            const coinRect = {
-              left: coin.x,
-              right: coin.x + COIN_SIZE,
-              top: coin.y,
-              bottom: coin.y + COIN_SIZE,
-            };
+        const updatedCoins: CollectibleCoin[] = [];
+        for (let i = 0; i < prevCoins.length; i++) {
+          const coin = prevCoins[i];
+          const birdRect = {
+            left: GAME_WIDTH / 2 - BIRD_SIZE / 2,
+            right: GAME_WIDTH / 2 + BIRD_SIZE / 2,
+            top: localBirdY,
+            bottom: localBirdY + BIRD_SIZE,
+          };
+          const coinRect = {
+            left: coin.x,
+            right: coin.x + COIN_SIZE,
+            top: coin.y,
+            bottom: coin.y + COIN_SIZE,
+          };
 
-            const overlapX =
-              birdRect.left < coinRect.right && birdRect.right > coinRect.left;
-            const overlapY =
-              birdRect.top < coinRect.bottom && birdRect.bottom > coinRect.top;
+          const overlapX =
+            birdRect.left < coinRect.right && birdRect.right > coinRect.left;
+          const overlapY =
+            birdRect.top < coinRect.bottom && birdRect.bottom > coinRect.top;
 
-            if (!coin.collected && overlapX && overlapY) {
-              setScore((s) => s + 5);
-              return { ...coin, collected: true };
-            }
-
-            return coin;
-          })
-          .filter((c) => !c.collected && c.x > -COIN_SIZE);
+          if (!coin.collected && overlapX && overlapY) {
+            setScore((s) => s + 5);
+            // Coin is collected, it will not be added to updatedCoins, effectively removing it
+          } else if (!coin.collected && coin.x > -COIN_SIZE) {
+            // Only keep uncollected coins that are still on screen
+            updatedCoins.push({ ...coin, x: coin.x - PIPE_SPEED });
+          }
+        }
+        return updatedCoins;
       });
 
       gameFrameRef.current = requestAnimationFrame(gameLoop);
@@ -278,20 +310,22 @@ const FlappyBird: React.FC = () => {
     velocity,
     generateNewObstacle,
     generateCollectibleCoin,
-    submitHighscore, // Added submitHighscore to dependencies
-    score, // Added score to dependencies
-    highscore, // Added highscore to dependencies
-    loopStarted, // Added loopStarted to dependencies
+    submitHighscore,
+    score,
+    loopStarted,
+    collectibles.length,
   ]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center ">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div
-        className="flex flex-col items-center p-6 bg-slate-900 text-white rounded-lg shadow-2xl border border-yellow-700"
+        className="flex flex-col items-center p-6 bg-slate-900 text-white rounded-xl shadow-2xl border border-blue-700/70" // Changed border color
         style={{ maxWidth: "fit-content" }}
       >
-        <h2 className="text-4xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 tracking-wide">
-          🪙 Flappy Coin
+        <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 tracking-wide text-center">
+          {" "}
+          {/* Adjusted gradient for title */}
+          💧 Flappy Coin
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-8 mt-4 justify-center items-center lg:items-start">
@@ -299,41 +333,51 @@ const FlappyBird: React.FC = () => {
           <div>
             {!gameStarted || gameOver ? (
               <div
-                className="w-[400px] h-[600px] bg-gradient-to-b from-blue-600 to-blue-800 flex flex-col justify-center items-center rounded-xl border-4 border-blue-900 text-center px-6 shadow-inset-lg"
+                className="flex flex-col justify-center items-center rounded-xl border-4 border-blue-900 text-center px-6 shadow-inset-lg transition-all duration-300 ease-in-out"
                 style={{
-                  boxShadow: "inset 0 0 20px rgba(0,0,0,0.5)",
+                  width: GAME_WIDTH,
+                  height: GAME_HEIGHT,
+                  boxShadow: "inset 0 0 30px rgba(0,0,0,0.6)",
                   backgroundImage:
-                    "radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%), radial-gradient(circle at bottom left, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 70%)",
+                    "radial-gradient(circle at top right, rgba(0,255,255,0.15) 0%, rgba(0,255,255,0) 70%), radial-gradient(circle at bottom left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%), linear-gradient(to bottom, #1e3a8a, #0c4a6e)", // Crypto-themed blue gradient background
                 }}
               >
-                <p className="text-lg mb-4 text-white font-medium drop-shadow-md">
-                  Press <span className="font-bold text-yellow-300">Space</span>{" "}
-                  to flap!
+                <p className="text-xl sm:text-2xl mb-4 text-white font-medium drop-shadow-md px-4">
+                  Press{" "}
+                  <span className="font-bold text-teal-300">Space</span> to
+                  flap! Collect coins for bonus points!
                 </p>
                 {gameOver && (
-                  <p className="text-red-400 text-2xl font-extrabold mt-4 animate-pulse">
-                    Game Over! Your Score: {score}
-                  </p>
+                  <div className="mt-6">
+                    <p className="text-purple-400 text-3xl sm:text-4xl font-extrabold animate-pulse mb-2">
+                      Game Over!
+                    </p>
+                    <p className="text-white text-2xl sm:text-3xl font-bold">
+                      Your Score:{" "}
+                      <span className="text-teal-300">{score}</span>
+                    </p>
+                  </div>
                 )}
                 <button
                   onClick={startGame}
-                  className="mt-8 px-10 py-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold rounded-full shadow-lg hover:from-yellow-500 hover:to-orange-500 transition-all duration-300 transform hover:scale-105 active:scale-95"
+                  className="mt-10 px-12 py-5 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold text-xl rounded-full shadow-lg hover:from-teal-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 ring-4 ring-teal-300/50" // Button gradient and ring changed
                 >
                   {gameOver ? "Play Again" : "Start Game"}
                 </button>
               </div>
             ) : (
               <div
-                className="relative rounded-lg overflow-hidden border-4 border-blue-900 bg-gradient-to-b from-blue-600 to-blue-800"
+                className="relative rounded-xl overflow-hidden border-4 border-blue-900 transition-all duration-300 ease-in-out"
                 ref={gameAreaRef}
                 tabIndex={0}
                 onClick={flap}
                 style={{
                   width: GAME_WIDTH,
                   height: GAME_HEIGHT,
-                  boxShadow: "inset 0 0 20px rgba(0,0,0,0.5)",
+                  boxShadow: "inset 0 0 30px rgba(0,0,0,0.6)",
                   backgroundImage:
-                    "radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%), radial-gradient(circle at bottom left, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 70%)",
+                    "linear-gradient(135deg, #1a5276 0%, #0c344b 100%)", // Darker, more consistent blue gradient for in-game
+                  cursor: "pointer",
                 }}
               >
                 {/* Bird */}
@@ -344,7 +388,7 @@ const FlappyBird: React.FC = () => {
                     top: birdY,
                     width: BIRD_SIZE,
                     height: BIRD_SIZE,
-                    transition: "transform 0.05s ease-out", // Smooth bird movement
+                    transition: "transform 0.08s ease-out", // Smooth bird movement
                     transform: `rotate(${velocity * 1.5}deg)`, // Bird rotation based on velocity
                   }}
                 >
@@ -368,10 +412,11 @@ const FlappyBird: React.FC = () => {
                         top: 0,
                         width: PIPE_WIDTH,
                         height: obs.height,
-                        backgroundColor: "#3b82f6", // Stronger blue
+                        background:
+                          "linear-gradient(180deg, #60a5fa 0%, #2563eb 100%)", // Blue gradient
                         borderRadius: "8px",
-                        border: "3px solid #1e40af", // Darker blue outline
-                        boxShadow: "3px 3px 8px rgba(0,0,0,0.4)", // Pipe shadow
+                        border: "3px solid #1e40af", // Darker blue border
+                        boxShadow: "3px 3px 10px rgba(37,99,235,0.25)", // Blue shadow
                       }}
                     >
                       {/* Pipe Top Cap */}
@@ -382,10 +427,11 @@ const FlappyBird: React.FC = () => {
                           left: -5, // Extend slightly beyond pipe width
                           width: PIPE_WIDTH + 10, // Cap width
                           height: 20, // Cap height
-                          backgroundColor: "#1e40af", // Darker blue for cap
+                          background:
+                            "linear-gradient(180deg, #3b82f6 0%, #1e40af 100%)", // Darker blue gradient for cap
                           borderRadius: "5px",
-                          border: "2px solid #000",
-                          boxShadow: "inset 0 -3px 5px rgba(0,0,0,0.3)",
+                          border: "2px solid #173273", // Even darker blue border
+                          boxShadow: "inset 0 -3px 5px rgba(30,64,175,0.18)",
                         }}
                       />
                     </div>
@@ -397,10 +443,11 @@ const FlappyBird: React.FC = () => {
                         top: obs.height + PIPE_GAP,
                         width: PIPE_WIDTH,
                         height: GAME_HEIGHT - obs.height - PIPE_GAP,
-                        backgroundColor: "#3b82f6",
+                        background:
+                          "linear-gradient(180deg, #60a5fa 0%, #2563eb 100%)", // Blue gradient
                         borderRadius: "8px",
-                        border: "3px solid #1e40af",
-                        boxShadow: "3px 3px 8px rgba(0,0,0,0.4)",
+                        border: "3px solid #1e40af", // Darker blue border
+                        boxShadow: "3px 3px 10px rgba(37,99,235,0.25)",
                       }}
                     >
                       {/* Pipe Bottom Cap */}
@@ -411,10 +458,11 @@ const FlappyBird: React.FC = () => {
                           left: -5, // Extend slightly beyond pipe width
                           width: PIPE_WIDTH + 10, // Cap width
                           height: 20, // Cap height
-                          backgroundColor: "#1e40af", // Darker blue for cap
+                          background:
+                            "linear-gradient(180deg, #3b82f6 0%, #1e40af 100%)", // Darker blue gradient for cap
                           borderRadius: "5px",
-                          border: "2px solid #000",
-                          boxShadow: "inset 0 3px 5px rgba(0,0,0,0.3)",
+                          border: "2px solid #173273", // Even darker blue border
+                          boxShadow: "inset 0 3px 5px rgba(30,64,175,0.18)",
                         }}
                       />
                     </div>
@@ -456,7 +504,7 @@ const FlappyBird: React.FC = () => {
                 `}</style>
 
                 {/* Score Display */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-4xl font-extrabold text-yellow-300 text-shadow-lg z-10">
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-5xl font-extrabold text-teal-300 text-shadow-xl z-10 drop-shadow-lg">
                   {score}
                 </div>
               </div>
@@ -464,10 +512,15 @@ const FlappyBird: React.FC = () => {
           </div>
 
           {/* Right Panel: Leaderboard */}
-          <div className="w-64 p-6 bg-slate-800/40 border border-yellow-700/50 rounded-2xl shadow-md hover:bg-slate-800/60 hover:border-yellow-600/50 transition-all duration-300">
+          <div className="w-72 p-6 bg-slate-800/40 border border-blue-700/50 rounded-2xl shadow-md hover:bg-slate-800/60 hover:border-blue-600/50 transition-all duration-300">
+            {" "}
+            {/* Adjusted border colors */}
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-xl flex items-center justify-center">
-                <Award className="w-5 h-5 text-yellow-400" />
+              <div className="w-10 h-10 bg-gradient-to-r from-teal-500/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                {" "}
+                {/* Adjusted gradient for icon background */}
+                <Award className="w-5 h-5 text-teal-400" />{" "}
+                {/* Adjusted icon color */}
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">Leaderboard</h3>
@@ -486,15 +539,15 @@ const FlappyBird: React.FC = () => {
                   key={entry.userId}
                   className={`flex items-center justify-between p-3 rounded-xl transition-all duration-200 border border-transparent ${
                     entry.name === "You"
-                      ? "bg-yellow-900/50 border-yellow-700/50 text-yellow-300 font-bold scale-105 shadow-md"
+                      ? "bg-blue-900/50 border-blue-700/50 text-teal-300 font-bold scale-105 shadow-md" // Adjusted "You" colors
                       : "hover:bg-slate-700/40 hover:border-slate-600/30 text-white"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <span
-                      className={`font-mono text-sm w-6 text-center ${
+                      className={`font-mono text-base w-8 text-center ${
                         entry.name === "You"
-                          ? "text-yellow-400"
+                          ? "text-teal-400" // Adjusted "You" rank color
                           : "text-slate-400"
                       }`}
                     >
@@ -506,7 +559,7 @@ const FlappyBird: React.FC = () => {
                   </div>
                   <span
                     className={`font-bold text-xl ${
-                      entry.name === "You" ? "text-yellow-400" : "text-orange-400"
+                      entry.name === "You" ? "text-teal-400" : "text-blue-400"
                     }`}
                   >
                     {entry.score}
@@ -517,7 +570,7 @@ const FlappyBird: React.FC = () => {
 
             <p className="text-sm text-slate-500 text-center mt-6 pt-4 border-t border-slate-700/50">
               Current Score:{" "}
-              <span className="font-bold text-yellow-400">{score}</span>
+              <span className="font-bold text-teal-400">{score}</span>
             </p>
           </div>
         </div>

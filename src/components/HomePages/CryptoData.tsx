@@ -44,7 +44,7 @@ const CoinColumn: React.FC<CoinColumnProps> = ({ cryptoData, index, isLast }) =>
 
   return (
     <>
-      <div className="flex-1 p-4 hover:bg-gray-900/20 transition-all duration-300 group">
+      <div className="flex-1 p-4 w-[225px] hover:bg-gray-900/20 transition-all duration-300 group">
         {/* Price Widget: Only Coin Name and Icon */}
         <div className="mb-6">
           <div className="custom-scale bg-gray-900/40 border border-gray-800/50 rounded-xl p-3 flex items-center justify-center gap-2 !text-[16px] font-semibold text-white">
@@ -212,7 +212,7 @@ const CryptoData: React.FC = () => {
       <div className="flex justify-center items-center">
         <div className="">
           <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl overflow-hidden shadow-2xl">
-            <div className="flex divide-x divide-gray-800/30">
+            <div className="flex flex-wrap divide-x divide-gray-800/30">
               {cardData.map((card: CryptoData, index: number) => (
                 <CoinColumn
                   key={card.coin}

@@ -10,7 +10,7 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://gemini.sjv.io/c/6232366/2794807/11829"
-          target="_top"
+          target="_blank"
           className="block w-full relative"
         >
           <img
@@ -47,7 +47,7 @@ export const PrintrendyCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://printrendy.pxf.io/c/6232366/1453719/17020"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -84,7 +84,7 @@ export const UrsimeCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://ursime.pxf.io/c/6232366/1390298/16384"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -121,7 +121,7 @@ export const PreplyCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://preply.sjv.io/c/6232366/2037662/24422"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -158,7 +158,7 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://nordvpn.sjv.io/c/6232366/2185832/7452"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -195,7 +195,7 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://fanatics.93n6tx.net/c/6232366/3065965/9663"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -232,7 +232,7 @@ export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://remitly.tod8mp.net/c/6232366/1417999/10408"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -269,7 +269,7 @@ export const StockMarketGuidesCard = ({ compact = false }: { compact?: boolean }
         <a
           rel="sponsored"
           href="https://stockmarketguides.sjv.io/c/6232366/1863442/20465"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -300,7 +300,7 @@ export const TicketNetworkCard = ({ compact = false }: { compact?: boolean }) =>
         <a
           rel="sponsored"
           href="https://ticketnetwork.lusg.net/c/6232366/1728828/2322"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -337,7 +337,7 @@ export const CPRCareCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://cprcare.pxf.io/c/6232366/3043520/33573"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -374,7 +374,7 @@ export const GolfPartnerCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://golfpartner.sjv.io/c/6232366/1442655/17026"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
@@ -411,7 +411,7 @@ export const Wwwm8xcomCard = ({ compact = false }: { compact?: boolean }) => {
         <a
           rel="sponsored"
           href="https://wwwm8xcom.pxf.io/c/6232366/2158003/26891"
-          target="_top"
+          target="_blank"
           className="block w-full relative flex-1"
         >
           <img
