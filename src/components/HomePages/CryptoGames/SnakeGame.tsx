@@ -599,7 +599,7 @@ const SnakeGame: React.FC = () => {
 
   // Fetch leaderboard from backend
   const fetchLeaderboard = useCallback(() => {
-    fetch("https://api.trobits.com/api/v1/games/snakegame/getallscores")
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/games/snakegame/getallscores`)
       .then((res) => res.json())
       .then((data) => {
         const scoresObj = data.scores || {};

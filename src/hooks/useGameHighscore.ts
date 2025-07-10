@@ -13,7 +13,7 @@ interface UseGameHighscoreResult {
   submitHighscore: (score: number) => Promise<void>;
 }
 
-const BASE_URL = "https://api.trobits.com/api/v1";
+const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`;
 
 export function useGameHighscore({ gameId, gameName, initialScore = 0 }: UseGameHighscoreArgs): UseGameHighscoreResult {
   const user = useAppSelector((state) => state.auth.user);

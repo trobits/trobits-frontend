@@ -13,7 +13,8 @@ import { clearUser, setUser } from "../slices/authSlice";
 const baseQuery = fetchBaseQuery({
   // baseUrl: "http://localhost:3000/api/v1",
   // baseUrl: "https://sisiku-backend.vercel.app/api/v1",
-  baseUrl: "https://api.trobits.com/api/v1",
+  // baseUrl: "https://api.trobits.com/api/v1",
+  baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`,
   credentials: "include",
   prepareHeaders: (headers, {}) => {
     const token = localStorage.getItem("accessToken");
@@ -39,7 +40,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       //   {
       // const res = await fetch("https://sisiku-backend.vercel.app/api/v1", {
       const res = await fetch(
-        "https://api.trobits.com/api/v1/user/access-token",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/user/access-token`,
         {
           method: "POST",
           credentials: "include",
