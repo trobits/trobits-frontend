@@ -121,48 +121,78 @@ const SymbolInfo = () => {
 };
 
 const ArticleFeed = () => {
-  const feedRef = useRef(null);
+    const [articles, setArticles] = React.useState<any[]>([]);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState<string | null>(null);
 
-  useEffect(() => {
-    const feedScript = document.createElement("script");
-    feedScript.src =
-        "https://s3.tradingview.com/external-embedding/embed-widget-timeline.js";
-    feedScript.async = true;
-    feedScript.innerHTML = JSON.stringify({
-      feedMode: "all_symbols",
-      isTransparent: true,
-      displayMode: "regular",
-      width: "100%",
-      height: 500,
-      colorTheme: "dark",
-      locale: "en",
-      filter: "terra-luna",
-    });
+    React.useEffect(() => {
+        const fetchNews = async () => {
+            setLoading(true);
+            try {
+                const res = await await fetch("/api/crypto-news/coinDetailNews?coin=LUNC&page=1&items=20");
 
-    if (feedRef.current) {
-      feedRef.current.innerHTML = "";
-      feedRef.current.appendChild(feedScript);
-    }
-  }, []);
+                if (!res.ok) throw new Error("Failed to fetch LUNC news");
+                const data = await res.json();
+                setArticles(data.articles || []);
+            } catch (err: any) {
+                setError(err.message || "Error fetching news");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  return (
-      <div className="bg-gray-950/80 border border-gray-800/60 rounded-2xl p-6 shadow-2xl">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-xl flex items-center justify-center border border-blue-500/20">
-            <Newspaper className="w-5 h-5 text-blue-400" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-white">News Feed</h3>
-            <p className="text-sm text-gray-400">Latest LUNC updates</p>
-          </div>
+        fetchNews();
+    }, []);
+
+    return (
+        <div className="bg-gray-950/80 border border-gray-800/60 rounded-2xl p-6 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-xl flex items-center justify-center border border-blue-500/20">
+                    <Newspaper className="w-5 h-5 text-blue-400" />
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold text-white">News Feed</h3>
+                    <p className="text-sm text-gray-400">Latest LUNC updates</p>
+                </div>
+            </div>
+            <div className="bg-black/50 border border-gray-800/40 rounded-xl overflow-y-auto" style={{ height: "500px" }}>
+                {loading && <div className="text-gray-400 p-6">Loading news...</div>}
+                {error && <div className="text-red-400 p-6">{error}</div>}
+                {!loading && !error && articles.length === 0 && (
+                    <div className="text-gray-400 p-6">No news found.</div>
+                )}
+                <ul className="divide-y divide-gray-800">
+                    {articles.map((article, idx) => (
+                        <li key={idx} className="flex gap-4 p-4 hover:bg-gray-800/40 transition-all">
+                            {article.image_url && (
+                                <img
+                                    src={article.image_url}
+                                    alt={article.title}
+                                    className="w-20 h-20 object-cover rounded-lg border border-gray-700"
+                                />
+                            )}
+                            <div className="flex-1">
+                                <a
+                                    href={article.news_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-lg font-semibold text-blue-300 hover:underline"
+                                >
+                                    {article.title}
+                                </a>
+                                <div className="text-gray-400 text-sm mt-1 mb-2">
+                                    {article.source_name} &middot; {new Date(article.date).toLocaleString()}
+                                </div>
+                                <div className="text-gray-300 text-sm line-clamp-3">
+                                    {article.text}
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
-        <div
-            className="bg-black/50 border border-gray-800/40 rounded-xl overflow-hidden"
-            ref={feedRef}
-            style={{ height: "500px" }}
-        />
-      </div>
-  );
+    );
 };
 
 const TechnicalAnalysis = () => {
