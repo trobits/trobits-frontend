@@ -3,30 +3,50 @@ import Image from "next/image";
 import { TextGenerateEffect } from "../ui/textGenerateEffect";
 
 export default function HeroSection() {
-   
+
     return (
-        <section className="">
-            <div className="flex flex-row items-center gap-10">
-                <div className="">
+        <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-10">
+                {/* Image Section */}
+                <div className="w-full lg:w-1/2 flex justify-center lg:justify-start order-2 lg:order-1">
                     <Image
                         src={heroImage}
                         height={350}
                         width={400}
                         alt="How Trobits Works"
-                        className="max-w-md w-[550px] h-[550px] object-contain rounded-2xl"
-                    />            
+                        className="w-full max-w-sm sm:max-w-md lg:w-[550px] h-[550px] object-contain rounded-2xl shadow-lg"
+                        priority
+                    />
                 </div>
-                <div className="text-white flex flex-col justify-between gap-16 py-5">
-                    <div>
-                        <h1 className="text-4xl font-bold mb-4">Welcome to Trobits</h1>
-                        <TextGenerateEffect words="Trobits seeks to boost the value of select cryptocurrencies by permanently burning coins using revenue from affiliates and advertisers, reducing their circulating supply." className="text-white" />
-                        {/* <p className="text-lg mb-6 max-w-[600px]">Trobits is a platform that aims to increase the value of selected cryptocurrencies by reducing their circulating supply through permanent coin burns, funded by revenue from affiliates and advertisers.</p> */}
-                    </div>
-                    <div>
-                        <div className="aspect-w-16 aspect-h-9">
-                            <video src="/demoVideo.mp4" controls autoPlay playsInline muted className="max-w-[600px] h-auto" />
+
+                {/* Content Section */}
+                <div className="w-full lg:w-1/2 text-white flex flex-col justify-between gap-8 sm:gap-12 lg:gap-16 py-5 order-1 lg:order-2">
+                    {/* Text Content */}
+                    <div className="text-center lg:text-left">
+                        <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6">
+                            Welcome to Trobits
+                        </h1>
+                        <div className="text-sm sm:text-base lg:text-lg">
+                            <TextGenerateEffect
+                                words="Trobits seeks to boost the value of select cryptocurrencies by permanently burning coins using revenue from affiliates and advertisers, reducing their circulating supply."
+                                className="text-white leading-relaxed"
+                            />
                         </div>
-                </div>
+                    </div>
+
+                    {/* Video Section */}
+                    <div className="w-full">
+                        <div className="relative w-full" style={{ paddingBottom: '56.25%' /* 16:9 aspect ratio */ }}>
+                            <video
+                                src="/demoVideo.mp4"
+                                controls
+                                autoPlay
+                                playsInline
+                                muted
+                                className="absolute top-0 left-0 w-full h-full object-cover rounded-lg shadow-lg"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
