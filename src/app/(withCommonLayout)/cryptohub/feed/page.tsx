@@ -303,21 +303,7 @@ const FeedPage = () => {
                   <VerifiedAccounts />
                 </div>
 
-                {/* Footer Links */}
-                <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6 hover:border-gray-600 transition-all duration-500 animate-fade-in-up" style={{ animationDelay: "1000ms" }}>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    {["About", "Help", "Terms", "Privacy"].map((link, index) => (
-                        <a
-                            key={index}
-                            href="#"
-                            className="text-gray-400 hover:text-white transition-all duration-300 hover:scale-105"
-                        >
-                          {link}
-                        </a>
-                    ))}
-                  </div>
-                  <p className="text-gray-500 text-xs mt-4">© 2024 CryptoHub</p>
-                </div>
+
               </div>
             </div>
           </div>

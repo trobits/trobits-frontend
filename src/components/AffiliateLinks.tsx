@@ -33,7 +33,7 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Gemini</h3>
+          <h3 className="text-base font-semibold text-cyan-300">Gemini: Signup and earn 5,000 points after your first transaction</h3>
         </div>
       </div>
     </div>
@@ -181,7 +181,9 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">NordVPN</h3>
+          <h3 className="text-base font-semibold text-cyan-300">NordVPN: Purchase any plan and earn 20,000 points
+
+          </h3>
         </div>
       </div>
     </div>
@@ -218,7 +220,7 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Fanatics</h3>
+          <h3 className="text-base font-semibold text-cyan-300">Fanatics: Earn 2,500 point after any purchase</h3>
         </div>
       </div>
     </div>
@@ -255,7 +257,7 @@ export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Remitly</h3>
+          <h3 className="text-base font-semibold text-cyan-300">Remitly: Earn 2,500 points for signing up; earn additional 2,500 points after your first transaction</h3>
         </div>
       </div>
     </div>
@@ -286,7 +288,7 @@ export const StockMarketGuidesCard = ({ compact = false }: { compact?: boolean }
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Stock Market Guides</h3>
+          <h3 className="text-base font-semibold text-cyan-300">Stock Market Guides: Signup and earn 6,500 points</h3>
         </div>
       </div>
     </div>
