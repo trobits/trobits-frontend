@@ -8,15 +8,8 @@ import ShibaIcon from "@/assets/icons/shiba-inu.png"; // Existing Shiba Inu icon
 import snakeHead from "@/assets/snakeHead.png"; // Existing Snake Head icon
 
 // ONLY keep imports for the coins that will be actively used in the game logic
-// Based on your provided imports:
-import PepeIcon from "@/assets/icons/pepe.png"; // Used for PepeCoin
 import LuncIcon from "@/assets/icons/lunc.png"; // Used for LuncCoin
-import BonkIcon from "@/assets/icons/bonk.png"; // Based on your import, BonkIcon points to pepe.png
 import FlokiIcon from "@/assets/icons/floki.png"; // Used for FlokiCoin
-
-// Placeholder for fake Shiba coins (you might want distinct images for these)
-import FakeShibaShrinkIcon from "@/assets/flappythumb.png"; // Replace with a distinct icon for shrinking fake shiba
-import FakeShibaReverseIcon from "@/assets/snake-thumb.png"; // Replace with a distinct icon for reverse fake shiba
 
 import { Award, Play, RotateCcw, Trophy, Zap } from "lucide-react";
 import { useGameHighscore } from "@/hooks/useGameHighscore";
@@ -28,38 +21,31 @@ const WIDTH = 600; // Game board width in pixels
 const HEIGHT = 500; // Game board height in pixels
 const BOARD_COLS = WIDTH / CELL_SIZE; // Number of columns on the board
 const BOARD_ROWS = HEIGHT / CELL_SIZE; // Number of rows on the board
-const INITIAL_NUM_COINS = 5; // Initial number of coins on the board
-const INITIAL_NUM_BOMBS = 3; // Initial number of bombs on the board
+const INITIAL_NUM_SHIBA_COINS = 3; // Initial number of Shiba coins on the board
+const INITIAL_NUM_LUNC_COINS = 2; // Initial number of Lunc coins on the board
 const GAME_TICK_RATE = 100; // Milliseconds per game update (lower is faster)
-const BOMB_SPEED_MULTIPLIER = 0.8; // Bombs move slightly slower than snake
 const MIN_SPAWN_DISTANCE_FROM_SNAKE = 3; // Minimum cell distance from snake head for new items
 
-// Coin Effect Durations (in milliseconds)
-const PEPE_EFFECT_DURATION = 3000; // Pepe: Slow down snake
-const FAKE_SHIBA_EFFECT_DURATION = 3000; // Fake Shiba: Reverse controls/shrink
-const LUNC_EFFECT_DURATION = 5000; // Lunc: Invincibility
+// Coin Effect Durations (in milliseconds) - Lunc invincibility is removed, so this is just for reference
+const LUNC_EFFECT_DURATION = 5000; // Lunc: Invincibility (now removed)
 
-// Coin Spawn Chances
+// Coin Spawn Chances (simplified as only specific coins spawn)
 const LIMITED_TIME_COIN_DURATION = 5000; // Limited-time coins disappear after this duration
 const LIMITED_TIME_COIN_CHANCE = 0.2; // 20% chance for a coin to be limited-time
 const BONUS_COIN_CHANCE = 0.1; // 10% chance for a coin to be a bonus coin
 
-// Coin Rotation
-const COIN_ROTATION_INTERVAL = 15000; // Rotate available coin types every 15 seconds
+// Coin Rotation (removed as only specific coins are used)
+const COIN_ROTATION_INTERVAL = 15000; // Rotate available coin types every 15 seconds (now removed)
 
 // --- Type Definitions ---
 type Point = { x: number; y: number };
-type MovingObject = Point & { dx: number; dy: number }; // Bombs now have a direction
+type MovingObject = Point & { dx: number; dy: number }; // Bombs now have a direction (bombs removed)
 
 // Updated CoinType enum to reflect only the active coins
 type CoinType =
   | "shiba"
-  | "pepe" // Will get slow down effect
-  | "lunc" // Keep invincibility
-  | "bonk" // Keep grow by 2
-  | "floki" // Will get clear bombs effect
-  | "fakeShibaShrink"
-  | "fakeShibaReverse";
+  | "lunc"
+  | "floki";
 
 type Coin = Point & {
   type: CoinType;
@@ -70,21 +56,15 @@ type Coin = Point & {
 // Map coin types to their image assets using the new imports
 const COIN_IMAGE_MAP: Record<CoinType, any> = {
   shiba: ShibaIcon,
-  pepe: PepeIcon,
   lunc: LuncIcon,
-  bonk: BonkIcon, // This will use the pepe.png image as per your import
   floki: FlokiIcon,
-  fakeShibaShrink: FakeShibaShrinkIcon,
-  fakeShibaReverse: FakeShibaReverseIcon,
 };
 
-// All possible coin types that can be part of the rotation pool (only the main 5)
+// All possible coin types that can be part of the rotation pool (only the main 2 + floki)
 const ALL_ROTATABLE_COIN_TYPES: CoinType[] = [
   "shiba",
-  "pepe",
   "lunc",
-  "bonk",
-  "floki",
+  "floki", // Floki is not rotatable, but included for type safety if needed
 ];
 
 const SnakeGame: React.FC = () => {
@@ -96,26 +76,21 @@ const SnakeGame: React.FC = () => {
   });
 
   const [coins, setCoins] = useState<Coin[]>([]);
-  const [bombs, setBombs] = useState<MovingObject[]>([]);
+  // Bombs are removed from the game
   const [snakeDirection, setSnakeDirection] = useState<Point>({ x: CELL_SIZE, y: 0 }); // Current intended direction for snake
   const [lastMovedDirection, setLastMovedDirection] = useState<Point>({ x: CELL_SIZE, y: 0 }); // Actual direction after last move
   const [gameOver, setGameOver] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [score, setScore] = useState(0);
+  const [flokiKilled, setFlokiKilled] = useState(false); // New state for Floki death message
 
-  // New states for game mechanics
-  const [snakeSpeedMultiplier, setSnakeSpeedMultiplier] = useState<number>(1); // 1 = normal, <1 = slower, >1 = faster
-  const [reverseControls, setReverseControls] = useState<boolean>(false);
-  const [invincible, setInvincible] = useState<boolean>(false);
-  const [activeCoinTypes, setActiveCoinTypes] = useState<CoinType[]>([]); // Coins currently allowed to spawn
+  // New states for game mechanics (simplified as per new rules)
+  const [snakeSpeedMultiplier, setSnakeSpeedMultiplier] = useState<number>(1); // 1 = normal, <1 = slower, >1 = faster (not used for coins anymore)
   const [activePopups, setActivePopups] = useState<{ id: string; message: string; type: CoinType; }[]>([]); // For in-game popups
 
   const gameIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  // Separate timeout refs for each powerup
-  const invincibleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const slowTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const reverseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const coinRotationIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  // Separate timeout refs for each powerup (simplified as per new rules)
+  const coinRotationIntervalRef = useRef<NodeJS.Timeout | null>(null); // This will be removed
 
   // Debug: log user and highscore when loaded
   useEffect(() => {
@@ -159,26 +134,14 @@ const SnakeGame: React.FC = () => {
     []
   );
 
-  // Helper function to get a random non-zero direction for bombs
-  const getRandomBombDirection = useCallback((): Point => {
-    const directions = [
-      { x: CELL_SIZE, y: 0 },
-      { x: -CELL_SIZE, y: 0 },
-      { x: 0, y: CELL_SIZE },
-      { x: 0, y: -CELL_SIZE },
-    ];
-    return directions[Math.floor(Math.random() * directions.length)];
-  }, []);
-
   // Combined function to get all occupied positions (for new spawns)
   const getAllCurrentOccupiedPositions = useCallback(
-    (currentSnake: Point[], currentCoins: Coin[], currentBombs: MovingObject[]) => {
+    (currentSnake: Point[], currentCoins: Coin[]) => {
       // Exclude the last segment of the snake because it will move next tick, freeing up space.
       const snakeOccupied = playing ? currentSnake.slice(0, currentSnake.length - 1) : currentSnake;
       return [
         ...snakeOccupied,
         ...currentCoins.map((c) => ({ x: c.x, y: c.y })),
-        ...currentBombs.map((b) => ({ x: b.x, y: b.y })),
       ];
     },
     [playing]
@@ -189,33 +152,24 @@ const SnakeGame: React.FC = () => {
     (
       currentSnake: Point[],
       currentCoins: Coin[],
-      currentBombs: MovingObject[],
-      specificType?: CoinType,
+      specificType: CoinType, // Now requires a specific type
       isBonusOverride?: boolean,
       isTimedOverride?: boolean
     ): Coin => {
-      const occupied = getAllCurrentOccupiedPositions(currentSnake, currentCoins, currentBombs);
+      const occupied = getAllCurrentOccupiedPositions(currentSnake, currentCoins);
       const newCoinPos = getRandomPosition(occupied, currentSnake[0]);
-
-      let typeToSpawn: CoinType;
-      if (specificType) {
-        typeToSpawn = specificType;
-      } else {
-        // Randomly pick from active coin types
-        typeToSpawn = activeCoinTypes[Math.floor(Math.random() * activeCoinTypes.length)];
-      }
 
       let isTimed = isTimedOverride ?? (Math.random() < LIMITED_TIME_COIN_CHANCE);
       let isBonus = isBonusOverride ?? (Math.random() < BONUS_COIN_CHANCE);
 
       return {
         ...newCoinPos,
-        type: typeToSpawn,
+        type: specificType,
         spawnTime: isTimed ? Date.now() : undefined,
         isBonus: isBonus,
       };
     },
-    [getAllCurrentOccupiedPositions, getRandomPosition, activeCoinTypes]
+    [getAllCurrentOccupiedPositions, getRandomPosition]
   );
 
   // Function to add a temporary popup message
@@ -239,49 +193,29 @@ const SnakeGame: React.FC = () => {
     setGameOver(false);
     setPlaying(true);
     setScore(0);
+    setFlokiKilled(false); // Reset Floki killed status
     setSnakeSpeedMultiplier(1);
-    setReverseControls(false);
-    setInvincible(false);
     setActivePopups([]); // Clear popups on game start
-
-    // Clear any pending effect timeouts
-    if (invincibleTimeoutRef.current) {
-      clearTimeout(invincibleTimeoutRef.current);
-      invincibleTimeoutRef.current = null;
-    }
-    if (slowTimeoutRef.current) {
-      clearTimeout(slowTimeoutRef.current);
-      slowTimeoutRef.current = null;
-    }
-    if (reverseTimeoutRef.current) {
-      clearTimeout(reverseTimeoutRef.current);
-      reverseTimeoutRef.current = null;
-    }
-
-    // Initialize active coin types for the first rotation
-    const initialActiveCoins = ALL_ROTATABLE_COIN_TYPES.slice(0, 3); // Start with a few types
-    setActiveCoinTypes(initialActiveCoins);
 
     let occupied: Point[] = [...initialSnake];
 
-    // Initialize coins
+    // Initialize Shiba coins
     const initialCoins: Coin[] = [];
-    for (let i = 0; i < INITIAL_NUM_COINS; i++) {
-      const newCoin = spawnNewCoin(initialSnake, initialCoins, [], undefined, false, false); // Ensure initial coins are not timed/bonus
+    for (let i = 0; i < INITIAL_NUM_SHIBA_COINS; i++) {
+      const newCoin = spawnNewCoin(initialSnake, initialCoins, "shiba", false, false);
+      initialCoins.push(newCoin);
+      occupied.push(newCoin);
+    }
+    // Initialize Lunc coins
+    for (let i = 0; i < INITIAL_NUM_LUNC_COINS; i++) {
+      const newCoin = spawnNewCoin(initialSnake, initialCoins, "lunc", false, false);
       initialCoins.push(newCoin);
       occupied.push(newCoin);
     }
     setCoins(initialCoins);
 
-    // Initialize bombs with random directions
-    const initialBombs: MovingObject[] = [];
-    for (let i = 0; i < INITIAL_NUM_BOMBS; i++) {
-      const newBombPos = getRandomPosition(occupied, initialSnake[0]);
-      initialBombs.push({ ...newBombPos, ...getRandomBombDirection() });
-      occupied.push(newBombPos);
-    }
-    setBombs(initialBombs);
-  }, [getRandomPosition, getRandomBombDirection, spawnNewCoin]);
+    // Bombs are removed, so no initialization for them
+  }, [getRandomPosition, spawnNewCoin]);
 
   // Keyboard input handler for snake direction
   useEffect(() => {
@@ -309,14 +243,6 @@ const SnakeGame: React.FC = () => {
           break;
       }
 
-      // Apply reverse controls logic
-      if (reverseControls) {
-        if (newDir.x === CELL_SIZE) newDir = { x: -CELL_SIZE, y: 0 }; // Right -> Left
-        else if (newDir.x === -CELL_SIZE) newDir = { x: CELL_SIZE, y: 0 }; // Left -> Right
-        else if (newDir.y === CELL_SIZE) newDir = { x: 0, y: -CELL_SIZE }; // Down -> Up
-        else if (newDir.y === -CELL_SIZE) newDir = { x: 0, y: CELL_SIZE }; // Up -> Down
-      }
-
       // Only update snakeDirection if it's a valid change (not 180 degree turn or same direction)
       if (newDir.x !== snakeDirection.x || newDir.y !== snakeDirection.y) {
         setSnakeDirection(newDir);
@@ -325,40 +251,14 @@ const SnakeGame: React.FC = () => {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [snakeDirection, lastMovedDirection, playing, gameOver, reverseControls]);
+  }, [snakeDirection, lastMovedDirection, playing, gameOver]);
 
-  // --- Coin Rotation Logic ---
+  // --- Coin Rotation Logic (Removed as per new rules) ---
   useEffect(() => {
-    if (!playing) {
-      if (coinRotationIntervalRef.current) {
-        clearInterval(coinRotationIntervalRef.current);
-        coinRotationIntervalRef.current = null;
-      }
-      return;
-    }
-
     if (coinRotationIntervalRef.current) {
       clearInterval(coinRotationIntervalRef.current);
+      coinRotationIntervalRef.current = null;
     }
-
-    coinRotationIntervalRef.current = setInterval(() => {
-      setActiveCoinTypes((prevTypes) => {
-        // Simple rotation: move first element to end
-        const newTypes = [...prevTypes];
-        const nextCoinType = ALL_ROTATABLE_COIN_TYPES[
-          (ALL_ROTATABLE_COIN_TYPES.indexOf(newTypes[newTypes.length - 1]) + 1) % ALL_ROTATABLE_COIN_TYPES.length
-        ];
-        newTypes.shift(); // Remove the oldest type
-        newTypes.push(nextCoinType); // Add the next type
-        return newTypes;
-      });
-    }, COIN_ROTATION_INTERVAL);
-
-    return () => {
-      if (coinRotationIntervalRef.current) {
-        clearInterval(coinRotationIntervalRef.current);
-      }
-    };
   }, [playing]);
 
   // --- Main Game Loop ---
@@ -375,7 +275,7 @@ const SnakeGame: React.FC = () => {
       clearInterval(gameIntervalRef.current);
     }
 
-    // Adjust tick rate based on snake speed multiplier
+    // Adjust tick rate based on snake speed multiplier (not used for coins anymore)
     const actualTickRate = GAME_TICK_RATE / snakeSpeedMultiplier;
 
     gameIntervalRef.current = setInterval(() => {
@@ -383,38 +283,8 @@ const SnakeGame: React.FC = () => {
         const currentHead = prevSnake[0];
         let newHead = { x: currentHead.x + snakeDirection.x, y: currentHead.y + snakeDirection.y }; // Use let for newHead
 
-        // --- Wall Wrap Logic (if invincible) ---
-        if (invincible) {
-            if (newHead.x < 0) newHead.x = WIDTH - CELL_SIZE;
-            else if (newHead.x >= WIDTH) newHead.x = 0;
-            if (newHead.y < 0) newHead.y = HEIGHT - CELL_SIZE;
-            else if (newHead.y >= HEIGHT) newHead.y = 0;
-        }
-
         // Update lastMovedDirection only after a tick has passed
         setLastMovedDirection(snakeDirection);
-
-        // --- Bomb Movement ---
-        setBombs((prevBombs) => {
-          return prevBombs.map((bomb) => {
-            let nextBombX = bomb.x + bomb.dx * BOMB_SPEED_MULTIPLIER;
-            let nextBombY = bomb.y + bomb.dy * BOMB_SPEED_MULTIPLIER;
-            let newDx = bomb.dx;
-            let newDy = bomb.dy;
-
-            // Collision with walls for bombs (bounce)
-            if (nextBombX < 0 || nextBombX + CELL_SIZE > WIDTH) {
-              newDx *= -1; // Reverse X direction
-              nextBombX = Math.max(0, Math.min(WIDTH - CELL_SIZE, nextBombX)); // Clamp to bounds
-            }
-            if (nextBombY < 0 || nextBombY + CELL_SIZE > HEIGHT) {
-              newDy *= -1; // Reverse Y direction
-              nextBombY = Math.max(0, Math.min(HEIGHT - CELL_SIZE, nextBombY)); // Clamp to bounds
-            }
-
-            return { x: nextBombX, y: nextBombY, dx: newDx, dy: newDy };
-          });
-        });
 
         // --- Coin Timer Management ---
         setCoins((prevCoins) => {
@@ -432,17 +302,7 @@ const SnakeGame: React.FC = () => {
             index !== 0 && segment.x === newHead.x && segment.y === newHead.y
         );
 
-        // Check for collision with bombs (using the *updated* bomb positions)
-        const currentBombs = bombs; // Use the state updated by the previous setBombs call in this tick
-        const hitBomb = currentBombs.some(
-          (bomb) =>
-            newHead.x < bomb.x + CELL_SIZE &&
-            newHead.x + CELL_SIZE > bomb.x &&
-            newHead.y < bomb.y + CELL_SIZE &&
-            newHead.y + CELL_SIZE > bomb.y
-        );
-
-        if ((hitWall || hitSelf || hitBomb) && !invincible) {
+        if (hitWall || hitSelf) {
           setGameOver(true);
           setPlaying(false);
           console.log("[SnakeGame] Game Over! Final Score:", score);
@@ -451,105 +311,85 @@ const SnakeGame: React.FC = () => {
             clearInterval(gameIntervalRef.current);
             gameIntervalRef.current = null;
           }
-          // Clear any pending effect timeouts on game over
-          if (invincibleTimeoutRef.current) {
-            clearTimeout(invincibleTimeoutRef.current);
-            invincibleTimeoutRef.current = null;
-          }
-          if (slowTimeoutRef.current) {
-            clearTimeout(slowTimeoutRef.current);
-            slowTimeoutRef.current = null;
-          }
-          if (reverseTimeoutRef.current) {
-            clearTimeout(reverseTimeoutRef.current);
-            reverseTimeoutRef.current = null;
-          }
           return prevSnake; // Return current snake to stop further updates
         }
 
         let newSnake = [newHead, ...prevSnake];
         let coinEaten = false;
-        let growBy = 1; // Default growth
-        let eatenCoin: Coin | undefined = undefined; // Initialize eatenCoin
+        let growBy = 0; // Default growth is 0, will be set by coin effects
 
+        // Find the eaten coin
         const eatenCoinIndex = coins.findIndex(
           (coin) => newHead.x === coin.x && newHead.y === coin.y
         );
 
         if (eatenCoinIndex !== -1) {
           coinEaten = true;
-          eatenCoin = coins[eatenCoinIndex];
-          let scoreIncrease = 1;
+          const eatenCoin = coins[eatenCoinIndex];
+
+          // Create a new array of coins, excluding the eaten one
+          let updatedCoins = coins.filter((_, idx) => idx !== eatenCoinIndex);
 
           // Apply coin-specific effects
           switch (eatenCoin.type) {
             case "shiba":
-              // Spawns two fake shiba coins
-              setCoins((prev) => [
-                ...prev.filter((_, idx) => idx !== eatenCoinIndex), // Remove original shiba
-                spawnNewCoin(newSnake, prev.filter((_, idx) => idx !== eatenCoinIndex), currentBombs, "fakeShibaShrink"),
-                spawnNewCoin(newSnake, prev.filter((_, idx) => idx !== eatenCoinIndex), currentBombs, "fakeShibaReverse"),
-              ]);
-              addPopup("Fake Shiba Coins Spawned!", "shiba");
-              break;
-            case "pepe": // New functionality: Slow down snake
-              setSnakeSpeedMultiplier(0.5); // Slow down
-              if (slowTimeoutRef.current) clearTimeout(slowTimeoutRef.current);
-              slowTimeoutRef.current = setTimeout(() => setSnakeSpeedMultiplier(1), 5000);
-              addPopup("Snake Slowed Down!", "pepe");
+              setScore((prevScore) => prevScore + 2); // Score increases by 2
+              growBy = 1; // Tail grows by 1 block
+              addPopup("Shiba Collected! +2 Score, +1 Tail", "shiba");
+              // Spawn a new Shiba coin into the updatedCoins array
+              updatedCoins.push(spawnNewCoin(newSnake, updatedCoins, "shiba"));
               break;
             case "lunc":
-              setInvincible(true);
-              if (invincibleTimeoutRef.current) clearTimeout(invincibleTimeoutRef.current);
-              invincibleTimeoutRef.current = setTimeout(() => setInvincible(false), 5000);
-              addPopup("Invincibility Activated!", "lunc");
+              setScore((prevScore) => prevScore - 1); // Score decreases by 1
+              addPopup("Lunc Collected! -1 Score, Spawning Floki", "lunc");
+              // Spawn two random Floki coins and a new Lunc coin into the updatedCoins array
+              updatedCoins.push(spawnNewCoin(newSnake, updatedCoins, "floki"));
+              updatedCoins.push(spawnNewCoin(newSnake, updatedCoins, "floki"));
+              updatedCoins.push(spawnNewCoin(newSnake, updatedCoins, "lunc"));
               break;
-            case "bonk":
-              growBy = 2; // Grow by 2 segments
-              addPopup("Snake Grew Faster!", "bonk");
-              break;
-            case "floki": // New functionality: Clear all bombs
-              setBombs([]); // Clear all bombs
-              addPopup("Bombs Cleared!", "floki");
-              break;
-            case "fakeShibaShrink":
-              newSnake = newSnake.slice(0, Math.max(1, newSnake.length - 2)); // Shrink by 2, minimum length 1
-              addPopup("Snake Shrunk!", "fakeShibaShrink");
-              break;
-            case "fakeShibaReverse":
-              setReverseControls(true);
-              if (reverseTimeoutRef.current) clearTimeout(reverseTimeoutRef.current);
-              reverseTimeoutRef.current = setTimeout(() => setReverseControls(false), 5000);
-              addPopup("Controls Reversed!", "fakeShibaReverse");
+            case "floki":
+              // Random Floki effect
+              const flokiEffect = Math.floor(Math.random() * 3);
+              if (flokiEffect === 0) {
+                // Case 1: Score increases by 10 and snake tail shrinks to 0
+                setScore((prevScore) => prevScore + 10);
+                newSnake = [newHead]; // Shrink tail to 0 (only head remains)
+                addPopup("Floki! +10 Score, Tail Reset!", "floki");
+              } else if (flokiEffect === 1) {
+                // Case 2: Score increases by 5 and tail increases by 5 blocks
+                setScore((prevScore) => prevScore + 5);
+                growBy = 5; // Grow by 5 segments
+                addPopup("Floki! +5 Score, +5 Tail!", "floki");
+              } else {
+                // Case 3: Snake instantly dies
+                setGameOver(true);
+                setPlaying(false);
+                setFlokiKilled(true); // Set Floki killed status
+                addPopup("Floki! Instant Death!", "floki");
+                console.log("[SnakeGame] Game Over! Final Score:", score);
+                submitHighscore(score); // Submit the score
+                if (gameIntervalRef.current) {
+                  clearInterval(gameIntervalRef.current);
+                  gameIntervalRef.current = null;
+                }
+                return prevSnake; // Return current snake to stop further updates
+              }
+              // Spawn a new Shiba or Lunc coin after Floki is eaten into the updatedCoins array
+              const nextCoinType: CoinType = Math.random() < 0.5 ? "shiba" : "lunc";
+              updatedCoins.push(spawnNewCoin(newSnake, updatedCoins, nextCoinType));
               break;
           }
-
-          if (eatenCoin.isBonus) {
-            scoreIncrease *= 2; // Double score for bonus coins
-          }
-          setScore((prevScore) => prevScore + scoreIncrease);
-
-          // If it's not a Shiba or Floki coin (which handle their own coin spawning)
-          // or a fake shiba coin (which don't spawn new coins)
-          if (eatenCoin.type !== "shiba" && eatenCoin.type !== "floki" &&
-              eatenCoin.type !== "fakeShibaShrink" && eatenCoin.type !== "fakeShibaReverse") {
-            setCoins((prevCoins) => {
-              const updatedCoins = prevCoins.filter((_, idx) => idx !== eatenCoinIndex); // Remove eaten coin
-              // Spawn a new random coin
-              updatedCoins.push(spawnNewCoin(newSnake, updatedCoins, currentBombs));
-              return updatedCoins;
-            });
-          }
+          // Update the coins state once after all manipulations for this tick
+          setCoins(updatedCoins);
         }
 
         // Apply growth based on growBy value
-        // Only apply growth if a coin was eaten and it wasn't a "fakeShibaShrink" or "solana" (which is removed)
-        if (coinEaten && eatenCoin?.type !== "fakeShibaShrink") {
-            for (let i = 0; i < growBy - 1; i++) {
-                newSnake.push(prevSnake[prevSnake.length - 1]); // Add a segment at the tail
-            }
+        if (growBy > 0) {
+          for (let i = 0; i < growBy; i++) {
+            newSnake.push(prevSnake[prevSnake.length - 1]); // Add a segment at the tail
+          }
         } else if (!coinEaten) {
-            newSnake.pop(); // Remove tail if no coin eaten
+          newSnake.pop(); // Remove tail if no coin eaten
         }
 
         return newSnake;
@@ -560,32 +400,19 @@ const SnakeGame: React.FC = () => {
       if (gameIntervalRef.current) {
         clearInterval(gameIntervalRef.current);
       }
-      if (invincibleTimeoutRef.current) {
-        clearTimeout(invincibleTimeoutRef.current);
-      }
-      if (slowTimeoutRef.current) {
-        clearTimeout(slowTimeoutRef.current);
-      }
-      if (reverseTimeoutRef.current) {
-        clearTimeout(reverseTimeoutRef.current);
-      }
     };
   }, [
     snakeDirection,
     playing,
     gameOver,
-    coins,
-    bombs,
-    score, // Include score in dependencies to ensure latest score is used for submission
+    score, // score is needed here for submitHighscore to use the latest value
     submitHighscore,
     getAllCurrentOccupiedPositions,
     getRandomPosition,
     spawnNewCoin,
     snakeSpeedMultiplier,
-    invincible,
-    reverseControls,
     lastMovedDirection,
-    addPopup // Add addPopup to dependencies
+    addPopup
   ]);
 
   const startGame = () => {
@@ -644,12 +471,12 @@ const SnakeGame: React.FC = () => {
           </div>
           <h2 className="text-3xl font-bold text-white mb-2">Crypto Snake</h2>
           <p className="text-gray-400 text-lg">
-            Collect various crypto coins for unique effects! Dodge the moving bombs!
+            Collect Shiba and Lunc coins! Beware of Floki!
           </p>
           <div className="text-sm text-gray-500 mt-2">
             Currently spawning:{" "}
             <span className="font-semibold text-purple-300">
-              {activeCoinTypes.map((type) => type.charAt(0).toUpperCase() + type.slice(1)).join(", ")}
+              Shiba, Lunc, Floki
             </span>
           </div>
         </div>
@@ -670,47 +497,32 @@ const SnakeGame: React.FC = () => {
                   <div className="space-y-3">
                     <p className="text-lg text-gray-300">
                       Use <span className="font-bold text-green-400">arrow keys</span> to control
-                      the snake. Eat various{" "}
-                      <span className="font-bold text-yellow-400">crypto coins</span> to grow and
-                      trigger unique effects! Avoid the{" "}
-                      <span className="font-bold text-red-400">moving bombs!</span>
+                      the snake. Eat{" "}
+                      <span className="font-bold text-yellow-400">Shiba coins</span> to grow and increase score. Collect{" "}
+                      <span className="font-bold text-blue-400">Lunc coins</span> to decrease score and spawn Floki coins!
                     </p>
                     {/* Coin Effects Instructions */}
                     <div className="bg-gray-800/60 border border-gray-700/50 rounded-xl p-4 mt-4 text-left text-sm text-gray-200 space-y-2 max-w-xl mx-auto">
                       <div className="font-bold text-base text-yellow-300 mb-2 flex items-center gap-2">
                         <span>🪙</span> Coin Effects Guide
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-                        <div className="flex items-center gap-2"><Image src={PepeIcon} alt="Pepe" width={20} height={20}/> <span><b>Pepe</b>: Slow down snake (3s)</span></div>
-                        <div className="flex items-center gap-2"><Image src={ShibaIcon} alt="Shiba" width={20} height={20}/> <span><b>Shiba</b>: Spawns 2 fake shiba coins</span></div>
-                        <div className="flex items-center gap-2"><Image src={FlokiIcon} alt="Floki" width={20} height={20}/> <span><b>Floki</b>: Clears all bombs</span></div>
-                        <div className="flex items-center gap-2"><Image src={BonkIcon} alt="Bonk" width={20} height={20}/> <span><b>Bonk</b>: Grow by 2 segments</span></div>
-                        <div className="flex items-center gap-2"><Image src={LuncIcon} alt="Lunc" width={20} height={20}/> <span><b>Lunc</b>: Invincibility (5s)</span></div>
-                        <div className="flex items-center gap-2"><Image src={FakeShibaShrinkIcon} alt="Fake Shiba Shrink" width={20} height={20}/> <span><b>Fake Shiba (Shrink)</b>: Shrinks snake by 2</span></div>
-                        <div className="flex items-center gap-2"><Image src={FakeShibaReverseIcon} alt="Fake Shiba Reverse" width={20} height={20}/> <span><b>Fake Shiba (Reverse)</b>: Reverses controls (3s)</span></div>
+                      <div className="grid grid-cols-1 gap-x-6 gap-y-2">
+                        <div className="flex items-center gap-2"><Image src={ShibaIcon} alt="Shiba" width={20} height={20}/> <span><b>Shiba</b>: +2 Score, +1 Tail</span></div>
+                        <div className="flex items-center gap-2"><Image src={LuncIcon} alt="Lunc" width={20} height={20}/> <span><b>Lunc</b>: -1 Score, Spawns 2 Floki coins</span></div>
+                        <div className="flex items-center gap-2"><Image src={FlokiIcon} alt="Floki" width={20} height={20}/> <span><b>Floki (Random Effect)</b>:</span></div>
+                        <ul className="list-disc list-inside ml-6 text-gray-300">
+                            <li>+10 Score, Tail shrinks to 0</li>
+                            <li>+5 Score, +5 Tail</li>
+                            <li>Instant Death!</li>
+                        </ul>
                       </div>
                     </div>
-                    {invincible && (
-                      <p className="text-lunc-400 text-lg font-semibold">
-                        Invincible!
-                      </p>
-                    )}
-                    {reverseControls && (
-                      <p className="text-red-400 text-lg font-semibold">
-                        Controls Reversed!
-                      </p>
-                    )}
-                    {snakeSpeedMultiplier !== 1 && (
-                      <p className="text-yellow-400 text-lg font-semibold">
-                        Speed {snakeSpeedMultiplier > 1 ? "Increased" : "Decreased"}!
-                      </p>
-                    )}
                   </div>
 
                   {gameOver && (
                     <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl p-4">
                       <p className="text-red-400 text-xl font-semibold">
-                        Game Over! Your Score: {score}
+                        {flokiKilled ? "You got killed by the FLOKI coin!" : `Game Over! Your Score: ${score}`}
                       </p>
                     </div>
                   )}
@@ -799,28 +611,6 @@ const SnakeGame: React.FC = () => {
                   />
                 ))}
 
-                {/* Render Bombs (now with movement transition) */}
-                {bombs.map((bomb, idx) => (
-                  <div
-                    key={`bomb-${idx}`}
-                    className="flex items-center justify-center"
-                    style={{
-                      position: "absolute",
-                      left: bomb.x,
-                      top: bomb.y,
-                      width: CELL_SIZE,
-                      height: CELL_SIZE,
-                      transition: `left ${GAME_TICK_RATE}ms linear, top ${GAME_TICK_RATE}ms linear`, // Bombs transition
-                      borderRadius: "50%",
-                      backgroundColor: "rgba(255, 0, 0, 0.6)",
-                      boxShadow: "0 0 10px 5px rgba(255, 0, 0, 0.7)",
-                      zIndex: 1,
-                    }}
-                  >
-                    <span className="text-white text-lg font-bold">X</span>
-                  </div>
-                ))}
-
                 {/* Popups */}
                 <div className="absolute top-4 right-4 z-50 flex flex-col items-end space-y-2">
                     {activePopups.map((popup) => (
@@ -828,7 +618,7 @@ const SnakeGame: React.FC = () => {
                             key={popup.id}
                             className="bg-gray-800/90 text-white text-sm px-4 py-2 rounded-lg shadow-lg flex items-center gap-2"
                             style={{
-                                borderColor: popup.type === "fakeShibaShrink" || popup.type === "fakeShibaReverse" ? 'red' : 'green',
+                                borderColor: popup.type === "floki" ? 'red' : 'green',
                                 borderWidth: '1px',
                                 minWidth: '150px',
                                 textAlign: 'center',
@@ -875,16 +665,6 @@ const SnakeGame: React.FC = () => {
               </div>
               <div className="mt-4 text-base text-purple-300">
                 Highscore: {loading ? "..." : highscore}
-              </div>
-              {/* Active Effects Display */}
-              <div className="mt-4 text-sm text-gray-400 space-y-1">
-                {invincible && <p className="text-lunc-400 font-semibold">🛡️ Invincible!</p>}
-                {reverseControls && <p className="text-red-400 font-semibold">🔄 Controls Reversed!</p>}
-                {snakeSpeedMultiplier !== 1 && (
-                  <p className="text-yellow-400 font-semibold">
-                    ⚡ Speed {snakeSpeedMultiplier > 1 ? "Increased" : "Decreased"}!
-                  </p>
-                )}
               </div>
             </div>
 
