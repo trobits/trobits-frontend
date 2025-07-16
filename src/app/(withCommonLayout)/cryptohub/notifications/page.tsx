@@ -25,7 +25,7 @@ import {
 import socket from "@/redux/features/api/socketClient";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { IoNotificationsCircle } from "react-icons/io5";
-import { useGetNotificationByUseridQuery } from "@/redux/features/api/authApi";
+import { useGetNotificationByUseridQuery, useMarkNotificationsAsReadMutation } from "@/redux/features/api/authApi";
 import Loading from "@/components/Shared/Loading";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -40,14 +40,17 @@ type Notification = {
   timestamp: string;
   postId?: string;
   category?: string;
+  isSeen: boolean;
 };
 
 export default function NotificationPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [visibleCount, setVisibleCount] = useState(20); // Initially show 20 notifications
+  const [filter, setFilter] = useState<'all' | 'read' | 'unread'>('all');
   const user = useAppSelector((state) => state.auth.user);
   const { data: allNotificationData, isLoading: allNotificationDataLoading, error: notificationError } =
       useGetNotificationByUseridQuery(user?.id);
+  const [markNotificationsAsRead, { isLoading: isMarkingRead }] = useMarkNotificationsAsReadMutation();
   const dispatch = useAppDispatch();
   const pathName = usePathname();
 
@@ -105,7 +108,13 @@ export default function NotificationPage() {
     setVisibleCount((prevCount) => prevCount + 20);
   };
 
-  const visibleNotifications = notifications.slice(0, visibleCount);
+  // Filter notifications based on the selected filter
+  const filteredNotifications = notifications.filter((notification) => {
+    if (filter === 'read') return notification.isSeen;
+    if (filter === 'unread') return !notification.isSeen;
+    return true;
+  });
+  const visibleNotifications = filteredNotifications.slice(0, visibleCount);
 
   return (
       <AuthGuard>
@@ -145,7 +154,46 @@ export default function NotificationPage() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
+            {/* Toggle Buttons for All, Read, Unread */}
+            <div className="flex justify-center gap-2 mb-6">
+              <Button
+                variant={filter === 'all' ? 'default' : 'outline'}
+                onClick={() => setFilter('all')}
+                className={filter === 'all' ? 'bg-blue-600 text-white' : ''}
+              >
+                All Notifications
+              </Button>
+              <Button
+                variant={filter === 'read' ? 'default' : 'outline'}
+                onClick={() => setFilter('read')}
+                className={filter === 'read' ? 'bg-green-600 text-white' : ''}
+              >
+                Read
+              </Button>
+              <Button
+                variant={filter === 'unread' ? 'default' : 'outline'}
+                onClick={() => setFilter('unread')}
+                className={filter === 'unread' ? 'bg-yellow-500 text-white' : ''}
+              >
+                Unread
+              </Button>
+            </div>
 
+            {/* Mark All as Read Button for Unread Filter */}
+            {filter === 'unread' && filteredNotifications.length > 0 && (
+              <div className="flex justify-end mb-4">
+                <Button
+                  onClick={async () => {
+                    const ids = filteredNotifications.map(n => n.id);
+                    await markNotificationsAsRead(ids);
+                  }}
+                  disabled={isMarkingRead}
+                  className="bg-green-600 text-white hover:bg-green-700"
+                >
+                  {isMarkingRead ? 'Marking...' : 'Mark All as Read'}
+                </Button>
+              </div>
+            )}
             {/* Notifications List */}
             <div className="space-y-3">
               {visibleNotifications?.map((notification) => {
@@ -179,6 +227,7 @@ export default function NotificationPage() {
 const NotificationCard = ({ notification }: { notification: Notification }) => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
+  const [markNotificationsAsRead, { isLoading: isMarkingRead }] = useMarkNotificationsAsReadMutation();
 
   const handleProfileClick = () => {
     router.push(`/cryptohub/userProfile/${notification.senderId}`);
@@ -275,6 +324,16 @@ const NotificationCard = ({ notification }: { notification: Notification }) => {
                       See Post
                       <ArrowUpRight className="h-3 w-3 ml-1" />
                     </button>
+                )}
+                {/* Mark as Read Button for Unread Notifications */}
+                {!notification.isSeen && (
+                  <button
+                    onClick={async () => await markNotificationsAsRead([notification.id])}
+                    disabled={isMarkingRead}
+                    className="inline-flex items-center h-8 px-3 text-xs font-medium text-green-500 hover:text-white hover:bg-green-700/80 transition-colors rounded-md cursor-pointer relative z-20 border border-green-500 ml-2"
+                  >
+                    {isMarkingRead ? 'Marking...' : 'Mark as Read'}
+                  </button>
                 )}
               </div>
             </div>

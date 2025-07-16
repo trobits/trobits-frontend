@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import {
   useForgotPasswordMutation,
   useSetNewPasswordMutation,
 } from "@/redux/features/api/authApi";
+import { ArrowLeftIcon } from "lucide-react";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -71,75 +73,90 @@ export default function ForgotPassword() {
       toast.success("Password updated successfully!");
       router.push("/auth/login");
     } catch {
-      toast.error(
-        "Something went wrong while verifying OTP and updating password."
-      );
+      toast.error("Something went wrong while verifying OTP and updating password.");
     } finally {
       setOtpLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0f1c] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 pt-28">
       {!showOtpModal && (
-        <div className="w-full max-w-lg min-h-[400px] rounded-3xl border border-cyan-400/20 bg-[#00000090] shadow-2xl p-10 backdrop-blur-md flex flex-col px-10 justify-center text-center">
-          <h2 className="text-center text-3xl font-bold text-cyan-300 mb-2 pb-4">
-            Forgot Password
-          </h2>
-          <p className="text-center text-white text-base mb-6">
+        <div className="w-full max-w-xl min-h-[550px] rounded-3xl bg-gray-900/40 border border-gray-800/50 shadow-2xl p-10 backdrop-blur-md flex flex-col justify-center text-center transition-all duration-300 hover:border-slate-500/40 relative">
+          {/* Go Back Button (only here) */}
+          <button
+            type="button"
+            className="absolute left-6 top-6 text-white text-sm px-3 py-1.5 rounded-lg backdrop-blur-md bg-gradient-to-r from-slate-600/50 to-slate-700/50 hover:from-slate-500/50 hover:to-slate-600/50 transition-all flex items-center"
+            onClick={() => router.back()}
+          >
+            <ArrowLeftIcon className="h-4 w-4 mr-1" />
+            Go Back
+          </button>
+
+          <h2 className="text-4xl font-bold text-white mb-2 pb-8">Forgot Password</h2>
+          <p className="text-base text-gray-400 mb-8">
             Enter your email to receive a 4-digit OTP.
           </p>
-          <Input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            placeholder="Enter your email"
-            className="text-black"
-          />
-          <Button
-            onClick={handleSendOtp}
-            className="mt-6 w-full bg-cyan-500 hover:bg-cyan-600 text-white"
-            disabled={sendOtpLoading}
-          >
-            {sendOtpLoading ? "Sending..." : "Send OTP"}
-          </Button>
+
+          <div className="mx-auto w-4/5">
+            <Input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              placeholder="Enter your email"
+              className="text-black bg-white"
+            />
+          </div>
+
+          <div className="mx-auto w-4/5 mt-6">
+            <Button
+              onClick={handleSendOtp}
+              className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white"
+              disabled={sendOtpLoading}
+            >
+              {sendOtpLoading ? "Sending..." : "Send OTP"}
+            </Button>
+          </div>
         </div>
       )}
 
       {showOtpModal && (
         <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-xl w-96">
-            <h2 className="text-xl font-bold mb-4">Verify Your Email</h2>
-            <p className="text-sm mb-4">
+          <div className="bg-gray-900 border border-gray-700 rounded-xl p-8 w-96 relative min-h-[400px]">
+            {/* NO Go Back button here */}
+
+            <h2 className="text-xl font-bold mb-4 text-white">Verify Your Email</h2>
+            <p className="text-sm mb-4 text-gray-400">
               Please enter the 4-digit OTP sent to your email.
             </p>
+
             <div className="space-y-4">
               <div>
-                <label className="block text-sm">Enter OTP</label>
+                <label className="block text-sm text-white">Enter OTP</label>
                 <input
                   type="text"
                   value={otp}
                   onChange={handleOtpChange}
                   maxLength={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-md"
                 />
               </div>
               <div>
-                <label className="block text-sm">New Password</label>
+                <label className="block text-sm text-white">New Password</label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={handleNewPasswordChange}
                   placeholder="Enter new password"
                   minLength={6}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-md"
                 />
               </div>
               <div className="flex justify-end space-x-4">
                 <Button
                   type="button"
                   onClick={() => setShowOtpModal(false)}
-                  className="bg-gray-400 text-white"
+                  className="bg-gray-600 text-white"
                 >
                   Cancel
                 </Button>
