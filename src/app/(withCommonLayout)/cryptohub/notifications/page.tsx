@@ -5,6 +5,8 @@ import AuthGuard from "@/components/Auth/AuthGuard";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Settings } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -145,9 +147,7 @@ export default function NotificationPage() {
                     align="end"
                     className="w-48 bg-gray-900 border-gray-700"
                 >
-                  <DropdownMenuItem className="text-gray-300 focus:text-white focus:bg-gray-800">
-                    Mark all as read
-                  </DropdownMenuItem>
+                  
                   <DropdownMenuItem className="text-gray-300 focus:text-white focus:bg-gray-800">
                     Notification settings
                   </DropdownMenuItem>
@@ -199,19 +199,24 @@ export default function NotificationPage() {
 
             {/* Mark All as Read Button for Unread Filter */}
             {filter === 'unread' && filteredNotifications.length > 0 && (
-              <div className="flex justify-end mb-4">
-                <Button
-                  onClick={async () => {
-                    const ids = filteredNotifications.map(n => n.id);
-                    await markNotificationsAsRead(ids);
-                  }}
-                  disabled={isMarkingRead}
-                  className="bg-green-600 text-white hover:bg-green-700"
-                >
-                  {isMarkingRead ? 'Marking...' : 'Mark All as Read'}
-                </Button>
-              </div>
-            )}
+  <div className="flex justify-end mb-4">
+    <button
+      onClick={async () => {
+        const ids = filteredNotifications.map(n => n.id);
+        await markNotificationsAsRead(ids);
+      }}
+      disabled={isMarkingRead}
+      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
+        ${isMarkingRead
+          ? 'bg-gray-600 text-white opacity-50 cursor-not-allowed'
+          : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg hover:brightness-110'}
+      `}
+    >
+      {isMarkingRead ? 'Marking...' : 'Mark All as Read'}
+    </button>
+  </div>
+)}
+
             {/* Notifications List */}
             <div className="space-y-3">
               {visibleNotifications?.map((notification) => {
@@ -345,14 +350,28 @@ const NotificationCard = ({ notification }: { notification: Notification }) => {
                 )}
                 {/* Mark as Read Button for Unread Notifications */}
                 {!notification.isSeen && (
-                  <button
-                    onClick={async () => await markNotificationsAsRead([notification.id])}
-                    disabled={isMarkingRead}
-                    className="inline-flex items-center h-8 px-3 text-xs font-medium text-green-500 hover:text-white hover:bg-green-700/80 transition-colors rounded-md cursor-pointer relative z-20 border border-green-500 ml-2"
-                  >
-                    {isMarkingRead ? 'Marking...' : 'Mark as Read'}
-                  </button>
-                )}
+  <div className="ml-auto relative flex items-center justify-center">
+    <button
+      onClick={async () => await markNotificationsAsRead([notification.id])}
+      disabled={isMarkingRead}
+      className={`
+        relative group p-2 rounded-full transition-all duration-300
+        border border-green-500/50
+        ${isMarkingRead
+          ? 'bg-gray-700/30 text-gray-400 cursor-not-allowed'
+          : 'bg-gray-800/40 text-green-400 hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:text-white'}
+      `}
+    >
+      <Eye className="w-4 h-4" />
+      {/* Tooltip */}
+      <span className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-50">
+        Mark as Read
+      </span>
+    </button>
+  </div>
+)}
+
+
               </div>
             </div>
           </div>
