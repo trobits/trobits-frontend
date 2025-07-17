@@ -11,9 +11,9 @@ import {
 import { clearUser, setUser } from "../slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: "http://localhost:3000/api/v1",
+   baseUrl: "http://localhost:3000/api/v1",
   // baseUrl: "https://sisiku-backend.vercel.app/api/v1",
-  baseUrl: "https://api.trobits.com/api/v1",
+  //baseUrl: "https://api.trobits.com/api/v1",
   // baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`,
   credentials: "include",
   prepareHeaders: (headers, {}) => {

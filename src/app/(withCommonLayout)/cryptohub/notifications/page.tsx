@@ -155,29 +155,47 @@ export default function NotificationPage() {
               </DropdownMenu>
             </div>
             {/* Toggle Buttons for All, Read, Unread */}
-            <div className="flex justify-center gap-2 mb-6">
-              <Button
-                variant={filter === 'all' ? 'default' : 'outline'}
-                onClick={() => setFilter('all')}
-                className={filter === 'all' ? 'bg-blue-600 text-white' : ''}
-              >
-                All Notifications
-              </Button>
-              <Button
-                variant={filter === 'read' ? 'default' : 'outline'}
-                onClick={() => setFilter('read')}
-                className={filter === 'read' ? 'bg-green-600 text-white' : ''}
-              >
-                Read
-              </Button>
-              <Button
-                variant={filter === 'unread' ? 'default' : 'outline'}
-                onClick={() => setFilter('unread')}
-                className={filter === 'unread' ? 'bg-yellow-500 text-white' : ''}
-              >
-                Unread
-              </Button>
-            </div>
+            {/* Filter Toggle Buttons with Gradient Styles */}
+<div className="flex justify-center gap-2 mb-6">
+  <div className="flex bg-gray-800/50 border border-gray-600/30 rounded-2xl p-1">
+    {/* All Notifications - Blue Gradient */}
+    <button
+      onClick={() => setFilter('all')}
+      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+        filter === 'all'
+          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+          : 'text-gray-400 hover:text-white hover:bg-gray-600/50'
+      }`}
+    >
+      All Notifications
+    </button>
+
+    {/* Read - Green Gradient */}
+    <button
+      onClick={() => setFilter('read')}
+      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+        filter === 'read'
+          ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+          : 'text-gray-400 hover:text-white hover:bg-gray-600/50'
+      }`}
+    >
+      Read
+    </button>
+
+    {/* Unread - Red Gradient */}
+    <button
+      onClick={() => setFilter('unread')}
+      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+        filter === 'unread'
+          ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg'
+          : 'text-gray-400 hover:text-white hover:bg-gray-600/50'
+      }`}
+    >
+      Unread
+    </button>
+  </div>
+</div>
+
 
             {/* Mark All as Read Button for Unread Filter */}
             {filter === 'unread' && filteredNotifications.length > 0 && (
