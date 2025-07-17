@@ -90,8 +90,8 @@ const CryptoLayout = ({ children }) => {
   ];
 
   const maxRewards = 10000;
-  // const currentRewards = userFromDb?.rewards ?? 0;
-   const currentRewards = 10000;
+  const currentRewards = userFromDb?.rewards ?? 0;
+  //  const currentRewards = 10000;
   // Ensure rewardProgress is between 0 and 100
   const rewardProgress = Math.max(0, Math.min(100, (currentRewards / maxRewards) * 100));
 
