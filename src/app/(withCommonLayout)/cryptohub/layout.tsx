@@ -90,7 +90,8 @@ const CryptoLayout = ({ children }) => {
   ];
 
   const maxRewards = 10000;
-  const currentRewards = userFromDb?.rewards ?? 0;
+  // const currentRewards = userFromDb?.rewards ?? 0;
+   const currentRewards = 10000;
   // Ensure rewardProgress is between 0 and 100
   const rewardProgress = Math.max(0, Math.min(100, (currentRewards / maxRewards) * 100));
 
@@ -201,10 +202,10 @@ const CryptoLayout = ({ children }) => {
 
                         {/* Rewards Progress Bar */}
                         <div className="mb-4">
-                          <p className="text-gray-400 text-xs mb-1">Rewards</p>
+                          <p className="text-gray-400 text-xs mb-1">Rewards : ${currentRewards}</p>
                           <div className="w-full bg-gray-700 rounded-full h-2.5 relative group">
                             <div
-                                className="bg-gradient-to-r from-white to-gray-300 h-2.5 rounded-full transition-all duration-300 relative"
+className="bg-gradient-to-r from-blue-500 to-cyan-400 h-2.5 rounded-full transition-all duration-300 relative"
                                 style={{ width: `${rewardProgress}%` }}
                             >
                             </div>
@@ -212,6 +213,22 @@ const CryptoLayout = ({ children }) => {
                               {currentRewards} / {maxRewards}
                             </div>
                           </div>
+                          {/* Checkout Button when rewards >= 10000 */}
+                         {currentRewards >= 10000 && (
+  <div className="flex justify-center">
+    <button
+      className="mt-4 px-10 py-2 text-sm font-medium text-white rounded-xl shadow-md border-2 border-white/10 transition-all duration-300 bg-white/5 backdrop-blur-md hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:border-green-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
+    >
+      Checkout
+    </button>
+  </div>
+)}
+
+
+
+
+
+
                         </div>
                       </>
                   ) : null}

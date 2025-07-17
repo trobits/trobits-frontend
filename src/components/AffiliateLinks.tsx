@@ -33,7 +33,7 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Gemini: Signup and earn 5,000 points after your first transaction</h3>
+          <h3 className="text-sm py-1 font-semibold text-cyan-300">Gemini: Signup and earn 5,000 points after your first transaction</h3>
         </div>
       </div>
     </div>
@@ -107,7 +107,7 @@ export const UrsimeCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Ursime</h3>
+          <h3 className="text-sm font-semibold text-cyan-300">Ursime</h3>
         </div>
       </div>
     </div>
@@ -144,7 +144,7 @@ export const PreplyCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Preply</h3>
+          <h3 className="text-sm font-semibold text-cyan-300">Preply</h3>
         </div>
       </div>
     </div>
@@ -181,7 +181,7 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">NordVPN: Purchase any plan and earn 20,000 points
+          <h3 className="text-sm font-semibold text-cyan-300">NordVPN: Purchase any plan and earn 20,000 points
 
           </h3>
         </div>
@@ -220,7 +220,7 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Fanatics: Earn 2,500 point after any purchase</h3>
+          <h3 className="text-sm font-semibold text-cyan-300">Fanatics: Earn 2,500 point after any purchase</h3>
         </div>
       </div>
     </div>
@@ -257,7 +257,7 @@ export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Remitly: Earn 2,500 points for signing up; earn additional 2,500 points after your first transaction</h3>
+          <h3 className="text-xs font-semibold text-cyan-300">Remitly: Earn 2,500 points for signing up; earn additional 2,500 points after your first transaction</h3>
         </div>
       </div>
     </div>
@@ -288,7 +288,7 @@ export const StockMarketGuidesCard = ({ compact = false }: { compact?: boolean }
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Stock Market Guides: Signup and earn 6,500 points</h3>
+          <h3 className="text-sm font-semibold text-cyan-300">Stock Market Guides: Signup and earn 6,500 points</h3>
         </div>
       </div>
     </div>
@@ -325,7 +325,7 @@ export const TicketNetworkCard = ({ compact = false }: { compact?: boolean }) =>
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">TicketNetwork</h3>
+          <h3 className="text-sm font-semibold text-cyan-300">TicketNetwork</h3>
         </div>
       </div>
     </div>
@@ -362,7 +362,7 @@ export const CPRCareCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">CPRCare</h3>
+          <h3 className="text-sm font-semibold text-cyan-300">CPRCare</h3>
         </div>
       </div>
     </div>
@@ -399,7 +399,7 @@ export const GolfPartnerCard = ({ compact = false }: { compact?: boolean }) => {
           alt=""
         />
         <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">GolfPartner</h3>
+          <h3 className="text-sm font-semibold text-cyan-300">GolfPartner</h3>
         </div>
       </div>
     </div>
