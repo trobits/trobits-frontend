@@ -21,251 +21,132 @@
 
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-
-// "use client";
-
-
 import { useState, useEffect } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
+import Script from "next/script";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+const calculateTimeLeft = () => {
+  const targetDate = new Date("2025-01-01T00:00:00").getTime();
+  const now = new Date().getTime();
+  const difference = targetDate - now;
 
-interface BurnDataRow {
-  date: string;
-  shiba: number;
-  lunc: number;
+  if (difference <= 0) {
+    return null; // Countdown is over
+  }
+
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((difference / (1000 * 60)) % 60);
+  const seconds = Math.floor((difference / 1000) % 60);
+
+  return { days, hours, minutes, seconds };
+};
+declare global {
+  interface Window {
+    growMe?: ((e: unknown) => void) & unknown[]; // Define growMe globally
+  }
 }
 
-import { ChartData, ChartOptions } from 'chart.js';
-
-export default function BurnChartWithCalculator() {
-  const [chartData, setChartData] = useState<ChartData<'line'>>({ labels: [], datasets: [] });
-  const [allData, setAllData] = useState<BurnDataRow[]>([]);
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [totals, setTotals] = useState<{ shiba: number; lunc: number } | null>(null);
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "2-digit",
-    });
-  };
-
-  const fetchBurnData = async (): Promise<void> => {
-    const apiKey = "AIzaSyC_pYUok9r2PD5PmIYyWV4ZCvHy8y_Iug0";
-    const sheetId = "10V4FpmrdcoQBCv-TXABSiNgqXx3dSj63qKqw06-3nFY";
-    const range = "A:Z";
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (!data.values || data.values.length < 2) {
-      console.error("No data found in sheet");
-      return;
-    }
-
-    const headers = data.values[0];
-    const dateIdx = headers.findIndex((h: string) => h.toLowerCase().includes("date"));
-    const shibaIdx = 3; // Column D
-    const luncIdx = 5;  // Column F
-
-    const rows = data.values.slice(1).filter((row: string[]) => row.length > luncIdx);
-
-    const parsedData: BurnDataRow[] = rows.map((row: string[]) => {
-      const date = formatDate(row[dateIdx]);
-      const shiba = parseInt(row[shibaIdx]?.replace(/,/g, "") || "0");
-      const lunc = parseInt(row[luncIdx]?.replace(/,/g, "") || "0");
-      return { date, shiba, lunc };
-    });
-
-    setAllData(parsedData);
-
-    const last14 = parsedData.slice(-14);
-    setChartData({
-      labels: last14.map((row: BurnDataRow) => row.date),
-      datasets: [
-        {
-          label: "Shiba Burns",
-          data: last14.map((row: BurnDataRow) => row.shiba),
-          borderColor: "rgba(255, 99, 132, 1)",
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-          tension: 0.4,
-          fill: true,
-          pointRadius: 2,
-        },
-        {
-          label: "LUNC Burns",
-          data: last14.map((row: BurnDataRow) => row.lunc),
-          borderColor: "rgba(54, 162, 235, 1)",
-          backgroundColor: "rgba(54, 162, 235, 0.2)",
-          tension: 0.4,
-          fill: true,
-          pointRadius: 2,
-        },
-      ],
-    });
-  };
-
+export function GrowMeWidget() {
   useEffect(() => {
-    fetchBurnData();
+    const loadGrowMeScript = () => {
+      if (window.growMe) return; // Avoid multiple script injections
+
+      const growMeArray: unknown[] = [];
+      const growMeFunction = (e: unknown) => {
+        growMeArray.push(e);
+      };
+
+      window.growMe = Object.assign(growMeFunction, growMeArray);
+
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://faves.grow.me/main.js";
+      script.defer = true;
+      script.setAttribute("data-grow-faves-site-id", "U2l0ZTplN2U5ODc0NC02MzJjLTQ2NWQtOGI0ZC00YzdlNTZjODAwYzA=");
+
+      document.body.appendChild(script);
+    };
+
+    loadGrowMeScript();
   }, []);
 
+  return null; // No UI element needed
+}
+
+function AdBannerF() {
+  return (
+    <>
+      <ins className="67c24fd7aa72d3d47fc083ad" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
+
+      <Script
+        id="ad-banner-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(e,n,c,t,o,r,d){
+              !function e(n,c,t,o,r,m,d,s,a){
+                s=c.getElementsByTagName(t)[0],
+                (a=c.createElement(t)).async=!0,
+                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+                s.parentNode.insertBefore(a,s)
+              }(window,document,"script","67c24fd7aa72d3d47fc083ad",["cdn.bmcdn6.com"], 0, new Date().getTime())
+            }();
+          `,
+        }}
+      />
+    </>
+  );
+}
+
+const Slider = () => {
+  const [ currentSlide, setCurrentSlide ] = useState(0);
+  const [ timeLeft, setTimeLeft ] = useState(calculateTimeLeft());
+
   useEffect(() => {
-    if (!startDate || !endDate) {
-      setTotals(null);
-      return;
-    }
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
 
-    const from = new Date(startDate);
-    const to = new Date(endDate);
-    to.setHours(23, 59, 59, 999);
+    return () => clearInterval(timer);
+  }, []);
 
-    const filtered = allData.filter((row: BurnDataRow) => {
-      const [d, m, y] = row.date.split(" ");
-      const rowDate = new Date(`20${y}-${m}-` + d);
-      return rowDate >= from && rowDate <= to;
-    });
-
-    const total = filtered.reduce(
-      (acc: { shiba: number; lunc: number }, row: BurnDataRow) => {
-        acc.shiba += row.shiba;
-        acc.lunc += row.lunc;
-        return acc;
-      },
-      { shiba: 0, lunc: 0 }
+  if (!timeLeft) {
+    return (
+      <div className="flex justify-center items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
+        <div className="text-4xl text-center text-yellow-400 font-bold">
+          <AdBannerF />
+        </div>
+      </div>
     );
-
-    setTotals(total);
-
-    setChartData({
-      labels: filtered.map((row: BurnDataRow) => row.date),
-      datasets: [
-        {
-          label: "Shiba Burns",
-          data: filtered.map((row: BurnDataRow) => row.shiba),
-          borderColor: "rgba(255, 99, 132, 1)",
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-          tension: 0.4,
-          fill: true,
-          pointRadius: 2,
-        },
-        {
-          label: "LUNC Burns",
-          data: filtered.map((row: BurnDataRow) => row.lunc),
-          borderColor: "rgba(54, 162, 235, 1)",
-          backgroundColor: "rgba(54, 162, 235, 0.2)",
-          tension: 0.4,
-          fill: true,
-          pointRadius: 2,
-        },
-      ],
-    });
-  }, [startDate, endDate]);
-
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-        labels: {
-          color: "#ffffff",
-        },
-      },
-      title: {
-        display: true,
-        text: "Shiba & LUNC Burns Over Time",
-        color: "#ffffff",
-      },
-      tooltip: { mode: "index" as const, intersect: false },
-    },
-    interaction: {
-      mode: "nearest" as const,
-      axis: "x" as const,
-      intersect: false,
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          color: "#ffffff",
-        },
-      },
-      x: {
-        ticks: {
-          color: "#ffffff",
-        },
-      },
-    },
-  };
+  }
 
   return (
-    <div className="p-8 pt-32 text-white">
-      <h1 className="text-3xl font-bold mb-10 text-white">Shiba and LUNC Burns Dashboard</h1>
-
-      <div className="bg-white text-black border p-6 rounded-lg shadow mb-10 w-full max-w-xl mx-auto">
-        <div className="flex flex-wrap gap-4 mb-4 items-center">
-          <label className="block">
-            📅 Start Date:
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="ml-2 px-2 py-1 border border-gray-300 rounded"
-            />
-          </label>
-          <label className="block">
-            📅 End Date:
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="ml-2 px-2 py-1 border border-gray-300 rounded"
-            />
-          </label>
-        </div>
-
-        {totals && (
-          <div className="mt-2">
-            <h2 className="text-lg font-semibold mb-2">Total Burns for Selected Range</h2>
-            <p>Shiba: <strong>{totals.shiba.toLocaleString()}</strong></p>
-            <p>LUNC: <strong>{totals.lunc.toLocaleString()}</strong></p>
+    <div>
+<GrowMeWidget />
+      <div className="flex flex-col justify-center items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
+        <h2 className="text-3xl text- font-bold mb-6 text-yellow-500">BURNING &nbsp; COINS &nbsp;  STARTS &nbsp;  JANUARY  1, 2025:</h2>
+        <div className="grid grid-cols-4 gap-6 text-center">
+          <div className="flex flex-col items-center">
+            <span className="text-6xl font-bold text-yellow-500">{timeLeft.days}:</span>
+            <span className="text-xl text-cyan-300">Days</span>
           </div>
-        )}
-      </div>
-
-      <div className="bg-gray-800 p-6 rounded-xl shadow">
-        <Line options={chartOptions} data={chartData} />
+          <div className="flex flex-col items-center">
+            <span className="text-6xl font-bold text-yellow-500">{timeLeft.hours}:</span>
+            <span className="text-xl text-cyan-300">Hours</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-6xl font-bold text-yellow-500">{timeLeft.minutes}:</span>
+            <span className="text-xl text-cyan-300">Minutes</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-6xl font-bold text-yellow-500">{timeLeft.seconds}</span>
+            <span className="text-xl text-cyan-300">Seconds</span>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Slider;

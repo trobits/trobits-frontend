@@ -1,17 +1,16 @@
-
-
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import Image from "next/image"
 import { useGetTopicByIdQuery } from "@/redux/features/api/topicApi"
 import Loading from "../Shared/Loading"
 import { useState } from "react"
 import PostModal from "../Shared/PostModal"
 import { useGetAllPostsByTopicQuery } from "@/redux/features/api/postApi"
-
 import PostCard from "../Post/PostCard"
+import { MessageCircle, Plus, TrendingUp, Clock, Users, Eye, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface Author {
     id: string;
@@ -48,12 +47,12 @@ export interface Post {
     viewCount: number;
 }
 
-
-
 export default function TopicDetailsPage({ topicId }: { topicId: string }) {
     const { data, isLoading: topicLoading } = useGetTopicByIdQuery(topicId);
-    const [ isOpenPostModal, setIsOpenPostModal ] = useState(false)
+    const [isOpenPostModal, setIsOpenPostModal] = useState(false)
     const { data: allPostsData, isLoading: allPostsLoading } = useGetAllPostsByTopicQuery(topicId)
+    const [activeTab, setActiveTab] = useState("top")
+    const router = useRouter()
 
     if (topicLoading || allPostsLoading) {
         return <Loading />
@@ -62,41 +61,145 @@ export default function TopicDetailsPage({ topicId }: { topicId: string }) {
     const topic = data?.data;
     const allPosts = (allPostsData?.data || []) as Post[];
 
+    // Sort posts based on active tab
+    const sortedPosts = [...allPosts].sort((a, b) => {
+        if (activeTab === "top") {
+            // Sort by engagement (likes + comments)
+            const aEngagement = (a.likeCount || 0) + (a.comments?.length || 0);
+            const bEngagement = (b.likeCount || 0) + (b.comments?.length || 0);
+            return bEngagement - aEngagement;
+        } else {
+            // Sort by latest (createdAt)
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }
+    });
+
+    // Calculate stats
+    const totalViews = allPosts.reduce((sum, post) => sum + (post.viewCount || 0), 0);
+    const totalLikes = allPosts.reduce((sum, post) => sum + (post.likeCount || 0), 0);
+    const totalComments = allPosts.reduce((sum, post) => sum + (post.comments?.length || 0), 0);
 
     return (
-        <div className="min-h-screen bg-[#0a0a0f75]">
-            <div className="max-w-5xl mx-auto px-4">
+        <div className="min-h-screen w-full bg-black">
+            <div className="max-w-5xl mx-auto px-4 py-6">
+
+                {/* Back Button */}
+                <button
+                    onClick={() => router.back()}
+                    className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200 mb-6 group"
+                >
+                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
+                    <span>Back to Topics</span>
+                </button>
+
                 {/* Topic Header */}
-                <div className="relative overflow-hidden mb-6">
-                    {
-                        topic?.image &&
-                        <div className="aspect-[3/2] overflow-hidden rounded-xl">
-                            <Image
-                                width={600}
-                                height={800}
-                                src={topic?.image as string}
-                                alt="Profile banner"
-                                className="w-full h-full mt-4 rounded-xl object-cover"
-                            />
+                <div className="mb-8">
+                    {topic?.image && (
+                        <div className="relative mb-6 group">
+                            <div className="relative aspect-[2.5/1] overflow-hidden rounded-2xl">
+                                <Image
+                                    width={1200}
+                                    height={400}
+                                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/topic_${topic.id}.jpg`}
+                                    alt="Topic banner"
+                                    className="w-full h-full object-cover transition-transform duration-700"
+                                />
+
+                                {/* Overlay gradient */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                                {/* Topic badge */}
+                                <div className="absolute bottom-6 left-6 bg-black/80 backdrop-blur-sm rounded-xl px-4 py-2 border border-gray-800">
+                                    <div className="flex items-center gap-2">
+                                        <MessageCircle className="w-4 h-4 text-white" />
+                                        <span className="text-sm text-white font-medium">Discussion Topic</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Topic Info */}
+                    <div className="bg-gray-900/40 border border-gray-800 rounded-2xl p-6">
+                        <div className="mb-6">
+                            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                                {topic?.title}
+                            </h1>
+                            <p className="text-lg text-gray-300 leading-relaxed">
+                                {topic?.description}
+                            </p>
                         </div>
 
-                    }
-                    <div className="p-6 bg-[#00000096] rounded-xl mt-4 text-white text-center">
-                        <h1 className="text-3xl font-bold">{topic?.title}</h1>
-                        <p className="text-lg mt-2">{topic?.description}</p>
+                        {/* Topic Stats */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center hover:bg-gray-800/70 transition-colors duration-200">
+                                <div className="w-10 h-10 bg-gray-700/50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <MessageCircle className="w-5 h-5 text-white" />
+                                </div>
+                                <p className="text-sm text-gray-400 mb-1">Posts</p>
+                                <p className="text-xl font-bold text-white">{allPosts.length}</p>
+                            </div>
+
+                            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center hover:bg-gray-800/70 transition-colors duration-200">
+                                <div className="w-10 h-10 bg-gray-700/50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <TrendingUp className="w-5 h-5 text-white" />
+                                </div>
+                                <p className="text-sm text-gray-400 mb-1">Likes</p>
+                                <p className="text-xl font-bold text-white">{totalLikes}</p>
+                            </div>
+
+                            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center hover:bg-gray-800/70 transition-colors duration-200">
+                                <div className="w-10 h-10 bg-gray-700/50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <Users className="w-5 h-5 text-white" />
+                                </div>
+                                <p className="text-sm text-gray-400 mb-1">Comments</p>
+                                <p className="text-xl font-bold text-white">{totalComments}</p>
+                            </div>
+
+                            <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center hover:bg-gray-800/70 transition-colors duration-200">
+                                <div className="w-10 h-10 bg-gray-700/50 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <Eye className="w-5 h-5 text-white" />
+                                </div>
+                                <p className="text-sm text-gray-400 mb-1">Views</p>
+                                <p className="text-xl font-bold text-white">{totalViews}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* New Post Button */}
-                <div className="flex justify-end mb-6">
+                {/* Action Bar */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    {/* Tabs */}
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+                        <TabsList className="bg-gray-900/50 border border-gray-800 rounded-xl p-1">
+                            <TabsTrigger
+                                value="top"
+                                className="flex items-center gap-2 px-4 py-2 rounded-lg data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-400 transition-all duration-200 hover:text-white"
+                            >
+                                <TrendingUp className="w-4 h-4" />
+                                Top Posts
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="latest"
+                                className="flex items-center gap-2 px-4 py-2 rounded-lg data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-gray-400 transition-all duration-200 hover:text-white"
+                            >
+                                <Clock className="w-4 h-4" />
+                                Latest
+                            </TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+
+                    {/* New Post Button */}
                     <Button
-                        className="bg-cyan-600 px-8 py-2 hover:bg-cyan-700 text-white"
+                        className="bg-white hover:bg-gray-200 text-black px-5 py-2 rounded-xl font-medium transition-all duration-200 hover:shadow-lg flex items-center gap-2 w-full sm:w-auto"
                         onClick={() => setIsOpenPostModal(true)}
                     >
+                        <Plus className="w-4 h-4" />
                         New Post
                     </Button>
                 </div>
 
+                {/* Post Modal */}
                 {isOpenPostModal && (
                     <PostModal
                         topicId={topicId}
@@ -105,35 +208,62 @@ export default function TopicDetailsPage({ topicId }: { topicId: string }) {
                     />
                 )}
 
-                {/* Tabs */}
-                <Tabs defaultValue="top" className="mb-6">
-                    <TabsList className="bg-transparent border-b border-gray-800 w-full justify-start h-auto p-0 gap-6">
-                        <TabsTrigger
-                            value="top"
-                            className="text-cyan-400 border-b-2 border-cyan-400 px-4 rounded-md pb-2 data-[state=inactive]:text-gray-500 data-[state=inactive]:border-transparent"
-                        >
-                            Top
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="latest"
-                            className="text-gray-500 border-b-2 border-transparent px-4 rounded-md pb-2 data-[state=active]:text-cyan-400 data-[state=active]:border-cyan-400"
-                        >
-                            Latest
-                        </TabsTrigger>
-                    </TabsList>
-                </Tabs>
-
                 {/* Posts List */}
-                <div className="space-y-6">
-                    {allPosts.length ? allPosts?.map((post: Post) => (
-                        <PostCard key={post?.id} post={post} />
-                    )) :
-                        <div>
-                            <h2 className="text-gray-200 text-center font-bold text-2xl">No posts yet.</h2>
+                <div className="space-y-4">
+                    {sortedPosts.length > 0 ? (
+                        <div className="space-y-4">
+                            {sortedPosts.map((post: Post, index) => (
+                                <div
+                                    key={post.id}
+                                    className="opacity-0 animate-fade-in"
+                                    style={{
+                                        animationDelay: `${index * 100}ms`,
+                                        animationFillMode: 'forwards'
+                                    }}
+                                >
+                                    <PostCard post={post} />
+                                </div>
+                            ))}
                         </div>
-                    }
+                    ) : (
+                        <div className="text-center py-16">
+                            <div className="space-y-4">
+                                <div className="w-16 h-16 bg-gray-900/50 rounded-2xl flex items-center justify-center mx-auto">
+                                    <MessageCircle className="w-8 h-8 text-gray-600" />
+                                </div>
+                                <h3 className="text-2xl font-semibold text-gray-300">No posts yet</h3>
+                                <p className="text-gray-500 max-w-md mx-auto">
+                                    Be the first to share your thoughts on this topic. Start the conversation!
+                                </p>
+                                <Button
+                                    className="bg-white hover:bg-gray-200 text-black px-5 py-2 rounded-xl font-medium transition-all duration-200 hover:shadow-lg flex items-center gap-2 mx-auto mt-6"
+                                    onClick={() => setIsOpenPostModal(true)}
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    Create First Post
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
+
+            <style jsx>{`
+                @keyframes fade-in {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-fade-in {
+                    animation: fade-in 0.6s ease-out;
+                }
+            `}</style>
         </div>
     )
 }

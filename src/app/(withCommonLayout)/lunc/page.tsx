@@ -1,196 +1,278 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import script from "next/script";
+import { TrendingUp, DollarSign, BarChart3, Newspaper } from "lucide-react";
 
-// ✅ Ad below chart
-function AdBannerF() {
-  const adRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.async = true;
-    script.src =
-      "https://cdn.bmcdn6.com/js/67c24fd7aa72d3d47fc083ad.js?v=" +
-      new Date().getTime();
-    if (adRef.current) {
-      adRef.current.innerHTML = "";
-      adRef.current.appendChild(script);
-    }
-    return () => {
-      if (adRef.current) adRef.current.innerHTML = "";
-    };
-  }, []);
-  return (
-    <div className="flex justify-center">
-      <div
-        ref={adRef}
-        className="67c24fd7aa72d3d47fc083ad"
-        style={{ display: "block", width: "300px", height: "250px" }}
-      />
-    </div>
-  );
-}
-
-// ✅ Terra Classic Header with h1
 const LuncHeader = () => (
-  <h1 className="text-5xl font-extrabold mb-4 text-center text-blue-400">
-    Terra Classic
-  </h1>
+    <div className="text-center mb-8">
+      <h1 className="text-4xl font-bold text-white mb-2">
+        Terra Classic Analytics
+      </h1>
+      <p className="text-gray-400 text-lg mb-6">
+        Comprehensive LUNC market analysis and insights
+      </p>
+
+      {/* LUNC Data Button */}
+      <div className="flex justify-center">
+        <a
+            href="/archive/lunc"
+            className="inline-block bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-6 rounded-xl text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25"
+        >
+          LUNC Burn
+        </a>
+      </div>
+    </div>
 );
 
-// ✅ LUNC Chart with blue styling
 const PriceGraph = () => {
-  const chartRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef(null);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+        "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
     script.async = true;
     script.innerHTML = JSON.stringify({
       autosize: true,
       symbol: "CRYPTO:LUNCUSD",
       interval: "D",
       timezone: "Etc/UTC",
-      theme: "light",
+      theme: "dark",
       style: "1",
       locale: "en",
       allow_symbol_change: true,
       calendar: false,
       support_host: "https://www.tradingview.com",
     });
+
     if (chartRef.current) {
       chartRef.current.innerHTML = "";
       chartRef.current.appendChild(script);
     }
   }, []);
+
   return (
-    <div
-      className="tradingview-widget-container border border-blue-500 rounded"
-      ref={chartRef}
-      style={{ height: "100%", width: "100%" }}
-    >
-      <div
-        className="tradingview-widget-container__widget"
-        style={{ height: "calc(100% - 32px)", width: "100%" }}
-      />
-    </div>
+      <div className="bg-gray-950/80 border border-gray-800/60 rounded-2xl p-6 shadow-2xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-xl flex items-center justify-center border border-green-500/20">
+            <BarChart3 className="w-5 h-5 text-green-400" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-white">Price Chart</h3>
+            <p className="text-sm text-gray-400">Advanced trading view</p>
+          </div>
+        </div>
+        <div
+            className="bg-black/50 border border-gray-800/40 rounded-xl overflow-hidden"
+            ref={chartRef}
+            style={{ height: "500px", width: "100%" }}
+        >
+          <div
+              className="tradingview-widget-container__widget"
+              style={{ height: "100%", width: "100%" }}
+          />
+        </div>
+      </div>
   );
 };
 
-// ✅ Symbol Info
 const SymbolInfo = () => {
-  const infoRef = useRef<HTMLDivElement>(null);
+  const infoRef = useRef(null);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
+        "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
     script.async = true;
     script.innerHTML = JSON.stringify({
       symbol: "CRYPTO:LUNCUSD",
       width: "100%",
       locale: "en",
-      colorTheme: "light",
-      isTransparent: false,
+      colorTheme: "dark",
+      isTransparent: true,
     });
+
     if (infoRef.current) {
       infoRef.current.innerHTML = "";
       infoRef.current.appendChild(script);
     }
   }, []);
+
   return (
-    <div className="w-full h-[450px] bg-white rounded shadow border border-blue-400" ref={infoRef}>
-      <div className="tradingview-widget-container__widget" />
-    </div>
+      <div className="bg-gray-950/80 border border-gray-800/60 rounded-2xl p-6 shadow-2xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-orange-500/30 to-red-500/30 rounded-xl flex items-center justify-center border border-orange-500/20">
+            <DollarSign className="w-5 h-5 text-orange-400" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-white">Market Info</h3>
+            <p className="text-sm text-gray-400">Real-time statistics</p>
+          </div>
+        </div>
+        <div
+            className="bg-black/50 border border-gray-800/40 rounded-xl overflow-hidden"
+            ref={infoRef}
+            style={{ height: "400px" }}
+        >
+          <div className="tradingview-widget-container__widget" />
+        </div>
+      </div>
   );
 };
 
-// ✅ Article Feed
 const ArticleFeed = () => {
-  const feedRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const feedScript = document.createElement("script");
-    feedScript.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-timeline.js";
-    feedScript.async = true;
-    feedScript.innerHTML = JSON.stringify({
-      feedMode: "all_symbols",
-      isTransparent: false,
-      displayMode: "regular",
-      width: "100%",
-      height: 550,
-      colorTheme: "light",
-      locale: "en",
-      filter: "terra-luna",
-    });
-    if (feedRef.current) {
-      feedRef.current.innerHTML = "";
-      feedRef.current.appendChild(feedScript);
-    }
-  }, []);
-  return (
-    <div className="w-full h-[550px] bg-white rounded shadow border border-blue-400">
-      <div
-        className="tradingview-widget-container"
-        ref={feedRef}
-        style={{ height: "100%", width: "100%" }}
-      />
-    </div>
-  );
+    const [articles, setArticles] = React.useState<any[]>([]);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        const fetchNews = async () => {
+            setLoading(true);
+            try {
+                const res = await await fetch("/api/crypto-news/coinDetailNews?coin=LUNC&page=1&items=20");
+
+                if (!res.ok) throw new Error("Failed to fetch LUNC news");
+                const data = await res.json();
+                setArticles(data.articles || []);
+            } catch (err: any) {
+                setError(err.message || "Error fetching news");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchNews();
+    }, []);
+
+    return (
+        <div className="bg-gray-950/80 border border-gray-800/60 rounded-2xl p-6 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-xl flex items-center justify-center border border-blue-500/20">
+                    <Newspaper className="w-5 h-5 text-blue-400" />
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold text-white">News Feed</h3>
+                    <p className="text-sm text-gray-400">Latest LUNC updates</p>
+                </div>
+            </div>
+            <div className="bg-black/50 border border-gray-800/40 rounded-xl overflow-y-auto" style={{ height: "500px" }}>
+                {loading && <div className="text-gray-400 p-6">Loading news...</div>}
+                {error && <div className="text-red-400 p-6">{error}</div>}
+                {!loading && !error && articles.length === 0 && (
+                    <div className="text-gray-400 p-6">No news found.</div>
+                )}
+                <ul className="divide-y divide-gray-800">
+                    {articles.map((article, idx) => (
+                        <li key={idx} className="flex gap-4 p-4 hover:bg-gray-800/40 transition-all">
+                            {article.image_url && (
+                                <img
+                                    src={article.image_url}
+                                    alt={article.title}
+                                    className="w-20 h-20 object-cover rounded-lg border border-gray-700"
+                                />
+                            )}
+                            <div className="flex-1">
+                                <a
+                                    href={article.news_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-lg font-semibold text-blue-300 hover:underline"
+                                >
+                                    {article.title}
+                                </a>
+                                <div className="text-gray-400 text-sm mt-1 mb-2">
+                                    {article.source_name} &middot; {new Date(article.date).toLocaleString()}
+                                </div>
+                                <div className="text-gray-300 text-sm line-clamp-3">
+                                    {article.text}
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
 };
 
-// ✅ Crypto Calendar (Converter)
-const CryptoCalendar = () => {
-  const calendarRef = useRef<HTMLDivElement>(null);
+const TechnicalAnalysis = () => {
+  const analysisRef = useRef(null);
+
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://www.cryptohopper.com/widgets/js/script";
+    script.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js";
     script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
+    script.innerHTML = JSON.stringify({
+      interval: "1m",
+      width: "100%",
+      isTransparent: true,
+      height: 400,
+      symbol: "CRYPTO:LUNCUSD",
+      showIntervalTabs: true,
+      locale: "en",
+      colorTheme: "dark",
+    });
+
+    if (analysisRef.current) {
+      analysisRef.current.innerHTML = "";
+      analysisRef.current.appendChild(script);
+    }
   }, []);
+
   return (
-    <div
-      className="rounded shadow p-2 border border-blue-500"
-      ref={calendarRef}
-      style={{ backgroundColor: "#f0f8ff", color: "#003366" }}
-    >
-      <div
-        className="cryptohopper-web-widget"
-        data-id="6"
-        data-text_color="#003366"
-        data-background_color="#f0f8ff"
-        data-coins="terra-luna"
-        data-numcoins="1000"
-      />
-    </div>
+      <div className="bg-gray-950/80 border border-gray-800/60 rounded-2xl p-6 shadow-2xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-yellow-500/30 to-amber-500/30 rounded-xl flex items-center justify-center border border-yellow-500/20">
+            <TrendingUp className="w-5 h-5 text-yellow-400" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-white">Technical Analysis</h3>
+            <p className="text-sm text-gray-400">Market indicators</p>
+          </div>
+        </div>
+        <div
+            className="bg-black/50 border border-gray-800/40 rounded-xl overflow-hidden"
+            ref={analysisRef}
+            style={{ height: "400px" }}
+        >
+          <div className="tradingview-widget-container__widget" />
+        </div>
+      </div>
   );
 };
 
-// ✅ Full Dashboard
-const LuncDashboard = () => {
+export default function Page() {
   return (
-    <div className="p-4 space-y-4 bg-[#00000077] text-white min-h-screen">
-      <LuncHeader />
+      <div className="min-h-screen bg-black">
+        <section className="container mx-auto mt-32 px-0">
+          <div className="flex justify-center items-center">
+            <div className="w-full max-w-7xl mx-auto px-6">
+              <div className="bg-gray-950/60 backdrop-blur-sm border border-gray-800/70 rounded-3xl p-8 shadow-2xl">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <SymbolInfo />
-        <PriceGraph />
+                {/* Header */}
+                <LuncHeader />
+
+                {/* Main Grid Layout */}
+                <div className="space-y-8">
+
+                  {/* Top Row - Symbol Info & Technical Analysis */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <SymbolInfo />
+                    <TechnicalAnalysis />
+                  </div>
+
+                  {/* Price Chart - Full Width */}
+                  <PriceGraph />
+
+                  {/* News Feed - Full Width */}
+                  <ArticleFeed />
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-
-      <AdBannerF />
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-1 flex flex-col space-y-4">
-          <CryptoCalendar />
-        </div>
-        <div className="md:col-span-2">
-          <ArticleFeed />
-        </div>
-      </div>
-    </div>
   );
-};
-
-export default LuncDashboard;
+}

@@ -10,9 +10,8 @@
 // import React, { useEffect, useRef } from "react";
 // import HomeNewsCard from "./HomeNewsCard";
 // import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-// import { setPaths } from "@/redux/features/slices/authSlice"; 
+// import { setPaths } from "@/redux/features/slices/authSlice";
 // import { usePathname } from "next/navigation";
-
 
 // const AdBanner = ({ adClass }: { adClass: string }) => {
 //   const adContainerRef = useRef<HTMLDivElement>(null);
@@ -71,16 +70,12 @@
 //   );
 // };
 
-
-
-
 // export default function NewsCompo() {
 //   const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
 //   const previousPath = useAppSelector((state) => state.auth.previousPath);
 //   const currentPath = useAppSelector((state) => state.auth.currentPath);
 //   const dispatch = useAppDispatch();
 //   const pathName = usePathname();
-
 
 //   if(window){
 //     if (previousPath !== "/" && currentPath === "/"){
@@ -96,22 +91,20 @@
 
 //   const allBlogs: Article[] = allBlogsData?.data || [];
 
-
-  // const adClasses = [
-  //   "67b00b6de904d5920e690b84",
-  //   "67b3b8a41b3a7f15c72fcc94",
-  //   "67b3b9181b3a7f15c72fce5d",
-  //   "67b3b9469a62fcbf1eeb65df",
-  //   "67b3c7949a62fcbf1eeb83a6",
-  //   "67b3c7d89a62fcbf1eeb842e",
-  // ];
-
+// const adClasses = [
+//   "67b00b6de904d5920e690b84",
+//   "67b3b8a41b3a7f15c72fcc94",
+//   "67b3b9181b3a7f15c72fce5d",
+//   "67b3b9469a62fcbf1eeb65df",
+//   "67b3c7949a62fcbf1eeb83a6",
+//   "67b3c7d89a62fcbf1eeb842e",
+// ];
 
 //   return (
 //     <div>
 //       <div className="container mx-auto mt-10">
 //         <h2 className="text-2xl text-center mb-6 font-bold text-cyan-600">Trobits Articles</h2>
-        
+
 //         <div className="flex flex-wrap justify-center gap-2 max-w- mx-auto">
 //           {allBlogs.slice(0,4).map((article, index) => (
 //             <div key={article.id} className={"flex flex-wrap justify-center items-center"}>
@@ -142,19 +135,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -176,7 +156,9 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     if (!adContainerRef.current) return;
 
     // Remove existing ad script if any
-    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+    const existingScript = document.querySelector(
+      `script[data-ad-class="${adClass}"]`
+    );
     if (existingScript) {
       existingScript.remove();
     }
@@ -213,7 +195,7 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [ adClass ]);
+  }, [adClass]);
 
   return (
     <div ref={adContainerRef}>
@@ -226,7 +208,8 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
 };
 
 export default function NewsCompo() {
-  const { data: allBlogsData, isLoading: allBlogsDataLoading } = useGetAllBlogsQuery([]);
+  const { data: allBlogsData, isLoading: allBlogsDataLoading } =
+    useGetAllBlogsQuery([]);
   const previousPath = useAppSelector((state) => state.auth.previousPath);
   const currentPath = useAppSelector((state) => state.auth.currentPath);
   const dispatch = useAppDispatch();
@@ -237,7 +220,7 @@ export default function NewsCompo() {
       dispatch(setPaths(pathName));
       window.location.reload();
     }
-  }, [ currentPath, dispatch, pathName, previousPath ]);
+  }, [currentPath, dispatch, pathName, previousPath]);
 
   // Handle loading state
   if (allBlogsDataLoading) {
@@ -255,27 +238,39 @@ export default function NewsCompo() {
     "67b3c7d89a62fcbf1eeb842e",
   ];
 
-
   let adIndex = 0; // Tracks which ad to use
 
   return (
     <div>
-      <div className="container mx-auto mt-10">
-        <h2 className="text-2xl text-center mb-6 font-bold text-cyan-600">Trobits Articles</h2>
+      <div className="min-h-screen px-20 relative pt-6">
+        <div className="pt-8">
+          <h2 className="pt-8 text-2xl text-center mb-6 font-bold text-cyan-600">
+            Trobits Articles
+          </h2>
+        </div>
 
         <div className="flex flex-wrap justify-center gap-2 mx-auto">
           {allBlogs.slice(0, 4).map((article) => (
-            <div key={article.id} className="flex flex-wrap justify-center items-center">
+            <div
+              key={article.id}
+              className="flex flex-wrap justify-center items-center"
+            >
               <HomeNewsCard articleData={article} />
             </div>
           ))}
 
           {allBlogs.slice(4).map((article, index) => (
-            <div key={article.id} className="flex flex-wrap justify-center items-center">
+            <div
+              key={article.id}
+              className="flex flex-wrap justify-center items-center"
+            >
               <HomeNewsCard articleData={article} />
               {/* Show an ad after every 2 articles */}
               {(index + 1) % 3 === 0 && adIndex < adClasses.length && (
-                <AdBanner key={adClasses[ adIndex ]} adClass={adClasses[ adIndex++ ]} />
+                <AdBanner
+                  key={adClasses[adIndex]}
+                  adClass={adClasses[adIndex++]}
+                />
               )}
             </div>
           ))}

@@ -1,299 +1,439 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Typography,
-  Grid,
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  TextField,
-} from "@mui/material";
-import { format, parseISO } from "date-fns";
-import { DatePicker } from "@mui/x-date-pickers";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import {
-  useGetAllArchiveQuery,
-  useGetAllShibaBurnsQuery,
-} from "@/redux/features/api/archiveApi";
-import Loading from "@/components/Shared/Loading";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { setPaths } from "@/redux/features/slices/authSlice";
-import { usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Footer from "@/app/shared/Footer/Footer";
+import React, {useState, useEffect, useRef} from "react";
+import {Flame, Calendar, Hash, ExternalLink, TrendingDown} from "lucide-react";
 
 interface ShibaBurnRecord {
-  id: string;
-  currency: string;
-  date: string; // ISO date string
-  transactionRef: string;
-  burnCount: number;
-  shibaBurnArchiveId?: string; // Optional field if not always present
+    id: string;
+    currency: string;
+    date: string;
+    transactionRef: string;
+    burnCount: number;
+    shibaBurnArchiveId?: string;
 }
 
 const adClasses = [
-  "67d2cfc79eb53572455e13e3",
-  "67d2d0779eb53572455e1516",
-  "67d2d0c56f9479aa015d006a",
+    "67d2cfc79eb53572455e13e3",
+    "67d2d0779eb53572455e1516",
+    "67d2d0c56f9479aa015d006a",
 ];
 
 const ShibaBurnsPage: React.FC = () => {
-  const [ records, setRecords ] = useState<ShibaBurnRecord[]>([]);
-  const [ selectedMonth, setSelectedMonth ] = useState<Date>(new Date());
-  const dispatch = useAppDispatch();
-  const previousPath = useAppSelector((state) => state.auth.previousPath);
-  const currentPath = useAppSelector((state) => state.auth.currentPath);
-  const pathName = usePathname();
+    const [records, setRecords] = useState<ShibaBurnRecord[]>([]);
+    const [allRecords, setAllRecords] = useState<ShibaBurnRecord[]>([]);
+    const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
+    const [loading, setLoading] = useState(true);
 
-  const formatSelectedMonth = (date: Date) => {
-    const month = date.getMonth() + 1; // Months are 0-indexed
-    const year = date.getFullYear();
-    return { month, year };
-  };
-  const { month, year } = formatSelectedMonth(selectedMonth);
+    // Date formatting functions
+    const formatDate = (date: Date, formatType: string = "full") => {
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-  const { data: allArchiveData, isLoading: allArchiveDataLoading } =
-    useGetAllArchiveQuery("");
+        if (formatType === "full") {
+            return `${months[date.getMonth()]} ${date.getDate().toString().padStart(2, '0')}, ${date.getFullYear()}`;
+        } else if (formatType === "month-year") {
+            return `${fullMonths[date.getMonth()]} ${date.getFullYear()}`;
+        }
+        return date.toLocaleDateString();
+    };
 
-  const { data: allShibaBurnsData, isLoading: allShibaBurnsDataLoading } =
-    useGetAllShibaBurnsQuery(`?month=${month}&year=${year}`);
+    const parseISOString = (dateStr: string) => {
+        return new Date(dateStr);
+    };
 
-  const allArchive =
-    allArchiveData?.data?.length > 0 ? allArchiveData?.data : [];
+    const fetchShibBurnData = async () => {
+        // Google Sheets API configuration
+        const apiKey = "AIzaSyC_pYUok9r2PD5PmIYyWV4ZCvHy8y_Iug0";
+        const sheetId = "10V4FpmrdcoQBCv-TXABSiNgqXx3dSj63qKqw06-3nFY";
+        const range = "A:Z";
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
-  useEffect(() => {
-    if (allShibaBurnsData?.data?.length > 0) {
-      setRecords(allShibaBurnsData.data);
-    }
-  }, [ allShibaBurnsData ]);
+        try {
+            setLoading(true);
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
 
-  if (window) {
-    if (previousPath !== "/archive/shiba" && currentPath === "/archive/shiba") {
-      dispatch(setPaths(pathName));
-      window.location.reload();
-    }
-  }
-  
-  if (allArchiveDataLoading || allShibaBurnsDataLoading) {
-    return <Loading />;
-  }
+            if (!data.values || data.values.length < 2) {
+                console.error("No data found in sheet");
+                return;
+            }
 
-  const sortedRecords = [ ...records ].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+            const headers = data.values[0];
+            const rows = data.values.slice(1).filter((row: string[]) => row.length > 1);
 
-  return (
-    <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
-      {/* Ad Banners at the top */}
-      <div className="flex flex-wrap justify-center gap-2 mb-3">
-        {adClasses.map((adClass) => (
-          <div key={adClass} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-            <AdBanner adClass={adClass} />
-          </div>
-        ))}
-      </div>
+            // Based on your other components, let's use known column positions
+            const finalDateIdx = 0; // Column A
+            const finalCurrencyIdx = 1; // Column B
+            const finalTransactionIdx = 2; // Column C
+            const finalBurnCountIdx = 3; // Column D (SHIB burns)
 
-      <Grid
-        container
-        spacing={3}
-        justifyContent="center"
-        alignItems="center"
-        direction="column"
-      >
-        <Grid item xs={12}>
-          <Typography
-            className="text-4xl font-bold text-center mb-2 text-cyan-600"
-            variant="h5"
-            sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
-          >
-            SHIB Burn Data
-          </Typography>
-          <Typography
-            className="text-xl font-bold text-center mb-2 text-cyan-600"
-            sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
-          >
-            Pick your Month to see Burn Data on This Month
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-            <MonthPicker
-              selectedMonth={selectedMonth}
-              onChange={(newValue: Date | null) => {
-                if (newValue) {
-                  setSelectedMonth(newValue);
+            const parsedRecords: ShibaBurnRecord[] = rows.map((row: string[], index: number) => {
+                // Parse date - handle various date formats
+                const dateValue = row[finalDateIdx] || "";
+                let formattedDate: string;
+
+                try {
+                    // Create a more robust date parser
+                    if (dateValue) {
+                        // Handle DD MMM YY format (like "01 Jan 25")
+                        if (dateValue.includes(' ')) {
+                            formattedDate = new Date(dateValue).toISOString();
+                        } else if (dateValue.includes('-')) {
+                            formattedDate = new Date(dateValue).toISOString();
+                        } else if (dateValue.includes('/')) {
+                            formattedDate = new Date(dateValue).toISOString();
+                        } else {
+                            // Try direct parsing
+                            formattedDate = new Date(dateValue).toISOString();
+                        }
+                    } else {
+                        formattedDate = new Date().toISOString();
+                    }
+                } catch {
+                    // Fallback to current date if parsing fails
+                    formattedDate = new Date().toISOString();
                 }
-              }}
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <TableContainer
-            component={Paper}
-            sx={{
-              backgroundColor: "#f8f9fa",
-              borderRadius: "8px",
-              width: "100vw",
-            }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      color: "black",
-                      textAlign: "center",
-                    }}
-                  >
-                    Date
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      color: "black",
-                      textAlign: "center",
-                    }}
-                  >
-                    Burn Count
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      color: "black",
-                      textAlign: "center",
-                    }}
-                  >
-                    Transaction Ref
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {allShibaBurnsData?.data?.length > 0 ? (
-                  sortedRecords.map((record, index) => (
-                    <TableRow
-                      key={record.id}
-                      sx={{
-                        backgroundColor:
-                          index % 2 === 0 ? "#f7f7f7" : "#eaeaea",
-                        cursor: "pointer",
-                        "&:hover": { backgroundColor: "#d1d1d1" },
-                      }}
-                    >
-                      <TableCell
-                        style={{
-                          fontSize: "16px",
-                          color: "black",
-                          fontWeight: "600",
-                          textAlign: "center",
-                        }}
-                      >
-                        {format(parseISO(record.date), "MMMM dd, yyyy")}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          fontSize: "16px",
-                          color: "black",
-                          fontWeight: "600",
-                          textAlign: "center",
-                        }}
-                      >
-                        {record.burnCount.toLocaleString()}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          fontSize: "16px",
-                          color: "black",
-                          fontWeight: "600",
-                          textAlign: "center",
-                        }}
-                      >
-                        {record.transactionRef}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={3}
-                      style={{
-                        textAlign: "center",
-                        fontSize: "16px",
-                        color: "black",
-                        fontWeight: "600",
-                      }}
-                    >
-                      No Data Found
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
-      <Footer/>
-    </div>
-  );
+
+                const currency = row[finalCurrencyIdx] || "SHIB";
+                const transactionRef = row[finalTransactionIdx] || `tx_${index}`;
+                const burnCountStr = row[finalBurnCountIdx] || "0";
+                const burnCount = parseInt(burnCountStr.toString().replace(/,/g, "").replace(/[^0-9]/g, "")) || 0;
+
+                return {
+                    id: `record_${index}`,
+                    currency,
+                    date: formattedDate,
+                    transactionRef,
+                    burnCount,
+                    shibaBurnArchiveId: `archive_${index}`
+                };
+            }).filter(record => record.burnCount > 0);
+
+            setAllRecords(parsedRecords);
+
+            // Find the most recent month with data and set it as default
+            if (parsedRecords.length > 0) {
+                const sortedByDate = [...parsedRecords].sort(
+                    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+                );
+                const mostRecentDate = new Date(sortedByDate[0].date);
+                setSelectedMonth(mostRecentDate);
+                filterRecordsByMonth(parsedRecords, mostRecentDate);
+            } else {
+                filterRecordsByMonth(parsedRecords, selectedMonth);
+            }
+
+        } catch (error) {
+            console.error("Failed to fetch SHIB burn data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filterRecordsByMonth = (allRecords: ShibaBurnRecord[], targetMonth: Date) => {
+        const targetYear = targetMonth.getFullYear();
+        const targetMonthNum = targetMonth.getMonth();
+
+        const filteredRecords = allRecords.filter(record => {
+            const recordDate = new Date(record.date);
+            return recordDate.getFullYear() === targetYear &&
+                recordDate.getMonth() === targetMonthNum;
+        });
+
+        setRecords(filteredRecords);
+    };
+
+    useEffect(() => {
+        fetchShibBurnData();
+    }, []);
+
+    useEffect(() => {
+        if (allRecords.length > 0) {
+            filterRecordsByMonth(allRecords, selectedMonth);
+        }
+    }, [selectedMonth, allRecords]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <div className="text-center">
+                    <div
+                        className="w-12 h-12 border-4 border-gray-600 border-t-orange-400 rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="text-gray-400 text-lg">Loading SHIB burn data...</div>
+                </div>
+            </div>
+        );
+    }
+
+    const sortedRecords = [...records].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    // Calculate total burns for the month
+    const totalBurns = sortedRecords.reduce((sum, record) => sum + record.burnCount, 0);
+
+    return (
+        <div className="min-h-screen bg-black text-white">
+            {/* Ad Banner */}
+            {/*<div className="w-full py-4">*/}
+            {/*    <div className="flex flex-wrap justify-center gap-2 mx-auto">*/}
+            {/*        {adClasses.map((adClass) => (*/}
+            {/*            <AdBanner key={adClass} adClass={adClass}/>*/}
+            {/*        ))}*/}
+            {/*    </div>*/}
+            {/*</div>*/}
+
+            <div className="container mt-10 mx-auto px-6 py-16">
+                {/* Header Section */}
+                <div className="text-center mb-16">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                        <Flame className="w-5 h-5 text-orange-400"/>
+                        <span className="text-sm font-medium text-gray-400 uppercase tracking-wider">
+              Burn Archive
+            </span>
+                    </div>
+
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                        SHIB Burn Data
+                    </h1>
+
+                    <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                        Track Shiba Inu token burns with detailed transaction records and historical data
+                    </p>
+                </div>
+
+                {/* Stats Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div
+                        className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+                        <div className="flex items-center justify-center mb-3">
+                            <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center">
+                                <Flame className="w-6 h-6 text-orange-400"/>
+                            </div>
+                        </div>
+                        <h3 className="text-lg font-semibold text-white mb-1">Total Burns</h3>
+                        <p className="text-2xl font-bold text-orange-400">
+                            {totalBurns.toLocaleString()}
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">This month</p>
+                    </div>
+
+                    <div
+                        className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+                        <div className="flex items-center justify-center mb-3">
+                            <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
+                                <Hash className="w-6 h-6 text-blue-400"/>
+                            </div>
+                        </div>
+                        <h3 className="text-lg font-semibold text-white mb-1">Transactions</h3>
+                        <p className="text-2xl font-bold text-blue-400">
+                            {sortedRecords.length}
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">Burn events</p>
+                    </div>
+
+                    <div
+                        className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
+                        <div className="flex items-center justify-center mb-3">
+                            <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                                <TrendingDown className="w-6 h-6 text-green-400"/>
+                            </div>
+                        </div>
+                        <h3 className="text-lg font-semibold text-white mb-1">Avg. Burn</h3>
+                        <p className="text-2xl font-bold text-green-400">
+                            {sortedRecords.length > 0 ? Math.floor(totalBurns / sortedRecords.length).toLocaleString() : "0"}
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">Per transaction</p>
+                    </div>
+                </div>
+
+                <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 mb-8">
+                    <div className="flex items-center justify-center gap-4">
+                        <Calendar className="w-5 h-5 text-gray-400"/>
+                        <span className="text-lg font-medium text-white">Select Month:</span>
+                        <MonthPicker
+                            selectedMonth={selectedMonth}
+                            onChange={(newValue: Date | null) => {
+                                if (newValue) {
+                                    setSelectedMonth(newValue);
+                                }
+                            }}
+                        />
+                    </div>
+                </div>
+
+                {/* Data Table */}
+                <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden">
+                    <div className="p-6 border-b border-gray-800/50">
+                        <h3 className="text-xl font-bold text-white">Burn Records</h3>
+                        <p className="text-gray-400 text-sm mt-1">
+                            {formatDate(selectedMonth, "month-year")} burn transactions
+                        </p>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                            <tr className="border-b border-gray-800/50">
+                                <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                                    Date
+                                </th>
+                                <th className=" p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                                    Burn Count
+                                </th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {sortedRecords.length > 0 ? (
+                                sortedRecords.map((record, index) => (
+                                    <tr
+                                        key={record.id}
+                                        className={`
+                        border-b border-gray-800/30 hover:bg-gray-800/30 transition-colors duration-200
+                        ${index % 2 === 0 ? 'bg-gray-800/10' : ''}
+                      `}
+                                    >
+                                        <td className="p-6">
+                                            <div className="flex items-center gap-3">
+                                                <div
+                                                    className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                                                    <Calendar className="w-4 h-4 text-blue-400"/>
+                                                </div>
+                                                <span className="text-white font-medium">
+                                                    {formatDate(parseISOString(record.date))}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="p-6 text-center ">
+                                            <div className="flex items-center justify-center gap-2">
+                                              <span className="text-xl font-bold text-orange-400">
+                                                {record.burnCount.toLocaleString()}
+                                              </span>
+                                                <Flame className="w-4 h-4 text-orange-400"/>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={3} className="p-12 text-center">
+                                        <div className="space-y-4">
+                                            <Flame className="w-12 h-12 text-gray-600 mx-auto"/>
+                                            <div>
+                                                <h3 className="text-lg font-medium text-gray-400 mb-1">No burn data
+                                                    found</h3>
+                                                <p className="text-gray-500 text-sm">
+                                                    No burn transactions recorded
+                                                    for {formatDate(selectedMonth, "month-year")}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
-// Month Picker Component
-const MonthPicker = ({ selectedMonth, onChange }: any) => {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        views={[ "year", "month" ]}
-        value={selectedMonth}
-        onChange={onChange}
-        openTo="month"
-        slots={{ textField: TextField }}
-        slotProps={{
-          textField: {
-            variant: "outlined",
-            label: "Select Month",
-            fullWidth: false,
-            margin: "normal",
-            size: "medium",
-            sx: {
-              backgroundColor: "#f7f7f7",
-              borderRadius: "8px",
-              fontSize: "20px",
-            },
-          },
-        }}
-      />
-    </LocalizationProvider>
-  );
+// Simple Month Picker Component (without external dependencies)
+const MonthPicker = ({selectedMonth, onChange}: any) => {
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+
+    // Get available months with data from allRecords (we'll need to pass this as prop or get from context)
+    // For now, we'll calculate based on years from data
+    const years = Array.from({length: 5}, (_, i) => currentYear - 2 + i);
+
+    const isMonthDisabled = (monthIndex: number, year: number) => {
+        // Disable future months
+        if (year > currentYear) return true;
+        if (year === currentYear && monthIndex > currentMonth) return true;
+        return false;
+    };
+
+    const handleMonthChange = (monthIndex: number) => {
+        const newDate = new Date(selectedMonth);
+        newDate.setMonth(monthIndex);
+        onChange(newDate);
+    };
+
+    const handleYearChange = (year: number) => {
+        const newDate = new Date(selectedMonth);
+        newDate.setFullYear(year);
+        // If the selected month is disabled for this year, select the most recent valid month
+        if (isMonthDisabled(newDate.getMonth(), year)) {
+            if (year === currentYear) {
+                newDate.setMonth(currentMonth);
+            } else {
+                newDate.setMonth(11); // December for past years
+            }
+        }
+        onChange(newDate);
+    };
+
+    return (
+        <div className="flex gap-3">
+            <select
+                value={selectedMonth.getMonth()}
+                onChange={(e) => handleMonthChange(parseInt(e.target.value))}
+                className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+                {months.map((month, index) => (
+                    <option
+                        key={month}
+                        value={index}
+                        className="bg-gray-800"
+                        disabled={isMonthDisabled(index, selectedMonth.getFullYear())}
+                    >
+                        {month}
+                    </option>
+                ))}
+            </select>
+
+            <select
+                value={selectedMonth.getFullYear()}
+                onChange={(e) => handleYearChange(parseInt(e.target.value))}
+                className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+                {years.map((year) => (
+                    <option key={year} value={year} className="bg-gray-800">
+                        {year}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
 };
 
 // Ad Banner Component
-const AdBanner = ({ adClass }: { adClass: string }) => {
-  const adContainerRef = useRef<HTMLDivElement>(null);
+const AdBanner = ({adClass}: { adClass: string }) => {
+    const adContainerRef = useRef<HTMLDivElement>(null);
 
-  const injectAdScript = () => {
-    if (!adContainerRef.current) return;
+    const injectAdScript = () => {
+        if (!adContainerRef.current) return;
 
-    // Remove existing ad script if any
-    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
-    if (existingScript) {
-      existingScript.remove();
-    }
+        const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+        if (existingScript) {
+            existingScript.remove();
+        }
 
-    // Create and inject new ad script
-    const script = document.createElement("script");
-    script.innerHTML = `
+        const script = document.createElement("script");
+        script.innerHTML = `
       !function(e,n,c,t,o,r,d){
         !function e(n,c,t,o,r,m,d,s,a){
           s=c.getElementsByTagName(t)[0],
@@ -304,35 +444,31 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
       }();
     `;
-    script.setAttribute("data-ad-class", adClass);
-    document.body.appendChild(script);
-  };
-
-  useEffect(() => {
-    console.log(`Injecting ad: ${adClass}`);
-    injectAdScript(); // Inject on mount
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        injectAdScript(); // Re-inject ads on page activation
-      }
+        script.setAttribute("data-ad-class", adClass);
+        document.body.appendChild(script);
     };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    useEffect(() => {
+        injectAdScript();
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "visible") {
+                injectAdScript();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [adClass]);
 
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [ adClass ]);
-
-  return (
-    <div ref={adContainerRef} className="w-full h-auto">
-      <ins
-        className={adClass}
-        style={{ display: "block", width: "100%", height: "auto" }}
-      ></ins>
-    </div>
-  );
+    return (
+        <div ref={adContainerRef} className="w-full flex justify-center">
+            <ins
+                className={adClass}
+                style={{display: "inline-block", width: "1px", height: "1px"}}
+            ></ins>
+        </div>
+    );
 };
 
 export default ShibaBurnsPage;

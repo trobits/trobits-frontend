@@ -3,14 +3,16 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Roboto', Arial, Helvetica, sans-serif; 
-  background-image: url('../assets/background4.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  /*background: linear-gradient(to bottom right, #111827, #1f2937, #000000);*/
+  background: black;
   position: relative; /* Required for the overlay positioning */
   z-index: 0; /* Ensure body is behind the overlay */
+  overflow-x: hidden;
+}
+
+html.theme-dark .tv-ticker-item-last__last{
+  color: purple !important;
 }
 
 body::before {
@@ -68,7 +70,12 @@ body::before {
 }
 
 .animated-card {
-  animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1); /* Modify the timing function for a quick start and slow end */
+  animation-timing-function: cubic-bezier(
+    0.5,
+    0,
+    0.5,
+    1
+  ); /* Modify the timing function for a quick start and slow end */
 }
 
 .fade-in {
@@ -98,9 +105,6 @@ body::before {
     opacity: 1;
   }
 }
-
-
-
 
 @keyframes slideInRight {
   from {
@@ -116,7 +120,6 @@ body::before {
 .slide-in {
   animation: slideInRight 0.3s ease-in-out;
 }
-
 
 @keyframes slideInRight {
   from {
@@ -193,6 +196,14 @@ body::before {
     --chart-5: 340 75% 55%;
   }
 }
+/* styles/globals.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 @layer base {
   * {
@@ -201,4 +212,33 @@ body::before {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.js-symbol-last, .apply-overflow-tooltip, .tv-ticker-item-last__last {
+  font-size: 20px !important;
+}
+
+/* For modern browsers (WebKit-based: Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+
+/* Optional: On hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #282828	;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #282828	 transparent;
 }
