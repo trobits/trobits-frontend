@@ -5,7 +5,7 @@ import RecommendedArticles from "@/components/NewsPart/RecommendedAritcles";
 function ArticlePage({ params: { id } }: { params: { id: string } }) {
   return (
     <div>
-      <ArticleDetailsPage articleId={id} />
+      <ArticleDetailsPage articleId={decodeURIComponent(id)} />
       <RecommendedArticles />
     </div>
   );

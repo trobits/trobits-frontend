@@ -1,171 +1,68 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-
-
-// "use client";
-
-// import React, { useEffect } from "react";
-
-// export default function CryptoNavbar() {
-//   useEffect(() => {
-//     // Check if the ticker tape script is already added
-//     if (!document.querySelector("#tickerTapeScript")) {
-//       const tickerTapeScript = document.createElement("script");
-//       tickerTapeScript.id = "tickerTapeScript"; // Set an ID to avoid duplicate additions
-//       tickerTapeScript.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
-//       tickerTapeScript.async = true;
-//       tickerTapeScript.innerHTML = JSON.stringify({
-//         symbols: [
-//           { description: "BTC", proName: "BINANCE:BTCUSD" },
-//           { description: "ETH", proName: "BINANCE:ETHUSD" },
-//           { description: "SOL", proName: "BINANCE:SOLUSD" },
-//           { description: "BNB", proName: "BINANCE:BNBUSD" },
-//           { description: "DOGE", proName: "BINANCE:DOGEUSD" },
-//           { description: "XRP", proName: "BINANCE:XRPUSD" },
-//           { description: "ADA", proName: "BINANCE:ADAUSD" },
-//         ],
-//         showSymbolLogo: true,
-//         isTransparent: true,
-//         largeChartUrl: "https://www.trobits.com",
-//         displayMode: "adaptive",
-//         colorTheme: "dark",
-//         locale: "en",
-//       });
-
-//       const tickerTapeContainer = document.querySelector(".tradingview-ticker-tape");
-
-//       if (tickerTapeContainer) {
-//         tickerTapeContainer.appendChild(tickerTapeScript);
-//       }
-//     }
-
-//     // Check if the LUNC script is already added
-//     if (!document.querySelector("#luncScript")) {
-//       const luncScript = document.createElement("script");
-//       luncScript.id = "luncScript"; // Set an ID to avoid duplicate additions
-//       luncScript.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
-//       luncScript.async = true;
-//       luncScript.innerHTML = JSON.stringify({
-//         symbol: "CRYPTO:LUNCUSD",
-//         width: "100%",
-//         isTransparent: true,
-//         colorTheme: "dark",
-//         locale: "en",
-//         largeChartUrl: "https://www.trobits.com/",
-//       });
-
-//       const luncContainer = document.querySelector(".tradingview-lunc");
-
-//       if (luncContainer) {
-//         luncContainer.appendChild(luncScript);
-//       }
-//     }
-
-//   }, []);
-
-//   return (
-//     <nav className="w-full bg-[#00000075] text-white px-10">
-//       <div className="max-w-screen-3xl mx-auto flex items-center">
-//         <div className="tradingview-ticker-tape flex-shrink-0 w-full"></div>
-//       </div>
-//     </nav>
-//   );
-// }
-
-
-
-
-
-
-
-
-
 "use client";
 
 import React, { useEffect, useRef } from "react";
 
 export default function CryptoNavbar() {
-  const tickerInitialized = useRef(false);
-  const luncInitialized = useRef(false);
+  const widgetRef = useRef(null);
+  const widgetLoadedRef = useRef(false);
 
   useEffect(() => {
-    // Define the event handler function
-    const handleClick = (e:any) => {
-      if (e.target.tagName === 'A') {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
+    if (widgetLoadedRef.current) return;
 
-    if (!tickerInitialized.current) {
-      const tickerTapeScript = document.createElement("script");
-      tickerTapeScript.id = "tickerTapeScript";
-      tickerTapeScript.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
-      tickerTapeScript.async = true;
-      tickerTapeScript.innerHTML = JSON.stringify({
-        symbols: [
-          { description: "BTC", proName: "BINANCE:BTCUSD" },
-          { description: "ETH", proName: "BINANCE:ETHUSD" },
-          { description: "SOL", proName: "BINANCE:SOLUSD" },
-          { description: "BNB", proName: "BINANCE:BNBUSD" },
-          { description: "DOGE", proName: "BINANCE:DOGEUSD" },
-          { description: "XRP", proName: "BINANCE:XRPUSD" },
-          { description: "ADA", proName: "BINANCE:ADAUSD" },
-        ],
-        showSymbolLogo: true,
-        isTransparent: true,
-        displayMode: "adaptive",
-        colorTheme: "dark",
-        locale: "en",
-      });
+    const container = widgetRef.current;
+    if (!container) return;
 
-      const tickerTapeContainer = document.querySelector(".tradingview-ticker-tape");
-      if (tickerTapeContainer) {
-        tickerTapeContainer.appendChild(tickerTapeScript);
-        tickerInitialized.current = true;
+    // Clear previous content
+    container.innerHTML = '';
 
-        // Add event listener
-        tickerTapeContainer.addEventListener('click', handleClick, true);
-      }
-    }
+    // Create widget container div
+    const widgetInner = document.createElement("div");
+    widgetInner.className = "tradingview-widget-container__widget";
+    container.appendChild(widgetInner);
 
-    if (!luncInitialized.current) {
-      const luncScript = document.createElement("script");
-      luncScript.id = "luncScript";
-      luncScript.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
-      luncScript.async = true;
-      luncScript.innerHTML = JSON.stringify({
-        symbol: "CRYPTO:LUNCUSD",
-        width: "100%",
-        isTransparent: true,
-        colorTheme: "dark",
-        locale: "en",
-      });
+    // Add copyright
+    const copyright = document.createElement("div");
+    copyright.className = "tradingview-widget-copyright";
+    copyright.innerHTML = `<a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a>`;
+    container.appendChild(copyright);
 
-      const luncContainer = document.querySelector(".tradingview-lunc");
-      if (luncContainer) {
-        luncContainer.appendChild(luncScript);
-        luncInitialized.current = true;
-      }
-    }
+    // Inject the script
+    const script = document.createElement("script");
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      symbols: [
+        { proName: "CRYPTO:BTCUSD", title: "BTC" },
+        { proName: "CRYPTO:ETHUSD", title: "ETH" },
+        { proName: "CRYPTO:XRPUSD", title: "XRP" },
+        { proName: "CRYPTO:BNBUSD", title: "BNB" },
+        { proName: "CRYPTO:SOLUSD", title: "SOL" },
+        { proName: "CRYPTO:SHIBUSD", title: "SHIB" },
+        { proName: "CRYPTO:PEPEUSD", title: "PEPE" },
+        { proName: "CRYPTO:BONKUSD", title: "BONK" },
+        { proName: "CRYPTO:FLOKIUSD", title: "FLOKI" },
+        { proName: "CRYPTO:LUNCUSD", title: "LUNC" },
+      ],
+      colorTheme: "dark",
+      locale: "en",
+      largeChartUrl: "",
+      isTransparent: false,
+      showSymbolLogo: true,
+      displayMode: "adaptive",
+    });
+    widgetInner.appendChild(script);
 
-    // Cleanup function
+    widgetLoadedRef.current = true;
+
     return () => {
-      const tickerTapeContainer = document.querySelector(".tradingview-ticker-tape");
-      if (tickerTapeContainer) {
-        // Remove event listener with the same function reference
-        tickerTapeContainer.removeEventListener('click', handleClick, true);
-      }
-      tickerInitialized.current = false;
-      luncInitialized.current = false;
+      widgetLoadedRef.current = false;
+      container.innerHTML = '';
     };
   }, []);
 
   return (
-    <nav className="w-full bg-[#00000075] text-white px-10">
-      <div className="max-w-screen-3xl mx-auto flex items-center">
-        <div className="tradingview-ticker-tape flex-shrink-0 w-full"></div>
+      <div className="fixed  bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-lg border-b border-gray-800/50">
+        <div className="tradingview-widget-container w-full" ref={widgetRef} />
       </div>
-    </nav>
   );
 }

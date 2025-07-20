@@ -50,8 +50,8 @@ const LeaderBoard = () => {
     }
   }
   return (
-    <div className="flex justify-center min-h-screen bg-[#00000000] fixed mt-5  left-0 w-full h-full">
-      <div className="w-full max-w-[95rem] h-[85vh] p-5 bg-[#00000081] rounded-lg shadow-2xl">
+    <div className="container mx-auto min-h-screen px-[5vw] 3xl:px-[1vw] pt-[16vh] 2xl:pt-[14vh]">
+      <div className="w-full h-[100vh] p-5 bg-[#00000081] rounded-lg shadow-2xl">
         <div className="tradingview-widget-container h-full">
           <div className="tradingview-widget-container__widget w-full h-full rounded-lg overflow-hidden"></div>
           <div className="tradingview-widget-copyright text-center text-white mt-2"></div>

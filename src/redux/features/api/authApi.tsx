@@ -177,6 +177,17 @@ const authApi = baseApi.injectEndpoints({
                 }
             }
         }),
+    markNotificationsAsRead: build.mutation({
+            query: (notificationIds: string[]) => {
+                return {
+                    url: `/user/notifications/mark-as-read`,
+                    method: "PATCH",
+                    body: { notificationIds }
+                }
+            },
+            // Optionally invalidate notifications
+            invalidatesTags: ["user"]
+        })
     })
 })
 
@@ -196,4 +207,6 @@ export const {
     useAllUserQuery,
     useCreateuserMutation,
     useLogoutQuery,
-    useLazyLogoutQuery } = authApi;
+    useLazyLogoutQuery,
+    useMarkNotificationsAsReadMutation
+} = authApi;

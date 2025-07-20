@@ -1,304 +1,28 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// /* eslint-disable @typescript-eslint/no-unused-vars */
-
-// "use client";
-// import {
-//   useGetSingleArticleQuery,
-//   useLikeToggleMutation,
-// } from "@/redux/features/api/articleApi";
-// import Image from "next/image";
-// import Loading from "../Shared/Loading";
-// import DummyImage from "@/assets/dummy-blog.png";
-// import { Article } from "@/app/(withCommonLayout)/articles/page";
-// import { HeartIcon } from "lucide-react";
-// import PostCommentCard from "../Post/PostCommentCard";
-// import { FormEvent, useState } from "react";
-// import { useAppSelector } from "@/redux/hooks";
-// import { IUser } from "../Cryptohub/Types";
-// import toast from "react-hot-toast";
-// import { useCreateCommentMutation } from "@/redux/features/api/postApi";
-// import { Button } from "../ui/button";
-// import Script from "next/script";
-
-
-// export function AdBannerF() {
-//   return (
-//     <>
-//       {/* Top Ad banner */}
-//       <div className="mt-0" style={{ height: "80px", width: "100%", display: "block" }}></div>
-
-//       {/* Ad Banner */}
-//       <ins className="67c250f39302154e82cf6946" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
-
-//       <Script
-//         id="ad-banner-script"
-//         strategy="afterInteractive"
-//         dangerouslySetInnerHTML={{
-//           __html: `
-//             !function(e,n,c,t,o,r,d){
-//               !function e(n,c,t,o,r,m,d,s,a){
-//                 s=c.getElementsByTagName(t)[0],
-//                 (a=c.createElement(t)).async=!0,
-//                 a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-//                 a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-//                 s.parentNode.insertBefore(a,s)
-//               }(window,document,"script","67c250f39302154e82cf6946",["cdn.bmcdn6.com"], 0, new Date().getTime())
-//             }();
-//           `,
-//         }}
-//       />
-//     </>
-//   );
-// }
-
-
-// function ArticleDetailsPage({ articleId }: { articleId: string }) {
-//   const { data: articleData, isLoading: articleLoading } =
-//     useGetSingleArticleQuery(articleId);
-//   const user: IUser | null = useAppSelector((state) => state.auth.user);
-//   const [ toggleLikeMutation, { isLoading: toggleLikeLoading } ] =
-//     useLikeToggleMutation();
-
-//   const article: Article | undefined = articleData?.data;
-
-//   // State for optimistic updates
-//   const [ likeCount, setLikeCount ] = useState(article?.likeCount || 0);
-//   const [ likers, setLikers ] = useState<string[]>(article?.likers || []);
-
-//   const [ newComment, setNewComment ] = useState("");
-//   const [ createComment, { isLoading: createCommentLoading } ] =
-//     useCreateCommentMutation();
-
-//   const handleLikeToggle = async () => {
-//     if (!user) {
-//       toast.error("Please Login first!");
-//       return;
-//     }
-
-//     const userId = user.id;
-//     const isLiked = likers.includes(userId);
-
-//     // Optimistically update the UI
-//     setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
-//     setLikers((prev) =>
-//       isLiked ? prev.filter((id) => id !== userId) : [ ...prev, userId ]
-//     );
-
-//     try {
-//       await toggleLikeMutation({ authorId: userId, id: article?.id });
-//     } catch (error: any) {
-//       // Rollback on failure
-//       toast.error("Failed to update like status.");
-//       setLikeCount(article?.likeCount || 0); // Revert to original count
-//       setLikers(article?.likers || []); // Revert to original likers
-//     }
-//   };
-
-//   const handleCommentSubmit = async (e: FormEvent) => {
-//     e.preventDefault();
-//     if (!user) {
-//       toast.error("Please Login first!");
-//       return;
-//     }
-//     try {
-//       if (newComment.trim()) {
-//         const response = await createComment({
-//           authorId: user.id,
-//           content: newComment.trim(),
-//           articleId: article?.id,
-//         });
-
-//         if (response?.error) {
-//           toast.error("Failed to create a new comment! Try again.");
-//         } else {
-//           toast.success("Comment added successfully.");
-//           setNewComment(""); // Clear the input
-//         }
-//       }
-//     } catch {
-//       toast.error("Something went wrong! Try again.");
-//     }
-//   };
-
-//   if (articleLoading) {
-//     return <Loading />;
-//   }
-
-//   return (
-//     <div className="min-h-screen py-8 px-4 sm:px-8 lg:px-8">
-//       {/* Flex container for the main content and side divs */}
-//       <div className="flex justify-center gap-8">
-//         {/* Left side divs */}
-//         <div className="flex flex-col gap-8">
-//           {/* First left div */}
-//           <div className="w-[250px] h-[250px] bg-red-500 flex items-center justify-center">
-//             <span className="text-white text-lg">Left 1</span>
-//           </div>
-
-
-//           {/* <AdBannerF /> */}
-
-//           {/* Second left div */}
-
-//           <div className="w-[250px] h-[250px] bg-red-500 flex items-center justify-center">
-//             <span className="text-white text-lg">Left 2</span>
-//           </div>
-//         </div>
-
-
-//           {/* <AdBannerF /> */}
-
-//           {/* Main content */}
-//           <article className="max-w-5xl bg-[#ffffffce] border-4 border-cyan-500 text-black tracking-wide leading-9 shadow-lg rounded-lg overflow-hidden">
-//             <div className="w-full flex justify-center">
-//               <div className="relative w-[40rem] h-[20rem] md:h-[25rem] mt-2 max-h-[30rem]">
-//                 <Image
-//                   src={article?.image || DummyImage}
-//                   alt={article?.title || "Article image"}
-//                   className="rounded-md border-4 border-cyan-600 p-1"
-//                   layout="fill"
-//                   objectFit="cover"
-//                   priority
-//                 />
-//               </div>
-//             </div>
-//             <div className="p-6 sm:p-8">
-//               <h1 className="text-3xl sm:text-4xl font-bold text-cyan-600 text-center mb-6">
-//                 {article?.title}
-//               </h1>
-
-//               {/* Article Content */}
-//               <div
-//                 className="prose font-bold leading-9 max-w-none"
-//                 dangerouslySetInnerHTML={{ __html: article?.content || "" }}
-//               />
-
-//               {/* Like Button */}
-//               <div className="flex justify-end mt-4">
-//                 <Button
-//                   disabled={toggleLikeLoading}
-//                   className={`bg-cyan-700 px-8 flex items-center space-x-2 ${toggleLikeLoading ? "scale-110" : ""
-//                     }`}
-//                   onClick={handleLikeToggle}
-//                 >
-//                   <span>Like</span>
-//                   <HeartIcon
-//                     scale={2}
-//                     size={12}
-//                     fill={article?.likers?.includes(user?.id || "") ? "red" : ""}
-//                     className="w-6 h-6 transform transition-transform duration-200"
-//                   />
-//                   <span>{article?.likeCount}</span>
-//                 </Button>
-//               </div>
-
-//               {/* Comment Section */}
-//               <div className="bg-gray-800 rounded-xl p-6 mt-8 text-white">
-//                 <h2 className="text-2xl font-bold mb-4">Comments</h2>
-
-//                 {/* Comment Input Section */}
-//                 <form
-//                   onSubmit={handleCommentSubmit}
-//                   className="flex items-center gap-2 mb-6"
-//                 >
-//                   <input
-//                     type="text"
-//                     placeholder="Leave a comment..."
-//                     value={newComment}
-//                     required
-//                     onChange={(e) => setNewComment(e.target.value)}
-//                     className="flex-1 p-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none"
-//                   />
-//                   <button
-//                     type="submit"
-//                     className="bg-purple-600 px-4 py-2 rounded-lg hover:bg-purple-700 transition"
-//                   >
-//                     {createCommentLoading ? "Sending..." : "Send"}
-//                   </button>
-//                 </form>
-
-//                 {/* Comments List */}
-//                 <div className="space-y-4">
-//                   {article?.comments?.length && article?.comments?.length > 0 ? (
-//                     article?.comments?.map((comment) => (
-//                       <PostCommentCard key={comment?.id} comment={comment} />
-//                     ))
-//                   ) : (
-//                     <p className="text-gray-400">No comments yet.</p>
-//                   )}
-//                 </div>
-//               </div>
-//             </div>
-//           </article>
-
-//           {/* Right side divs */}
-//           <div className="flex flex-col gap-8">
-//             {/* First right div */}
-//             {/* <div className="w-[250px] h-[250px] bg-red-500 flex items-center justify-center">
-//               <span className="text-white text-lg">Right 1</span>
-//             </div> */}
-//             <AdBannerF />
-
-//             {/* Second right div */}
-//             {/* <div className="w-[250px] h-[250px] bg-red-500 flex items-center justify-center">
-//               <span className="text-white text-lg">Right 2</span>
-//             </div> */}
-//             <AdBannerF />
-//           </div>
-//         </div>
-
-//         {/* Hidden div */}
-//         <div
-//           className="_0cbf1c3d417e250a"
-//           data-options="count=1,interval=1,burst=1"
-//           data-placement="7b3b9874f5764c699e7183abeecc123d"
-//           style={{ display: "none" }}
-//         ></div>
-//       </div>
-//   )
-// };
-// export default ArticleDetailsPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client";
-import {
-  useGetSingleArticleQuery,
-  useLikeToggleMutation,
-} from "@/redux/features/api/articleApi";
 import Image from "next/image";
-import Loading from "../Shared/Loading";
 import DummyImage from "@/assets/dummy-blog.png";
-import { Article } from "@/app/(withCommonLayout)/articles/SubPage";
-import { HeartIcon } from "lucide-react";
-import PostCommentCard from "../Post/PostCommentCard";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { useAppSelector } from "@/redux/hooks";
-import { IUser } from "../Cryptohub/Types";
-import toast from "react-hot-toast";
-import { useCreateCommentMutation } from "@/redux/features/api/postApi";
-import { Button } from "../ui/button";
+import { Calendar, ArrowLeft, Share2, ExternalLink, Globe, Clock, TrendingUp } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
+interface CryptoArticle {
+  id: string;
+  title: string;
+  content?: string;
+  text?: string;
+  source_name?: string;
+  sourceName?: string;
+  date: string;
+  createdAt: string;
+  tickers?: string[];
+  news_url?: string;
+  sourceUrl?: string;
+  image_url?: string;
+  image?: string;
+  sentiment?: 'positive' | 'negative' | 'neutral';
+  kind?: string;
+  type: 'crypto_news';
+}
 
 const adClasses = [
   "67d2cfc79eb53572455e13e3",
@@ -307,173 +31,327 @@ const adClasses = [
 ];
 
 function ArticleDetailsPage({ articleId }: { articleId: string }) {
-  const { data: articleData, isLoading: articleLoading } =
-    useGetSingleArticleQuery(articleId);
-  const user: IUser | null = useAppSelector((state) => state.auth.user);
-  const [ toggleLikeMutation, { isLoading: toggleLikeLoading } ] =
-    useLikeToggleMutation();
+  const [article, setArticle] = useState<CryptoArticle | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const article: Article | undefined = articleData?.data;
+  // Fetch article data from our crypto news API
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        setLoading(true);
+        console.log('Fetching crypto news article with ID:', articleId);
 
-  // State for optimistic updates
-  const [ likeCount, setLikeCount ] = useState(article?.likeCount || 0);
-  const [ likers, setLikers ] = useState<string[]>(article?.likers || []);
+        const response = await fetch(`/api/crypto-news/article/${encodeURIComponent(articleId)}`);
+        const data = await response.json();
 
-  const [ newComment, setNewComment ] = useState("");
-  const [ createComment, { isLoading: createCommentLoading } ] =
-    useCreateCommentMutation();
-
-  const handleLikeToggle = async () => {
-    if (!user) {
-      toast.error("Please Login first!");
-      return;
-    }
-
-    const userId = user.id;
-    const isLiked = likers.includes(userId);
-
-    // Optimistically update the UI
-    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
-    setLikers((prev) =>
-      isLiked ? prev.filter((id) => id !== userId) : [ ...prev, userId ]
-    );
-
-    try {
-      await toggleLikeMutation({ authorId: userId, id: article?.id });
-    } catch (error: any) {
-      // Rollback on failure
-      toast.error("Failed to update like status.");
-      setLikeCount(article?.likeCount || 0); // Revert to original count
-      setLikers(article?.likers || []); // Revert to original likers
-    }
-  };
-
-  const handleCommentSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!user) {
-      toast.error("Please Login first!");
-      return;
-    }
-    try {
-      if (newComment.trim()) {
-        const response = await createComment({
-          authorId: user.id,
-          content: newComment.trim(),
-          articleId: article?.id,
-        });
-
-        if (response?.error) {
-          toast.error("Failed to create a new comment! Try again.");
+        if (data.success && data.data) {
+          setArticle(data.data);
+          setError(null);
         } else {
-          toast.success("Comment added successfully.");
-          setNewComment(""); // Clear the input
+          setError(data.error || 'Article not found');
         }
+      } catch (err) {
+        console.error('Error fetching article:', err);
+        setError('Failed to fetch article');
+      } finally {
+        setLoading(false);
       }
+    };
+
+    if (articleId) {
+      fetchArticle();
+    }
+  }, [articleId]);
+
+  // Format date
+  const formatDate = (date: string) => {
+    try {
+      return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
     } catch {
-      toast.error("Something went wrong! Try again.");
+      return 'Unknown date';
     }
   };
 
-  if (articleLoading) {
-    return <Loading />;
+  // Get reading time estimate
+  const getReadingTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const wordCount = content.split(/\s+/).length;
+    return Math.ceil(wordCount / wordsPerMinute);
+  };
+
+  // Handle share
+  const handleShare = async () => {
+    if (navigator.share && article) {
+      try {
+        await navigator.share({
+          title: article.title,
+          text: `Check out this crypto news: ${article.title}`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        // Fallback to clipboard
+        navigator.clipboard.writeText(window.location.href);
+      }
+    } else {
+      // Fallback to clipboard
+      navigator.clipboard.writeText(window.location.href);
+    }
+  };
+
+  // Loading state
+  if (loading) {
+    return (
+        <div className="min-h-screen bg-black text-white flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 border-4 border-gray-700 border-t-white rounded-full animate-spin mx-auto"></div>
+            <p className="text-gray-400">Loading crypto news article...</p>
+          </div>
+        </div>
+    );
   }
 
-  return (
-    <div className="min-h-screen py-8 px-4 sm:px-8 lg:px-8">
-      <div className="flex flex-wrap justify-center gap-2 mx-auto">
-        {adClasses.map((adClass) => (
-        <AdBanner key={adClass} adClass={adClass} />
-      ))}
-      </div>
-      {/* Main content */}
-      <div className="flex justify-center">
-        <article className="max-w-5xl bg-[#ffffffce] border-4 border-cyan-500 text-black tracking-wide leading-9 shadow-lg rounded-lg overflow-hidden">
-          <div className="w-full flex justify-center">
-            <div className="relative w-[40rem] h-[20rem] md:h-[25rem] mt-2 max-h-[30rem]">
-              <Image
-                src={article?.image || DummyImage}
-                alt={article?.title || "Article image"}
-                className="rounded-md border-4 border-cyan-600 p-1"
-                layout="fill"
-                objectFit="cover"
-                priority
-              />
+  // Error state
+  if (error || !article) {
+    return (
+        <div className="min-h-screen bg-black text-white flex items-center justify-center">
+          <div className="text-center space-y-6 max-w-md mx-auto px-6">
+            <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto">
+              <Globe className="w-10 h-10 text-gray-400" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold mb-2">Article Not Found</h1>
+              <p className="text-gray-400 mb-6">
+                {error || "The crypto news article you're looking for doesn't exist or may have been removed."}
+              </p>
+              <Link
+                  href="/articles"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-xl font-medium hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to News
+              </Link>
             </div>
           </div>
-          <div className="p-6 sm:p-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-cyan-600 text-center mb-6">
-              {article?.title}
-            </h1>
+        </div>
+    );
+  }
 
-            {/* Article Content */}
-            <div
-              className="prose font-bold leading-9 max-w-none"
-              dangerouslySetInnerHTML={{ __html: article?.content || "" }}
-            />
+  const articleContent = article.content || article.text || '';
+  const readingTime = getReadingTime(articleContent);
 
-            {/* Like Button */}
-            <div className="flex justify-end mt-4">
-              <Button
-                disabled={toggleLikeLoading}
-                className={`bg-cyan-700 px-8 flex items-center space-x-2 ${toggleLikeLoading ? "scale-110" : ""
-                  }`}
-                onClick={handleLikeToggle}
-              >
-                <span>Like</span>
-                <HeartIcon
-                  scale={2}
-                  size={12}
-                  fill={article?.likers?.includes(user?.id || "") ? "red" : ""}
-                  className="w-6 h-6 transform transition-transform duration-200"
+  return (
+      <div className="min-h-screen bg-black text-white">
+        {/* Ad Banner */}
+        <div className="w-full py-4">
+          <div className="flex flex-wrap justify-center gap-2 mx-auto">
+            {adClasses.map((adClass) => (
+                <AdBanner key={adClass} adClass={adClass} />
+            ))}
+          </div>
+        </div>
+
+        {/* Navigation Header */}
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex items-center justify-between mb-8">
+            <Link
+                href="/articles"
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200 group"
+            >
+              <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1" />
+              <span className="text-sm font-medium">Back to Crypto News</span>
+            </Link>
+
+            <button
+                onClick={handleShare}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-900 border border-gray-800 rounded-xl hover:bg-gray-800 transition-colors duration-200"
+            >
+              <Share2 className="w-4 h-4" />
+              <span className="text-sm font-medium">Share</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="container mx-auto px-6 pb-16">
+          <div className="max-w-4xl mx-auto">
+            <article className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-3xl overflow-hidden">
+
+              {/* Hero Image */}
+              <div className="relative w-full h-96 md:h-[500px] overflow-hidden">
+                <Image
+                    src={article.image || article.image_url || DummyImage}
+                    alt={article.title}
+                    fill
+                    className="object-cover"
+                    priority
                 />
-                <span>{article?.likeCount}</span>
-              </Button>
-            </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-            {/* Comment Section */}
-            <div className="bg-gray-800 rounded-xl p-6 mt-8 text-white">
-              <h2 className="text-2xl font-bold mb-4">Comments</h2>
+                {/* Floating info on image */}
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="flex flex-wrap items-center gap-3">
+                    {/* Source */}
+                    <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2">
+                      <Globe className="w-4 h-4 text-blue-400" />
+                      <span className="text-sm font-medium text-white">
+                      {article.source_name || article.sourceName || 'Crypto News'}
+                    </span>
+                    </div>
 
-              {/* Comment Input Section */}
-              <form
-                onSubmit={handleCommentSubmit}
-                className="flex items-center gap-2 mb-6"
-              >
-                <input
-                  type="text"
-                  placeholder="Leave a comment..."
-                  value={newComment}
-                  required
-                  onChange={(e) => setNewComment(e.target.value)}
-                  className="flex-1 p-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="bg-purple-600 px-4 py-2 rounded-lg hover:bg-purple-700 transition"
-                >
-                  {createCommentLoading ? "Sending..." : "Send"}
-                </button>
-              </form>
+                    {/* Reading time */}
+                    <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2">
+                      <Clock className="w-4 h-4 text-green-400" />
+                      <span className="text-sm font-medium text-white">{readingTime} min read</span>
+                    </div>
 
-              {/* Comments List */}
-              <div className="space-y-4">
-                {article?.comments?.length && article?.comments?.length > 0 ? (
-                  article?.comments?.map((comment) => (
-                    <PostCommentCard key={comment?.id} comment={comment} />
-                  ))
-                ) : (
-                  <p className="text-gray-400">No comments yet.</p>
+                    {/* Sentiment */}
+                    {article.sentiment && article.sentiment !== 'neutral' && (
+                        <div className={`flex items-center gap-2 backdrop-blur-sm rounded-full px-4 py-2 ${
+                            article.sentiment === 'positive'
+                                ? 'bg-green-600/60'
+                                : 'bg-red-600/60'
+                        }`}>
+                          <TrendingUp className="w-4 h-4 text-white" />
+                          <span className="text-sm font-medium text-white">
+                        {article.sentiment.charAt(0).toUpperCase() + article.sentiment.slice(1)}
+                      </span>
+                        </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Article Content */}
+              <div className="p-8 md:p-12">
+
+                {/* Article Meta */}
+                <div className="flex flex-wrap items-center gap-6 mb-8 text-gray-400">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    <span className="text-sm">
+                    {formatDate(article.date)}
+                  </span>
+                  </div>
+
+                  {article.tickers && article.tickers.length > 0 && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">Related:</span>
+                        <div className="flex gap-1">
+                          {article.tickers.slice(0, 5).map((ticker) => (
+                              <span
+                                  key={ticker}
+                                  className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full font-medium"
+                              >
+                          {ticker}
+                        </span>
+                          ))}
+                          {article.tickers.length > 5 && (
+                              <span className="px-2 py-1 bg-gray-600 text-white text-xs rounded-full">
+                          +{article.tickers.length - 5} more
+                        </span>
+                          )}
+                        </div>
+                      </div>
+                  )}
+                </div>
+
+                {/* Title */}
+                <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-8">
+                  {article.title}
+                </h1>
+
+                {/* Article Content */}
+                <div className="prose prose-lg prose-invert max-w-none
+                  prose-headings:text-white prose-headings:font-bold
+                  prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
+                  prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-white prose-em:text-gray-300
+                  prose-ul:text-gray-300 prose-ol:text-gray-300
+                  prose-li:mb-2">
+
+                  {/* Convert plain text content to readable paragraphs */}
+                  {articleContent.split('\n').map((paragraph, index) => {
+                    const trimmedParagraph = paragraph.trim();
+                    if (!trimmedParagraph) return null;
+
+                    return (
+                        <p key={index} className="mb-6 text-gray-300 leading-relaxed text-lg">
+                          {trimmedParagraph}
+                        </p>
+                    );
+                  })}
+                </div>
+
+                {/* Tickers Section */}
+                {article.tickers && article.tickers.length > 0 && (
+                    <div className="mt-12 p-6 bg-gray-800/50 rounded-2xl border border-gray-700/50">
+                      <h3 className="text-lg font-semibold text-white mb-4">Related Cryptocurrencies</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {article.tickers.map((ticker) => (
+                            <span
+                                key={ticker}
+                                className="px-3 py-2 bg-blue-600/20 text-blue-400 rounded-xl font-medium border border-blue-600/30 hover:bg-blue-600/30 transition-colors"
+                            >
+                        {ticker}
+                      </span>
+                        ))}
+                      </div>
+                    </div>
                 )}
+
+                {/* Action Buttons */}
+                <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-800">
+                  <div className="flex items-center gap-4">
+                    {article.news_url && (
+                        <a
+                            href={article.news_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium
+                        transition-all duration-200 hover:bg-blue-700 hover:scale-105"
+                        >
+                          <ExternalLink className="w-5 h-5" />
+                          <span>Read Original Article</span>
+                        </a>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <button
+                        onClick={handleShare}
+                        className="p-3 bg-gray-800 border border-gray-700 rounded-xl hover:bg-gray-700 transition-colors duration-200"
+                        title="Share article"
+                    >
+                      <Share2 className="w-5 h-5 text-gray-400" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            {/* Info Note */}
+            <div className="mt-8 p-6 bg-gray-900/30 border border-gray-800/30 rounded-2xl">
+              <div className="flex items-center justify-center gap-3 text-sm text-gray-400">
+                <Globe className="w-4 h-4" />
+                <span>
+                This article is sourced from <strong className="text-white">
+                {article.source_name || article.sourceName || 'external crypto news providers'}
+                </strong>. Content is provided for informational purposes only.
+              </span>
               </div>
             </div>
           </div>
-        </article>
+        </div>
       </div>
-    </div>
   );
 }
-
-
 
 const AdBanner = ({ adClass }: { adClass: string }) => {
   const adContainerRef = useRef<HTMLDivElement>(null);
@@ -481,13 +359,11 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   const injectAdScript = () => {
     if (!adContainerRef.current) return;
 
-    // Remove existing ad script if any
     const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
     if (existingScript) {
       existingScript.remove();
     }
 
-    // Create and inject new ad script
     const script = document.createElement("script");
     script.innerHTML = `
       !function(e,n,c,t,o,r,d){
@@ -505,29 +381,26 @@ const AdBanner = ({ adClass }: { adClass: string }) => {
   };
 
   useEffect(() => {
-    console.log(`Injecting ad: ${adClass}`);
-    injectAdScript(); // Inject on mount
-
+    injectAdScript();
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        injectAdScript(); // Re-inject ads on page activation
+        injectAdScript();
       }
     };
-
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [ adClass ]);
+  }, [adClass]);
 
   return (
-    <div ref={adContainerRef}>
-      <ins
-        className={adClass}
-        style={{ display: "inline-block", width: "1px", height: "1px" }}
-      ></ins>
-    </div>
+      <div ref={adContainerRef} className="w-full flex justify-center">
+        <ins
+            className={adClass}
+            style={{ display: "inline-block", width: "1px", height: "1px" }}
+        ></ins>
+      </div>
   );
 };
+
 export default ArticleDetailsPage;

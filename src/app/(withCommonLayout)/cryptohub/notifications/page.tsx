@@ -5,6 +5,8 @@ import AuthGuard from "@/components/Auth/AuthGuard";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Settings } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,14 +19,18 @@ import {
   MessageCircle,
   MoreVertical,
   Bell,
+  Clock,
+  User,
+  ArrowUpRight,
+  Eye
 } from "lucide-react";
 import socket from "@/redux/features/api/socketClient";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { IoNotificationsCircle } from "react-icons/io5";
-import { useGetNotificationByUseridQuery } from "@/redux/features/api/authApi";
+import { useGetNotificationByUseridQuery, useMarkNotificationsAsReadMutation } from "@/redux/features/api/authApi";
 import Loading from "@/components/Shared/Loading";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { setPaths } from "@/redux/features/slices/authSlice";
 
 // Define types for notifications
@@ -36,20 +42,25 @@ type Notification = {
   timestamp: string;
   postId?: string;
   category?: string;
+  isSeen: boolean;
 };
 
 export default function NotificationPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [visibleCount, setVisibleCount] = useState(20); // Initially show 20 notifications
+  const [filter, setFilter] = useState<'all' | 'read' | 'unread'>('all');
   const user = useAppSelector((state) => state.auth.user);
-  const { data: allNotificationData, isLoading: allNotificationDataLoading } =
-    useGetNotificationByUseridQuery(user?.id);
+  const { data: allNotificationData, isLoading: allNotificationDataLoading, error: notificationError } =
+      useGetNotificationByUseridQuery(user?.id);
+  const [markNotificationsAsRead, { isLoading: isMarkingRead }] = useMarkNotificationsAsReadMutation();
   const dispatch = useAppDispatch();
-  const previousPath = useAppSelector((state) => state.auth.previousPath);
-  const currentPath = useAppSelector((state) => state.auth.currentPath);
   const pathName = usePathname();
 
-  
+  // Update paths without reload - FIXED!
+  useEffect(() => {
+    dispatch(setPaths(pathName));
+  }, [pathName, dispatch]);
+
   // Handle real-time notifications
   useEffect(() => {
     socket.on("connect", () => {});
@@ -60,220 +71,318 @@ export default function NotificationPage() {
         ...prevNotifications,
       ]);
     });
-    
+
     const userId = user?.id;
     if (userId) {
       socket.emit("joinUserRoom", userId);
     }
-    
+
     return () => {
       socket.off("receiveNotification");
     };
   }, [user?.id]);
-  
+
   useEffect(() => {
     if (allNotificationData?.data?.length) {
       setNotifications(allNotificationData.data);
     }
   }, [allNotificationData]);
 
-  if (window) {
-    if (previousPath !== "/cryptohub/notifications" && currentPath === "/cryptohub/notifications") {
-      dispatch(setPaths(pathName));
-      window.location.reload();
-    }
-  }
-  
   if (allNotificationDataLoading) {
     return <Loading />;
   }
-  
+
+  if (notificationError) {
+    let errorMsg = "";
+    if (typeof notificationError.data === "object" && notificationError.data?.message) {
+      errorMsg = notificationError.data.message;
+    }
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-black">
+          <div className="bg-gray-900/80 text-white p-8 rounded-xl shadow-lg text-center">
+            <h2 className="text-2xl font-bold mb-4">{errorMsg}</h2>
+          </div>
+        </div>
+    );
+  }
+
   const handleShowMore = () => {
     setVisibleCount((prevCount) => prevCount + 20);
   };
-  
-  const visibleNotifications = notifications.slice(0, visibleCount);
-  
+
+  // Filter notifications based on the selected filter
+  const filteredNotifications = notifications.filter((notification) => {
+    if (filter === 'read') return notification.isSeen;
+    if (filter === 'unread') return !notification.isSeen;
+    return true;
+  });
+  const visibleNotifications = filteredNotifications.slice(0, visibleCount);
+
   return (
-    <AuthGuard>
-      <div className="min-h-screen bg-[#0000004f]">
-        <div className="max-w-2xl mx-auto p-4">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <Bell className="h-5 w-5 text-cyan-400" />
-              <h1 className="text-xl font-semibold text-white">
-                Notifications
-              </h1>
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-400 hover:text-cyan-400"
+      <AuthGuard>
+        <div className="min-h-screen bg-black">
+          <div className="max-w-2xl mx-auto p-4">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <Bell className="h-4 w-4 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-white">Notifications</h1>
+                  <p className="text-gray-400 text-sm">Stay updated with your activity</p>
+                </div>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-gray-400 hover:text-white"
+                  >
+                    <MoreVertical className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                    align="end"
+                    className="w-48 bg-gray-900 border-gray-700"
                 >
-                  <MoreVertical className="h-5 w-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-48 bg-[#00000091] border-cyan-400/30"
-              >
-                <DropdownMenuItem className="text-gray-300 focus:text-white focus:bg-cyan-400/10">
-                  Mark all as read
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-gray-300 focus:text-white focus:bg-cyan-400/10">
-                  Notification settings
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          {/* Notifications List */}
-          <div className="space-y-4">
-            {visibleNotifications?.map((notification) => {
-              if (notification?.senderId === user?.id) return;
-              return (
-                <NotificationCard
-                  key={notification.id}
-                  notification={notification}
-                />
-              );
-            })}
-          </div>
-
-          {/* Show More Button */}
-          {visibleCount < notifications.length && (
-            <div className="flex justify-center mt-4">
-              <Button
-                onClick={handleShowMore}
-                variant="outline"
-                className="text-cyan-400 border-cyan-400"
-              >
-                Show More
-              </Button>
+                  
+                  <DropdownMenuItem className="text-gray-300 focus:text-white focus:bg-gray-800">
+                    Notification settings
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-          )}
+            {/* Toggle Buttons for All, Read, Unread */}
+            {/* Filter Toggle Buttons with Gradient Styles */}
+<div className="flex justify-center gap-2 mb-6">
+  <div className="flex bg-gray-800/50 border border-gray-600/30 rounded-2xl p-1">
+    {/* All Notifications - Blue Gradient */}
+    <button
+      onClick={() => setFilter('all')}
+      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+        filter === 'all'
+          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
+          : 'text-gray-400 hover:text-white hover:bg-gray-600/50'
+      }`}
+    >
+      All Notifications
+    </button>
+
+    {/* Read - Green Gradient */}
+    <button
+      onClick={() => setFilter('read')}
+      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+        filter === 'read'
+          ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+          : 'text-gray-400 hover:text-white hover:bg-gray-600/50'
+      }`}
+    >
+      Read
+    </button>
+
+    {/* Unread - Red Gradient */}
+    <button
+      onClick={() => setFilter('unread')}
+      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+        filter === 'unread'
+          ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg'
+          : 'text-gray-400 hover:text-white hover:bg-gray-600/50'
+      }`}
+    >
+      Unread
+    </button>
+  </div>
+</div>
+
+
+            {/* Mark All as Read Button for Unread Filter */}
+            {filter === 'unread' && filteredNotifications.length > 0 && (
+  <div className="flex justify-end mb-4">
+    <button
+      onClick={async () => {
+        const ids = filteredNotifications.map(n => n.id);
+        await markNotificationsAsRead(ids);
+      }}
+      disabled={isMarkingRead}
+      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
+        ${isMarkingRead
+          ? 'bg-gray-600 text-white opacity-50 cursor-not-allowed'
+          : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg hover:brightness-110'}
+      `}
+    >
+      {isMarkingRead ? 'Marking...' : 'Mark All as Read'}
+    </button>
+  </div>
+)}
+
+            {/* Notifications List */}
+            <div className="space-y-3">
+              {visibleNotifications?.map((notification) => {
+                if (notification?.senderId === user?.id) return;
+                return (
+                    <NotificationCard
+                        key={notification.id}
+                        notification={notification}
+                    />
+                );
+              })}
+            </div>
+
+            {/* Show More Button */}
+            {visibleCount < notifications.length && (
+                <div className="flex justify-center mt-6">
+                  <Button
+                      onClick={handleShowMore}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 rounded-full transition-all duration-200 transform hover:scale-105"
+                  >
+                    Show More
+                  </Button>
+                </div>
+            )}
+          </div>
         </div>
-      </div>
-    </AuthGuard>
+      </AuthGuard>
   );
 }
-// Component to render different notification types
-// const NotificationCard = ({ notification }: { notification: Notification }) => {
-//   return (
-//     <Card className="bg-transparent border-cyan-400/30 p-4">
-//       <div className="flex">
-//         <Avatar />
-//         <div className="flex-1 space-y-1">
-//           <div className="flex items-center gap-1">
-//             <h1 className="text-white"><IoNotificationsCircle className="size-10 mr-3" /></h1>
-//             {notification.type === "LIKE" && (
-//               <div className=" flex justify-between w-full items-center gap-3">
-//                 <div className=" flex gap-2 items-center">
 
-//                   <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
-//                   <p className="text-gray-400">{notification?.message}</p>
-//                 </div>
-//                 <Link href={`/cryptohub/userProfile/${notification?.senderId}`} className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white">Visit Profile</Link>
-//               </div>
-//             )}
-//             {notification.type === "COMMENT" && (
-//               <div className=" flex justify-between w-full items-center gap-3">
-//                 <div className=" flex gap-2 items-center">
-
-//                   <MessageCircle className="h-5 w-5 text-cyan-400" />
-//                   <p className="text-gray-400">{notification?.message}</p>
-//                 </div>
-//                 <Link href={`/cryptohub/userProfile/${notification?.senderId}`} className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white">Visit Profile</Link>
-//               </div>
-//             )}
-//             {notification.type === "FOLLOW" && (
-//               <div className=" flex justify-between w-full items-center gap-3">
-//                 <div className=" flex gap-2 items-center">
-
-//                   <BadgeCheck className="h-4 w-4 fill-blue-400 text-white" />
-//                   <p className="text-gray-400">{notification?.message}</p>
-//                 </div>
-//                 <Link href={`/cryptohub/userProfile/${notification?.senderId}`} className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white">Visit Profile</Link>
-//               </div>
-//             )}
-//           </div>
-//           <p className="text-xs text-gray-500">{notification.timestamp}</p>
-//         </div>
-//       </div>
-//     </Card>
-//   );
-// };
-
-// Existing NotificationCard component
 const NotificationCard = ({ notification }: { notification: Notification }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+  const [markNotificationsAsRead, { isLoading: isMarkingRead }] = useMarkNotificationsAsReadMutation();
+
+  const handleProfileClick = () => {
+    router.push(`/cryptohub/userProfile/${notification.senderId}`);
+  };
+
+  const handlePostClick = () => {
+    if (notification.postId) {
+      router.push(`/cryptohub/cryptochat/${notification.id}/${notification.postId}`);
+    }
+  };
+
+  const getIcon = (type: string) => {
+    switch (type) {
+      case "LIKE":
+        return <Heart className="h-4 w-4 text-pink-500 fill-pink-500" />;
+      case "COMMENT":
+        return <MessageCircle className="h-4 w-4 text-blue-500" />;
+      case "FOLLOW":
+        return <BadgeCheck className="h-4 w-4 text-green-500 fill-green-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const getGradientBorder = (type: string) => {
+    switch (type) {
+      case "LIKE":
+        return "bg-gradient-to-r from-pink-500/20 to-purple-500/20";
+      case "COMMENT":
+        return "bg-gradient-to-r from-blue-500/20 to-cyan-500/20";
+      case "FOLLOW":
+        return "bg-gradient-to-r from-green-500/20 to-emerald-500/20";
+      default:
+        return "bg-gray-800/50";
+    }
+  };
+
   return (
-    <Card className="bg-transparent border-cyan-400/30 p-4">
-      <div className="flex">
-        <Avatar />
-        <div className="flex-1 space-y-1">
-          <div className="flex items-center gap-1">
-            <h1 className="text-white">
-              <IoNotificationsCircle className="size-10 mr-3" />
-            </h1>
-            {notification.type === "LIKE" && (
-              <div className=" flex justify-between w-full items-center gap-3">
-                <div className=" flex gap-2 items-center">
-                  <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
-                  <p className="text-gray-400">{notification?.message}</p>
-                </div>
-                <Link
-                  href={`/cryptohub/userProfile/${notification?.senderId}`}
-                  className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white"
-                >
-                  Visit Profile
-                </Link>
+      <Card
+          className={`
+        relative overflow-hidden transition-all duration-300 ease-out
+        bg-gray-900/80 border-gray-700/50 hover:border-gray-600/80
+        hover:shadow-lg hover:shadow-gray-900/20
+        group cursor-pointer
+      `}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Gradient accent line */}
+        <div className={`absolute top-0 left-0 right-0 h-0.5 ${getGradientBorder(notification.type)}`} />
+
+        <div className="p-4">
+          <div className="flex items-start gap-3">
+            {/* Avatar with status indicator */}
+            <div className="relative flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center overflow-hidden">
+                <IoNotificationsCircle className="h-6 w-6 text-gray-400" />
               </div>
-            )}
-            {notification.type === "COMMENT" && (
-              <div className=" flex justify-between w-full items-center gap-3">
-                <div className=" flex gap-2 items-center">
-                  <MessageCircle className="h-5 w-5 text-cyan-400" />
-                  <p className="text-gray-400">{notification?.message}</p>
-                </div>
-                <Link
-                  href={`/cryptohub/userProfile/${notification?.senderId}`}
-                  className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white"
-                >
-                  Visit Profile
-                </Link>
+              {/* Type indicator badge */}
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center border border-gray-700">
+                {getIcon(notification.type)}
               </div>
-            )}
-            {notification.type === "FOLLOW" && (
-              <div className=" flex justify-between w-full items-center gap-3">
-                <div className=" flex gap-2 items-center">
-                  <BadgeCheck className="h-4 w-4 fill-blue-400 text-white" />
-                  <p className="text-gray-400">{notification?.message}</p>
-                </div>
-                <Link
-                  href={`/cryptohub/userProfile/${notification?.senderId}`}
-                  className=" px-2 py-2 rounded-md hover:bg-cyan-500 shadow-white transition-all font-sans bg-cyan-700 text-white"
-                >
-                  Visit Profile
-                </Link>
-              </div>
-            )}
-          </div>
-          {notification.postId && (
-            <div className="mt-4 flex justify-end">
-              <Link
-                href={`/cryptohub/cryptochat/${notification?.id}/${notification?.postId}`}
-                className="px-3 py-2 text-sm font-medium rounded-md shadow-md bg-indigo-600 hover:bg-indigo-500 text-white transition-all"
-              >
-                See Post
-              </Link>
             </div>
-          )}
-          <p className="text-xs text-gray-500">{notification.timestamp}</p>
+
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-1 text-gray-500 text-xs">
+                  <Clock className="h-3 w-3" />
+                  {notification.timestamp}
+                </div>
+              </div>
+
+              <p className="text-gray-300 text-sm leading-relaxed mb-3">
+                {notification.message}
+              </p>
+
+              {/* Action buttons */}
+              <div className="flex items-center gap-2 flex-wrap relative z-10">
+                <button
+                    onClick={handleProfileClick}
+                    className="inline-flex items-center h-8 px-3 text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/80 transition-colors rounded-md cursor-pointer relative z-20"
+                >
+                  <User className="h-3 w-3 mr-1" />
+                  Visit Profile
+                </button>
+
+                {notification.postId && (
+                    <button
+                        onClick={handlePostClick}
+                        className="inline-flex items-center h-8 px-3 text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/80 transition-colors rounded-md cursor-pointer relative z-20"
+                    >
+                      <Eye className="h-3 w-3 mr-1" />
+                      See Post
+                      <ArrowUpRight className="h-3 w-3 ml-1" />
+                    </button>
+                )}
+                {/* Mark as Read Button for Unread Notifications */}
+                {!notification.isSeen && (
+  <div className="ml-auto relative flex items-center justify-center">
+    <button
+      onClick={async () => await markNotificationsAsRead([notification.id])}
+      disabled={isMarkingRead}
+      className={`
+        relative group p-2 rounded-full transition-all duration-300
+        border border-green-500/50
+        ${isMarkingRead
+          ? 'bg-gray-700/30 text-gray-400 cursor-not-allowed'
+          : 'bg-gray-800/40 text-green-400 hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:text-white'}
+      `}
+    >
+      <Eye className="w-4 h-4" />
+      {/* Tooltip */}
+      <span className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-50">
+        Mark as Read
+      </span>
+    </button>
+  </div>
+)}
+
+
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </Card>
+
+        {/* Hover effect overlay */}
+        <div className={`
+        absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent
+        transform transition-transform duration-500 ease-out pointer-events-none
+        ${isHovered ? 'translate-x-0' : '-translate-x-full'}
+      `} />
+      </Card>
   );
 };

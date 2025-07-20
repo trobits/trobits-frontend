@@ -5,7 +5,7 @@ const topicApi = baseApi.injectEndpoints({
         getAllTopic: build.query({
             query: () => {
                 return {
-                    url: `/topic/topics `,
+                    url: `/topic/topics`,
                     method: "GET",
 
                 }
