@@ -7,9 +7,9 @@ import SubPage from "./articles/SubPage";
 import HeroSection from "@/components/HomePages/HeroSection";
 import {GridBackground} from "@/components/ui/gridBackground";
 import {
-    PrintrendyCard,
-    GeminiCard, UrsimeCard, NordVPNCard,
-    CPRCareCard, FanaticsCard, RemitlyCard
+    
+    GeminiCard,  NordVPNCard,
+     FanaticsCard, RemitlyCard
 } from "@/components/AffiliateLinks";
 
 import CardCarousel from "@/components/HomePages/Affiliate/AffilliateCarousel";
@@ -33,7 +33,7 @@ const Profile = () => {
 
             {/* Horizontal Affiliate Link */}
             <div className="w-full">
-                <PrintrendyCard compact/>
+                <GeminiCard compact/>
             </div>
 
             {/* SubPage + Vertical Affiliate Section - Responsive Layout */}
@@ -83,7 +83,7 @@ const Profile = () => {
                 <div className="hidden lg:flex lg:w-[20%] flex-col gap-3">
                     <GeminiCard/>
                     <RemitlyCard/>
-                    <CPRCareCard/>
+                    <GeminiCard/>
                     <FanaticsCard/>
                 </div>
             </div>
@@ -96,7 +96,7 @@ const Profile = () => {
                         <RemitlyCard/>
                     </div>
                     <div className="flex-shrink-0 w-64">
-                        <CPRCareCard/>
+                        <GeminiCard/>
                     </div>
                     <div className="flex-shrink-0 w-64">
                         <FanaticsCard/>
