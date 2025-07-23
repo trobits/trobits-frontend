@@ -76,7 +76,7 @@ const AdBannerHeader = ({ adClass }: { adClass: string }) => {
 function RewardsProgressBar({ currentRewards, maxRewards }: { currentRewards: number, maxRewards: number }) {
   const rewardProgress = Math.max(0, Math.min(100, (currentRewards / maxRewards) * 100));
   return (
-    <div className="flex flex-col items-end min-w-[120px]">
+    <div className="flex flex-col items-start min-w-[120px]">
       <p className="text-gray-400 text-xs mb-1">Rewards : ${currentRewards}</p>
       <div className="w-32 bg-gray-700 rounded-full h-2.5 relative group">
         <div
@@ -504,7 +504,7 @@ export default function Navbar() {
               {/* User Section */}
               <div className="hidden md:flex items-center gap-4">
                 {userFromDb && user && (
-                  <RewardsProgressBar currentRewards={7500} maxRewards={10000} />
+                  <RewardsProgressBar currentRewards={userFromDb.rewards ?? 0} maxRewards={10000} />
                 )}
                 {userFromDb && user ? (
                     <Button
@@ -708,7 +708,7 @@ export default function Navbar() {
                     {/* Mobile User Section */}
                     <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
                       {userFromDb && user && (
-                        <RewardsProgressBar currentRewards={7500} maxRewards={10000} />
+                        <RewardsProgressBar currentRewards={userFromDb.rewards ?? 0} maxRewards={10000} />
                       )}
                       {userFromDb && user ? (
                           <Button
