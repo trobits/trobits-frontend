@@ -1,18 +1,19 @@
 import React, { useRef, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
-  PrintrendyCard,
-  GeminiCard,
-  UrsimeCard,
+ 
+  TesterupCard,
+  TikTokCard,
+  SocialCatfishCard,
+  NexoCard,
   NordVPNCard,
-  PreplyCard,
+  CoinbaseCard,
+  GeminiCard,
+  StockMarketGuidesCard,
   FanaticsCard,
   RemitlyCard,
-  StockMarketGuidesCard,
-  TicketNetworkCard,
-  CPRCareCard,
-  GolfPartnerCard,
-  Wwwm8xcomCard,
+  
+  
 
 } from "@/components/AffiliateLinks";
 
@@ -25,18 +26,19 @@ const CardCarousel: React.FC = () => {
 
   // Card data for easier management
   const cards = [
-    { id: 1, component: <GeminiCard /> },
-    { id: 2, component: <UrsimeCard /> },
-    { id: 3, component: <PrintrendyCard /> },
-    { id: 4, component: <NordVPNCard /> },
-    { id: 5, component: <PreplyCard /> },
-    { id: 6, component: <FanaticsCard /> },
-    { id: 7, component: <RemitlyCard /> },
+    { id: 1, component: <TesterupCard /> },
+    { id: 2, component: <TikTokCard /> },
+    { id: 3, component: <SocialCatfishCard /> },
+    { id: 4, component: <NexoCard /> },
+    { id: 5, component: <NordVPNCard /> },
+    { id: 6, component: <CoinbaseCard /> },
+    { id: 7, component: <GeminiCard /> },
     { id: 8, component: <StockMarketGuidesCard /> },
-    { id: 9, component: <TicketNetworkCard /> },
-    { id: 10, component: <CPRCareCard /> },
-    { id: 11, component: <GolfPartnerCard /> },
-    { id: 12, component: <Wwwm8xcomCard /> }
+    { id: 9, component: <FanaticsCard /> },
+    { id: 10, component: <RemitlyCard /> }
+    
+   
+   
   ];
 
   const totalCards = cards.length;

@@ -72,6 +72,32 @@ const AdBannerHeader = ({ adClass }: { adClass: string }) => {
   );
 };
 
+// Rewards Progress Bar Component
+function RewardsProgressBar({ currentRewards, maxRewards }: { currentRewards: number, maxRewards: number }) {
+  const rewardProgress = Math.max(0, Math.min(100, (currentRewards / maxRewards) * 100));
+  return (
+    <div className="flex flex-col items-start min-w-[120px]">
+      <p className="text-gray-400 text-xs mb-1">Rewards : ${currentRewards}</p>
+      <div className="w-32 bg-gray-700 rounded-full h-2.5 relative group">
+        <div
+          className="bg-gradient-to-r from-blue-500 to-cyan-400 h-2.5 rounded-full transition-all duration-300 relative"
+          style={{ width: `${rewardProgress}%` }}
+        ></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+          {currentRewards} / {maxRewards}
+        </div>
+      </div>
+      {currentRewards >= maxRewards && (
+        <button
+          className="mt-2 px-4 py-1 text-xs font-medium text-white rounded-xl shadow-md border-2 border-white/10 transition-all duration-300 bg-white/5 backdrop-blur-md hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:border-green-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
+        >
+          Checkout
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isBasicsDropdownOpen, setIsBasicsDropdownOpen] = useState(false);
@@ -476,7 +502,10 @@ export default function Navbar() {
               </div>
 
               {/* User Section */}
-              <div className="hidden md:block">
+              <div className="hidden md:flex items-center gap-4">
+                {userFromDb && user && (
+                  <RewardsProgressBar currentRewards={userFromDb.rewards ?? 0} maxRewards={10000} />
+                )}
                 {userFromDb && user ? (
                     <Button
                         onClick={() => {
@@ -677,7 +706,10 @@ export default function Navbar() {
                     )}
 
                     {/* Mobile User Section */}
-                    <div className="pt-4 border-t border-white/10">
+                    <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
+                      {userFromDb && user && (
+                        <RewardsProgressBar currentRewards={userFromDb.rewards ?? 0} maxRewards={10000} />
+                      )}
                       {userFromDb && user ? (
                           <Button
                               onClick={() => {
