@@ -1,5 +1,7 @@
 import React from "react";
 import smgImg from "@/assets/smg.png";
+import tiktok from "@/assets/tiktok.jpg";
+import coinbase from  "@/assets/coinbase.png";
 // Testerup
 export const TesterupCard = ({ compact = false }: { compact?: boolean }) => (
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
@@ -9,24 +11,35 @@ export const TesterupCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://aestimiumgmbh.pxf.io/c/6232366/2934755/32340"
         target="_top"
         id="2934755"
-        className="block w-full relative"
+        className="block w-full relative flex justify-center items-center" // ✅ center the image
+        style={{ minHeight: compact ? "80px" : "300px" }} // ✅ give height for vertical space
       >
         <img
           src="//a.impactradius-go.com/display-ad/32340-2934755"
-         
           alt="Testerup"
           width="1200"
           height="627"
-          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : "h-full max-h-[300px] object-contain"}`}
         />
       </a>
-      <img height="0" width="0" src="https://imp.pxf.io/i/6232366/2934755/32340" style={{ position: "absolute", visibility: "hidden" }} alt="" />
+
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/2934755/32340"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">Testerup: Signup and Earn 750 points</h3>
+        <h3 className="text-sm font-semibold text-cyan-300">
+          Testerup: Signup and Earn 750 points
+        </h3>
       </div>
     </div>
   </div>
 );
+
 
 // TikTok
 export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
@@ -40,7 +53,7 @@ export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
         className="block w-full relative"
       >
         <img
-          src="//a.impactradius-go.com/display-ad/27618-2220947"
+          src={tiktok.src}
          
           alt="TikTok"
           width="5418"
@@ -65,24 +78,35 @@ export const SocialCatfishCard = ({ compact = false }: { compact?: boolean }) =>
         href="https://social-catfish.pxf.io/c/6232366/1790174/12693"
         target="_top"
         id="1790174"
-        className="block w-full relative"
+        className="block w-full relative flex justify-center items-center" // ✅ added flex centering
+        style={{ minHeight: compact ? "80px" : "300px" }} // ✅ ensures height to allow vertical centering
       >
         <img
           src="//a.impactradius-go.com/display-ad/12693-1790174"
-        
           alt="Social Catfish"
           width="320"
           height="50"
-          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : "h-full max-h-[300px] object-contain"}`}
         />
       </a>
-      <img height="0" width="0" src="https://imp.pxf.io/i/6232366/1790174/12693" style={{ position: "absolute", visibility: "hidden" }} alt="" />
+
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/1790174/12693"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">Social Catfish: Signup and Earn 3,000 points</h3>
+        <h3 className="text-sm font-semibold text-cyan-300">
+          Social Catfish: Signup and Earn 3,000 points
+        </h3>
       </div>
     </div>
   </div>
 );
+
 
 // NEXO
 export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
@@ -152,7 +176,7 @@ export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
         className="block w-full relative"
       >
         <img
-          src="//a.impactradius-go.com/display-ad/9251-1039486"
+          src={coinbase.src}
           
           alt="Coinbase"
           width="2081"
