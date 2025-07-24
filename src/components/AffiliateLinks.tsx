@@ -1,444 +1,324 @@
 import React from "react";
 import smgImg from "@/assets/smg.png";
-
-const CARD_IMAGE_HEIGHT = "h-[300px]";
-
-export const GeminiCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://gemini.sjv.io/c/6232366/2794807/11829"
-          target="_blank"
-          className="block w-full relative"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/11829-2794807"
-            alt="Gemini Exchange"
-            width="1422"
-            height="800"
-            className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-                  </a>
+import tiktok from "@/assets/tiktok.jpg";
+import coinbase from  "@/assets/coinbase.png";
+// Testerup
+export const TesterupCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://aestimiumgmbh.pxf.io/c/6232366/2934755/32340"
+        target="_top"
+        id="2934755"
+        className="block w-full relative flex justify-center items-center" // ✅ center the image
+        style={{ minHeight: compact ? "80px" : "300px" }} // ✅ give height for vertical space
+      >
         <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/2794807/11829"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src="//a.impactradius-go.com/display-ad/32340-2934755"
+          alt="Testerup"
+          width="1200"
+          height="627"
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : "h-full max-h-[300px] object-contain"}`}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm py-1 font-semibold text-cyan-300">Gemini: Signup and earn 5,000 points after your first transaction</h3>
-        </div>
+      </a>
+
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/2934755/32340"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm font-semibold text-cyan-300">
+          Testerup: Signup and Earn 750 points
+        </h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const PrintrendyCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://printrendy.pxf.io/c/6232366/1453719/17020"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/17020-1453719"
-            alt="Printrendy Online Sale"
-            width="300"
-            height="250"
-            className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'object-contain h-full max-h-[300px]'}`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-                  </a>
+
+// TikTok
+export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://tiktok.pxf.io/c/6232366/2220947/27618"
+        target="_top"
+        id="2220947"
+        className="block w-full relative"
+      >
         <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/1453719/17020"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src={tiktok.src}
+         
+          alt="TikTok"
+          width="5418"
+          height="5417"
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">Printrendy</h3>
-        </div>
+      </a>
+      <img height="0" width="0" src="https://imp.pxf.io/i/6232366/2220947/27618" style={{ position: "absolute", visibility: "hidden" }} alt="" />
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm font-semibold text-cyan-300">TikTok: Signup and earn 2,000 points</h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const UrsimeCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://ursime.pxf.io/c/6232366/1390298/16384"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/16384-1390298"
-            alt="Ursime Online Sale"
-            width="1920"
-            height="800"
-            className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-                  </a>
+// Social Catfish
+export const SocialCatfishCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://social-catfish.pxf.io/c/6232366/1790174/12693"
+        target="_top"
+        id="1790174"
+        className="block w-full relative flex justify-center items-center" // ✅ added flex centering
+        style={{ minHeight: compact ? "80px" : "300px" }} // ✅ ensures height to allow vertical centering
+      >
         <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/1390298/16384"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src="//a.impactradius-go.com/display-ad/12693-1790174"
+          alt="Social Catfish"
+          width="320"
+          height="50"
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : "h-full max-h-[300px] object-contain"}`}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm font-semibold text-cyan-300">Ursime</h3>
-        </div>
+      </a>
+
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/1790174/12693"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm font-semibold text-cyan-300">
+          Social Catfish: Signup and Earn 3,000 points
+        </h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const PreplyCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://preply.sjv.io/c/6232366/2037662/24422"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/24422-2037662"
-            alt="Preply Online Sale"
-            width="300"
-            height="50"
-            className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-        </a>
+
+// NEXO
+export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://nexo.sjv.io/c/6232366/2218907/12544"
+        target="_top"
+        id="2218907"
+        className="block w-full relative"
+      >
         <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/2037662/24422"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src="//a.impactradius-go.com/display-ad/12544-2218907"
+         
+          alt="NEXO"
+          width="1080"
+          height="1080"
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm font-semibold text-cyan-300">Preply</h3>
-        </div>
+      </a>
+      <img height="0" width="0" src="https://imp.pxf.io/i/6232366/2218907/12544" style={{ position: "absolute", visibility: "hidden" }} alt="" />
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm font-semibold text-cyan-300">NEXO: Signup and earn 250 points after your first transaction</h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://nordvpn.sjv.io/c/6232366/2185832/7452"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/7452-2185832"
-            alt="NordVPN"
-            width="320"
-            height="280"
-            className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-        </a>
+// NordVPN
+export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://nordvpn.sjv.io/c/6232366/512103/7452"
+        target="_top"
+        id="512103"
+        className="block w-full relative"
+      >
         <img
-          height="0"
-          width="0"
-          src="https://nordvpn.sjv.io/i/6232366/2185832/7452"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src="//a.impactradius-go.com/display-ad/7452-512103"
+        
+          alt="NordVPN"
+          width="300"
+          height="250"
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm font-semibold text-cyan-300">NordVPN: Purchase any plan and earn 20,000 points
-
-          </h3>
-        </div>
+      </a>
+      <img height="0" width="0" src="https://nordvpn.sjv.io/i/6232366/512103/7452" style={{ position: "absolute", visibility: "hidden" }} alt="" />
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm font-semibold text-cyan-300">NordVPN: Purchase any plan and earn 20,000 points</h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://fanatics.93n6tx.net/c/6232366/3065965/9663"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/9663-3065965"
-            alt="Fanatics"
-            width="300"
-            height="250"
-            className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-        </a>
+// Coinbase
+export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://coinbase-consumer.sjv.io/c/6232366/1039486/9251"
+        target="_top"
+        id="1039486"
+        className="block w-full relative"
+      >
         <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/3065965/9663"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src={coinbase.src}
+          
+          alt="Coinbase"
+          width="2081"
+          height="367"
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm font-semibold text-cyan-300">Fanatics: Earn 2,500 point after any purchase</h3>
-        </div>
+      </a>
+      <img height="0" width="0" src="https://imp.pxf.io/i/6232366/1039486/9251" style={{ position: "absolute", visibility: "hidden" }} alt="" />
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm font-semibold text-cyan-300">Coinbase: Signup and earn 2,500 points after your first trade</h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://remitly.tod8mp.net/c/6232366/1417999/10408"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/10408-1417999"
-            alt="Remitly"
-            width="320"
-            height="480"
-            className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-        </a>
+// Gemini
+export const GeminiCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://gemini.sjv.io/c/6232366/2794807/11829"
+        target="_blank"
+        className="block w-full relative"
+      >
         <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/1417999/10408"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src="https://a.impactradius-go.com/display-ad/11829-2794807"
+          alt="Gemini Exchange"
+          width="1422"
+          height="800"
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+            e.currentTarget.nextElementSibling?.classList.remove("hidden");
+          }}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-xs font-semibold text-cyan-300">Remitly: Earn 2,500 points for signing up; earn additional 2,500 points after your first transaction</h3>
-        </div>
+      </a>
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/2794807/11829"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm py-1 font-semibold text-cyan-300">Gemini: Signup and earn 5,000 points after your first transaction</h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const StockMarketGuidesCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://stockmarketguides.sjv.io/c/6232366/1863442/20465"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
+// Stock Market Guides
+export const StockMarketGuidesCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://stockmarketguides.sjv.io/c/6232366/1863442/20465"
+        target="_blank"
+        className="block w-full relative flex-1"
+      >
+       <img
             src={smgImg.src}
             alt="Stock Market Guides"
             className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
           />
-        </a>
-        <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/1863442/20465"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
-        />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm font-semibold text-cyan-300">Stock Market Guides: Signup and earn 6,500 points</h3>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-export const TicketNetworkCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://ticketnetwork.lusg.net/c/6232366/1728828/2322"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://d3b7ca3kks92i5.cloudfront.net/performer/113/113-tn-300x250.jpg"
-            alt="TicketNetwork"
-            width="300"
-            height="250"
-            className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-        </a>
-        <img
-          height="0"
-          width="0"
-          src="https://ticketnetwork.lusg.net/i/6232366/1728828/2322"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
-        />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm font-semibold text-cyan-300">TicketNetwork</h3>
-        </div>
+      </a>
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/1863442/20465"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm font-semibold text-cyan-300">Stock Market Guides: Signup and earn 6,500 points</h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const CPRCareCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://cprcare.pxf.io/c/6232366/3043520/33573"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/33573-3043520"
-            alt="CPRCare"
-            width="800"
-            height="800"
-            className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-        </a>
+// Fanatics
+export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://fanatics.93n6tx.net/c/6232366/3065965/9663"
+        target="_blank"
+        className="block w-full relative flex-1"
+      >
         <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/3043520/33573"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src="https://a.impactradius-go.com/display-ad/9663-3065965"
+          alt="Fanatics"
+          width="300"
+          height="250"
+          className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm font-semibold text-cyan-300">CPRCare</h3>
-        </div>
+      </a>
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/3065965/9663"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+      <div className="text-center w-full px-2">
+        <h3 className="text-sm font-semibold text-cyan-300">Fanatics: Earn 2,500 point after any purchase</h3>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const GolfPartnerCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://golfpartner.sjv.io/c/6232366/1442655/17026"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/17026-1442655"
-            alt="GolfPartner"
-            width="512"
-            height="512"
-            className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-        </a>
+// Remitly
+export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://remitly.tod8mp.net/c/6232366/1417999/10408"
+        target="_blank"
+        className="block w-full relative flex-1"
+      >
         <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/1442655/17026"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
+          src="https://a.impactradius-go.com/display-ad/10408-1417999"
+          alt="Remitly"
+          width="320"
+          height="480"
+          className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
         />
-        <div className="text-center w-full px-2">
-          <h3 className="text-sm font-semibold text-cyan-300">GolfPartner</h3>
-        </div>
+      </a>
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/1417999/10408"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+      <div className="text-center w-full px-2">
+        <h3 className="text-xs font-semibold text-cyan-300">Remitly: Earn 2,500 points for signing up; earn additional 2,500 points after your first transaction</h3>
       </div>
     </div>
-  );
-};
-
-export const Wwwm8xcomCard = ({ compact = false }: { compact?: boolean }) => {
-  return (
-    <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-      <div className="flex flex-col items-center gap-1 h-full justify-between">
-        <a
-          rel="sponsored"
-          href="https://wwwm8xcom.pxf.io/c/6232366/2158003/26891"
-          target="_blank"
-          className="block w-full relative flex-1"
-        >
-          <img
-            src="https://a.impactradius-go.com/display-ad/26891-2158003"
-            alt="wwwm8xcom"
-            width="0"
-            height="0"
-            className={`rounded-lg w-full h-full object-contain max-h-[300px]`}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-              e.currentTarget.nextElementSibling?.classList.remove("hidden");
-            }}
-          />
-        </a>
-        <img
-          height="0"
-          width="0"
-          src="https://imp.pxf.io/i/6232366/2158003/26891"
-          style={{ position: "absolute", visibility: "hidden" }}
-          alt=""
-        />
-        <div className="text-center w-full px-2">
-          <h3 className="text-base font-semibold text-cyan-300">wwwm8xcom</h3>
-        </div>
-      </div>
-    </div>
-  );
-};
+  </div>
+);
