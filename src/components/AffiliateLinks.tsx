@@ -41,6 +41,7 @@ export const TesterupCard = ({ compact = false }: { compact?: boolean }) => (
 );
 
 
+
 // TikTok
 export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
