@@ -9,7 +9,12 @@ import {GridBackground} from "@/components/ui/gridBackground";
 import {
     
     GeminiCard,  NordVPNCard,
-     FanaticsCard, RemitlyCard
+     FanaticsCard, RemitlyCard,
+     TikTokCard,
+     SocialCatfishCard,
+     NexoCard,
+     TesterupCard,
+     SocialCatfishCompact
 } from "@/components/AffiliateLinks";
 
 import CardCarousel from "@/components/HomePages/Affiliate/AffilliateCarousel";
@@ -33,7 +38,7 @@ const Profile = () => {
 
             {/* Horizontal Affiliate Link */}
             <div className="w-full">
-                <GeminiCard compact/>
+                <SocialCatfishCard compact/>
             </div>
 
             {/* SubPage + Vertical Affiliate Section - Responsive Layout */}
@@ -44,7 +49,7 @@ const Profile = () => {
 
                     {/* Mobile: Show GeminiCard here */}
                     <div className="block lg:hidden">
-                        <GeminiCard/>
+                        <TesterupCard/>
                     </div>
 
                     {/* Article Content */}
@@ -81,9 +86,9 @@ const Profile = () => {
 
                 {/* Vertical Affiliate cards - Hidden on mobile, shown on desktop */}
                 <div className="hidden lg:flex lg:w-[20%] flex-col gap-3">
-                    <GeminiCard/>
-                    <RemitlyCard/>
-                    <GeminiCard/>
+                    <TikTokCard/>
+                    <NexoCard/>
+                    <NordVPNCard/>
                     <FanaticsCard/>
                 </div>
             </div>
@@ -96,7 +101,7 @@ const Profile = () => {
                         <RemitlyCard/>
                     </div>
                     <div className="flex-shrink-0 w-64">
-                        <GeminiCard/>
+                        <TikTokCard/>
                     </div>
                     <div className="flex-shrink-0 w-64">
                         <FanaticsCard/>
