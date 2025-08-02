@@ -7,9 +7,9 @@ export const TesterupCard = ({ compact = false }: { compact?: boolean }) => (
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
     <div className="flex flex-col items-center gap-1 h-full justify-between">
       <a
-        rel="sponsored"
+        rel="noopener sponsored"
         href="https://aestimiumgmbh.pxf.io/c/6232366/2934755/32340"
-        target="_top"
+        target="_blank"
         id="2934755"
         className="block w-full relative flex justify-center items-center" // ✅ center the image
         style={{ minHeight: compact ? "80px" : "300px" }} // ✅ give height for vertical space
@@ -47,9 +47,9 @@ export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
     <div className="flex flex-col items-center gap-1 h-full justify-between">
       <a
-        rel="sponsored"
+        rel="noopener sponsored"
         href="https://tiktok.pxf.io/c/6232366/2220947/27618"
-        target="_top"
+        target="_blank"
         id="2220947"
         className="block w-full relative"
       >
@@ -75,9 +75,9 @@ export const SocialCatfishCard = ({ compact = false }: { compact?: boolean }) =>
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
     <div className="flex flex-col items-center gap-1 h-full justify-between">
       <a
-        rel="sponsored"
+        rel="noopener sponsored"
         href="https://social-catfish.pxf.io/c/6232366/1790174/12693"
-        target="_top"
+        target="_blank"
         id="1790174"
         className="block w-full relative flex justify-center items-center" // ✅ added flex centering
         style={{ minHeight: compact ? "80px" : "300px" }} // ✅ ensures height to allow vertical centering
@@ -114,9 +114,9 @@ export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
     <div className="flex flex-col items-center gap-1 h-full justify-between">
       <a
-        rel="sponsored"
+        rel="noopener sponsored"
         href="https://nexo.sjv.io/c/6232366/2218907/12544"
-        target="_top"
+        target="_blank"
         id="2218907"
         className="block w-full relative"
       >
@@ -142,9 +142,9 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
     <div className="flex flex-col items-center gap-1 h-full justify-between">
       <a
-        rel="sponsored"
+        rel="noopener sponsored"
         href="https://nordvpn.sjv.io/c/6232366/512103/7452"
-        target="_top"
+        target="_blank"
         id="512103"
         className="block w-full relative"
       >
@@ -170,9 +170,9 @@ export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
     <div className="flex flex-col items-center gap-1 h-full justify-between">
       <a
-        rel="sponsored"
+        rel="noopener sponsored"
         href="https://coinbase-consumer.sjv.io/c/6232366/1039486/9251"
-        target="_top"
+        target="_blank"
         id="1039486"
         className="block w-full relative"
       >
