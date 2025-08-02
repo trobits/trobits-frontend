@@ -157,7 +157,7 @@ const CardCarousel: React.FC = () => {
             key={card.id}
             className="flex-shrink-0"
             style={{
-              width: 'calc(33.333% - 1rem)',
+              width: 'calc(25% - 1rem)', // Smaller width for smaller cards
               marginLeft: index === 0 ? '2.5rem' : '0.5rem',
               marginRight: index === cards.length - 1 ? '2.5rem' : '0.5rem',
               scrollSnapAlign: 'start'
