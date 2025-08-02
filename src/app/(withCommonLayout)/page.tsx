@@ -85,11 +85,11 @@ const Profile = () => {
                 </div>
 
                 {/* Vertical Affiliate cards - Hidden on mobile, shown on desktop */}
-                <div className="hidden lg:flex lg:w-[20%] flex-col gap-3">
-                    <TikTokCard/>
-                    <NexoCard/>
-                    <NordVPNCard/>
-                    <FanaticsCard/>
+                <div className="hidden lg:flex lg:w-[15%] flex-col gap-3 scale-90 -mt-12">
+                <TikTokCard/>
+                <NexoCard/>
+                <NordVPNCard/>
+                <FanaticsCard/>
                 </div>
             </div>
 
