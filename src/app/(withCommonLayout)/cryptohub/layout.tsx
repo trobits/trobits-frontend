@@ -90,7 +90,14 @@ const CryptoLayout = ({ children }) => {
   ];
 
   const maxRewards = 10000;
-  const currentRewards = userFromDb?.rewards ?? 0;
+  useEffect(() => {
+    if (userFromDb) {
+      console.log('Fetched userFromDb.rewards:', userFromDb.rewards);
+    }
+  }, [userFromDb]);
+  const currentRewards = Array.isArray(userFromDb?.rewards)
+    ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0)
+    : 0;
   //  const currentRewards = 10000;
   // Ensure rewardProgress is between 0 and 100
   const rewardProgress = Math.max(0, Math.min(100, (currentRewards / maxRewards) * 100));
@@ -200,35 +207,9 @@ const CryptoLayout = ({ children }) => {
                           </div>
                         </div>
 
-                        {/* Rewards Progress Bar */}
+                        {/* Rewards Display Only */}
                         <div className="mb-4">
-                          <p className="text-gray-400 text-xs mb-1">Rewards : ${currentRewards}</p>
-                          <div className="w-full bg-gray-700 rounded-full h-2.5 relative group">
-                            <div
-className="bg-gradient-to-r from-blue-500 to-cyan-400 h-2.5 rounded-full transition-all duration-300 relative"
-                                style={{ width: `${rewardProgress}%` }}
-                            >
-                            </div>
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                              {currentRewards} / {maxRewards}
-                            </div>
-                          </div>
-                          {/* Checkout Button when rewards >= 10000 */}
-                         {currentRewards >= 10000 && (
-  <div className="flex justify-center">
-    <button
-      className="mt-4 px-10 py-2 text-sm font-medium text-white rounded-xl shadow-md border-2 border-white/10 transition-all duration-300 bg-white/5 backdrop-blur-md hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:border-green-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
-    >
-      Checkout
-    </button>
-  </div>
-)}
-
-
-
-
-
-
+                          <p className="text-gray-400 text-sm font-medium">Rewards: {currentRewards}</p>
                         </div>
                       </>
                   ) : null}

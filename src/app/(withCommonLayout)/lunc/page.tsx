@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { TrendingUp, DollarSign, BarChart3, Newspaper } from "lucide-react";
+import { NordVPNCard, FanaticsCard, NexoCard } from "@/components/AffiliateLinks";
 
 const LuncHeader = () => (
     <div className="text-center mb-8">
@@ -260,6 +261,19 @@ export default function Page() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <SymbolInfo />
                     <TechnicalAnalysis />
+                  </div>
+
+                  {/* Horizontal Ad Section */}
+                  <div className="flex flex-row justify-center gap-6 my-4">
+                    <div className="max-w-[350px] w-full">
+                      <NordVPNCard />
+                    </div>
+                    <div className="max-w-[350px] w-full">
+                      <FanaticsCard />
+                    </div>
+                    <div className="max-w-[350px] w-full">
+                      <NexoCard />
+                    </div>
                   </div>
 
                   {/* Price Chart - Full Width */}

@@ -9,6 +9,7 @@ import { useGetAllTopicQuery } from "@/redux/features/api/topicApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { usePathname } from "next/navigation";
 import { setPaths } from "@/redux/features/slices/authSlice";
+import { NordVPNCard, FanaticsCard, NexoCard, TikTokCard } from "@/components/AffiliateLinks";
 
 const CryptoChatPage = () => {
   const { data, isLoading: allTopicLoading } = useGetAllTopicQuery("");
@@ -70,36 +71,60 @@ const CryptoChatPage = () => {
           </div>
         </div>
 
-        {/* Topics Grid */}
-        <div className="w-full">
-          {filteredTopics.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                {filteredTopics.map((topic: ITopicInfo, index) => (
-                    <div
-                        key={topic.id}
-                        className="opacity-0 animate-fade-in"
-                        style={{
-                          animationDelay: `${index * 100}ms`,
-                          animationFillMode: 'forwards'
-                        }}
-                    >
-                      <TopicsCard topicInfo={topic} />
-                    </div>
-                ))}
-              </div>
-          ) : (
-              <div className="text-center py-16">
-                <div className="w-16 h-16 bg-gray-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Search className="w-8 h-8 text-gray-600" />
+        {/* Main Content: Topics + Vertical Affiliate */}
+        <div className="w-full flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
+          {/* Topics Grid - Smaller */}
+          <div className="flex-1">
+            {filteredTopics.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {filteredTopics.map((topic: ITopicInfo, index) => (
+                      <div
+                          key={topic.id}
+                          className="opacity-0 animate-fade-in"
+                          style={{
+                            animationDelay: `${index * 100}ms`,
+                            animationFillMode: 'forwards'
+                          }}
+                      >
+                        <div className="scale-95">
+                          <TopicsCard topicInfo={topic} />
+                        </div>
+                      </div>
+                  ))}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-300 mb-2">
-                  {searchQuery ? "No topics found" : "No topics available"}
-                </h3>
-                <p className="text-gray-500">
-                  {searchQuery ? "Try adjusting your search terms" : "Be the first to create a topic!"}
-                </p>
-              </div>
-          )}
+            ) : (
+                <div className="text-center py-16">
+                  <div className="w-16 h-16 bg-gray-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-8 h-8 text-gray-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-300 mb-2">
+                    {searchQuery ? "No topics found" : "No topics available"}
+                  </h3>
+                  <p className="text-gray-500">
+                    {searchQuery ? "Try adjusting your search terms" : "Be the first to create a topic!"}
+                  </p>
+                </div>
+            )}
+          </div>
+          {/* Vertical Affiliate Section */}
+          <div className="hidden lg:flex w-60 flex-shrink-0 flex-col mt-2">
+  <div className="max-h-[180px] flex justify-center items-center mb-16 last:mb-0">
+    <div className="scale-90 w-full">
+      <NordVPNCard />
+    </div>
+  </div>
+  <div className="max-h-[180px] flex justify-center items-center mb-20 last:mb-0">
+    <div className="scale-90 w-full">
+      <FanaticsCard />
+    </div>
+  </div>
+  <div className="max-h-[180px] flex justify-center items-center mb-8 last:mb-0">
+    <div className="scale-90 w-full">
+      <TikTokCard />
+    </div>
+  </div>
+</div>
+
         </div>
 
         <style jsx>{`

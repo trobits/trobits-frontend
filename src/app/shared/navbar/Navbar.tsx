@@ -77,7 +77,7 @@ function RewardsProgressBar({ currentRewards, maxRewards }: { currentRewards: nu
   const rewardProgress = Math.max(0, Math.min(100, (currentRewards / maxRewards) * 100));
   return (
     <div className="flex flex-col items-start min-w-[120px]">
-      <p className="text-gray-400 text-xs mb-1">Rewards : ${currentRewards}</p>
+      <p className="text-gray-400 text-sm mb-1">Rewards : ${currentRewards}</p>
       <div className="w-32 bg-gray-700 rounded-full h-2.5 relative group">
         <div
           className="bg-gradient-to-r from-blue-500 to-cyan-400 h-2.5 rounded-full transition-all duration-300 relative"
@@ -504,7 +504,13 @@ export default function Navbar() {
               {/* User Section */}
               <div className="hidden md:flex items-center gap-4">
                 {userFromDb && user && (
-                  <RewardsProgressBar currentRewards={userFromDb.rewards ?? 0} maxRewards={10000} />
+                  <span className="text-gray-400 text-sm font-medium">Rewards: 
+                    {
+                      Array.isArray(userFromDb.rewards)
+                        ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0)
+                        : 0
+                    }
+                  </span>
                 )}
                 {userFromDb && user ? (
                     <Button
@@ -708,7 +714,13 @@ export default function Navbar() {
                     {/* Mobile User Section */}
                     <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
                       {userFromDb && user && (
-                        <RewardsProgressBar currentRewards={userFromDb.rewards ?? 0} maxRewards={10000} />
+                        <span className="text-gray-400 text-sm font-medium">Rewards: 
+                          {
+                            Array.isArray(userFromDb.rewards)
+                              ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0)
+                              : 0
+                          }
+                        </span>
                       )}
                       {userFromDb && user ? (
                           <Button
