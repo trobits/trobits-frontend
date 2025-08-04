@@ -50,28 +50,28 @@ const InfiniteLoader: React.FC<{
 };
 
 // Vertical Ad Placeholder Component
-const VerticalAdPlaceholder: React.FC = () => {
-  return (
-      <div className="sticky top-4 bg-gray-900 border border-gray-700 rounded-2xl p-6 text-center h-fit">
-        <div className="space-y-4">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-lg">AD</span>
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-white">Advertisement</h3>
-            <p className="text-gray-400 text-sm">Sponsored Content</p>
-          </div>
-          <div className="bg-gray-800 rounded-lg p-8 h-96 flex items-center justify-center">
-            <span className="text-gray-500 text-sm">300 x 600 Ad Space</span>
-          </div>
-          <div className="text-xs text-gray-600">
-            Ad placement area
-          </div>
-        </div>
-      </div>
+// const VerticalAdPlaceholder: React.FC = () => {
+//   return (
+//       <div className="sticky top-4 bg-gray-900 border border-gray-700 rounded-2xl p-6 text-center h-fit">
+//         <div className="space-y-4">
+//           <div className="w-12 h-12 mx-auto bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center">
+//             <span className="text-white font-bold text-lg">AD</span>
+//           </div>
+//           <div className="space-y-2">
+//             <h3 className="text-lg font-semibold text-white">Advertisement</h3>
+//             <p className="text-gray-400 text-sm">Sponsored Content</p>
+//           </div>
+//           <div className="bg-gray-800 rounded-lg p-8 h-96 flex items-center justify-center">
+//             <span className="text-gray-500 text-sm">300 x 600 Ad Space</span>
+//           </div>
+//           <div className="text-xs text-gray-600">
+//             Ad placement area
+//           </div>
+//         </div>
+//       </div>
       
-  );
-};
+//   );
+// };
 
 interface SubPageProps {
   simpleHeader?: boolean;

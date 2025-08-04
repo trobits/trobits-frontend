@@ -1,5 +1,6 @@
-import heroImage from "../../assets/how-trobits-work.jpeg"
+import heroImage from "../../assets/how-trobits-work.jpg"
 import Image from "next/image";
+
 import { TextGenerateEffect } from "../ui/textGenerateEffect";
 
 export default function HeroSection() {
