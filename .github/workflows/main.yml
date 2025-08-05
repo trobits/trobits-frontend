@@ -25,7 +25,7 @@ jobs:
       - name: Deploy via SSH
         run: |
           ssh trobits@160.153.175.21 << 'EOF'
-            cd /var/www/newsisiku-frontend
+            cd /var/www/trobits-frontend
             git pull origin main
             npm install
             npm run build
