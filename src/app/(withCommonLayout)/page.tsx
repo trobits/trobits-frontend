@@ -1,6 +1,6 @@
 "use client";
 import CryptoData from "@/components/HomePages/CryptoData";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CryptoNavbar from "../shared/navbar/CryptoNavbar";
 import Footer from "../shared/Footer/Footer";
 import SubPage from "./articles/SubPage";
@@ -18,6 +18,59 @@ import {
 } from "@/components/AffiliateLinks";
 
 import CardCarousel from "@/components/HomePages/Affiliate/AffilliateCarousel";
+
+function HomepageArticleSection() {
+    const [article, setArticle] = useState<{ title: string; body: string } | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`);
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`)
+            .then(async (res) => {
+                
+                if (!res.ok) throw new Error("No article found");
+                return res.json();
+            })
+            .then((data) => {
+                setArticle({ title: data.title, body: data.body });
+                setLoading(false);
+            })
+            .catch(() => {
+                setError("No homepage article found.");
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return (
+            <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-4 sm:p-6'>
+                <div className="text-gray-400">Loading homepage article...</div>
+            </div>
+        );
+    }
+    if (error || !article) {
+        return (
+            <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-4 sm:p-6'>
+                <div className="text-gray-400">{error}</div>
+            </div>
+        );
+    }
+    return (
+        <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-4 sm:p-6'>
+            <div className="space-y-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+                    {article.title}
+                </h2>
+                <div className="text-gray-300 space-y-3 text-sm sm:text-base">
+                    {article.body.split(/\n+/).map((para, idx) => (
+                        <p key={idx}>{para}</p>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
 
 const Profile = () => {
     return (
@@ -53,35 +106,7 @@ const Profile = () => {
                     </div>
 
                     {/* Article Content */}
-                    <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-4 sm:p-6'>
-                        <div className="space-y-4">
-                            <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
-                                SHIB and LUNC: Community-Driven Comebacks in a Changing Market
-                            </h2>
-                            <div className="text-gray-300 space-y-3 text-sm sm:text-base">
-                                <p>
-                                    <strong>Shiba Inu (SHIB)</strong> and <strong>Terra Classic (LUNC)</strong> continue to capture the attention of crypto traders and enthusiasts in 2025. Despite their contrasting origins — one as a meme token and the other from a collapsed ecosystem — both coins are seeing renewed interest due to strong community backing and ambitious burn mechanisms.
-                                </p>
-
-                                <p>
-                                    SHIB's recent integration into Shibarium, its Layer 2 blockchain, has driven up on-chain activity. Over 410 trillion SHIB tokens have been burned since inception, with the community accelerating weekly burns to reduce the circulating supply and boost scarcity-driven demand.
-                                </p>
-
-                                <p>
-                                    LUNC, once part of the infamous Terra ecosystem collapse, is finding new life through community governance. The recent 1.2% tax burn proposal and validator upgrades have helped restore some confidence. Active development efforts are also targeting interoperability and ecosystem revival.
-                                </p>
-
-                                <p>
-                                    While both coins face volatility, their value now stems more from sustained ecosystem development and community-driven utility than hype alone — a sign of maturity in the meme and recovery coin space.
-                                </p>
-                            </div>
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 pt-4 border-t border-gray-700/50">
-                                <span className="text-sm text-gray-400">Published: Today</span>
-                                <span className="hidden sm:inline text-sm text-gray-400">•</span>
-                                <span className="text-sm text-gray-400">4 min read</span>
-                            </div>
-                        </div>
-                    </div>
+                    <HomepageArticleSection />
                 </div>
 
                 {/* Vertical Affiliate cards - Hidden on mobile, shown on desktop */}
