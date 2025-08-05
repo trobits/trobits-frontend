@@ -1,6 +1,7 @@
 "use client";
 import React, {useState, useEffect, useRef} from "react";
 import {Flame, Calendar, Hash, ExternalLink, TrendingDown} from "lucide-react";
+import { NordVPNCard, FanaticsCard, TikTokCard} from "@/components/AffiliateLinks";
 
 interface ShibaBurnRecord {
     id: string;
@@ -186,6 +187,7 @@ const ShibaBurnsPage: React.FC = () => {
             {/*</div>*/}
 
             <div className="container mt-10 mx-auto px-6 py-16">
+                
                 {/* Header Section */}
                 <div className="text-center mb-16">
                     <div className="flex items-center justify-center gap-2 mb-4">
@@ -249,6 +251,17 @@ const ShibaBurnsPage: React.FC = () => {
                     </div>
                 </div>
 
+                <div className="flex flex-row justify-center gap-6 my-4">
+                                                    <div className="max-w-[350px] w-full">
+                                                        <NordVPNCard />
+                                                    </div>
+                                                    <div className="max-w-[350px] w-full">
+                                                        <FanaticsCard />
+                                                    </div>
+                                                    <div className="max-w-[350px] w-full">
+                                                        <TikTokCard />
+                                                    </div>
+                                                </div>
                 <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 mb-8">
                     <div className="flex items-center justify-center gap-4">
                         <Calendar className="w-5 h-5 text-gray-400"/>
