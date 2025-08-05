@@ -36,55 +36,55 @@ const adClasses = [
     "67b3c7d89a62fcbf1eeb842e",
 ];
 
-const AdBanner = ({ adClass }: { adClass: string }) => {
-    const adContainerRef = useRef<HTMLDivElement>(null);
+// const AdBanner = ({ adClass }: { adClass: string }) => {
+//     const adContainerRef = useRef<HTMLDivElement>(null);
 
-    const injectAdScript = () => {
-        if (!adContainerRef.current) return;
+//     const injectAdScript = () => {
+//         if (!adContainerRef.current) return;
 
-        const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
-        if (existingScript) {
-            existingScript.remove();
-        }
+//         const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+//         if (existingScript) {
+//             existingScript.remove();
+//         }
 
-        const script = document.createElement("script");
-        script.innerHTML = `
-      !function(e,n,c,t,o,r,d){
-        !function e(n,c,t,o,r,m,d,s,a){
-          s=c.getElementsByTagName(t)[0],
-          (a=c.createElement(t)).async=!0,
-          a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-          a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-          s.parentNode.insertBefore(a,s)
-        }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
-      }();
-    `;
-        script.setAttribute("data-ad-class", adClass);
-        document.body.appendChild(script);
-    };
+//         const script = document.createElement("script");
+//         script.innerHTML = `
+//       !function(e,n,c,t,o,r,d){
+//         !function e(n,c,t,o,r,m,d,s,a){
+//           s=c.getElementsByTagName(t)[0],
+//           (a=c.createElement(t)).async=!0,
+//           a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+//           a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+//           s.parentNode.insertBefore(a,s)
+//         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
+//       }();
+//     `;
+//         script.setAttribute("data-ad-class", adClass);
+//         document.body.appendChild(script);
+//     };
 
-    useEffect(() => {
-        injectAdScript();
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === "visible") {
-                injectAdScript();
-            }
-        };
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-        return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-        };
-    }, [adClass]);
+//     useEffect(() => {
+//         injectAdScript();
+//         const handleVisibilityChange = () => {
+//             if (document.visibilityState === "visible") {
+//                 injectAdScript();
+//             }
+//         };
+//         document.addEventListener("visibilitychange", handleVisibilityChange);
+//         return () => {
+//             document.removeEventListener("visibilitychange", handleVisibilityChange);
+//         };
+//     }, [adClass]);
 
-    return (
-        <div ref={adContainerRef} className="w-full flex justify-center my-8">
-            <ins
-                className={adClass}
-                style={{ display: "inline-block", width: "1px", height: "1px" }}
-            />
-        </div>
-    );
-};
+//     return (
+//         <div ref={adContainerRef} className="w-full flex justify-center my-8">
+//             <ins
+//                 className={adClass}
+//                 style={{ display: "inline-block", width: "1px", height: "1px" }}
+//             />
+//         </div>
+//     );
+// };
 
 export default function RecommendedArticles() {
     const [articles, setArticles] = useState<CryptoArticle[]>([]);
@@ -211,11 +211,11 @@ export default function RecommendedArticles() {
                                     </div>
 
                                     {/* Show an ad after every 4 articles */}
-                                    {(index + 1) % 4 === 0 && index < adClasses.length && (
+                                    {/* {(index + 1) % 4 === 0 && index < adClasses.length && (
                                         <div className="col-span-full">
                                             <AdBanner key={adClasses[Math.floor(index / 4)]} adClass={adClasses[Math.floor(index / 4)]} />
                                         </div>
-                                    )}
+                                    )} */}
                                 </React.Fragment>
                             ))}
                         </div>

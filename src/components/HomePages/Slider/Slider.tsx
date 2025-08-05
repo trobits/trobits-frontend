@@ -73,31 +73,31 @@ export function GrowMeWidget() {
   return null; // No UI element needed
 }
 
-function AdBannerF() {
-  return (
-    <>
-      <ins className="67c24fd7aa72d3d47fc083ad" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
+// function AdBannerF() {
+//   return (
+//     <>
+//       <ins className="67c24fd7aa72d3d47fc083ad" style={{ display: "inline-block", width: "1px", height: "1px" }}></ins>
 
-      <Script
-        id="ad-banner-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(e,n,c,t,o,r,d){
-              !function e(n,c,t,o,r,m,d,s,a){
-                s=c.getElementsByTagName(t)[0],
-                (a=c.createElement(t)).async=!0,
-                a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-                a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-                s.parentNode.insertBefore(a,s)
-              }(window,document,"script","67c24fd7aa72d3d47fc083ad",["cdn.bmcdn6.com"], 0, new Date().getTime())
-            }();
-          `,
-        }}
-      />
-    </>
-  );
-}
+//       <Script
+//         id="ad-banner-script"
+//         strategy="afterInteractive"
+//         dangerouslySetInnerHTML={{
+//           __html: `
+//             !function(e,n,c,t,o,r,d){
+//               !function e(n,c,t,o,r,m,d,s,a){
+//                 s=c.getElementsByTagName(t)[0],
+//                 (a=c.createElement(t)).async=!0,
+//                 a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+//                 a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+//                 s.parentNode.insertBefore(a,s)
+//               }(window,document,"script","67c24fd7aa72d3d47fc083ad",["cdn.bmcdn6.com"], 0, new Date().getTime())
+//             }();
+//           `,
+//         }}
+//       />
+//     </>
+//   );
+// }
 
 const Slider = () => {
   const [ currentSlide, setCurrentSlide ] = useState(0);
@@ -115,7 +115,7 @@ const Slider = () => {
     return (
       <div className="flex justify-center items-center mt-10 sm:mt-20 border-2 border-opacity-80 border-cyan-400 p-4 bg-blue-800 bg-opacity-60 w-full max-w-[900px] mx-auto min-h-40 rounded-lg">
         <div className="text-4xl text-center text-yellow-400 font-bold">
-          <AdBannerF />
+          {/* <AdBannerF /> */}
         </div>
       </div>
     );

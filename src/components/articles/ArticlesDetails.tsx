@@ -149,13 +149,13 @@ function ArticleDetailsPage({ articleId }: { articleId: string }) {
   return (
       <div className="min-h-screen bg-black text-white">
         {/* Ad Banner */}
-        <div className="w-full py-4">
+        {/* <div className="w-full py-4">
           <div className="flex flex-wrap justify-center gap-2 mx-auto">
             {adClasses.map((adClass) => (
                 <AdBanner key={adClass} adClass={adClass} />
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Navigation Header */}
         <div className="container mx-auto px-6 py-8">
@@ -353,54 +353,54 @@ function ArticleDetailsPage({ articleId }: { articleId: string }) {
   );
 }
 
-const AdBanner = ({ adClass }: { adClass: string }) => {
-  const adContainerRef = useRef<HTMLDivElement>(null);
+// const AdBanner = ({ adClass }: { adClass: string }) => {
+//   const adContainerRef = useRef<HTMLDivElement>(null);
 
-  const injectAdScript = () => {
-    if (!adContainerRef.current) return;
+//   const injectAdScript = () => {
+//     if (!adContainerRef.current) return;
 
-    const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
-    if (existingScript) {
-      existingScript.remove();
-    }
+//     const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
+//     if (existingScript) {
+//       existingScript.remove();
+//     }
 
-    const script = document.createElement("script");
-    script.innerHTML = `
-      !function(e,n,c,t,o,r,d){
-        !function e(n,c,t,o,r,m,d,s,a){
-          s=c.getElementsByTagName(t)[0],
-          (a=c.createElement(t)).async=!0,
-          a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-          a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-          s.parentNode.insertBefore(a,s)
-        }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
-      }();
-    `;
-    script.setAttribute("data-ad-class", adClass);
-    document.body.appendChild(script);
-  };
+//     const script = document.createElement("script");
+//     script.innerHTML = `
+//       !function(e,n,c,t,o,r,d){
+//         !function e(n,c,t,o,r,m,d,s,a){
+//           s=c.getElementsByTagName(t)[0],
+//           (a=c.createElement(t)).async=!0,
+//           a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
+//           a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
+//           s.parentNode.insertBefore(a,s)
+//         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
+//       }();
+//     `;
+//     script.setAttribute("data-ad-class", adClass);
+//     document.body.appendChild(script);
+//   };
 
-  useEffect(() => {
-    injectAdScript();
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        injectAdScript();
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [adClass]);
+//   useEffect(() => {
+//     injectAdScript();
+//     const handleVisibilityChange = () => {
+//       if (document.visibilityState === "visible") {
+//         injectAdScript();
+//       }
+//     };
+//     document.addEventListener("visibilitychange", handleVisibilityChange);
+//     return () => {
+//       document.removeEventListener("visibilitychange", handleVisibilityChange);
+//     };
+//   }, [adClass]);
 
-  return (
-      <div ref={adContainerRef} className="w-full flex justify-center">
-        <ins
-            className={adClass}
-            style={{ display: "inline-block", width: "1px", height: "1px" }}
-        ></ins>
-      </div>
-  );
-};
+//   return (
+//       <div ref={adContainerRef} className="w-full flex justify-center">
+//         <ins
+//             className={adClass}
+//             style={{ display: "inline-block", width: "1px", height: "1px" }}
+//         ></ins>
+//       </div>
+//   );
+// };
 
 export default ArticleDetailsPage;
