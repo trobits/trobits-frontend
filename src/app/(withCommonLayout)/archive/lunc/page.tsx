@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Flame, Calendar, Hash, ExternalLink, TrendingDown } from "lucide-react";
+import { NordVPNCard, FanaticsCard, NexoCard } from "@/components/AffiliateLinks";
 
 interface LuncBurnRecord {
   id: string;
@@ -244,6 +245,17 @@ const LuncBurnsPage: React.FC = () => {
               <p className="text-sm text-gray-400 mt-1">Per transaction</p>
             </div>
           </div>
+ <div className="flex flex-row justify-center gap-6 my-4">
+                    <div className="max-w-[350px] w-full">
+                      <NordVPNCard />
+                    </div>
+                    <div className="max-w-[350px] w-full">
+                      <NexoCard />
+                    </div>
+                    <div className="max-w-[350px] w-full">
+                      <FanaticsCard />
+                    </div>
+                  </div>
 
           <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 mb-8">
             <div className="flex items-center justify-center gap-4">
