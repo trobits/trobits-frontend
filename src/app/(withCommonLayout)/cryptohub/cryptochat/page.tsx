@@ -106,25 +106,7 @@ const CryptoChatPage = () => {
                 </div>
             )}
           </div>
-          {/* Vertical Affiliate Section */}
-          <div className="hidden lg:flex w-60 flex-shrink-0 flex-col mt-2">
-  <div className="max-h-[180px] flex justify-center items-center mb-16 last:mb-0">
-    <div className="scale-90 w-full">
-      <NordVPNCard />
-    </div>
-  </div>
-  <div className="max-h-[180px] flex justify-center items-center mb-20 last:mb-0">
-    <div className="scale-90 w-full">
-      <FanaticsCard />
-    </div>
-  </div>
-  <div className="max-h-[180px] flex justify-center items-center mb-8 last:mb-0">
-    <div className="scale-90 w-full">
-      <TikTokCard />
-    </div>
-  </div>
-</div>
-
+          
         </div>
 
         <style jsx>{`
