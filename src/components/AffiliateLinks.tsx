@@ -59,7 +59,7 @@ export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
           alt="TikTok"
           width="5418"
           height="5417"
-          className={`rounded-lg w-full ${compact ? "h-30 object-cover" : 'h-full max-h-[300px] object-contain'}`}
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
         />
       </a>
       <img height="0" width="0" src="https://imp.pxf.io/i/6232366/2220947/27618" style={{ position: "absolute", visibility: "hidden" }} alt="" />
@@ -275,7 +275,7 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => (
           alt="Fanatics"
           width="300"
           height="250"
-          className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : "object-contain h-full max-h-[300px]"}`}
         />
       </a>
       <img
