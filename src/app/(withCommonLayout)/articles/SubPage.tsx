@@ -606,7 +606,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                 </div>
 
                 {/* Vertical Ad Section */}
-                <div className="w-80 flex-shrink-0 flex flex-col gap-5">
+                <div className="w-60 flex-shrink-0 flex flex-col gap-5">
                   <div className="max-h-[350px]">
                     <NordVPNCard />
                   </div>
