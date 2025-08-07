@@ -62,33 +62,50 @@ const CoinColumn: React.FC<CoinColumnProps> = ({ cryptoData, index, isLast }) =>
         </div>
 
         {/* Burn Stats */}
-        <div className="bg-gradient-to-br from-slate-800/30 to-slate-700/20 border border-slate-600/30 rounded-xl p-4 space-y-4 hover:border-slate-500/40 transition-all duration-300">
-          {/* 1 Day Burn */}
-          <div>
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <Flame className="w-4 h-4 text-slate-400" />
-              <span className="text-sm font-medium text-slate-300">
-                1 Day Burn
-              </span>
-            </div>
-            <div className="text-center text-lg font-bold text-white">
-              {formatNumber(burns)}
-            </div>
-          </div>
-
-          {/* Lifetime Burn */}
-          <div>
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <TrendingUp className="w-4 h-4 text-slate-400" />
-              <span className="text-sm font-medium text-slate-300">
-                Lifetime Burn
-              </span>
-            </div>
-            <div className="text-center text-lg font-bold text-white">
-              {formatNumber(burns30Day)}
-            </div>
-          </div>
+        <div className="bg-gradient-to-br from-slate-800/30 to-slate-700/20 border border-slate-600/30 rounded-xl p-4 space-y-4 hover:border-slate-500/40 transition-all duration-300 min-h-[180px] flex flex-col justify-center">
+  {(!burns || !burns30Day) ? (
+    <div className="flex flex-1 flex-col items-center justify-center text-center text-sm font-medium text-slate-300 space-y-1">
+      <div className="flex items-center gap-1">
+        <Flame className="w-4 h-4 text-slate-400" />
+        <span>Burn data</span>
+      </div>
+      <div className="text-slate-400">coming soon!</div>
+    </div>
+  ) : (
+    <>
+      {/* 1 Day Burn */}
+      <div>
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <Flame className="w-4 h-4 text-slate-400" />
+          <span className="text-sm font-medium text-slate-300">
+            1 Day Burn
+          </span>
         </div>
+        <div className="text-center text-lg font-bold text-white">
+          {formatNumber(burns)}
+        </div>
+      </div>
+
+      {/* Lifetime Burn */}
+      <div>
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <TrendingUp className="w-4 h-4 text-slate-400" />
+          <span className="text-sm font-medium text-slate-300">
+            Lifetime Burn
+          </span>
+        </div>
+        <div className="text-center text-lg font-bold text-white">
+          {formatNumber(burns30Day)}
+        </div>
+      </div>
+    </>
+  )}
+</div>
+
+
+
+
+
 
         {/* Action Button */}
         <div className="mt-6">
