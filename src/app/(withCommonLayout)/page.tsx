@@ -14,7 +14,7 @@ import {
      SocialCatfishCard,
      NexoCard,
      TesterupCard,
-     SocialCatfishCompact
+     
 } from "@/components/AffiliateLinks";
 
 import CardCarousel from "@/components/HomePages/Affiliate/AffilliateCarousel";
@@ -25,6 +25,7 @@ function HomepageArticleSection() {
     const [error, setError] = useState("");
 
     useEffect(() => {
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
         console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`);
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`)
             .then(async (res) => {
