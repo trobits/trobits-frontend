@@ -25,7 +25,7 @@ export default function HeroSection() {
                     {/* Text Content */}
                     <div className="text-center lg:text-left">
                         <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6">
-                            Welcome to Trobits
+                            Welcome to Trobits.
                         </h1>
                         <div className="text-sm sm:text-base lg:text-lg">
                             <TextGenerateEffect
