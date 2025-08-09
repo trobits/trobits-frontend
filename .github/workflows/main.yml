@@ -27,7 +27,7 @@ jobs:
           ssh trobits@160.153.175.21 << 'EOF'
             cd /var/www/trobits-frontend
             git pull origin main
-            npm install
+            npm install --force
             npm run build
             pm2 restart 1
           EOF
