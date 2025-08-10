@@ -25,8 +25,6 @@ function HomepageArticleSection() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
-        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`);
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`)
             .then(async (res) => {
                 
@@ -88,17 +86,19 @@ const Profile = () => {
             <CryptoData/>
 
             {/* Market Card Carousel Section */}
-            <CardCarousel/>
-
-            {/* Horizontal Affiliate Link */}
-            <div className="w-full">
-                <SocialCatfishCard compact/>
+            <div className="flex items-center justify-center">
+                <CardCarousel/>
             </div>
 
+            {/* Horizontal Affiliate Link */}
+            {/* <div className="w-full">
+                <SocialCatfishCard compact/>
+            </div> */}
+
             {/* SubPage + Vertical Affiliate Section - Responsive Layout */}
-            <div className="flex flex-col lg:flex-row w-full gap-5">
+            <div className="flex flex-col lg:flex-row w-full gap-5 justify-center">
                 {/* Main SubPage content - Full width on mobile, 80% on desktop */}
-                <div className="w-full lg:w-[80%] flex flex-col gap-5 lg:-mt-11">
+                <div className="w-full xl:w-[72%] flex flex-col gap-5 lg:-mt-11">
                     <SubPage simpleHeader/>
 
                     {/* Mobile: Show GeminiCard here */}
@@ -111,11 +111,11 @@ const Profile = () => {
                 </div>
 
                 {/* Vertical Affiliate cards - Hidden on mobile, shown on desktop */}
-                <div className="hidden lg:flex lg:w-[15%] flex-col gap-3 scale-90 -mt-12">
-                <TikTokCard/>
-                <NexoCard/>
-                <NordVPNCard/>
-                <FanaticsCard/>
+                <div className="hidden xl:flex lg:w-[10%] flex-col gap-3 scale-90 -mt-12">
+                    <TikTokCard/>
+                    <NexoCard/>
+                    <NordVPNCard/>
+                    <FanaticsCard/>
                 </div>
             </div>
 

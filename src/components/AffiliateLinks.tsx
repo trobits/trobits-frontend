@@ -32,7 +32,7 @@ export const TesterupCard = ({ compact = false }: { compact?: boolean }) => (
       />
 
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">
+        <h3 className="text-xs font-semibold text-cyan-300">
           Testerup: Signup and Earn 750 points
         </h3>
       </div>
@@ -64,7 +64,7 @@ export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
       </a>
       <img height="0" width="0" src="https://imp.pxf.io/i/6232366/2220947/27618" style={{ position: "absolute", visibility: "hidden" }} alt="" />
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">TikTok: Signup and earn 2,000 points</h3>
+        <h3 className="text-xs font-semibold text-cyan-300">TikTok: Signup and earn 2,000 points</h3>
       </div>
     </div>
   </div>
@@ -100,7 +100,7 @@ export const SocialCatfishCard = ({ compact = false }: { compact?: boolean }) =>
       />
 
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">
+        <h3 className="text-xs font-semibold text-cyan-300">
           Social Catfish: Signup and Earn 3,000 points
         </h3>
       </div>
@@ -131,7 +131,7 @@ export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
       </a>
       <img height="0" width="0" src="https://imp.pxf.io/i/6232366/2218907/12544" style={{ position: "absolute", visibility: "hidden" }} alt="" />
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">NEXO: Signup and earn 250 points after your first transaction</h3>
+        <h3 className="text-xs font-semibold text-cyan-300">NEXO: Signup and earn 250 points after your first transaction</h3>
       </div>
     </div>
   </div>
@@ -159,7 +159,7 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
       </a>
       <img height="0" width="0" src="https://nordvpn.sjv.io/i/6232366/512103/7452" style={{ position: "absolute", visibility: "hidden" }} alt="" />
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">NordVPN: Purchase any plan and earn 20,000 points</h3>
+        <h3 className="text-xs font-semibold text-cyan-300">NordVPN: Purchase any plan and earn 20,000 points</h3>
       </div>
     </div>
   </div>
@@ -187,7 +187,7 @@ export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
       </a>
       <img height="0" width="0" src="https://imp.pxf.io/i/6232366/1039486/9251" style={{ position: "absolute", visibility: "hidden" }} alt="" />
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">Coinbase: Signup and earn 2,500 points after your first trade</h3>
+        <h3 className="text-xs font-semibold text-cyan-300">Coinbase: Signup and earn 2,500 points after your first trade</h3>
       </div>
     </div>
   </div>
@@ -223,7 +223,7 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => (
         alt=""
       />
       <div className="text-center w-full px-2">
-        <h3 className="text-sm py-1 font-semibold text-cyan-300">Gemini: Signup and earn 5,000 points after your first transaction</h3>
+        <h3 className="text-xs py-1 font-semibold text-cyan-300">Gemini: Signup and earn 5,000 points after your first transaction</h3>
       </div>
     </div>
   </div>
@@ -254,7 +254,7 @@ export const StockMarketGuidesCard = ({ compact = false }: { compact?: boolean }
         alt=""
       />
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">Stock Market Guides: Signup and earn 6,500 points</h3>
+        <h3 className="text-xs font-semibold text-cyan-300">Stock Market Guides: Signup and earn 6,500 points</h3>
       </div>
     </div>
   </div>
@@ -286,7 +286,7 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => (
         alt=""
       />
       <div className="text-center w-full px-2">
-        <h3 className="text-sm font-semibold text-cyan-300">Fanatics: Earn 2,500 point after any purchase</h3>
+        <h3 className="text-xs font-semibold text-cyan-300">Fanatics: Earn 2,500 point after any purchase</h3>
       </div>
     </div>
   </div>
