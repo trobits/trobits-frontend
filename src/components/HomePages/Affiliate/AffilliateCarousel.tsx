@@ -27,18 +27,15 @@ const CardCarousel: React.FC = () => {
   // Card data for easier management
   const cards = [
     { id: 1, component: <TesterupCard /> },
-    { id: 2, component: <TikTokCard /> },
+    // { id: 2, component: <TikTokCard /> },
     { id: 3, component: <SocialCatfishCard /> },
-    { id: 4, component: <NexoCard /> },
-    { id: 5, component: <NordVPNCard /> },
+    // { id: 4, component: <NexoCard /> },
+    // { id: 5, component: <NordVPNCard /> },
     { id: 6, component: <CoinbaseCard /> },
-    { id: 7, component: <GeminiCard /> },
+    // { id: 7, component: <GeminiCard /> },
     { id: 8, component: <StockMarketGuidesCard /> },
-    { id: 9, component: <FanaticsCard /> },
+    // { id: 9, component: <FanaticsCard /> },
     { id: 10, component: <RemitlyCard /> }
-    
-   
-   
   ];
 
   const totalCards = cards.length;
@@ -107,7 +104,7 @@ const CardCarousel: React.FC = () => {
   return (
     <div className="relative">
       {/* Left Scroll Button */}
-      <button
+      {/* <button
         onMouseEnter={() => {
           setPauseScroll(true);
           hoverLeftRef.current = true;
@@ -121,10 +118,10 @@ const CardCarousel: React.FC = () => {
         aria-label="Previous card"
       >
         <ChevronLeft className="text-white w-5 h-5" />
-      </button>
+      </button> */}
 
       {/* Right Scroll Button */}
-      <button
+      {/* <button
         onMouseEnter={() => {
           setPauseScroll(true);
           hoverRightRef.current = true;
@@ -138,40 +135,30 @@ const CardCarousel: React.FC = () => {
         aria-label="Next card"
       >
         <ChevronRight className="text-white w-5 h-5" />
-      </button>
+      </button> */}
 
       {/* Scrollable Cards Container */}
-      <div
-        ref={scrollRef}
-        className="overflow-x-auto no-scrollbar scroll-smooth flex"
-        style={{
-          scrollSnapType: 'x mandatory',
-          WebkitOverflowScrolling: 'touch'
-        }}
-        onMouseEnter={() => setPauseScroll(true)}
-        onMouseLeave={() => setPauseScroll(false)}
-        onScroll={handleScroll}
-      >
-        {cards.map((card, index) => (
-          <div
-            key={card.id}
-            className="flex-shrink-0"
-            style={{
-              width: 'calc(25% - 1rem)', // Smaller width for smaller cards
-              marginLeft: index === 0 ? '2.5rem' : '0.5rem',
-              marginRight: index === cards.length - 1 ? '2.5rem' : '0.5rem',
-              scrollSnapAlign: 'start'
-            }}
-          >
-            <div className="h-full">
-              {card.component}
-            </div>
-          </div>
-        ))}
+<div
+  className="overflow-x-none no-scrollbar scroll-smooth flex gap-4 justify-center max-w-6xl mx-auto"
+>
+  {cards.map((card, index) => (
+    <div
+      key={card.id}
+      className="flex-shrink-0"
+      style={{
+        width: 'calc(19.5% - 1rem)', // Each card takes ~18% of container width
+        minWidth: '180px' // Minimum width to prevent too small cards
+      }}
+    >
+      <div className="h-40"> {/* Fixed height for consistency */}
+        {React.cloneElement(card.component, { compact: true })}
       </div>
+    </div>
+  ))}
+</div>
 
       {/* Dots Indicator */}
-      <div className="flex justify-center mt-4 space-x-2">
+      {/* <div className="flex justify-center mt-4 space-x-2">
         {Array.from({ length: totalCards - 2 }).map((_, index) => (
           <button
             key={index}
@@ -184,7 +171,7 @@ const CardCarousel: React.FC = () => {
             aria-label={`Go to card ${index + 1}`}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
