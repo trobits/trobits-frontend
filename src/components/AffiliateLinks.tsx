@@ -138,32 +138,32 @@ export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
 );
 
 // NordVPN
-//export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
-  //<div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-    //<div className="flex flex-col items-center gap-1 h-full justify-between">
-      //<a
-        //rel="noopener sponsored"
-        //href="https://nordvpn.sjv.io/c/6232366/512103/7452"
-        //target="_blank"
-        //id="512103"
-        //className="block w-full relative"
-      //>
-        //<img
-          //src="//a.impactradius-go.com/display-ad/7452-512103"
+export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="noopener sponsored"
+        href="https://nordvpn.sjv.io/c/6232366/512103/7452"
+        target="_blank"
+        id="512103"
+        className="block w-full relative"
+      >
+        <img
+          src="//a.impactradius-go.com/display-ad/7452-512103"
         
-          //alt="NordVPN"
-          //width="300"
-          //height="250"
-          //className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
-        ///>
-      //</a>
-      //<img height="0" width="0" src="https://nordvpn.sjv.io/i/6232366/512103/7452" style={{ position: "absolute", visibility: "hidden" }} alt="" />
-      //<div className="text-center w-full px-2">
-        //<h3 className="text-xs font-semibold text-cyan-300">Purchase any plan and earn 20,000 points</h3>
-      //</div>
-    //</div>
-  //</div>
-//);
+          alt="NordVPN"
+          width="300"
+          height="250"
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
+        />
+      </a>
+      <img height="0" width="0" src="https://nordvpn.sjv.io/i/6232366/512103/7452" style={{ position: "absolute", visibility: "hidden" }} alt="" />
+      <div className="text-center w-full px-2">
+        <h3 className="text-xs font-semibold text-cyan-300">Purchase any plan and earn 20,000 points</h3>
+      </div>
+    </div>
+  </div>
+);
 
 // Coinbase
 export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
@@ -293,33 +293,33 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => (
 );
 
 // Remitly
-//export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => (
- // <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
-    //<div className="flex flex-col items-center gap-1 h-full justify-between">
-     // <a
-        //rel="sponsored"
-        //href="https://remitly.tod8mp.net/c/6232366/1417999/10408"
-        //target="_blank"
-        //className="block w-full relative flex-1"
-      //>
-        //<img
-          //src="https://a.impactradius-go.com/display-ad/10408-1417999"
-          //alt="Remitly"
-          //width="320"
-          //height="120"
-          //className={`rounded-lg w-full object-contain max-h-[100px] bg-cover`}
-        ///>
-      //</a>
-      //<img
-        //height="0"
-        //width="0"
-        //src="https://imp.pxf.io/i/6232366/1417999/10408"
-        //style={{ position: "absolute", visibility: "hidden" }}
-        //alt=""
-      ///>
-      //<div className="text-center w-full px-2">
-        //<h3 className="text-xs font-semibold text-cyan-300">Earn 2,500 points for signing up</h3>
-      //</div>
-    //</div>
-  //</div>
+export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => (
+  <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
+    <div className="flex flex-col items-center gap-1 h-full justify-between">
+      <a
+        rel="sponsored"
+        href="https://remitly.tod8mp.net/c/6232366/1417999/10408"
+        target="_blank"
+        className="block w-full relative flex-1"
+      >
+        <img
+          src="https://a.impactradius-go.com/display-ad/10408-1417999"
+          alt="Remitly"
+          width="320"
+          height="120"
+          className={`rounded-lg w-full object-contain max-h-[100px] bg-cover`}
+        />
+      </a>
+      <img
+        height="0"
+        width="0"
+        src="https://imp.pxf.io/i/6232366/1417999/10408"
+        style={{ position: "absolute", visibility: "hidden" }}
+        alt=""
+      />
+      <div className="text-center w-full px-2">
+        <h3 className="text-xs font-semibold text-cyan-300">Earn 2,500 points for signing up</h3>
+      </div>
+    </div>
+  </div>
 );
