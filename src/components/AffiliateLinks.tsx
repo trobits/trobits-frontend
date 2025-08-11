@@ -306,8 +306,8 @@ export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => (
           src="https://a.impactradius-go.com/display-ad/10408-1417999"
           alt="Remitly"
           width="320"
-          height="480"
-          className={`rounded-lg w-full object-contain h-full max-h-[300px]`}
+          height="120"
+          className={`rounded-lg w-full object-contain max-h-[100px] bg-cover`}
         />
       </a>
       <img
@@ -318,7 +318,7 @@ export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => (
         alt=""
       />
       <div className="text-center w-full px-2">
-        <h3 className="text-xs font-semibold text-cyan-300">Remitly: Earn 2,500 points for signing up; earn additional 2,500 points after your first transaction</h3>
+        <h3 className="text-xs font-semibold text-cyan-300">Remitly: Earn 2,500 points for signing up</h3>
       </div>
     </div>
   </div>
