@@ -98,7 +98,7 @@ const Profile = () => {
             {/* SubPage + Vertical Affiliate Section - Responsive Layout */}
             <div className="flex flex-col lg:flex-row w-full gap-5 justify-center">
                 {/* Main SubPage content - Full width on mobile, 80% on desktop */}
-                <div className="w-full xl:w-[72%] flex flex-col gap-5 lg:-mt-11">
+                <div className="w-full lg:w-[100%] xl:w-[90%] 2xl:w-[72%] flex flex-col gap-5 lg:-mt-11">
                     <SubPage simpleHeader/>
 
                     {/* Mobile: Show GeminiCard here */}
