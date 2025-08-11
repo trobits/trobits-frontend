@@ -322,4 +322,4 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => (
       //</div>
     //</div>
   //</div>
-//);
+);
