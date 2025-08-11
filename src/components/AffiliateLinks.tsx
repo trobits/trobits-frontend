@@ -138,7 +138,7 @@ export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
 );
 
 // NordVPN
-export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
+/*export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
   <div className="bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700 w-full h-full flex flex-col justify-between">
     <div className="flex flex-col items-center gap-1 h-full justify-between">
       <a
@@ -163,7 +163,7 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
       </div>
     </div>
   </div>
-);
+);*/
 
 // Coinbase
 export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
