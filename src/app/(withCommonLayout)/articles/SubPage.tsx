@@ -267,7 +267,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
 
     const interval = setInterval(() => {
       nextSlide();
-    }, 4000); // 4 seconds
+    }, 10000); // 4 seconds
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, simpleHeader, nextSlide, filteredArticles.length, cardsPerView]);
