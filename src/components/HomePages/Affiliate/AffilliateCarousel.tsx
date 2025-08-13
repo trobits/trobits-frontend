@@ -150,7 +150,7 @@ const CardCarousel: React.FC = () => {
         minWidth: '180px' // Minimum width to prevent too small cards
       }}
     >
-      <div className="h-40"> {/* Fixed height for consistency */}
+      <div className="max-h-40 h-40"> {/* Fixed height for consistency */}
         {React.cloneElement(card.component, { compact: true })}
       </div>
     </div>
