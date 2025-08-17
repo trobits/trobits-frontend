@@ -208,7 +208,7 @@ export const GeminiCard = ({ compact = false }: { compact?: boolean }) => (
           alt="Gemini Exchange"
           width="1422"
           height="800"
-          className={`rounded-lg w-full ${compact ? "h-48 object-contain" : 'h-full max-h-[300px] object-contain'}`}
+          className={`rounded-lg w-full ${compact ? "h-20 object-cover" : 'h-full max-h-[300px] object-contain'}`}
           onError={(e) => {
             e.currentTarget.style.display = "none";
             e.currentTarget.nextElementSibling?.classList.remove("hidden");
@@ -307,7 +307,7 @@ export const RemitlyCard = ({ compact = false }: { compact?: boolean }) => (
           alt="Remitly"
           width="320"
           height="120"
-          className={`rounded-lg w-full object-contain ${compact ? "max-h-[200px]" : "max-h-[100px]"} bg-cover`}
+          className={`rounded-lg w-full object-contain ${compact ? "max-h-[200px]" : "max-h-[100px]"}`}
         />
       </a>
       <img
