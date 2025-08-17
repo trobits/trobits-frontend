@@ -116,7 +116,7 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
             }
         ${isListView
                 ? "flex flex-row h-64 w-full rounded-3xl overflow-hidden"
-                : "flex flex-col max-w-sm h-[480px] rounded-3xl overflow-hidden"
+                : "flex flex-col max-w-sm h-[280px] rounded-2xl overflow-hidden"
             }
       `}
         >
@@ -125,7 +125,7 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
         relative overflow-hidden bg-gradient-to-br from-gray-700 to-gray-800
         ${isListView
                 ? "w-80 h-full flex-shrink-0"
-                : "w-full h-64"
+                : "w-full h-40"
             }
       `}>
                 {!imageError && articleImage !== DummyBlogImage ? (
@@ -159,32 +159,41 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
                     </div>
                 </div>
 
-                {/* External link indicator */}
-                <div className="absolute top-4 right-4">
-                    <div className="flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1">
-                        <ExternalLink className="w-3 h-3 text-white" />
-                        <span className="text-white text-xs font-medium">External</span>
-                    </div>
-                </div>
-
-                {/* Sentiment badge */}
-                {articleData.sentiment && articleData.sentiment !== 'neutral' && (
-                    <div className="absolute bottom-4 right-4">
-                        <div className={`flex items-center gap-1 rounded-full px-3 py-1 ${
-                            articleData.sentiment === 'positive'
-                                ? 'bg-green-600/80'
-                                : 'bg-red-600/80'
-                        }`}>
-                            <TrendingUp className="w-3 h-3 text-white" />
-                            <span className="text-white text-xs font-bold">
-                    {articleData.sentiment.toUpperCase()}
-                  </span>
+                {/* External link indicator - Only show in list view */}
+                {isListView && (
+                    <div className="absolute top-4 right-4">
+                        <div className="flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded-full px-2 py-1">
+                            <ExternalLink className="w-3 h-3 text-white" />
                         </div>
                     </div>
                 )}
 
-                {/* Tickers overlay */}
-                {articleData.tickers && articleData.tickers.length > 0 && (
+                {/* Sentiment badge - Simplified for grid view */}
+                {!isListView && articleData.sentiment && articleData.sentiment !== 'neutral' && (
+                    <div className="absolute top-4 right-4">
+                        <div className={`rounded-full w-6 h-6 flex items-center justify-center ${
+                            articleData.sentiment === 'positive'
+                                ? 'bg-green-600/80'
+                                : 'bg-red-600/80'
+                        }`}>
+                            <span className="text-white text-xs font-bold">
+                                {articleData.sentiment === 'positive' ? '+' : '-'}
+                            </span>
+                        </div>
+                    </div>
+                )}
+
+                {/* Tickers overlay - Only show main ticker for grid view */}
+                {!isListView && articleData.tickers && articleData.tickers.length > 0 && (
+                    <div className="absolute bottom-4 left-4">
+                        <span className="bg-blue-600/80 text-white text-xs px-2 py-1 rounded-md font-medium">
+                            {articleData.tickers[0]}
+                        </span>
+                    </div>
+                )}
+                
+                {/* Tickers overlay - Full for list view */}
+                {isListView && articleData.tickers && articleData.tickers.length > 0 && (
                     <div className="absolute bottom-4 left-4">
                         <div className="flex gap-1">
                             {articleData.tickers.slice(0, 2).map((ticker) => (
@@ -192,13 +201,13 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
                                     key={ticker}
                                     className="bg-blue-600/80 text-white text-xs px-2 py-1 rounded-full font-medium"
                                 >
-                    {ticker}
-                  </span>
+                                    {ticker}
+                                </span>
                             ))}
                             {articleData.tickers.length > 2 && (
                                 <span className="bg-gray-600/80 text-white text-xs px-2 py-1 rounded-full">
-                    +{articleData.tickers.length - 2}
-                  </span>
+                                    +{articleData.tickers.length - 2}
+                                </span>
                             )}
                         </div>
                     </div>
@@ -224,12 +233,12 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
 
             {/* Content Section */}
             <div className={`
-        flex flex-col justify-between p-6
+        flex flex-col justify-between ${isListView ? 'p-6' : 'p-4'}
         ${isListView ? "flex-1 min-w-0" : "flex-1"}
       `}>
                 {/* Header */}
-                <div className="space-y-4">
-                    {/* Date and time */}
+                <div className={`space-y-${isListView ? '4' : '2'}`}>
+                    {/* Date and time - Simplified for grid view */}
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-gray-400">
                             <Clock className="w-3 h-3" />
@@ -244,21 +253,21 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
                         )}
                     </div>
 
-                    {/* Tickers for grid view */}
-                    {!isListView && articleData.tickers && articleData.tickers.length > 0 && (
+                    {/* Tickers for list view only */}
+                    {isListView && articleData.tickers && articleData.tickers.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                             {articleData.tickers.slice(0, 3).map((ticker) => (
                                 <span
                                     key={ticker}
                                     className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded-full font-medium"
                                 >
-                    {ticker}
-                  </span>
+                                    {ticker}
+                                </span>
                             ))}
                             {articleData.tickers.length > 3 && (
                                 <span className="px-2 py-1 bg-gray-600/20 text-gray-400 text-xs rounded-full">
-                    +{articleData.tickers.length - 3}
-                  </span>
+                                    +{articleData.tickers.length - 3}
+                                </span>
                             )}
                         </div>
                     )}
@@ -269,30 +278,22 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
             transition-colors duration-300 group-hover:text-cyan-200
             ${isListView
                         ? "text-xl line-clamp-2"
-                        : "text-lg line-clamp-3"
+                        : "text-sm line-clamp-2"
                     }
           `}>
                         {articleData?.title || "Untitled Article"}
                     </h3>
 
-                    {/* Content Preview */}
-                    <div className={`
-            text-gray-400 leading-relaxed
-            transition-colors duration-300 group-hover:text-gray-300
-            ${isListView
-                        ? "text-sm line-clamp-3"
-                        : "text-sm line-clamp-4"
-                    }
-          `}>
-                        {getCleanContent(
-                            articleContent,
-                            isListView ? 180 : 150
-                        )}
-                    </div>
+                    {/* Content Preview - Only for list view */}
+                    {isListView && (
+                        <div className="text-gray-400 leading-relaxed text-sm line-clamp-3 transition-colors duration-300 group-hover:text-gray-300">
+                            {getCleanContent(articleContent, 180)}
+                        </div>
+                    )}
                 </div>
 
-                {/* Footer */}
-                {!isListView && (
+                {/* Footer - Only for list view */}
+                {isListView && (
                     <div className="pt-4 border-t border-gray-700/50">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4 text-xs text-gray-500">
@@ -300,7 +301,6 @@ const NewsCard = ({ articleData, viewMode = "grid" }: NewsCardProps) => {
                                     <Calendar className="w-3 h-3" />
                                     <span>{articleSource}</span>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>

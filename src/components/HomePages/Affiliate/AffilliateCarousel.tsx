@@ -35,7 +35,7 @@ const CardCarousel: React.FC = () => {
     // { id: 7, component: <GeminiCard /> },
     { id: 8, component: <StockMarketGuidesCard /> },
     // { id: 9, component: <FanaticsCard /> },
-    { id: 10, component: <RemitlyCard /> }
+    // { id: 10, component: <RemitlyCard /> } - Removed as requested
   ];
 
   const totalCards = cards.length;
@@ -146,11 +146,11 @@ const CardCarousel: React.FC = () => {
       key={card.id}
       className="flex-shrink-0"
       style={{
-        width: 'calc(19.5% - 1rem)', // Each card takes ~18% of container width
-        minWidth: '180px' // Minimum width to prevent too small cards
+        width: 'calc(24% - 1rem)', // Each card takes ~24% of container width (4 cards instead of 5)
+        minWidth: '200px' // Minimum width to prevent too small cards
       }}
     >
-      <div className="max-h-40 h-40"> {/* Fixed height for consistency */}
+      <div className="max-h-60 h-60"> {/* Increased height to show full images */}
         {React.cloneElement(card.component, { compact: true })}
       </div>
     </div>
