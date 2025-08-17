@@ -245,17 +245,26 @@ const PepeBurnsPage: React.FC = () => {
                         <p className="text-sm text-gray-400 mt-1">Per transaction</p>
                     </div>
                 </div>
- <div className="flex flex-row justify-center gap-6 my-4">
-                                    <div className="max-w-[350px] w-full">
-                                        <NordVPNCard />
-                                    </div>
-                                    <div className="max-w-[350px] w-full">
-                                        <TikTokCard />
-                                    </div>
-                                    <div className="max-w-[350px] w-full">
-                                        <NexoCard />
-                                    </div>
-                                </div>
+                {/* Affiliate Cards Section - Following home page pattern */}
+                <div className="w-full mb-8">
+                    <div className="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto">
+                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                            <div className="max-h-40 h-40">
+                                <NordVPNCard compact />
+                            </div>
+                        </div>
+                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                            <div className="max-h-40 h-40">
+                                <TikTokCard compact />
+                            </div>
+                        </div>
+                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                            <div className="max-h-40 h-40">
+                                <NexoCard compact />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 mb-8">
                     <div className="flex items-center justify-center gap-4">
                         <Calendar className="w-5 h-5 text-gray-400" />

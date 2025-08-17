@@ -310,7 +310,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
   }
 
   return (
-      <div className={`${simpleHeader ? 'h-[550px] mb-20' : 'min-h-screen bg-black'} relative`}>
+      <div className={`${simpleHeader ? 'h-auto mb-8' : 'min-h-screen bg-black'} relative`}>
 
         {/* Overlay spinner on refetch */}
         {isFetching && !isLoading && (
@@ -335,7 +335,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                 <div className="relative">
                   {/* Carousel Container */}
                   <div
-                      className="relative overflow-hidden h-[550px] rounded-2xl pb-12"
+                      className="relative overflow-hidden h-[320px] rounded-2xl"
                       onMouseEnter={() => setIsAutoPlaying(false)}
                       onMouseLeave={() => setIsAutoPlaying(true)}
                   >
@@ -361,7 +361,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                     {/* Articles Carousel */}
                     <div
                         ref={carouselRef}
-                        className="flex transition-transform duration-500 ease-out pb-8"
+                        className="flex transition-transform duration-500 ease-out h-full"
                         style={{
                           transform: `translateX(-${currentSlide * (133 / cardsPerView)}%)`,
                         }}
@@ -373,7 +373,7 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                               style={{ width: `${133 / cardsPerView}%` }}
                           >
                             <div className="h-full">
-                              <div className="w-full max-w-sm mx-auto h-48">
+                              <div className="w-full max-w-xs mx-auto h-64">
                                 <NewsCard articleData={article} viewMode="grid" />
                               </div>
                             </div>
@@ -381,22 +381,6 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                       ))}
                     </div>
 
-                    {/* Pagination Dots - Positioned at bottom with proper spacing */}
-                    {filteredArticles.length > cardsPerView && (
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex space-x-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2">
-                          {Array.from({ length: totalSlides }, (_, index) => (
-                              <button
-                                  key={index}
-                                  onClick={() => goToSlide(index)}
-                                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                                      index === currentSlide
-                                          ? 'bg-cyan-400 w-6'
-                                          : 'bg-white/30 hover:bg-white/50'
-                                  }`}
-                              />
-                          ))}
-                        </div>
-                    )}
 
                     {/* Loading State for Carousel */}
                     {filteredArticles.length === 0 && (
@@ -409,7 +393,24 @@ const SubPage: React.FC<SubPageProps> = ({ simpleHeader = false }) => {
                     )}
                   </div>
 
-                  {/* Article count indicator - Positioned below carousel */}
+                  {/* Pagination Dots - Positioned below carousel */}
+                  {filteredArticles.length > cardsPerView && (
+                      <div className="flex justify-center mt-4 space-x-2">
+                        {Array.from({ length: totalSlides }, (_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => goToSlide(index)}
+                                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                    index === currentSlide
+                                        ? 'bg-cyan-400 w-6'
+                                        : 'bg-white/30 hover:bg-white/50'
+                                }`}
+                            />
+                        ))}
+                      </div>
+                  )}
+
+                  {/* Article count indicator - Positioned below dots */}
                   {filteredArticles.length > 0 && (
                       <div className="text-center mt-2">
                       <span className="text-xs text-gray-500">

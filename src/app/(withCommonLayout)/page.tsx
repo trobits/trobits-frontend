@@ -77,16 +77,16 @@ const Profile = () => {
             {/* Navigation */}
             <CryptoNavbar/>
 
-            {/* Hero Section - with responsive top spacing after navbar */}
-            <div className="pt-8 sm:pt-16 lg:pt-[12vh] flex items-center justify-center">
+            {/* Hero Section - with reduced top spacing after navbar */}
+            <div className="pt-2 sm:pt-4 lg:pt-6 flex items-center justify-center">
                 <HeroSection/>
             </div>
 
             {/* Crypto Data Section */}
             <CryptoData/>
 
-            {/* Market Card Carousel Section */}
-            <div className="flex items-center justify-center">
+            {/* Market Card Carousel Section - Increased spacing above and below */}
+            <div className="flex items-center justify-center my-12 sm:my-16 lg:my-20">
                 <CardCarousel/>
             </div>
 
@@ -95,12 +95,15 @@ const Profile = () => {
                 <SocialCatfishCard compact/>
             </div> */}
 
-            {/* SubPage + Vertical Affiliate Section - Responsive Layout */}
-            <div className="flex flex-col lg:flex-row w-full gap-5 justify-center">
-                {/* Main SubPage content - Full width on mobile, 80% on desktop */}
-                <div className="w-full lg:w-[100%] xl:w-[90%] 2xl:w-[72%] flex flex-col gap-5 lg:-mt-11">
-                    <SubPage simpleHeader/>
+            {/* News Carousel Section - Full Width */}
+            <div className="w-full">
+                <SubPage simpleHeader/>
+            </div>
 
+            {/* Article + Vertical Affiliate Section - Responsive Layout */}
+            <div className="flex flex-col lg:flex-row w-full gap-5 justify-center">
+                {/* Article Content - Main content area */}
+                <div className="w-full lg:w-[100%] xl:w-[90%] 2xl:w-[72%] flex flex-col gap-5">
                     {/* Mobile: Show GeminiCard here */}
                     <div className="block lg:hidden">
                         <TesterupCard/>
@@ -111,10 +114,9 @@ const Profile = () => {
                 </div>
 
                 {/* Vertical Affiliate cards - Hidden on mobile, shown on desktop */}
-                <div className="hidden xl:flex lg:w-[10%] flex-col gap-3 scale-90 -mt-6 max-h-[530px]">
+                <div className="hidden xl:flex lg:w-[12%] flex-col gap-4 scale-95 max-h-[530px]">
                     <TikTokCard/>
                     <NexoCard/>
-                    <NordVPNCard/>
                 </div>
             </div>
 

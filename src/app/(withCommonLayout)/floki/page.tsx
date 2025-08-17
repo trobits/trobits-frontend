@@ -263,16 +263,24 @@ export default function Page() {
                                     <TechnicalAnalysis />
                                 </div>
 
-                                {/* Horizontal Ad Section */}
-                                <div className="flex flex-row justify-center gap-6 my-4">
-                                    <div className="max-w-[350px] w-full">
-                                        <TikTokCard />
-                                    </div>
-                                    <div className="max-w-[350px] w-full">
-                                        <NexoCard />
-                                    </div>
-                                    <div className="max-w-[350px] w-full">
-                                        <FanaticsCard />
+                                {/* Affiliate Cards Section - Following home page pattern */}
+                                <div className="w-full mb-8">
+                                    <div className="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto">
+                                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                                            <div className="max-h-40 h-40">
+                                                <TikTokCard compact />
+                                            </div>
+                                        </div>
+                                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                                            <div className="max-h-40 h-40">
+                                                <NexoCard compact />
+                                            </div>
+                                        </div>
+                                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                                            <div className="max-h-40 h-40">
+                                                <FanaticsCard compact />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 

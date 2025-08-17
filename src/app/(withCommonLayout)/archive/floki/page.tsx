@@ -205,7 +205,7 @@ const FlokiBurnsPage: React.FC = () => {
                 </div>
 
                 {/* Stats Overview */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
                     <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-center">
                         <div className="flex items-center justify-center mb-3">
                             <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center">
@@ -232,17 +232,26 @@ const FlokiBurnsPage: React.FC = () => {
                         <p className="text-sm text-gray-400 mt-1">Per transaction</p>
                     </div>
                 </div>
- <div className="flex flex-row justify-center gap-6 my-4">
-                                    <div className="max-w-[350px] w-full">
-                                        <TikTokCard />
-                                    </div>
-                                    <div className="max-w-[350px] w-full">
-                                        <NexoCard />
-                                    </div>
-                                    <div className="max-w-[350px] w-full">
-                                        <FanaticsCard />
-                                    </div>
-                                </div>
+                {/* Affiliate Cards Section - Following home page pattern */}
+                <div className="w-full mb-8">
+                    <div className="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto">
+                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                            <div className="max-h-40 h-40">
+                                <TikTokCard compact />
+                            </div>
+                        </div>
+                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                            <div className="max-h-40 h-40">
+                                <NexoCard compact />
+                            </div>
+                        </div>
+                        <div className="flex-shrink-0" style={{ width: 'calc(24% - 1rem)', minWidth: '200px' }}>
+                            <div className="max-h-40 h-40">
+                                <FanaticsCard compact />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div className="bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm rounded-2xl p-6 mb-8">
                     <div className="flex items-center justify-center gap-4">

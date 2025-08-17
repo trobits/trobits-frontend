@@ -12,6 +12,7 @@ import { clearUser, setPaths } from "@/redux/features/slices/authSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 import { GeminiCard } from "@/components/AffiliateLinks";
+import ClaimsModal from "@/components/Claims/ClaimsModal";
 
 // const AdBannerHeader = ({ adClass }: { adClass: string }) => {
 //   const adContainerRef = useRef<HTMLDivElement>(null);
@@ -104,6 +105,7 @@ export default function Navbar() {
   const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] =
       useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isClaimsModalOpen, setIsClaimsModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -119,37 +121,11 @@ export default function Navbar() {
   const userFromDb = userFromDbData?.data;
   const pathName = usePathname();
 
-  // Scroll behavior - adjusted for CryptoNavbar
-  useEffect(() => {
-    const controlNavbar = () => {
-      if (typeof window !== "undefined") {
-        const currentScrollY = window.scrollY;
-
-        if (currentScrollY < 10) {
-          // Always show at top
-          setIsVisible(true);
-        } else if (currentScrollY > lastScrollY && currentScrollY > 150) {
-          // Scrolling down & past threshold (increased for CryptoNavbar)
-          setIsVisible(false);
-        } else if (currentScrollY < lastScrollY) {
-          // Scrolling up
-          setIsVisible(true);
-        }
-
-        setLastScrollY(currentScrollY);
-      }
-    };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", controlNavbar);
-      return () => {
-        window.removeEventListener("scroll", controlNavbar);
-      };
-    }
-  }, [lastScrollY]);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+  const handleOpenClaimsModal = () => setIsClaimsModalOpen(true);
+  const handleCloseClaimsModal = () => setIsClaimsModalOpen(false);
 
   const toggleDropdown = (dropdownSetter: any) => {
     setIsBasicsDropdownOpen(false);
@@ -184,19 +160,12 @@ export default function Navbar() {
             <GeminiCard compact/>
           </div>
       }
-        {/* Island Navbar - positioned below CryptoNavbar */}
-        <nav
-            id="main-navbar"
-            className={`
-          fixed ${isHomePage ? 'top-[130px]' : 'top-[10px]'} left-1/2 transform -translate-x-1/2 z-40 
-          transition-all duration-500 ease-in-out
-          ${
-                isVisible
-                    ? "translate-y-0 opacity-100"
-                    : "-translate-y-full opacity-0"
-            }
-        `}
-        >
+        {/* Island Navbar - static positioned at top */}
+        <div className="flex justify-center mt-4">
+          <nav
+              id="main-navbar"
+              className="z-40"
+          >
           <div
               className="
           bg-black/90 backdrop-blur-xl border border-white/10
@@ -504,28 +473,53 @@ export default function Navbar() {
               {/* User Section */}
               <div className="hidden md:flex items-center gap-4">
                 {userFromDb && user && (
-                  <span className="text-gray-400 text-sm font-medium">Rewards: 
-                    {
-                      Array.isArray(userFromDb.rewards)
-                        ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0)
-                        : 0
-                    }
-                  </span>
+                  <div className="relative group">
+                    <span className="text-gray-400 text-sm font-medium cursor-help">Rewards: 
+                      {
+                        Array.isArray(userFromDb.rewards)
+                          ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0)
+                          : 0
+                      }
+                    </span>
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-gray-900 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                      Complete transactions to earn rewards
+                    </div>
+                  </div>
                 )}
                 {userFromDb && user ? (
-                    <Button
-                        onClick={() => {
-                          handleLogOut();
-                          closeAllDropdowns();
-                        }}
-                        className="
-                    bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
-                    text-white px-6 py-2 rounded-xl font-medium
-                    transition-all duration-200 hover:scale-105 shadow-lg
-                  "
-                    >
-                      Logout
-                    </Button>
+                    <div className="flex items-center gap-3">
+                      <div className="relative group">
+                        <Button
+                            onClick={() => {
+                              handleOpenClaimsModal();
+                              closeAllDropdowns();
+                            }}
+                            className="
+                          bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700
+                          text-white px-6 py-2 rounded-xl font-medium
+                          transition-all duration-200 hover:scale-105 shadow-lg
+                        "
+                        >
+                          Claims
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-gray-900 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                          Click on claims after completing transaction
+                        </div>
+                      </div>
+                      <Button
+                          onClick={() => {
+                            handleLogOut();
+                            closeAllDropdowns();
+                          }}
+                          className="
+                        bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
+                        text-white px-6 py-2 rounded-xl font-medium
+                        transition-all duration-200 hover:scale-105 shadow-lg
+                      "
+                      >
+                        Logout
+                      </Button>
+                    </div>
                 ) : (
                     <Link
                         href={"/auth/login"}
@@ -714,29 +708,55 @@ export default function Navbar() {
                     {/* Mobile User Section */}
                     <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
                       {userFromDb && user && (
-                        <span className="text-gray-400 text-sm font-medium">Rewards: 
-                          {
-                            Array.isArray(userFromDb.rewards)
-                              ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0)
-                              : 0
-                          }
-                        </span>
+                        <div className="relative group">
+                          <span className="text-gray-400 text-sm font-medium cursor-help">Rewards: 
+                            {
+                              Array.isArray(userFromDb.rewards)
+                                ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0)
+                                : 0
+                            }
+                          </span>
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-gray-900 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                            Complete transactions to earn rewards
+                          </div>
+                        </div>
                       )}
                       {userFromDb && user ? (
-                          <Button
-                              onClick={() => {
-                                handleLogOut();
-                                closeAllDropdowns();
-                                setIsOpen(false);
-                              }}
-                              className="
-                        w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
-                        text-white px-6 py-3 rounded-xl font-medium
-                        transition-all duration-200 hover:scale-105 shadow-lg
-                      "
-                          >
-                            Logout
-                          </Button>
+                          <div className="flex flex-col gap-2">
+                            <div className="relative group">
+                              <Button
+                                  onClick={() => {
+                                    handleOpenClaimsModal();
+                                    closeAllDropdowns();
+                                    setIsOpen(false);
+                                  }}
+                                  className="
+                            w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700
+                            text-white px-6 py-3 rounded-xl font-medium
+                            transition-all duration-200 hover:scale-105 shadow-lg
+                          "
+                              >
+                                Claims
+                              </Button>
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-gray-900 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                                Click on claims after completing transaction
+                              </div>
+                            </div>
+                            <Button
+                                onClick={() => {
+                                  handleLogOut();
+                                  closeAllDropdowns();
+                                  setIsOpen(false);
+                                }}
+                                className="
+                          w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
+                          text-white px-6 py-3 rounded-xl font-medium
+                          transition-all duration-200 hover:scale-105 shadow-lg
+                        "
+                            >
+                              Logout
+                            </Button>
+                          </div>
                       ) : (
                           <Link
                               href={"/auth/login"}
@@ -758,9 +778,11 @@ export default function Navbar() {
                 </div>
             )}
           </div>
-        </nav>
+          </nav>
+        </div>
 
         <VideoModal isOpen={isModalOpen} onClose={handleCloseModal} />
+        <ClaimsModal isOpen={isClaimsModalOpen} onClose={handleCloseClaimsModal} />
       </>
   );
 }
