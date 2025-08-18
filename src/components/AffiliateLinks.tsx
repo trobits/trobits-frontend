@@ -18,7 +18,7 @@ export const TesterupCard = ({ compact = false }: { compact?: boolean }) => (
           src="//a.impactradius-go.com/display-ad/32340-2934755"
           alt="Testerup"
           width="1200"
-          height="500"
+          height="627"
           className={`rounded-lg w-full ${compact ? "h-48 object-contain" : "h-full max-h-[300px] object-contain"}`}
         />
       </a>
