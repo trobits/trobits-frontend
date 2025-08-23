@@ -51,7 +51,7 @@ export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://tiktok.pxf.io/c/6232366/2220947/27618"
         target="_blank"
         id="2220947"
-        className="block w-full relative max-h-[85%]"
+        className="block w-full relative max-h-[75%]"
       >
         <img
           src={tiktok.src}
@@ -80,7 +80,7 @@ export const SocialCatfishCard = ({ compact = false }: { compact?: boolean }) =>
         target="_blank"
         id="1790174"
         className="block w-full relative flex justify-center items-center" // ✅ added flex centering
-        style={{ minHeight: compact ? "200px" : "300px" }} // ✅ ensures height to allow vertical centering
+        style={{ minHeight: compact ? "200px" : "100px" }} // ✅ ensures height to allow vertical centering
       >
         <img
           src="//a.impactradius-go.com/display-ad/12693-1790174"
@@ -118,7 +118,7 @@ export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://nexo.sjv.io/c/6232366/2218907/12544"
         target="_blank"
         id="2218907"
-        className="block w-full relative max-h-[85%]"
+        className="block w-full relative max-h-[75%]"
       >
         <img
           src="//a.impactradius-go.com/display-ad/12544-2218907"
@@ -146,7 +146,7 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://nordvpn.sjv.io/c/6232366/512103/7452"
         target="_blank"
         id="512103"
-        className="block w-full relative max-h-[85%]"
+        className="block w-full relative max-h-[75%]"
       >
         <img
           src="//a.impactradius-go.com/display-ad/7452-512103"
@@ -174,7 +174,7 @@ export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://coinbase-consumer.sjv.io/c/6232366/1039486/9251"
         target="_blank"
         id="1039486"
-        className="block w-full relative max-h-[85%]"
+        className="block w-full relative max-h-[75%]"
       >
         <img
           src={coinbase.src}
@@ -237,7 +237,7 @@ export const StockMarketGuidesCard = ({ compact = false }: { compact?: boolean }
         rel="sponsored"
         href="https://stockmarketguides.sjv.io/c/6232366/1863442/20465"
         target="_blank"
-        className="block w-full relative flex-1 max-h-[85%]"
+        className="block w-full relative flex-1 max-h-[75%]"
       >
        <img
             src={smgImg.src}
@@ -268,7 +268,7 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => (
         rel="sponsored"
         href="https://fanatics.93n6tx.net/c/6232366/3065965/9663"
         target="_blank"
-        className="block w-full relative flex-1 max-h-[85%]"
+        className="block w-full relative flex-1 max-h-[75%]"
       >
         <img
           src="https://a.impactradius-go.com/display-ad/9663-3065965"
