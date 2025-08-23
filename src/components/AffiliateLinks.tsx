@@ -19,7 +19,7 @@ export const TesterupCard = ({ compact = false }: { compact?: boolean }) => (
           alt="Testerup"
           width="1200"
           height="627"
-          className={`rounded-lg w-full ${compact ? "h-48 object-contain" : "h-full max-h-[300px] object-contain"}`}
+          className={`rounded-lg w-full ${compact ? "max-h-full object-contain" : "h-full max-h-[300px] object-contain"}`}
         />
       </a>
 
@@ -51,7 +51,7 @@ export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://tiktok.pxf.io/c/6232366/2220947/27618"
         target="_blank"
         id="2220947"
-        className="block w-full relative"
+        className="block w-full relative max-h-[85%]"
       >
         <img
           src={tiktok.src}
@@ -59,7 +59,7 @@ export const TikTokCard = ({ compact = false }: { compact?: boolean }) => (
           alt="TikTok"
           width="5418"
           height="5417"
-          className={`rounded-lg w-full ${compact ? "h-48 object-contain" : 'h-full max-h-[300px] object-contain'}`}
+          className={`rounded-lg w-full ${compact ? "max-h-full object-contain" : 'h-full max-h-[300px] object-contain'}`}
         />
       </a>
       <img height="0" width="0" src="https://imp.pxf.io/i/6232366/2220947/27618" style={{ position: "absolute", visibility: "hidden" }} alt="" />
@@ -87,7 +87,7 @@ export const SocialCatfishCard = ({ compact = false }: { compact?: boolean }) =>
           alt="Social Catfish"
           width="320"
           height="50"
-          className={`rounded-lg w-full ${compact ? "h-48 object-contain" : "h-full max-h-[300px] object-contain"}`}
+          className={`rounded-lg w-full ${compact ? "max-h-full object-contain" : "h-full max-h-[300px] object-contain"}`}
         />
       </a>
 
@@ -118,7 +118,7 @@ export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://nexo.sjv.io/c/6232366/2218907/12544"
         target="_blank"
         id="2218907"
-        className="block w-full relative"
+        className="block w-full relative max-h-[85%]"
       >
         <img
           src="//a.impactradius-go.com/display-ad/12544-2218907"
@@ -126,7 +126,7 @@ export const NexoCard = ({ compact = false }: { compact?: boolean }) => (
           alt="NEXO"
           width="1080"
           height="1080"
-          className={`rounded-lg w-full ${compact ? "h-48 object-contain" : 'h-full max-h-[300px] object-contain'}`}
+          className={`rounded-lg w-full ${compact ? "max-h-full object-contain" : 'h-full max-h-[300px] object-contain'}`}
         />
       </a>
       <img height="0" width="0" src="https://imp.pxf.io/i/6232366/2218907/12544" style={{ position: "absolute", visibility: "hidden" }} alt="" />
@@ -146,7 +146,7 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://nordvpn.sjv.io/c/6232366/512103/7452"
         target="_blank"
         id="512103"
-        className="block w-full relative"
+        className="block w-full relative max-h-[85%]"
       >
         <img
           src="//a.impactradius-go.com/display-ad/7452-512103"
@@ -154,7 +154,7 @@ export const NordVPNCard = ({ compact = false }: { compact?: boolean }) => (
           alt="NordVPN"
           width="300"
           height="250"
-          className={`rounded-lg w-full ${compact ? "h-48 object-contain" : 'h-full max-h-[300px] object-contain'}`}
+          className={`rounded-lg w-full ${compact ? "max-h-full object-contain" : 'h-full max-h-[300px] object-contain'}`}
         />
       </a>
       <img height="0" width="0" src="https://nordvpn.sjv.io/i/6232366/512103/7452" style={{ position: "absolute", visibility: "hidden" }} alt="" />
@@ -174,7 +174,7 @@ export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
         href="https://coinbase-consumer.sjv.io/c/6232366/1039486/9251"
         target="_blank"
         id="1039486"
-        className="block w-full relative"
+        className="block w-full relative max-h-[85%]"
       >
         <img
           src={coinbase.src}
@@ -182,7 +182,7 @@ export const CoinbaseCard = ({ compact = false }: { compact?: boolean }) => (
           alt="Coinbase"
           width="2081"
           height="367"
-          className={`rounded-lg w-full ${compact ? "h-48 object-contain" : 'h-full max-h-[300px] object-contain'}`}
+          className={`rounded-lg w-full ${compact ? "max-h-full object-contain" : 'h-full max-h-[300px] object-contain'}`}
         />
       </a>
       <img height="0" width="0" src="https://imp.pxf.io/i/6232366/1039486/9251" style={{ position: "absolute", visibility: "hidden" }} alt="" />
@@ -237,7 +237,7 @@ export const StockMarketGuidesCard = ({ compact = false }: { compact?: boolean }
         rel="sponsored"
         href="https://stockmarketguides.sjv.io/c/6232366/1863442/20465"
         target="_blank"
-        className="block w-full relative flex-1"
+        className="block w-full relative flex-1 max-h-[85%]"
       >
        <img
             src={smgImg.src}
@@ -268,14 +268,14 @@ export const FanaticsCard = ({ compact = false }: { compact?: boolean }) => (
         rel="sponsored"
         href="https://fanatics.93n6tx.net/c/6232366/3065965/9663"
         target="_blank"
-        className="block w-full relative flex-1"
+        className="block w-full relative flex-1 max-h-[85%]"
       >
         <img
           src="https://a.impactradius-go.com/display-ad/9663-3065965"
           alt="Fanatics"
           width="300"
           height="250"
-          className={`rounded-lg w-full ${compact ? "h-48 object-contain" : "object-contain h-full max-h-[300px]"}`}
+          className={`rounded-lg w-full ${compact ? "max-h-full object-contain" : "object-contain h-full max-h-[300px]"}`}
         />
       </a>
       <img

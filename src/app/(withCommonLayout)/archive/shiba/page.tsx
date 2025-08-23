@@ -42,96 +42,98 @@ const ShibaBurnsPage: React.FC = () => {
     };
 
     const fetchShibBurnData = async () => {
-        // Google Sheets API configuration
-        const apiKey = "AIzaSyC_pYUok9r2PD5PmIYyWV4ZCvHy8y_Iug0";
-        const sheetId = "10V4FpmrdcoQBCv-TXABSiNgqXx3dSj63qKqw06-3nFY";
-        const range = "A:Z";
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+  // Google Sheets API configuration
+  const apiKey = "AIzaSyC_pYUok9r2PD5PmIYyWV4ZCvHy8y_Iug0";
+  const sheetId = "10V4FpmrdcoQBCv-TXABSiNgqXx3dSj63qKqw06-3nFY";
+  const range = "A:Z";
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+
+  try {
+    setLoading(true);
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+
+    if (!data.values || data.values.length < 2) {
+      console.error("No data found in sheet");
+      return;
+    }
+
+    // Debug log headers
+    const headers = data.values[0];
+    console.log("🔎 Sheet Headers:", headers);
+    console.log("🔎 Header count:", headers.length);
+
+    const rows = data.values.slice(1).filter((row: string[]) => row.length > 1);
+
+    // Debug: log row lengths and missing cells
+    rows.forEach((row: string[], idx: number) => {
+      console.log(
+        `Row ${idx + 1}: length=${row.length}, values=`,
+        row.map((val, i) => `[${i}:${headers[i] || "??"}]=${val}`)
+      );
+    });
+
+    // Known column positions (adjust later once logs show missing column)
+    const finalDateIdx = 0; // Column A
+    const finalCurrencyIdx = 1; // Column B
+    const finalTransactionIdx = 2; // Column C
+    const finalBurnCountIdx = 3; // Column D (SHIB burns)
+
+    const parsedRecords: ShibaBurnRecord[] = rows
+      .map((row: string[], index: number) => {
+        const dateValue = row[finalDateIdx] || "";
+        let formattedDate: string;
 
         try {
-            setLoading(true);
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-
-            if (!data.values || data.values.length < 2) {
-                console.error("No data found in sheet");
-                return;
-            }
-
-            const headers = data.values[0];
-            const rows = data.values.slice(1).filter((row: string[]) => row.length > 1);
-
-            // Based on your other components, let's use known column positions
-            const finalDateIdx = 0; // Column A
-            const finalCurrencyIdx = 1; // Column B
-            const finalTransactionIdx = 2; // Column C
-            const finalBurnCountIdx = 3; // Column D (SHIB burns)
-
-            const parsedRecords: ShibaBurnRecord[] = rows.map((row: string[], index: number) => {
-                // Parse date - handle various date formats
-                const dateValue = row[finalDateIdx] || "";
-                let formattedDate: string;
-
-                try {
-                    // Create a more robust date parser
-                    if (dateValue) {
-                        // Handle DD MMM YY format (like "01 Jan 25")
-                        if (dateValue.includes(' ')) {
-                            formattedDate = new Date(dateValue).toISOString();
-                        } else if (dateValue.includes('-')) {
-                            formattedDate = new Date(dateValue).toISOString();
-                        } else if (dateValue.includes('/')) {
-                            formattedDate = new Date(dateValue).toISOString();
-                        } else {
-                            // Try direct parsing
-                            formattedDate = new Date(dateValue).toISOString();
-                        }
-                    } else {
-                        formattedDate = new Date().toISOString();
-                    }
-                } catch {
-                    // Fallback to current date if parsing fails
-                    formattedDate = new Date().toISOString();
-                }
-
-                const currency = row[finalCurrencyIdx] || "SHIB";
-                const transactionRef = row[finalTransactionIdx] || `tx_${index}`;
-                const burnCountStr = row[finalBurnCountIdx] || "0";
-                const burnCount = parseInt(burnCountStr.toString().replace(/,/g, "").replace(/[^0-9]/g, "")) || 0;
-
-                return {
-                    id: `record_${index}`,
-                    currency,
-                    date: formattedDate,
-                    transactionRef,
-                    burnCount,
-                    shibaBurnArchiveId: `archive_${index}`
-                };
-            }).filter(record => record.burnCount > 0);
-
-            setAllRecords(parsedRecords);
-
-            // Find the most recent month with data and set it as default
-            if (parsedRecords.length > 0) {
-                const sortedByDate = [...parsedRecords].sort(
-                    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-                );
-                const mostRecentDate = new Date(sortedByDate[0].date);
-                setSelectedMonth(mostRecentDate);
-                filterRecordsByMonth(parsedRecords, mostRecentDate);
-            } else {
-                filterRecordsByMonth(parsedRecords, selectedMonth);
-            }
-
-        } catch (error) {
-            console.error("Failed to fetch SHIB burn data:", error);
-        } finally {
-            setLoading(false);
+          if (dateValue) {
+            formattedDate = new Date(dateValue).toISOString();
+          } else {
+            formattedDate = new Date().toISOString();
+          }
+        } catch {
+          formattedDate = new Date().toISOString();
         }
-    };
+
+        const currency = row[finalCurrencyIdx] || "SHIB";
+        const transactionRef = row[finalTransactionIdx] || `tx_${index}`;
+        const burnCountStr = row[finalBurnCountIdx] || "0";
+        const burnCount =
+          parseInt(burnCountStr.toString().replace(/,/g, "").replace(/[^0-9]/g, "")) || 0;
+
+        return {
+          id: `record_${index}`,
+          currency,
+          date: formattedDate,
+          transactionRef,
+          burnCount,
+          shibaBurnArchiveId: `archive_${index}`,
+        };
+      })
+      .filter((record) => record.burnCount > 0);
+
+    setAllRecords(parsedRecords);
+
+    // Find the most recent month with data and set it as default
+    if (parsedRecords.length > 0) {
+      const sortedByDate = [...parsedRecords].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      const mostRecentDate = new Date(sortedByDate[0].date);
+      setSelectedMonth(mostRecentDate);
+      filterRecordsByMonth(parsedRecords, mostRecentDate);
+    } else {
+      filterRecordsByMonth(parsedRecords, selectedMonth);
+    }
+  } catch (error) {
+    console.error("Failed to fetch SHIB burn data:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
     const filterRecordsByMonth = (allRecords: ShibaBurnRecord[], targetMonth: Date) => {
         const targetYear = targetMonth.getFullYear();

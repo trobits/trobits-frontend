@@ -13,6 +13,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 import { GeminiCard } from "@/components/AffiliateLinks";
 import ClaimsModal from "@/components/Claims/ClaimsModal";
+import WithdrawModal from "@/components/WidrawModel/WidrawModal";
 
 // const AdBannerHeader = ({ adClass }: { adClass: string }) => {
 //   const adContainerRef = useRef<HTMLDivElement>(null);
@@ -99,6 +100,7 @@ function RewardsProgressBar({ currentRewards, maxRewards }: { currentRewards: nu
   );
 }
 
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isBasicsDropdownOpen, setIsBasicsDropdownOpen] = useState(false);
@@ -106,6 +108,7 @@ export default function Navbar() {
       useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClaimsModalOpen, setIsClaimsModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -126,6 +129,8 @@ export default function Navbar() {
   const handleCloseModal = () => setIsModalOpen(false);
   const handleOpenClaimsModal = () => setIsClaimsModalOpen(true);
   const handleCloseClaimsModal = () => setIsClaimsModalOpen(false);
+  const handleOpenWithdrawModal = () => setIsWithdrawModalOpen(true);
+  const handleCloseWithdrawModal = () => setIsWithdrawModalOpen(false);
 
   const toggleDropdown = (dropdownSetter: any) => {
     setIsBasicsDropdownOpen(false);
@@ -508,6 +513,19 @@ export default function Navbar() {
                       </div>
                       <Button
                           onClick={() => {
+                            handleOpenWithdrawModal();
+                            closeAllDropdowns();
+                          }}
+                          className="
+                        bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700
+                        text-white px-6 py-2 rounded-xl font-medium
+                        transition-all duration-200 hover:scale-105 shadow-lg
+                      "
+                      >
+                        Withdraw
+                      </Button>
+                      <Button
+                          onClick={() => {
                             handleLogOut();
                             closeAllDropdowns();
                           }}
@@ -744,6 +762,20 @@ export default function Navbar() {
                             </div>
                             <Button
                                 onClick={() => {
+                                  handleOpenWithdrawModal();
+                                  closeAllDropdowns();
+                                  setIsOpen(false);
+                                }}
+                                className="
+                          w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700
+                          text-white px-6 py-3 rounded-xl font-medium
+                          transition-all duration-200 hover:scale-105 shadow-lg
+                        "
+                            >
+                              Withdraw
+                            </Button>
+                            <Button
+                                onClick={() => {
                                   handleLogOut();
                                   closeAllDropdowns();
                                   setIsOpen(false);
@@ -783,6 +815,11 @@ export default function Navbar() {
 
         <VideoModal isOpen={isModalOpen} onClose={handleCloseModal} />
         <ClaimsModal isOpen={isClaimsModalOpen} onClose={handleCloseClaimsModal} />
+        <WithdrawModal 
+          isOpen={isWithdrawModalOpen} 
+          onClose={handleCloseWithdrawModal} 
+          userRewards={userFromDb ? (Array.isArray(userFromDb.rewards) ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0) : 0) : 0} 
+        />
       </>
   );
 }

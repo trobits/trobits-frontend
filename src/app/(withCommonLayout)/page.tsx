@@ -24,22 +24,68 @@ function HomepageArticleSection() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`)
-            .then(async (res) => {
+    // useEffect(() => {
+    //     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`)
+    //         .then(async (res) => {
                 
-                if (!res.ok) throw new Error("No article found");
-                return res.json();
-            })
-            .then((data) => {
-                setArticle({ title: data.title, body: data.body });
-                setLoading(false);
-            })
-            .catch(() => {
-                setError("No homepage article found.");
-                setLoading(false);
+    //             if (!res.ok) throw new Error("No article found");
+    //             return res.json();
+    //         })
+    //         .then((data) => {
+    //             setArticle({ title: data.title, body: data.body });
+    //             setLoading(false);
+    //         })
+    //         .catch(() => {
+    //             setError("No homepage article found.");
+    //             setLoading(false);
+    //         });
+    // }, []);
+
+    useEffect(() => {
+        const fetchDoc = async () => {
+            try {
+            const res = await fetch(
+                "https://docs.google.com/document/d/e/2PACX-1vQ23P0mq9771XnncntSw5Cw8Jkwoui5fEXt2QfjCeDDMPR6-AtKwg2f80KuYgwXMKgL4bS1uqjmSved/pub?embedded=true"
+            );
+
+            if (!res.ok) throw new Error("Failed to fetch Google Doc");
+
+            const html = await res.text();
+
+            // Parse HTML with DOMParser
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+
+            // Grab the first heading (Google Docs often uses <h1> or <h2>)
+            const headingEl = doc.querySelector("h1, h2, h3");
+            const title = headingEl ? (headingEl.textContent?.trim() ?? "No Title") : "No Title";
+
+            // Grab all paragraphs
+            const paragraphs = Array.from(doc.querySelectorAll("p"))
+                .map((p) => p.innerText.trim())
+                .filter((text) => text.length > 0);
+
+            // Join into body text
+            const body = paragraphs.join("\n\n");
+
+            console.log("ARTICLESSS:", title, body);
+            
+
+            setArticle({
+                title,
+                body,
             });
+            setLoading(false);
+            } catch (err) {
+            console.error(err);
+            setError("No homepage article found.");
+            setLoading(false);
+            }
+        };
+
+        fetchDoc();
     }, []);
+
 
     if (loading) {
         return (
