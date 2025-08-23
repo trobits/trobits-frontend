@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         // Email content
         const mailOptions = {
             from: process.env.EMAIL_USER || 'trobitscommunity@gmail.com',
-            to: 'abdulmannankhan1000@gmail.com',
+            to: 'trobitscommunity@gmail.com',
             subject: `New Claim Submission - ${affiliateName}`,
             html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
