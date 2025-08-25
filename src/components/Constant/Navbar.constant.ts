@@ -10,4 +10,5 @@ export const navItems = [
     href: "/cryptogame",
     value: "cryptogames",
   },
+  {name: "Edit", href: "edit-article", value: "edit-article" }
 ];

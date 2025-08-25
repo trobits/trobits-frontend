@@ -14,106 +14,18 @@ import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
 import { GeminiCard } from "@/components/AffiliateLinks";
 import ClaimsModal from "@/components/Claims/ClaimsModal";
 import WithdrawModal from "@/components/WidrawModel/WidrawModal";
-
-// const AdBannerHeader = ({ adClass }: { adClass: string }) => {
-//   const adContainerRef = useRef<HTMLDivElement>(null);
-
-//   const injectAdScript = () => {
-//     if (!adContainerRef.current) return;
-
-//     // Remove existing ad script if any
-//     const existingScript = document.querySelector(
-//         `script[data-ad-class="${adClass}"]`
-//     );
-//     if (existingScript) {
-//       existingScript.remove();
-//     }
-
-//     // Create and inject new ad script
-//     const script = document.createElement("script");
-//     script.innerHTML = `
-//       !function(e,n,c,t,o,r,d){
-//         !function e(n,c,t,o,r,m,d,s,a){
-//           s=c.getElementsByTagName(t)[0],
-//           (a=c.createElement(t)).async=!0,
-//           a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-//           a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-//           s.parentNode.insertBefore(a,s)
-//         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
-//       }();
-//     `;
-//     script.setAttribute("data-ad-class", adClass);
-//     document.body.appendChild(script);
-//   };
-
-//   useEffect(() => {
-//     injectAdScript(); // Inject on mount
-
-//     // Listen for page visibility changes (when navigating back)
-//     const handleVisibilityChange = () => {
-//       if (document.visibilityState === "visible") {
-//         injectAdScript(); // Re-inject ads on page activation
-//       }
-//     };
-
-//     document.addEventListener("visibilitychange", handleVisibilityChange);
-
-//     return () => {
-//       document.removeEventListener("visibilitychange", handleVisibilityChange);
-//     };
-//   }, [adClass]);
-
-//   return (
-//       <div ref={adContainerRef}>
-//         <ins
-//             className={adClass}
-//             style={{ display: "inline-block", width: "1px", height: "1px" }}
-//             key={adClass + Date.now()}
-//         ></ins>
-//       </div>
-//   );
-// };
-
-// Rewards Progress Bar Component
-function RewardsProgressBar({ currentRewards, maxRewards }: { currentRewards: number, maxRewards: number }) {
-  const rewardProgress = Math.max(0, Math.min(100, (currentRewards / maxRewards) * 100));
-  return (
-    <div className="flex flex-col items-start min-w-[120px]">
-      <p className="text-gray-400 text-sm mb-1">Rewards : ${currentRewards}</p>
-      <div className="w-32 bg-gray-700 rounded-full h-2.5 relative group">
-        <div
-          className="bg-gradient-to-r from-blue-500 to-cyan-400 h-2.5 rounded-full transition-all duration-300 relative"
-          style={{ width: `${rewardProgress}%` }}
-        ></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-          {currentRewards} / {maxRewards}
-        </div>
-      </div>
-      {currentRewards >= maxRewards && (
-        <button
-          className="mt-2 px-4 py-1 text-xs font-medium text-white rounded-xl shadow-md border-2 border-white/10 transition-all duration-300 bg-white/5 backdrop-blur-md hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-500 hover:border-green-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
-        >
-          Checkout
-        </button>
-      )}
-    </div>
-  );
-}
-
+import EditArticleModal from "@/components/edit-article/EditArticleModal";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isBasicsDropdownOpen, setIsBasicsDropdownOpen] = useState(false);
-  const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] =
-      useState(false);
+  const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClaimsModalOpen, setIsClaimsModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const user = useAppSelector((state) => state.auth.user);
-  const paths = useAppSelector((state) => state.auth);
   const {
     data: userFromDbData,
     isLoading: userFromDbLoading,
@@ -124,13 +36,14 @@ export default function Navbar() {
   const userFromDb = userFromDbData?.data;
   const pathName = usePathname();
 
-
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
   const handleOpenClaimsModal = () => setIsClaimsModalOpen(true);
   const handleCloseClaimsModal = () => setIsClaimsModalOpen(false);
   const handleOpenWithdrawModal = () => setIsWithdrawModalOpen(true);
   const handleCloseWithdrawModal = () => setIsWithdrawModalOpen(false);
+  const handleOpenEditModal = () => setIsEditModalOpen(true);
+  const handleCloseEditModal = () => setIsEditModalOpen(false);
 
   const toggleDropdown = (dropdownSetter: any) => {
     setIsBasicsDropdownOpen(false);
@@ -148,6 +61,15 @@ export default function Navbar() {
     setIsBasicsDropdownOpen(false);
     setIsBurnArchiveDropdownOpen(false);
   };
+
+  // Filter nav items based on user email
+  const filteredNavItems = navItems.filter((item) => {
+    if (item.name === "Edit") {
+      // Only show Edit nav item if user email is khizerch2001@gmail.com
+      return user?.email === "trobitscommunity@gmail.com";
+    }
+    return true; // Show all other nav items
+  });
 
   useEffect(() => {
     dispatch(setPaths(pathName));
@@ -186,7 +108,7 @@ export default function Navbar() {
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center gap-1">
-                {navItems.map((item) => {
+                {filteredNavItems.map((item) => {
                   if (item.name === "Learn") {
                     return (
                         <Link
@@ -447,6 +369,30 @@ export default function Navbar() {
                     );
                   } else {
                     return (
+                        item.name === "Edit" ? (
+                          <button
+                              key={item.name}
+                              onClick={() => {
+                                handleOpenEditModal();
+                                closeAllDropdowns();
+                              }}
+                              className={`
+                        px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
+                        hover:bg-white/10 hover:scale-105
+                        ${
+                                (
+                                    item.href === "/"
+                                        ? pathName === "/"
+                                        : pathName.includes(item.href)
+                                )
+                                    ? "text-teal-400 bg-teal-400/10"
+                                    : "text-gray-300 hover:text-white"
+                            }
+                      `}
+                          >
+                            {item.name}
+                          </button>
+                        ) : (
                         <Link
                             key={item.name}
                             href={item.href}
@@ -470,6 +416,7 @@ export default function Navbar() {
                         >
                           {item.name}
                         </Link>
+                        )
                     );
                   }
                 })}
@@ -517,10 +464,10 @@ export default function Navbar() {
                             closeAllDropdowns();
                           }}
                           className="
-                        bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700
-                        text-white px-6 py-2 rounded-xl font-medium
-                        transition-all duration-200 hover:scale-105 shadow-lg
-                      "
+                        bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700
+                          text-white px-6 py-2 rounded-xl font-medium
+                          transition-all duration-200 hover:scale-105 shadow-lg
+                        "
                       >
                         Withdraw
                       </Button>
@@ -539,20 +486,55 @@ export default function Navbar() {
                       </Button>
                     </div>
                 ) : (
-                    <Link
-                        href={"/auth/login"}
-                        className="
-                    bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
-                    text-white px-6 py-2 rounded-xl font-medium
-                    transition-all duration-200 hover:scale-105 shadow-lg inline-block
-                  "
-                        onClick={() => {
-                          setIsOpen(false);
-                          closeAllDropdowns();
-                        }}
-                    >
-                      Login
-                    </Link>
+                                      <div className="flex items-center gap-3">
+                      <div className="relative group">
+                        <Button
+                            disabled
+                            onClick={() => {
+                              handleOpenClaimsModal();
+                              closeAllDropdowns();
+                            }}
+                            className="
+                          bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700
+                          text-white px-6 py-2 rounded-xl font-medium
+                          transition-all duration-200 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed
+                        "
+                        >
+                          Claims
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-gray-900 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                          Click on claims after completing transaction
+                        </div>
+                      </div>
+                      <Button
+                          disabled
+                          onClick={() => {
+                            handleOpenWithdrawModal();
+                            closeAllDropdowns();
+                          }}
+                          className="
+                        bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700
+                          text-white px-6 py-2 rounded-xl font-medium
+                          transition-all duration-200 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed
+                        "
+                      >
+                        Withdraw
+                      </Button>
+                      <Link
+                          href={"/auth/login"}
+                          className="
+                      bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700
+                      text-white px-6 py-2 rounded-xl font-medium
+                      transition-all duration-200 hover:scale-105 shadow-lg inline-block
+                    "
+                          onClick={() => {
+                            setIsOpen(false);
+                            closeAllDropdowns();
+                          }}
+                      >
+                        Login
+                      </Link>
+                    </div>
                 )}
               </div>
 
@@ -579,7 +561,7 @@ export default function Navbar() {
             {isOpen && (
                 <div className="md:hidden mt-4 pt-4 border-t border-white/10">
                   <div className="space-y-2">
-                    {navItems.map((item) =>
+                    {filteredNavItems.map((item) =>
                         item.name === "Learn" ? (
                             <div key={item.name}>
                               <Link
@@ -702,6 +684,26 @@ export default function Navbar() {
                               )}
                             </div>
                         ) : (
+                            item.name === "Edit" ? (
+                              <button
+                                  key={item.name}
+                                  onClick={() => {
+                                    handleOpenEditModal();
+                                    setIsOpen(false);
+                                    closeAllDropdowns();
+                                  }}
+                                  className={`
+                        block w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-all duration-200
+                        ${
+                                    pathName.includes(item.href)
+                                        ? "text-teal-400 bg-teal-400/10"
+                                        : "text-gray-300 hover:text-white hover:bg-white/10"
+                                }
+                      `}
+                              >
+                                {item.name}
+                              </button>
+                            ) : (
                             <Link
                                 key={item.name}
                                 href={item.href}
@@ -720,6 +722,7 @@ export default function Navbar() {
                             >
                               {item.name}
                             </Link>
+                            )
                         )
                     )}
 
@@ -740,7 +743,7 @@ export default function Navbar() {
                         </div>
                       )}
                       {userFromDb && user ? (
-                          <div className="flex flex-col gap-2">
+                          <>
                             <div className="relative group">
                               <Button
                                   onClick={() => {
@@ -788,7 +791,7 @@ export default function Navbar() {
                             >
                               Logout
                             </Button>
-                          </div>
+                          </>
                       ) : (
                           <Link
                               href={"/auth/login"}
@@ -820,6 +823,7 @@ export default function Navbar() {
           onClose={handleCloseWithdrawModal} 
           userRewards={userFromDb ? (Array.isArray(userFromDb.rewards) ? userFromDb.rewards.reduce((sum, reward) => sum + (reward.reward_amount || 0), 0) : 0) : 0} 
         />
+        <EditArticleModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} />
       </>
   );
 }
