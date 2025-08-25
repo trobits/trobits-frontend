@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Flame, Calendar, Hash, ExternalLink, TrendingDown } from "lucide-react";
+import { Flame, Calendar, Hash, ExternalLink, TrendingDown, Copy } from "lucide-react";
 import { NordVPNCard, FanaticsCard, NexoCard } from "@/components/AffiliateLinks";
 
 interface LuncBurnRecord {
@@ -9,6 +9,7 @@ interface LuncBurnRecord {
   date: string;
   transactionRef: string;
   burnCount: number;
+  burnAddress?: string;
   shibaBurnArchiveId?: string;
 }
 
@@ -41,6 +42,22 @@ const LuncBurnsPage: React.FC = () => {
     return new Date(dateStr);
   };
 
+  // Function to copy address to clipboard
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // You could add a toast notification here
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
+  // Function to truncate address for display
+  const truncateAddress = (address: string, startChars: number = 6, endChars: number = 4) => {
+    if (!address || address.length <= startChars + endChars) return address;
+    return `${address.slice(0, startChars)}...${address.slice(-endChars)}`;
+  };
+
   const fetchLuncBurnData = async () => {
     // Google Sheets API configuration
     const apiKey = "AIzaSyC_pYUok9r2PD5PmIYyWV4ZCvHy8y_Iug0";
@@ -62,6 +79,8 @@ const LuncBurnsPage: React.FC = () => {
       }
 
       const headers = data.values[0];
+      console.log("🔎 LUNC Sheet Headers:", headers);
+      
       const rows = data.values.slice(1).filter((row: string[]) => row.length > 1);
 
       // Column positions for LUNC data
@@ -69,6 +88,7 @@ const LuncBurnsPage: React.FC = () => {
       const finalCurrencyIdx = 1; // Column B
       const finalTransactionIdx = 2; // Column C
       const finalBurnCountIdx = 5; // Column F (LUNC burns)
+      const burnAddressIdx = 6; // Column G (LUNC burn address)
 
       const parsedRecords: LuncBurnRecord[] = rows.map((row: string[], index: number) => {
         // Parse date - handle various date formats
@@ -101,6 +121,7 @@ const LuncBurnsPage: React.FC = () => {
         const transactionRef = row[finalTransactionIdx] || `tx_${index}`;
         const burnCountStr = row[finalBurnCountIdx] || "0";
         const burnCount = parseInt(burnCountStr.toString().replace(/,/g, "").replace(/[^0-9]/g, "")) || 0;
+        const burnAddress = row[burnAddressIdx] || "";
 
         return {
           id: `record_${index}`,
@@ -108,6 +129,7 @@ const LuncBurnsPage: React.FC = () => {
           date: formattedDate,
           transactionRef,
           burnCount,
+          burnAddress,
           shibaBurnArchiveId: `archive_${index}`
         };
       }).filter(record => record.burnCount > 0);
@@ -297,8 +319,11 @@ const LuncBurnsPage: React.FC = () => {
                   <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                  <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
                     Burn Count
+                  </th>
+                  <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                    Burn Address
                   </th>
                 </tr>
                 </thead>
@@ -322,19 +347,37 @@ const LuncBurnsPage: React.FC = () => {
                           </span>
                             </div>
                           </td>
-                          <td className="p-6 text-center">
-                            <div className="flex items-center justify-center gap-2">
+                          <td className="p-6 text-left">
+                            <div className="flex items-center gap-2">
                           <span className="text-xl font-bold text-blue-400">
                             {record.burnCount.toLocaleString()}
                           </span>
                               <Flame className="w-4 h-4 text-blue-400" />
                             </div>
                           </td>
+                          <td className="p-6">
+                            {record.burnAddress ? (
+                                <div className="flex items-center gap-2">
+                                    <code className="text-sm text-gray-300 bg-gray-800/50 px-2 py-1 rounded font-mono">
+                                        {truncateAddress(record.burnAddress)}
+                                    </code>
+                                    <button
+                                        onClick={() => copyToClipboard(record.burnAddress || "")}
+                                        className="p-1 text-gray-400 hover:text-white transition-colors duration-200"
+                                        title="Copy full address"
+                                    >
+                                        <Copy className="w-4 h-4"/>
+                                    </button>
+                                </div>
+                            ) : (
+                                <span className="text-gray-500 text-sm">No address</span>
+                            )}
+                          </td>
                         </tr>
                     ))
                 ) : (
                     <tr>
-                      <td colSpan={2} className="p-12 text-center">
+                      <td colSpan={3} className="p-12 text-center">
                         <div className="space-y-4">
                           <Flame className="w-12 h-12 text-gray-600 mx-auto" />
                           <div>
@@ -431,56 +474,5 @@ const MonthPicker = ({ selectedMonth, onChange }: any) => {
       </div>
   );
 };
-
-// Ad Banner Component
-// const AdBanner = ({ adClass }: { adClass: string }) => {
-//   const adContainerRef = useRef<HTMLDivElement>(null);
-
-//   const injectAdScript = () => {
-//     if (!adContainerRef.current) return;
-
-//     const existingScript = document.querySelector(`script[data-ad-class="${adClass}"]`);
-//     if (existingScript) {
-//       existingScript.remove();
-//     }
-
-//     const script = document.createElement("script");
-//     script.innerHTML = `
-//       !function(e,n,c,t,o,r,d){
-//         !function e(n,c,t,o,r,m,d,s,a){
-//           s=c.getElementsByTagName(t)[0],
-//           (a=c.createElement(t)).async=!0,
-//           a.src="https://"+r[m]+"/js/"+o+".js?v="+d,
-//           a.onerror=function(){a.remove(),(m+=1)>=r.length||e(n,c,t,o,r,m)},
-//           s.parentNode.insertBefore(a,s)
-//         }(window,document,"script","${adClass}",["cdn.bmcdn6.com"], 0, new Date().getTime())
-//       }();
-//     `;
-//     script.setAttribute("data-ad-class", adClass);
-//     document.body.appendChild(script);
-//   };
-
-//   useEffect(() => {
-//     injectAdScript();
-//     const handleVisibilityChange = () => {
-//       if (document.visibilityState === "visible") {
-//         injectAdScript();
-//       }
-//     };
-//     document.addEventListener("visibilitychange", handleVisibilityChange);
-//     return () => {
-//       document.removeEventListener("visibilitychange", handleVisibilityChange);
-//     };
-//   }, [adClass]);
-
-//   return (
-//       <div ref={adContainerRef} className="w-full flex justify-center">
-//         <ins
-//             className={adClass}
-//             style={{ display: "inline-block", width: "1px", height: "1px" }}
-//         ></ins>
-//       </div>
-//   );
-// };
 
 export default LuncBurnsPage;
