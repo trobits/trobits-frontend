@@ -1,4 +1,3 @@
-
 "use client";
 import Image from "next/image";
 import { Button } from "../ui/button";
@@ -10,6 +9,8 @@ import {
   useToggleLikeMutation,
   useUpdatePostMutation,
   useCreateCommentMutation,
+  useDeleteCommentMutation,
+  useUpdateCommentMutation,
 } from "@/redux/features/api/postApi";
 import { useAppSelector } from "@/redux/hooks";
 import {
@@ -30,26 +31,32 @@ import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { Post } from "../Cryptohub/TopicDetails";
 
-const PostCard = ({ post }: { post: Post }) => {
-  const { refetch } = useGetAllPostsQuery("");
+const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
+  // const { refetch } = useGetAllPostsQuery("");
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(post);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
-  const [createComment, { isLoading: createCommentLoading }] =
-    useCreateCommentMutation();
-  const [toggleLike, { isLoading: toggleLikeLoading }] =
-    useToggleLikeMutation();
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editCommentContent, setEditCommentContent] = useState("");
+  const [commentDropdowns, setCommentDropdowns] = useState<{[key: string]: boolean}>({});
+  const [deleteCommentId, setDeleteCommentId] = useState<string | null>(null);
+  const [isDeleteCommentModalOpen, setIsDeleteCommentModalOpen] = useState(false);
+  
+  const [createComment, { isLoading: createCommentLoading }] = useCreateCommentMutation();
+  const [deleteComment, { isLoading: deleteCommentLoading }] = useDeleteCommentMutation();
+  const [updateComment, { isLoading: updateCommentLoading }] = useUpdateCommentMutation();
+  const [toggleLike, { isLoading: toggleLikeLoading }] = useToggleLikeMutation();
+  
   const user = useAppSelector((state) => state.auth.user);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const [increaseVideoViewCount] = useIncreaseVideoViewCountMutation();
   const [updatePost, { isLoading: updateLoading }] = useUpdatePostMutation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [deletePost, { isLoading: deletePostLoading }] =
-    useDeletePostMutation();
+  const [deletePost, { isLoading: deletePostLoading }] = useDeletePostMutation();
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   const handleOpenEditModal = () => {
@@ -106,6 +113,9 @@ const PostCard = ({ post }: { post: Post }) => {
       likeCount: newLikeCount,
     }));
 
+    console.log("Post after like toggle:", currentPost);
+    
+
     try {
       const response = await toggleLike({ authorId, id: currentPost?.id });
       if (response?.error) {
@@ -143,6 +153,93 @@ const PostCard = ({ post }: { post: Post }) => {
     } catch (error) {
       toast.error("Failed to add comment!");
     }
+  };
+
+  const handleDeleteComment = async () => {
+    if (!deleteCommentId || !user?.id) return;
+
+    const deleteLoading = toast.loading("Deleting comment...");
+    try {
+      await deleteComment({
+        id: deleteCommentId,
+        authorId: user.id
+      }).unwrap();
+      toast.success("Comment deleted successfully!");
+      setDeleteCommentId(null);
+      setIsDeleteCommentModalOpen(false);
+      refetch();
+    } catch (error: any) {
+      toast.error("Failed to delete comment.");
+    } finally {
+      toast.dismiss(deleteLoading);
+    }
+  };
+
+  const handleEditComment = async (commentId: string) => {
+    if (!editCommentContent.trim()) return;
+
+    const updateLoading = toast.loading("Updating comment...");
+    try {
+      await updateComment({
+        id: commentId,
+        content: editCommentContent.trim(),
+      }).unwrap();
+      toast.success("Comment updated successfully!");
+      setEditingCommentId(null);
+      setEditCommentContent("");
+      refetch();
+    } catch (error: any) {
+      toast.error("Failed to update comment.");
+    } finally {
+      toast.dismiss(updateLoading);
+    }
+  };
+
+  const startEditingComment = (commentId: string, content: string) => {
+    setEditingCommentId(commentId);
+    setEditCommentContent(content);
+    setCommentDropdowns({});
+  };
+
+  const cancelEditingComment = () => {
+    setEditingCommentId(null);
+    setEditCommentContent("");
+  };
+
+  const openDeleteCommentModal = (commentId: string) => {
+    setDeleteCommentId(commentId);
+    setIsDeleteCommentModalOpen(true);
+    setCommentDropdowns({});
+  };
+
+  const closeDeleteCommentModal = () => {
+    setDeleteCommentId(null);
+    setIsDeleteCommentModalOpen(false);
+  };
+
+  const toggleCommentDropdown = (commentId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCommentDropdowns(prev => ({
+      ...prev,
+      [commentId]: !prev[commentId]
+    }));
+  };
+
+  const isCommentEditable = (commentCreatedAt: string): boolean => {
+    const commentDate = new Date(commentCreatedAt);
+    const now = new Date();
+    const diffInHours = (now.getTime() - commentDate.getTime()) / (1000 * 60 * 60);
+    return diffInHours <= 24;
+  };
+
+  const canDeleteComment = (commentAuthorId: string): boolean => {
+    // Can delete if I'm the post author OR if it's my comment
+    return currentPost?.author?.id === user?.id || commentAuthorId === user?.id;
+  };
+
+  const canEditComment = (commentAuthorId: string, commentCreatedAt: string): boolean => {
+    // Can only edit my own comments and within 24 hours
+    return commentAuthorId === user?.id && isCommentEditable(commentCreatedAt);
   };
 
   const toggleComments = (e: React.MouseEvent) => {
@@ -541,17 +638,94 @@ const PostCard = ({ post }: { post: Post }) => {
                       )}
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-white font-medium text-sm">
-                          {comment.author?.firstName} {comment.author?.lastName}
-                        </span>
-                        <span className="text-slate-500 text-xs">
-                          {new Date(comment.createdAt).toLocaleDateString()}
-                        </span>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-medium text-sm">
+                            {comment.author?.firstName} {comment.author?.lastName}
+                          </span>
+                          <span className="text-slate-500 text-xs">
+                            {new Date(comment.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        
+                        {/* Comment Actions */}
+                        {(canDeleteComment(comment.author?.id) || canEditComment(comment.author?.id, comment.createdAt)) && (
+                          <div className="relative">
+                            <button
+                              onClick={(e) => toggleCommentDropdown(comment.id, e)}
+                              className="text-slate-400 hover:text-white p-1 hover:bg-slate-600/50 rounded transition-colors duration-200"
+                            >
+                              <MoreHorizontal className="w-3 h-3" />
+                            </button>
+
+                            {commentDropdowns[comment.id] && (
+                              <div className="absolute right-0 top-full mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-20 min-w-[100px]">
+                                {canEditComment(comment.author?.id, comment.createdAt) && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      startEditingComment(comment.id, comment.content);
+                                    }}
+                                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-700/50 transition-colors duration-200"
+                                  >
+                                    <Edit className="w-3 h-3" />
+                                    Edit
+                                  </button>
+                                )}
+                                {canDeleteComment(comment.author?.id) && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      openDeleteCommentModal(comment.id);
+                                    }}
+                                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-red-400 hover:bg-slate-700/50 transition-colors duration-200"
+                                  >
+                                    <Trash className="w-3 h-3" />
+                                    Delete
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <p className="text-slate-300 text-sm">
-                        {comment.content}
-                      </p>
+                      
+                      {editingCommentId === comment.id ? (
+                        <div className="space-y-2">
+                          <textarea
+                            value={editCommentContent}
+                            onChange={(e) => setEditCommentContent(e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full p-2 text-sm bg-slate-600/50 border border-slate-500 rounded text-white placeholder-slate-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200"
+                            rows={2}
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditComment(comment.id);
+                              }}
+                              disabled={updateCommentLoading}
+                              className="px-2 py-1 text-xs bg-cyan-500 hover:bg-cyan-600 text-white rounded transition-colors duration-200"
+                            >
+                              {updateCommentLoading ? "Saving..." : "Save"}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                cancelEditingComment();
+                              }}
+                              className="px-2 py-1 text-xs bg-slate-600 hover:bg-slate-500 text-white rounded transition-colors duration-200"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-slate-300 text-sm">
+                          {comment.content}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))
@@ -561,7 +735,6 @@ const PostCard = ({ post }: { post: Post }) => {
               </p>
             )}
 
-            {/* View All Comments Link */}
             {currentPost?.comments?.length > 3 && (
               <Link
                 href={`/cryptohub/cryptochat/${currentPost?.topicId}/${currentPost?.id}`}
@@ -678,11 +851,50 @@ const PostCard = ({ post }: { post: Post }) => {
         </div>
       )}
 
+      {/* Delete Comment Confirmation Modal */}
+      {isDeleteCommentModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-white">Delete Comment</h2>
+            <p className="text-slate-300 mb-6">
+              Are you sure you want to delete this comment? This action cannot be
+              undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                disabled={deleteCommentLoading}
+                type="button"
+                onClick={closeDeleteCommentModal}
+                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={deleteCommentLoading}
+                type="button"
+                onClick={handleDeleteComment}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-medium transition-all duration-200"
+              >
+                {deleteCommentLoading ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Click outside to close dropdown */}
       {showDropdown && (
         <div
           className="fixed inset-0 z-5"
           onClick={() => setShowDropdown(false)}
+        />
+      )}
+
+      {/* Click outside to close comment dropdowns */}
+      {Object.values(commentDropdowns).some(Boolean) && (
+        <div
+          className="fixed inset-0 z-15"
+          onClick={() => setCommentDropdowns({})}
         />
       )}
     </div>

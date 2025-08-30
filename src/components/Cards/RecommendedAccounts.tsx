@@ -103,7 +103,7 @@ const RecommendedAccounts = () => {
   if (allUsersDataLoading) return <Loading />;
 
   return (
-      <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/60 hover:border-slate-600/50 transition-all duration-300">
+      <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/60 hover:border-slate-600/50 transition-all duration-300 max-h-[50vh]">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl flex items-center justify-center">

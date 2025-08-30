@@ -447,8 +447,8 @@ export default function Navbar() {
                               closeAllDropdowns();
                             }}
                             className="
-                          bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700
-                          text-white px-6 py-2 rounded-xl font-medium
+                          bg-white hover:text-white
+                          text-black px-6 py-2 rounded-xl font-medium
                           transition-all duration-200 hover:scale-105 shadow-lg
                         "
                         >
@@ -464,8 +464,8 @@ export default function Navbar() {
                             closeAllDropdowns();
                           }}
                           className="
-                        bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700
-                          text-white px-6 py-2 rounded-xl font-medium
+                        bg-white hover:text-white
+                          text-black px-6 py-2 rounded-xl font-medium
                           transition-all duration-200 hover:scale-105 shadow-lg
                         "
                       >
