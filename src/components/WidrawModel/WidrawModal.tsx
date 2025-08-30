@@ -169,7 +169,7 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
           {/* Coins Available */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
-              Amount to Withdraw <span className="text-red-400">*</span>
+              Coins to Withdraw <span className="text-red-400">*</span>
             </label>
             <input
               type="number"
@@ -208,7 +208,7 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
               <span className="text-white">0.65</span>
             </div>
             <div className="flex justify-between items-center text-sm mt-2">
-              <span className="text-gray-300">USD Value:</span>
+              <span className="text-gray-300">Your points in USD:</span>
               <span className="text-cyan-400">${usdAmount.toFixed(2)}</span>
             </div>
           </div>
