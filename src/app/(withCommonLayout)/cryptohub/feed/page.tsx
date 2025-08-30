@@ -35,7 +35,7 @@ function useDebounce(value: string, delay: number) {
 const FeedPage = () => {
   const [createPost, { isLoading: createPostLoading }] = useCreatePostMutation();
   const user = useAppSelector((state) => state.auth.user);
-  const { data: allImagePost, isLoading: allImagePostLoading } = useGetAllImagePostQuery("");
+  const { data: allImagePost, isLoading: allImagePostLoading, refetch: refetchAllPosts } = useGetAllImagePostQuery("");
   const allPosts: Post[] = allImagePost?.data.length ? allImagePost.data : [];
   const [postContent, setPostContent] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -268,7 +268,7 @@ const FeedPage = () => {
                             className="animate-fade-in-up hover:scale-[1.01] transition-transform duration-300"
                             style={{ animationDelay: `${index * 100}ms` }}
                         >
-                          <PostCard post={post} />
+                          <PostCard post={post} refetch={refetchAllPosts} />
                         </div>
                     ))
                 ) : (

@@ -42,14 +42,19 @@ const VerifiedAccounts = () => {
   useEffect(() => {
     if (allUsersData?.data) {
       setLocalUsers(allUsersData.data);
-      setFilteredUsers(allUsersData.data);
+      setFilteredUsers([]); // 👈 start with empty results
     }
   }, [allUsersData]);
 
   const debouncedSearch = debounce((term: string) => {
+    if (!term.trim()) {
+      setFilteredUsers([]); // 👈 no users when search is empty
+      return;
+    }
+
     const lower = term.toLowerCase();
     const filtered = localUsers.filter((user) =>
-        `${user.firstName} ${user.lastName || ""}`.toLowerCase().includes(lower)
+      `${user.firstName} ${user.lastName || ""}`.toLowerCase().includes(lower)
     );
     setFilteredUsers(filtered);
   }, 400);
@@ -103,7 +108,7 @@ const VerifiedAccounts = () => {
   if (allUsersDataLoading) return <Loading />;
 
   return (
-      <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/60 hover:border-slate-600/50 transition-all duration-300">
+      <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/60 hover:border-slate-600/50 transition-all duration-300 max-h-[45vh]">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-8 h-8 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
@@ -204,7 +209,7 @@ const VerifiedAccounts = () => {
                   <BadgeCheck className="w-6 h-6 text-slate-500" />
                 </div>
                 <p className="text-slate-400 text-sm">
-                  {searchTerm ? "No verified users found" : "No verified users available"}
+                  {searchTerm ? "No verified users found" : "Discover verified accounts"}
                 </p>
                 <p className="text-slate-500 text-xs mt-1">
                   {searchTerm ? "Try a different search term" : "Verified accounts will appear here"}

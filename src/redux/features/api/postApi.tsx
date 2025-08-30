@@ -48,6 +48,28 @@ const topicApi = baseApi.injectEndpoints({
       invalidatesTags: [ "post", "blog" ],
     }),
 
+    updateComment: build.mutation({
+      query: (data) => {
+        return {
+          url: "/comment/update-comment",
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: [ "post", "blog" ],
+    }),
+
+    deleteComment: build.mutation({
+      query: (data) => {
+        return {
+          url: "/comment/delete-comment",
+          method: "DELETE",
+          body: data,
+        };
+      },
+      invalidatesTags: [ "post", "blog" ],
+    }),
+
     toggleLike: build.mutation({
       query: (data) => {
         return {
@@ -225,6 +247,8 @@ export const {
   useGetPostsByIdQuery,
   useToggleLikeMutation,
   useCreateCommentMutation,
+  useUpdateCommentMutation,
+  useDeleteCommentMutation,
   useGetAllPostsByTopicQuery,
   useReplyCommentMutation,
   useIncreaseVideoViewCountMutation,
