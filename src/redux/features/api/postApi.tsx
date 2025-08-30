@@ -229,7 +229,16 @@ const topicApi = baseApi.injectEndpoints({
       },
       invalidatesTags: [ "post" ],
     }),
-
+    claimAccount: build.mutation({
+      query: (data: { userEmail: string }) => {
+        return {
+          url: "/user/claim-account",
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["user"], // 👈 optional: if you have a user tag to refetch
+    }),
   }),
 });
 
@@ -253,5 +262,7 @@ export const {
   useReplyCommentMutation,
   useIncreaseVideoViewCountMutation,
   useUpdatePostMutation,
-  useDeletePostMutation
+  useDeletePostMutation,
+  useClaimAccountMutation, 
+
 } = topicApi;
