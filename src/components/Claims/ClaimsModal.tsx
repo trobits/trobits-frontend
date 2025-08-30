@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/hooks";
 import { useGetUserByIdQuery } from "@/redux/features/api/authApi";
+import { useClaimAccountMutation } from "@/redux/features/api/postApi";
 
 interface ClaimsModalProps {
     isOpen: boolean;
@@ -33,6 +34,9 @@ interface ClaimsFormData {
 }
 
 export default function ClaimsModal({ isOpen, onClose }: ClaimsModalProps) {
+    
+    const [claimAccount, { isLoading }] = useClaimAccountMutation();
+
     const user = useAppSelector((state) => state.auth.user);
     const {
         data: userFromDbData,
@@ -90,7 +94,7 @@ export default function ClaimsModal({ isOpen, onClose }: ClaimsModalProps) {
             }
 
             toast.success("Claim submitted successfully!");
-            
+
             // Reset form with auto-filled values
             const today = new Date().toISOString().split('T')[0];
             setFormData({
@@ -111,6 +115,16 @@ export default function ClaimsModal({ isOpen, onClose }: ClaimsModalProps) {
         }
     };
 
+     const handleClaim = async () => {
+    try {
+      await claimAccount({ userEmail: userFromDb?.email }).unwrap();
+      toast.success("Account claimed successfully!");
+    } catch (error) {
+      toast.error("Failed to claim account");
+      console.error(error);
+    }
+  };
+
     if (!isOpen) return null;
 
     return (
@@ -130,7 +144,7 @@ export default function ClaimsModal({ isOpen, onClose }: ClaimsModalProps) {
                     Submit Claim
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleClaim} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-1">
                             Email <span className="text-red-400">*</span>

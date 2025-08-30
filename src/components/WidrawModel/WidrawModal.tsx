@@ -1,61 +1,93 @@
+import { useAppSelector } from "@/redux/hooks";
 import { ChevronDown, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-// Withdraw Modal Component
 function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onClose: () => void, userRewards: number }) {
-  const [selectedCoin, setSelectedCoin] = useState('shib');
-  const [address, setAddress] = useState('');
+  const [selectedCoin, setSelectedCoin] = useState("shib");
+  const [address, setAddress] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState(10000);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Mock crypto prices (you should replace these with real-time data)
-  const cryptoPrices = {
-    shib: 0.00001307, // SHIB price in USD
-    lunc: 0.00007854, // LUNC price in USD
-    pepe: 0.00001234, // PEPE price in USD
-    floki: 0.00012456, // FLOKI price in USD
-    bonk: 0.00000987   // BONK price in USD
-  };
+  const userEmail = useAppSelector((state) => state.auth.user?.email) || "";
+  console.log("User email from Redux:", userEmail);
+  
+  const [cryptoPrices, setCryptoPrices] = useState<{ [key: string]: number }>({});
+  const [loadingPrice, setLoadingPrice] = useState(false);
 
   const coins = [
-    { value: 'shib', label: 'SHIB', icon: '🔥' },
-    { value: 'lunc', label: 'LUNC', icon: '🌙' },
-    { value: 'pepe', label: 'PEPE', icon: '🐸' },
-    { value: 'floki', label: 'FLOKI', icon: '🐕' },
-    { value: 'bonk', label: 'BONK', icon: '🦴' }
+    { value: "shib", label: "SHIB", icon: "🔥" },
+    { value: "lunc", label: "LUNC", icon: "🌙" },
+    { value: "pepe", label: "PEPE", icon: "🐸" },
+    { value: "floki", label: "FLOKI", icon: "🐕" },
+    { value: "bonk", label: "BONK", icon: "🦴" },
   ];
 
-  // Calculate crypto amount based on points (assuming 1 point = $0.01)
-  const pointValueInUSD = 0.01;
+  // Fetch price whenever selectedCoin changes
+  useEffect(() => {
+    if (!isOpen) return; // only fetch when modal is open
+
+    const fetchPrice = async () => {
+      try {
+        setLoadingPrice(true);
+
+        // Example: Cryptonews API or you can switch to CoinGecko for free
+        const res = await fetch(
+          `https://min-api.cryptocompare.com/data/price?fsym=${selectedCoin.toUpperCase()}&tsyms=USD`
+        );
+        const data = await res.json();
+
+        console.log("Fetched price data:", data);
+        
+
+        if (data?.USD) {
+          setCryptoPrices((prev) => ({ ...prev, [selectedCoin]: data.USD }));
+        } else {
+          toast.error("Failed to fetch price.");
+        }
+      } catch (err) {
+        console.error("Error fetching price:", err);
+        toast.error("Error fetching price");
+      } finally {
+        setLoadingPrice(false);
+      }
+    };
+
+    fetchPrice();
+  }, [selectedCoin, isOpen]);
+
+  // Conversion
+  const pointValueInUSD = 0.001; // 1 point = $0.001
   const usdAmount = withdrawAmount * pointValueInUSD;
-  const cryptoAmount = usdAmount / cryptoPrices[selectedCoin as keyof typeof cryptoPrices];
+  const coinPrice = cryptoPrices[selectedCoin] || 0;
+  const cryptoAmount = coinPrice ? usdAmount / coinPrice : 0;
 
   const handleConfirm = async () => {
     setIsSubmitting(true);
     const submitToastLoading = toast.loading("Processing withdrawal...");
 
     try {
-      // Handle withdrawal logic here
-      console.log('Withdrawal:', {
-        coin: selectedCoin,
-        address,
-        amount: withdrawAmount,
-        cryptoAmount
+      const res = await fetch("/api/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: userEmail, // pass logged-in user email
+          coin: selectedCoin,
+          address,
+          withdrawAmount,
+          usdValue: usdAmount.toFixed(2),
+          cryptoAmount: cryptoAmount.toFixed(8),
+        }),
       });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      if (!res.ok) throw new Error("Failed to send withdrawal email");
       
       toast.success("Withdrawal request submitted successfully!");
       onClose();
     } catch (error) {
-      toast.error("Failed to process withdrawal. Please try again.");
-      console.error("Error processing withdrawal:", error);
-    } finally {
-      setIsSubmitting(false);
-      toast.dismiss(submitToastLoading);
+      toast.error("Failed to process withdrawal.");
+      console.error(error);
     }
   };
 
@@ -64,7 +96,6 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="relative bg-[#1a1a1a] text-white rounded-lg p-8 w-[90%] max-w-md shadow-lg">
-        {/* Close Button */}
         <button
           disabled={isSubmitting}
           type="button"
@@ -92,12 +123,9 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm">
-                    {coins.find(coin => coin.value === selectedCoin)?.icon}
+                    {coins.find((coin) => coin.value === selectedCoin)?.icon}
                   </span>
-                  <span>
-                    {coins.find(coin => coin.value === selectedCoin)?.label}
-                  </span>
-                  <span className="bg-cyan-600 text-white text-xs px-2 py-0.5 rounded">BTC</span>
+                  <span>{coins.find((coin) => coin.value === selectedCoin)?.label}</span>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-400" />
               </button>
@@ -115,7 +143,6 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
                     >
                       <span className="text-sm">{coin.icon}</span>
                       <span>{coin.label}</span>
-                      <span className="bg-cyan-600 text-white text-xs px-2 py-0.5 rounded">BTC</span>
                     </button>
                   ))}
                 </div>
@@ -149,30 +176,25 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
               min="10000"
               max={userRewards}
               value={withdrawAmount}
-              onChange={(e) =>
-                setWithdrawAmount(Math.max(10000, parseInt(e.target.value) || 10000))
-              }
+              onChange={(e) => setWithdrawAmount(Math.max(parseInt(e.target.value)))}
               className="w-full px-4 py-2 bg-gray-800 text-white border border-gray-600 rounded-lg focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors"
               required
               disabled={isSubmitting}
             />
-            <p className="text-xs text-gray-400 mt-1">
-              Available: <span className="text-cyan-400">{userRewards} coins</span> | 
-              Minimum: <span className="text-cyan-400">10,000 coins</span>
-            </p>
-            {withdrawAmount < 10000 && (
-              <p className="text-red-400 text-xs mt-1">Minimum withdrawal is 10,000 coins</p>
-            )}
           </div>
 
-          {/* Faucetpay Amount */}
+          {/* You Will Receive */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               You Will Receive
             </label>
             <input
               type="text"
-              value={`${cryptoAmount.toFixed(8)} ${selectedCoin.toUpperCase()}`}
+              value={
+                loadingPrice
+                  ? "Fetching price..."
+                  : `${cryptoAmount.toFixed(8)} ${selectedCoin.toUpperCase()}`
+              }
               readOnly
               className="w-full px-4 py-2 bg-gray-800 text-gray-400 border border-gray-600 rounded-lg"
               disabled
@@ -183,7 +205,7 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
           <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-300">Transaction Fee:</span>
-              <span className="text-white">0</span>
+              <span className="text-white">0.65</span>
             </div>
             <div className="flex justify-between items-center text-sm mt-2">
               <span className="text-gray-300">USD Value:</span>
@@ -203,7 +225,12 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
             </button>
             <button
               onClick={handleConfirm}
-              disabled={withdrawAmount < 10000 || !address || withdrawAmount > userRewards || isSubmitting}
+              disabled={
+                withdrawAmount < 10000 ||
+                !address ||
+                
+                isSubmitting
+              }
               className="px-6 py-2 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white rounded-lg transition-all duration-200 hover:scale-105 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
             >
               {isSubmitting ? "Processing..." : "Confirm Withdrawal"}
