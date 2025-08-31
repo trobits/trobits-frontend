@@ -650,26 +650,16 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
                         
                         {/* Comment Actions */}
                         {(canDeleteComment(comment.author?.id) || canEditComment(comment.author?.id, comment.createdAt)) && (
-                          <div className="relative">
-                            <button
-                              onClick={(e) => toggleCommentDropdown(comment.id, e)}
-                              className="text-slate-400 hover:text-white p-1 hover:bg-slate-600/50 rounded transition-colors duration-200"
-                            >
-                              <MoreHorizontal className="w-3 h-3" />
-                            </button>
-
-                            {commentDropdowns[comment.id] && (
-                              <div className="absolute right-0 top-full mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-20 min-w-[100px]">
-                                {canEditComment(comment.author?.id, comment.createdAt) && (
+                          <div className="flex">
+                            {canEditComment(comment.author?.id, comment.createdAt) && (
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       startEditingComment(comment.id, comment.content);
                                     }}
-                                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-700/50 transition-colors duration-200"
+                                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-white transition-colors duration-200"
                                   >
                                     <Edit className="w-3 h-3" />
-                                    Edit
                                   </button>
                                 )}
                                 {canDeleteComment(comment.author?.id) && (
@@ -678,14 +668,11 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
                                       e.stopPropagation();
                                       openDeleteCommentModal(comment.id);
                                     }}
-                                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-red-400 hover:bg-slate-700/50 transition-colors duration-200"
+                                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-red-400 transition-colors duration-200"
                                   >
                                     <Trash className="w-3 h-3" />
-                                    Delete
                                   </button>
                                 )}
-                              </div>
-                            )}
                           </div>
                         )}
                       </div>
