@@ -32,7 +32,6 @@ import { format } from "date-fns";
 import { Post } from "../Cryptohub/TopicDetails";
 
 const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
-  // const { refetch } = useGetAllPostsQuery("");
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [currentPost, setCurrentPost] = useState(post);
@@ -58,6 +57,11 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [deletePost, { isLoading: deletePostLoading }] = useDeletePostMutation();
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
+  // Update currentPost when prop changes (important for refetch updates)
+  useEffect(() => {
+    setCurrentPost(post);
+  }, [post]);
 
   const handleOpenEditModal = () => {
     setIsOpenEditModal(true);
@@ -105,25 +109,27 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
       ? currentPost?.likeCount - 1
       : currentPost?.likeCount + 1;
 
-    setCurrentPost((prevPost) => ({
-      ...prevPost,
+    // Optimistic update
+    const optimisticUpdate = {
+      ...currentPost,
       likers: isLiked
-        ? prevPost?.likers?.filter((likerId) => likerId !== authorId)
-        : [...prevPost?.likers, authorId],
+        ? currentPost?.likers?.filter((likerId) => likerId !== authorId)
+        : [...(currentPost?.likers || []), authorId],
       likeCount: newLikeCount,
-    }));
+    };
 
-    console.log("Post after like toggle:", currentPost);
-    
+    setCurrentPost(optimisticUpdate);
 
     try {
       const response = await toggleLike({ authorId, id: currentPost?.id });
       if (response?.error) {
-        setCurrentPost(post);
+        // Revert on error
+        setCurrentPost(currentPost);
         toast.error("Failed to like the post.");
       }
     } catch (error) {
-      setCurrentPost(post);
+      // Revert on error
+      setCurrentPost(currentPost);
       toast.error("Failed to like the post.");
     }
   };
@@ -141,14 +147,35 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
         authorId: user.id,
         content: newComment.trim(),
         postId: currentPost.id,
-      });
+      }).unwrap();
 
-      if (response?.error) {
-        toast.error("Failed to add comment!");
-      } else {
+      if (response?.data) {
+        // Optimistic update - add the new comment to local state
+        const newCommentData = {
+          id: response.data.id,
+          content: newComment.trim(),
+          createdAt: new Date().toISOString(),
+          author: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            profileImage: user.profileImage,
+          },
+          replyToId: null,
+        };
+
+        setCurrentPost(prev => ({
+          ...prev,
+          comments: [...(prev.comments || []), newCommentData]
+        }));
+
         toast.success("Comment added successfully!");
         setNewComment("");
+        
+        // Still call refetch to ensure data consistency
         refetch();
+      } else {
+        toast.error("Failed to add comment!");
       }
     } catch (error) {
       toast.error("Failed to add comment!");
@@ -164,9 +191,18 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
         id: deleteCommentId,
         authorId: user.id
       }).unwrap();
+      
+      // Optimistic update - remove comment from local state
+      setCurrentPost(prev => ({
+        ...prev,
+        comments: prev.comments?.filter(comment => comment.id !== deleteCommentId) || []
+      }));
+
       toast.success("Comment deleted successfully!");
       setDeleteCommentId(null);
       setIsDeleteCommentModalOpen(false);
+      
+      // Still call refetch to ensure data consistency
       refetch();
     } catch (error: any) {
       toast.error("Failed to delete comment.");
@@ -184,9 +220,22 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
         id: commentId,
         content: editCommentContent.trim(),
       }).unwrap();
+      
+      // Optimistic update - update comment in local state
+      setCurrentPost(prev => ({
+        ...prev,
+        comments: prev.comments?.map(comment => 
+          comment.id === commentId 
+            ? { ...comment, content: editCommentContent.trim() }
+            : comment
+        ) || []
+      }));
+
       toast.success("Comment updated successfully!");
       setEditingCommentId(null);
       setEditCommentContent("");
+      
+      // Still call refetch to ensure data consistency
       refetch();
     } catch (error: any) {
       toast.error("Failed to update comment.");
@@ -233,12 +282,10 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
   };
 
   const canDeleteComment = (commentAuthorId: string): boolean => {
-    // Can delete if I'm the post author OR if it's my comment
     return currentPost?.author?.id === user?.id || commentAuthorId === user?.id;
   };
 
   const canEditComment = (commentAuthorId: string, commentCreatedAt: string): boolean => {
-    // Can only edit my own comments and within 24 hours
     return commentAuthorId === user?.id && isCommentEditable(commentCreatedAt);
   };
 
@@ -310,7 +357,7 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
                 .then(() => {
                   setCurrentPost((prevPost) => ({
                     ...prevPost,
-                    viewCount: prevPost?.viewCount + 1,
+                    viewCount: (prevPost?.viewCount || 0) + 1,
                   }));
                 })
                 .catch((error) => {
@@ -324,7 +371,7 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
                 .then(() => {
                   setCurrentPost((prevPost) => ({
                     ...prevPost,
-                    viewCount: prevPost?.viewCount + 1,
+                    viewCount: (prevPost?.viewCount || 0) + 1,
                   }));
                 })
                 .catch((error) => {
@@ -365,16 +412,15 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
     <div
       className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/60 hover:border-slate-600/50 transition-all duration-300 cursor-pointer"
       onClick={(e) => {
-        // Only navigate if not clicking on interactive elements
         const target = e.target as HTMLElement;
         const isInteractive =
           target.closest("button") ||
           target.closest("input") ||
           target.closest("video") ||
-          target.closest("a");
+          target.closest("a") ||
+          target.closest("textarea");
 
         if (!isInteractive && !showComments) {
-            
           window.location.href = `/cryptohub/cryptochat/${currentPost?.topicId}/${currentPost?.id}`;
         }
       }}
@@ -517,7 +563,7 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
               } ${toggleLikeLoading ? "scale-125" : ""}`}
             />
             <span className="text-sm font-medium">
-              {currentPost?.likeCount}
+              {currentPost?.likeCount || 0}
             </span>
           </button>
 
@@ -616,7 +662,7 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
             {currentPost?.comments?.length > 0 ? (
               currentPost.comments
                 .filter((comment) => !comment?.replyToId)
-                .slice(0, 3) // Show only first 3 comments
+                .slice(0, 3)
                 .map((comment, index) => (
                   <div
                     key={comment.id}
@@ -652,27 +698,27 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
                         {(canDeleteComment(comment.author?.id) || canEditComment(comment.author?.id, comment.createdAt)) && (
                           <div className="flex">
                             {canEditComment(comment.author?.id, comment.createdAt) && (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      startEditingComment(comment.id, comment.content);
-                                    }}
-                                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-white transition-colors duration-200"
-                                  >
-                                    <Edit className="w-3 h-3" />
-                                  </button>
-                                )}
-                                {canDeleteComment(comment.author?.id) && (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      openDeleteCommentModal(comment.id);
-                                    }}
-                                    className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-red-400 transition-colors duration-200"
-                                  >
-                                    <Trash className="w-3 h-3" />
-                                  </button>
-                                )}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  startEditingComment(comment.id, comment.content);
+                                }}
+                                className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-white transition-colors duration-200"
+                              >
+                                <Edit className="w-3 h-3" />
+                              </button>
+                            )}
+                            {canDeleteComment(comment.author?.id) && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openDeleteCommentModal(comment.id);
+                                }}
+                                className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-slate-300 hover:text-red-400 transition-colors duration-200"
+                              >
+                                <Trash className="w-3 h-3" />
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>
@@ -740,7 +786,11 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4 text-white">Edit Post</h2>
-            <div>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              handleUpdatePost(formData);
+            }}>
               <textarea
                 name="content"
                 defaultValue={currentPost?.content}
@@ -802,7 +852,7 @@ const PostCard = ({ post, refetch }: { post: Post, refetch }) => {
                   {updateLoading ? "Saving..." : "Save"}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}
