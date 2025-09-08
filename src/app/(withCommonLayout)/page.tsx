@@ -52,7 +52,7 @@ function HomepageArticleSection() {
         );
     }
     return (
-        <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-4 sm:p-6'>
+        <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-4 sm:p-6 max-h-[50vh] overflow-auto'>
             <div className="space-y-4">
                 <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
                     {article.title}
