@@ -337,7 +337,7 @@ const ShibaBurnsPage: React.FC = () => {
                                         Burn Count
                                     </th>
                                     <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                                        Burn Address
+                                        Transaction Reference
                                     </th>
                                 </tr>
                             </thead>
@@ -374,7 +374,7 @@ const ShibaBurnsPage: React.FC = () => {
                                                 {record.burnAddress ? (
                                                     <div className="flex items-center gap-2">
                                                         <code className="text-sm text-gray-300 bg-gray-800/50 px-2 py-1 rounded font-mono">
-                                                            {truncateAddress(record.burnAddress)}
+                                                            {record.burnAddress}
                                                         </code>
                                                         <button
                                                             onClick={() => copyToClipboard(record.burnAddress || "")}
