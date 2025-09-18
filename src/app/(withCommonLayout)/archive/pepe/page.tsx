@@ -360,7 +360,7 @@ const PepeBurnsPage: React.FC = () => {
                                             {record.burnAddress ? (
                                                 <div className="flex items-center gap-2">
                                                     <code className="text-sm text-gray-300 bg-gray-800/50 px-2 py-1 rounded font-mono">
-                                                        {truncateAddress(record.burnAddress)}
+                                                        {record.burnAddress}
                                                     </code>
                                                     <button
                                                         onClick={() => copyToClipboard(record.burnAddress || "")}
