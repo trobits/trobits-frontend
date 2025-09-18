@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Loading from "@/components/Shared/Loading";
 import {
   useGetPostsByIdQuery,
@@ -60,6 +60,41 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
   const user: IUser = useAppSelector((state) => state.auth.user);
   const router = useRouter();
 
+  // Function to build nested comment structure
+  const buildNestedComments = (comments: IComment[]): IComment[] => {
+    const commentMap = new Map<string, IComment>();
+    const rootComments: IComment[] = [];
+
+    // First pass: create a map of all comments and initialize replies array
+    comments.forEach(comment => {
+      commentMap.set(comment.id, { ...comment, replies: [] });
+    });
+
+    // Second pass: build the nested structure
+    comments.forEach(comment => {
+      const commentWithReplies = commentMap.get(comment.id)!;
+      
+      if (comment.replyToId) {
+        // This is a reply, add it to its parent's replies array
+        const parentComment = commentMap.get(comment.replyToId);
+        if (parentComment) {
+          parentComment.replies.push(commentWithReplies);
+        }
+      } else {
+        // This is a top-level comment
+        rootComments.push(commentWithReplies);
+      }
+    });
+
+    return rootComments;
+  };
+
+  // Build nested comment structure
+  const nestedComments = useMemo(() => {
+    if (!data?.data?.comments) return [];
+    return buildNestedComments(data.data.comments);
+  }, [data?.data?.comments]);
+
   if (postLoading) {
     return <Loading />;
   }
@@ -114,6 +149,15 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
       minute: '2-digit'
     });
   };
+
+  // Count total comments (including nested replies)
+  const countTotalComments = (comments: IComment[]): number => {
+    return comments.reduce((total, comment) => {
+      return total + 1 + countTotalComments(comment.replies || []);
+    }, 0);
+  };
+
+  const totalCommentsCount = post?.comments ? countTotalComments(nestedComments) : 0;
 
   return (
       <div className="min-h-screen w-full">
@@ -239,7 +283,7 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
                   {/* Comments Count */}
                   <div className="flex items-center gap-2 text-slate-400">
                     <MessageCircle className="w-6 h-6" />
-                    <span className="font-medium">{post?.comments?.length || 0}</span>
+                    <span className="font-medium">{totalCommentsCount || 0}</span>
                   </div>
 
                   {/* Views (for video/image posts) */}
@@ -261,7 +305,7 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
             <div className="flex items-center gap-3 mb-6">
               <MessageCircle className="w-6 h-6 text-cyan-400" />
               <h2 className="text-2xl font-bold text-white">
-                Comments ({post?.comments?.length || 0})
+                Comments ({totalCommentsCount || 0})
               </h2>
             </div>
 
@@ -316,23 +360,21 @@ export default function PostDetailsPage({ postId }: { postId: string }) {
               </div>
             </div>
 
-            {/* Comments List */}
+            {/* Comments List - Now using nested structure */}
             <div className="space-y-4">
-              {post?.comments?.length > 0 ? (
-                  post.comments
-                      .filter(comment => !comment?.replyToId)
-                      .map((comment: IComment, index) => (
-                          <div
-                              key={comment?.id}
-                              className="opacity-0 animate-fade-in"
-                              style={{
-                                animationDelay: `${index * 100}ms`,
-                                animationFillMode: 'forwards'
-                              }}
-                          >
-                            <PostCommentCard comment={comment} />
-                          </div>
-                      ))
+              {nestedComments.length > 0 ? (
+                  nestedComments.map((comment: IComment, index) => (
+                      <div
+                          key={comment?.id}
+                          className="opacity-0 animate-fade-in"
+                          style={{
+                            animationDelay: `${index * 100}ms`,
+                            animationFillMode: 'forwards'
+                          }}
+                      >
+                        <PostCommentCard comment={comment} />
+                      </div>
+                  ))
               ) : (
                   <div className="text-center py-12">
                     <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
