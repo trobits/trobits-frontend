@@ -323,7 +323,7 @@ const LuncBurnsPage: React.FC = () => {
                     Burn Count
                   </th>
                   <th className="text-left p-6 text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                    Burn Address
+                    Transaction Reference
                   </th>
                 </tr>
                 </thead>
