@@ -16,7 +16,10 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
   const [cryptoPrices, setCryptoPrices] = useState<{ [key: string]: number }>({});
   const [loadingPrice, setLoadingPrice] = useState(false);
 
-  const coins = [
+    const formatCryptoDown0 = (n: number) => Math.floor(n).toString();
+
+
+    const coins = [
     { value: "shib", label: "SHIB", icon: "🔥" },
     { value: "lunc", label: "LUNC", icon: "🌙" },
     { value: "pepe", label: "PEPE", icon: "🐸" },
@@ -77,7 +80,7 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
           address,
           withdrawAmount,
           usdValue: usdAmount.toFixed(2),
-          cryptoAmount: cryptoAmount.toFixed(8),
+          cryptoAmount: formatCryptoDown0(cryptoAmount),
         }),
       });
 
@@ -193,7 +196,7 @@ function WithdrawModal({ isOpen, onClose, userRewards }: { isOpen: boolean, onCl
               value={
                 loadingPrice
                   ? "Fetching price..."
-                  : `${cryptoAmount.toFixed(8)} ${selectedCoin.toUpperCase()}`
+                  : `${formatCryptoDown0(cryptoAmount)} ${selectedCoin.toUpperCase()}`
               }
               readOnly
               className="w-full px-4 py-2 bg-gray-800 text-gray-400 border border-gray-600 rounded-lg"
