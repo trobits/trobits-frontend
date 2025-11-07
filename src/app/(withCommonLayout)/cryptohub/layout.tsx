@@ -12,10 +12,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { clearUser } from "@/redux/features/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useGetUserByIdQuery, useGetNotificationByUseridQuery, useAllUserQuery } from "@/redux/features/api/authApi";
+import { useGetUserByIdQuery, useGetNotificationByUseridQuery, useAllUserQuery, useDeleteUserCompletelyMutation } from "@/redux/features/api/authApi";
 import socket from "@/redux/features/api/socketClient";
 import AffiliateLinksBar from "@/components/AffiliateLinksBar";
 import { X } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 
 const CryptoLayout = ({ children }) => {
   const dispatch = useAppDispatch();
@@ -24,6 +25,7 @@ const CryptoLayout = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const pathname = usePathname();
+  const [isDeleteModalOpen, setDeleteIsModalOpen] = useState(false);
 
   const user = useAppSelector((state) => state.auth.user);
   const { data: userFromDbData, isLoading: userFromDbLoading } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
@@ -68,6 +70,22 @@ const CryptoLayout = ({ children }) => {
   const handleLogOut = () => {
     dispatch(clearUser());
     router.push("/");
+  };
+
+  const [deleteUserCompletely, { isLoading }] = useDeleteUserCompletelyMutation();
+
+  const deleteAccount = async () => {
+    try {
+      console.log("USERRRR", user);
+      
+      await deleteUserCompletely(user?.id).unwrap();
+      dispatch(clearUser());
+      router.push("/");
+
+      // Optionally redirect or clear localStorage/session
+    } catch (err) {
+      console.error("❌ Delete failed:", err);
+    }
   };
 
   const navigationItems = [
@@ -226,6 +244,14 @@ const openModal = (type: "followers" | "following") => {
 
                   <p className="text-sm mt-4 text-gray-400">Rewards: {currentRewards}</p>
 
+                  {/* Delete Account Button + Confirmation Popup */}
+                  <Button
+                    onClick={() => setDeleteIsModalOpen(true)} // 👈 open confirmation modal
+                    className="group bg-white text-black hover:bg-red-600 hover:text-white px-4 py-3 mt-4 rounded-xl font-medium text-sm transition-all duration-300 w-full flex items-center justify-center gap-2 hover:shadow-lg"
+                  >
+                    <Trash2Icon className="w-4 h-4 transition-transform duration-200 group-hover:rotate-12" />
+                    Delete Account
+                  </Button>
                   <Button
                     onClick={handleLogOut}
                     className="group bg-white text-black hover:bg-red-600 hover:text-white mt-4 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-300 w-full flex items-center justify-center gap-2 hover:shadow-lg"
@@ -242,6 +268,38 @@ const openModal = (type: "followers" | "following") => {
         {/* Main Content */}
         <main className="flex-1 min-h-screen">{children}</main>
       </div>
+
+      {/* Confirmation Modal */}
+                    {isDeleteModalOpen && (
+                      <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
+                        <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 w-[90%] max-w-md shadow-lg text-center">
+                          <h2 className="text-xl font-semibold text-white mb-3">
+                            Are you sure you want to delete your account?
+                          </h2>
+                          <p className="text-gray-400 text-sm mb-6">
+                            ⚠️ This process is <span className="text-red-500 font-medium">irreversible</span> and will permanently remove all your data.
+                          </p>
+
+                          <div className="flex justify-center gap-4">
+                            <Button
+                              onClick={() => setDeleteIsModalOpen(false)}
+                              className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-all duration-300"
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              onClick={async () => {
+                                await deleteAccount();
+                                setDeleteIsModalOpen(false);
+                              }}
+                              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-all duration-300"
+                            >
+                              Yes, Delete
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
       {/* Modal */}
       {isModalOpen && (

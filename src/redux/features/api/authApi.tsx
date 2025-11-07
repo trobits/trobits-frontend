@@ -177,7 +177,7 @@ const authApi = baseApi.injectEndpoints({
                 }
             }
         }),
-    markNotificationsAsRead: build.mutation({
+        markNotificationsAsRead: build.mutation({
             query: (notificationIds: string[]) => {
                 return {
                     url: `/user/notifications/mark-as-read`,
@@ -187,7 +187,24 @@ const authApi = baseApi.injectEndpoints({
             },
             // Optionally invalidate notifications
             invalidatesTags: ["user"]
-        })
+        }),
+        deleteUserCompletely: build.mutation({
+            query: (userID) => {
+                return {
+                    url: `/user/delete-user-completely/${userID}`,
+                    method: "DELETE",
+                }
+            },
+            invalidatesTags: [ "user" ]
+        }),
+        sendAccountDeletionRequest: build.mutation({
+            query: (data) => ({
+                url: `/contactus/request-account-deletion`,
+                method: "POST",
+                body: data,
+            }),
+        }),
+
     })
 })
 
@@ -200,6 +217,7 @@ export const {
     useGetAllRecommendedUsersQuery,
     useVerifyOtpMutation,
     useGetNotificationByUseridQuery,
+    useDeleteUserCompletelyMutation,
     useUpdateProfileInfoMutation,
     useGetUserByIdQuery,
     useToggleFollowMutation,
@@ -208,5 +226,6 @@ export const {
     useCreateuserMutation,
     useLogoutQuery,
     useLazyLogoutQuery,
-    useMarkNotificationsAsReadMutation
+    useMarkNotificationsAsReadMutation,
+    useSendAccountDeletionRequestMutation
 } = authApi;
