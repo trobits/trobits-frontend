@@ -66,7 +66,7 @@ export default function Navbar() {
   const filteredNavItems = navItems.filter((item) => {
     if (item.name === "Edit") {
       // Only show Edit nav item if user email is khizerch2001@gmail.com
-      return user?.email === "arreytabeebob@gmail.com";
+      return user?.email === "trobitscommuity@gmail.com";
     }
     return true; // Show all other nav items
   });
