@@ -17,6 +17,8 @@ import socket from "@/redux/features/api/socketClient";
 import AffiliateLinksBar from "@/components/AffiliateLinksBar";
 import { X } from "lucide-react";
 import { Trash2Icon } from "lucide-react";
+import { Gift } from "lucide-react";
+
 
 const CryptoLayout = ({ children }) => {
   const dispatch = useAppDispatch();
@@ -243,6 +245,18 @@ const openModal = (type: "followers" | "following") => {
                   </div>
 
                   <p className="text-sm mt-4 text-gray-400">Rewards: {currentRewards}</p>
+
+{/* Daily Rewards Button */}
+<Button
+  onClick={() => {
+    setIsSidebarOpen(false);
+    router.push("/daily-rewards"); // ✅ adjust if your route is /cryptohub/daily-rewards
+  }}
+  className="group bg-white text-black hover:bg-gray-800 hover:text-white px-4 py-3 mt-4 rounded-xl font-medium text-sm transition-all duration-300 w-full flex items-center justify-center gap-2 hover:shadow-lg"
+>
+  <Gift className="w-4 h-4 transition-transform duration-200 group-hover:rotate-12" />
+  Daily Rewards
+</Button>
 
                   {/* Delete Account Button + Confirmation Popup */}
                   <Button
