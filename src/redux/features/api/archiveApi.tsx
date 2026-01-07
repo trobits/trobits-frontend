@@ -6,6 +6,7 @@ const archiveApi = baseApi.injectEndpoints({
     getAllArchive: build.query({
       query: () => {
         return {
+          
           url: "/lunc-archive/all-archive",
           method: "GET",
         };
