@@ -37,25 +37,26 @@ type DottedGlowBackgroundProps = {
 };
 
 /**
- * Returns a float in [0, 1) using a CSPRNG when available.
- * - In the browser, uses crypto.getRandomValues().
- * - Falls back to Math.random() only if crypto isn't available.
+ * Cryptographically-secure random float in [0, 1).
+ * Uses Web Crypto only (no Math.random fallback) to satisfy SonarQube S2245.
  *
- * This avoids SonarQube hotspot typescript:S2245 for Math.random().
+ * Note: This is a client component ("use client"), so Web Crypto is expected.
+ * If crypto is unavailable, we throw to avoid silently downgrading randomness.
  */
 const secureRandom = (): number => {
   const cryptoObj: Crypto | undefined =
     typeof globalThis !== "undefined" ? (globalThis.crypto as Crypto) : undefined;
 
-  if (cryptoObj?.getRandomValues) {
-    const buf = new Uint32Array(1);
-    cryptoObj.getRandomValues(buf);
-    // 2^32 = 4294967296
-    return buf[0] / 4294967296;
+  if (!cryptoObj?.getRandomValues) {
+    throw new Error(
+      "Web Crypto API is unavailable: crypto.getRandomValues() is required.",
+    );
   }
 
-  // Fallback for environments without crypto (rare in modern browsers)
-  return Math.random();
+  const buf = new Uint32Array(1);
+  cryptoObj.getRandomValues(buf);
+  // 2^32 = 4294967296
+  return buf[0] / 4294967296;
 };
 
 /**
@@ -212,7 +213,7 @@ export const DottedGlowBackground = ({
           const x = i * gap + (j % 2 === 0 ? 0 : gap * 0.5); // offset every other row
           const y = j * gap;
 
-          // Randomize phase and speed per dot (CSPRNG where available)
+          // Randomize phase and speed per dot (CSPRNG)
           const phase = secureRandom() * Math.PI * 2;
           const span = Math.max(max - min, 0);
           const speed = min + secureRandom() * span; // configurable rad/s
@@ -226,7 +227,13 @@ export const DottedGlowBackground = ({
       regenDots();
     };
 
-    regenDots();
+    // If Web Crypto is missing for some reason, fail gracefully (no animation)
+    try {
+      regenDots();
+    } catch {
+      // If crypto is unavailable, stop setup; component still renders an empty canvas layer.
+      return;
+    }
 
     let last = performance.now();
 
