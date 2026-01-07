@@ -37,6 +37,28 @@ type DottedGlowBackgroundProps = {
 };
 
 /**
+ * Returns a float in [0, 1) using a CSPRNG when available.
+ * - In the browser, uses crypto.getRandomValues().
+ * - Falls back to Math.random() only if crypto isn't available.
+ *
+ * This avoids SonarQube hotspot typescript:S2245 for Math.random().
+ */
+const secureRandom = (): number => {
+  const cryptoObj: Crypto | undefined =
+    typeof globalThis !== "undefined" ? (globalThis.crypto as Crypto) : undefined;
+
+  if (cryptoObj?.getRandomValues) {
+    const buf = new Uint32Array(1);
+    cryptoObj.getRandomValues(buf);
+    // 2^32 = 4294967296
+    return buf[0] / 4294967296;
+  }
+
+  // Fallback for environments without crypto (rare in modern browsers)
+  return Math.random();
+};
+
+/**
  * Canvas-based dotted background that randomly glows and dims.
  * - Uses a stable grid of dots.
  * - Each dot gets its own phase + speed producing organic shimmering.
@@ -184,14 +206,17 @@ export const DottedGlowBackground = ({
       const rows = Math.ceil(height / gap) + 2;
       const min = Math.min(speedMin, speedMax);
       const max = Math.max(speedMin, speedMax);
+
       for (let i = -1; i < cols; i++) {
         for (let j = -1; j < rows; j++) {
           const x = i * gap + (j % 2 === 0 ? 0 : gap * 0.5); // offset every other row
           const y = j * gap;
-          // Randomize phase and speed slightly per dot
-          const phase = Math.random() * Math.PI * 2;
+
+          // Randomize phase and speed per dot (CSPRNG where available)
+          const phase = secureRandom() * Math.PI * 2;
           const span = Math.max(max - min, 0);
-          const speed = min + Math.random() * span; // configurable rad/s
+          const speed = min + secureRandom() * span; // configurable rad/s
+
           dots.push({ x, y, phase, speed });
         }
       }
@@ -209,6 +234,10 @@ export const DottedGlowBackground = ({
       if (stopped) return;
       const dt = (now - last) / 1000; // seconds
       last = now;
+
+      // dt is intentionally unused; keep for future smoothing/time-based logic
+      void dt;
+
       const { width, height } = container.getBoundingClientRect();
 
       ctx.clearRect(0, 0, el.width, el.height);
@@ -240,6 +269,7 @@ export const DottedGlowBackground = ({
       const time = (now / 1000) * Math.max(speedScale, 0);
       for (let i = 0; i < dots.length; i++) {
         const d = dots[i];
+
         // Linear triangle wave 0..1..0 for linear glow/dim
         const mod = (time * d.speed + d.phase) % 2;
         const lin = mod < 1 ? mod : 2 - mod; // 0..1..0
