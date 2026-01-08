@@ -21,7 +21,7 @@ function HomepageArticleSection() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1//homepage-article`)
+        fetch(`https://api.trobits.com/api/v1//homepage-article`)
             .then(async (res) => {
                 
                 if (!res.ok) throw new Error("No article found");
