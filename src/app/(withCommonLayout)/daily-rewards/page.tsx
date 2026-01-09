@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   useClaimDailyRewardMutation,
   useGetDailyRewardsStatusQuery,
 } from "@/redux/features/api/dailyRewardsApi";
 import { Gift } from "lucide-react";
 import { DottedGlowBackground } from "@/components/ui/dotted-glow-background";
-import { HoverEffect } from "@/components/ui/card-hover-effect";
+import { useAppSelector } from "@/redux/hooks";
+import { usePathname } from "next/navigation";
 
 const MAX_DAYS = 7;
-
 
 const pointsForDay = (day: number) => {
   const table = [10, 10, 20, 20, 30, 30, 30];
@@ -21,7 +21,27 @@ const pointsForDay = (day: number) => {
 type CardState = "CLAIMED" | "ACTIVE" | "NEXT" | "LOCKED";
 
 export default function DailyRewardsPage() {
-  const { data, isLoading, isError, refetch } = useGetDailyRewardsStatusQuery();
+  const user = useAppSelector((state) => state.auth.user);
+  const userId = user?.id;
+  const pathname = usePathname();
+
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    isFetching,
+  } = useGetDailyRewardsStatusQuery(userId as string, {
+    skip: !userId,
+
+    // ✅ Ensures fresh fetch when you navigate to this page
+    refetchOnMountOrArgChange: true,
+
+    // ✅ Extra safety: refetch if tab refocuses / connection returns
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
+
   const [claimDailyReward, { isLoading: isClaiming }] =
     useClaimDailyRewardMutation();
 
@@ -29,6 +49,14 @@ export default function DailyRewardsPage() {
     type: "success" | "error";
     msg: string;
   } | null>(null);
+
+  // ✅ If user navigates back to this page, force a refetch
+  useEffect(() => {
+    if (!userId) return;
+    if (pathname === "/daily-rewards") {
+      refetch();
+    }
+  }, [pathname, userId, refetch]);
 
   const streakDayToClaim = data?.streakDayToClaim ?? 1;
   const canClaim = data?.canClaim ?? false;
@@ -51,35 +79,20 @@ export default function DailyRewardsPage() {
     });
   }, [streakDayToClaim, canClaim]);
 
-  // Decorative hover-effect dataset (not used for logic; just subtle background flair)
-  const hoverProjects = useMemo(
-    () =>
-      cards.map((c) => ({
-        title: `Day ${c.day}`,
-        description:
-          c.state === "CLAIMED"
-            ? "Claimed"
-            : c.state === "ACTIVE"
-            ? `Available now (+${data?.pointsIfClaimNow ?? pointsForDay(c.day)} pts)`
-            : c.state === "NEXT"
-            ? "Next cycle"
-            : "Locked",
-        link: "#",
-      })),
-    [cards, data?.pointsIfClaimNow]
-  );
-
   const handleClaim = async () => {
     if (!data) return;
     if (!data.canClaim) return;
+    if (!userId) return;
 
     setToast(null);
     try {
-      const res = await claimDailyReward().unwrap();
+      const res = await claimDailyReward(userId).unwrap();
       setToast({
         type: "success",
         msg: `Claimed Day ${res.awarded.dayNumber} (+${res.awarded.points} pts). New balance: ${res.pointsBalance}`,
       });
+
+      // ✅ Pull fresh status immediately after claim
       refetch();
     } catch (e: any) {
       setToast({
@@ -91,7 +104,18 @@ export default function DailyRewardsPage() {
     }
   };
 
-  if (isLoading) {
+  if (!userId) {
+    return (
+      <div className="min-h-screen px-4 py-8 flex items-center justify-center">
+        <div className="w-full max-w-md bg-gray-900/40 border border-gray-800/60 rounded-2xl p-6">
+          <p className="text-gray-300">Please login to view daily rewards.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ show loading when fetching too (prevents showing stale data “instantly”)
+  if (isLoading || isFetching) {
     return (
       <div className="min-h-screen px-4 py-8 flex items-center justify-center">
         <div className="w-full max-w-md bg-gray-900/40 border border-gray-800/60 rounded-2xl p-6">
@@ -119,9 +143,7 @@ export default function DailyRewardsPage() {
 
   return (
     <div className="min-h-screen px-4 sm:px-6 lg:px-[5vw] 3xl:px-[1vw] py-10">
-<div className="mx-auto w-full max-w-7xl relative min-h-[calc(100vh-5rem)] flex flex-col py-8">
-
-
+      <div className="mx-auto w-full max-w-7xl relative min-h-[calc(100vh-5rem)] flex flex-col py-8">
         {/* Header */}
         <div className="bg-gray-900/40 border border-gray-800/60 rounded-2xl p-6 relative overflow-hidden mb-6">
           <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-white/5 blur-3xl" />
@@ -163,9 +185,9 @@ export default function DailyRewardsPage() {
           )}
         </div>
 
-        {/* ✅ Cards: one horizontal line (side-by-side), narrow but presentable */}
-<div className="relative flex-1 flex items-center">
-<div className="flex gap-4 overflow-x-auto py-6 snap-x snap-mandatory w-full">
+        {/* Cards */}
+        <div className="relative flex-1 flex items-center">
+          <div className="flex gap-4 overflow-x-auto py-6 snap-x snap-mandatory w-full">
             {cards.map((c) => {
               const isActive = c.state === "ACTIVE";
               const isClaimed = c.state === "CLAIMED";
@@ -235,26 +257,21 @@ export default function DailyRewardsPage() {
                     "relative overflow-visible rounded-2xl border",
                     borderClass,
                     tintBgClass,
-                    // ✅ hover effects preserved + enhanced
                     "transition-all duration-300",
                     "hover:-translate-y-1 hover:shadow-2xl hover:shadow-white/10",
                     "group",
-                    // ✅ width tuned (narrow, but not ugly)
-"w-[170px] sm:w-[205px] lg:w-[195px] shrink-0",
-                    // ✅ top padding because icon floats in
+                    "w-[170px] sm:w-[205px] lg:w-[195px] shrink-0",
                     "pt-12 px-4 pb-5",
-  "min-h-[320px]",
-  "snap-start",
+                    "min-h-[320px]",
+                    "snap-start",
                   ].join(" ")}
                 >
-                  {/* Floating Gift Icon: centered, larger, half outside card */}
                   <div className="absolute left-1/2 -top-7 -translate-x-1/2 z-20">
                     <div className="w-14 h-14 rounded-2xl bg-gray-950/70 border border-white/10 shadow-xl flex items-center justify-center">
                       <Gift className={`w-8 h-8 ${iconTint}`} />
                     </div>
                   </div>
 
-                  {/* Dotted glow background (masked, on hover) */}
                   <DottedGlowBackground
                     className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 mask-radial-to-90% mask-radial-at-center rounded-2xl"
                     opacity={1}
@@ -270,7 +287,6 @@ export default function DailyRewardsPage() {
                     speedScale={1}
                   />
 
-                  {/* Minimal content */}
                   <div className="relative z-10">
                     <div className="text-center space-y-2">
                       <p className="text-white font-semibold">Day {c.day}</p>
@@ -289,7 +305,6 @@ export default function DailyRewardsPage() {
                       </div>
                     </div>
 
-                    {/* Claim button at end + broader */}
                     <button
                       disabled={!isActive || isClaiming}
                       onClick={handleClaim}
@@ -303,7 +318,6 @@ export default function DailyRewardsPage() {
                       {isClaiming && isActive ? "Claiming..." : label}
                     </button>
 
-                    {/* tiny helper (kept minimal) */}
                     <p className="mt-2 text-[11px] text-center text-gray-500">
                       {isActive
                         ? "Available now"
@@ -319,12 +333,10 @@ export default function DailyRewardsPage() {
             })}
           </div>
 
-          {/* Fade edges as scroll cue */}
           <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-black/20 to-transparent rounded-2xl" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-black/20 to-transparent rounded-2xl" />
         </div>
 
-        {/* Footer note */}
         <div className="text-center text-xs text-gray-500">
           Only the current cycle’s reward can be claimed. Come back after reset
           for the next day.

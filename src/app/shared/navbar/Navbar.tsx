@@ -16,13 +16,17 @@ import ClaimsModal from "@/components/Claims/ClaimsModal";
 import WithdrawModal from "@/components/WidrawModel/WidrawModal";
 import EditArticleModal from "@/components/edit-article/EditArticleModal";
 
-// ✅ Adjust this import path if your file is elsewhere
+// ✅ Daily rewards
 import { useGetDailyRewardsStatusQuery } from "@/redux/features/api/dailyRewardsApi";
+
+// ✅ Reset RTK Query cache on logout
+import { baseApi } from "@/redux/features/api/baseApi";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isBasicsDropdownOpen, setIsBasicsDropdownOpen] = useState(false);
-  const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] = useState(false);
+  const [isBurnArchiveDropdownOpen, setIsBurnArchiveDropdownOpen] =
+    useState(false);
   const [isRewardsDropdownOpen, setIsRewardsDropdownOpen] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,16 +35,19 @@ export default function Navbar() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const user = useAppSelector((state) => state.auth.user);
+  const userId = user?.id;
+
   const {
     data: userFromDbData,
     isLoading: userFromDbLoading,
     refetch: refetchUserFromDb,
   } = useGetUserByIdQuery(user?.id, { skip: !user?.id });
 
-  // ✅ Daily rewards status (pointsBalance)
-  const { data: dailyRewardsStatus } = useGetDailyRewardsStatusQuery(undefined, {
-    skip: !user?.id,
-  });
+  // ✅ Daily rewards status (pointsBalance) - USER-SCOPED cache key
+  const { data: dailyRewardsStatus } = useGetDailyRewardsStatusQuery(
+    userId as string,
+    { skip: !userId }
+  );
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -65,7 +72,13 @@ export default function Navbar() {
 
   const handleLogOut = async () => {
     await refetchUserFromDb();
+
+    // ✅ Clear RTK Query cache (prevents stale daily rewards across users/devices)
+    dispatch(baseApi.util.resetApiState());
+
+    // ✅ Clear user auth
     dispatch(clearUser());
+
     router.push("/");
   };
 
@@ -93,7 +106,10 @@ export default function Navbar() {
 
   const affiliateRewardsTotal =
     userFromDb && Array.isArray(userFromDb.rewards)
-      ? userFromDb.rewards.reduce((sum: number, reward: any) => sum + (reward.reward_amount || 0), 0)
+      ? userFromDb.rewards.reduce(
+          (sum: number, reward: any) => sum + (reward.reward_amount || 0),
+          0
+        )
       : 0;
 
   const dailyRewardsPointsBalance = dailyRewardsStatus?.pointsBalance ?? 0;
@@ -134,7 +150,9 @@ export default function Navbar() {
                         px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
                         hover:bg-white/10 hover:scale-105
                         ${
-                          (item.href === "/" ? pathName === "/" : pathName.includes(item.href))
+                          (item.href === "/"
+                            ? pathName === "/"
+                            : pathName.includes(item.href))
                             ? "text-teal-400 bg-teal-400/10"
                             : "text-gray-300 hover:text-white"
                         }
@@ -163,7 +181,9 @@ export default function Navbar() {
                           transition-all duration-300 hover:bg-white/10 hover:scale-105
                           ${
                             isBasicsDropdownOpen ||
-                            (item.href === "/" ? pathName === "/" : pathName.includes(item.href))
+                            (item.href === "/"
+                              ? pathName === "/"
+                              : pathName.includes(item.href))
                               ? "text-teal-400 bg-teal-400/10"
                               : "text-gray-300 hover:text-white"
                           }
@@ -272,7 +292,11 @@ export default function Navbar() {
                           <ChevronDown
                             className={`
                           w-4 h-4 transition-transform duration-300
-                          ${isBurnArchiveDropdownOpen ? "rotate-180" : "rotate-0"}
+                          ${
+                            isBurnArchiveDropdownOpen
+                              ? "rotate-180"
+                              : "rotate-0"
+                          }
                         `}
                           />
                         </button>
@@ -391,7 +415,9 @@ export default function Navbar() {
                         px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
                         hover:bg-white/10 hover:scale-105
                         ${
-                          (item.href === "/" ? pathName === "/" : pathName.includes(item.href))
+                          (item.href === "/"
+                            ? pathName === "/"
+                            : pathName.includes(item.href))
                             ? "text-teal-400 bg-teal-400/10"
                             : "text-gray-300 hover:text-white"
                         }
@@ -407,7 +433,9 @@ export default function Navbar() {
                         px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
                         hover:bg-white/10 hover:scale-105
                         ${
-                          (item.href === "/" ? pathName === "/" : pathName.includes(item.href))
+                          (item.href === "/"
+                            ? pathName === "/"
+                            : pathName.includes(item.href))
                             ? "text-teal-400 bg-teal-400/10"
                             : "text-gray-300 hover:text-white"
                         }
@@ -437,7 +465,11 @@ export default function Navbar() {
                       className={`
                         px-3 py-2 rounded-xl text-sm font-medium flex items-center gap-1
                         transition-all duration-300 hover:bg-white/10 hover:scale-105
-                        ${isRewardsDropdownOpen ? "text-teal-400 bg-teal-400/10" : "text-gray-300 hover:text-white"}
+                        ${
+                          isRewardsDropdownOpen
+                            ? "text-teal-400 bg-teal-400/10"
+                            : "text-gray-300 hover:text-white"
+                        }
                       `}
                     >
                       Rewards
@@ -475,7 +507,9 @@ export default function Navbar() {
                               ></div>
                               <span>Affiliate Rewards</span>
                             </div>
-                            <span className="text-gray-200">{affiliateRewardsTotal}</span>
+                            <span className="text-gray-200">
+                              {affiliateRewardsTotal}
+                            </span>
                           </div>
 
                           <div
@@ -491,7 +525,9 @@ export default function Navbar() {
                               ></div>
                               <span>Daily Rewards</span>
                             </div>
-                            <span className="text-gray-200">{dailyRewardsPointsBalance}</span>
+                            <span className="text-gray-200">
+                              {dailyRewardsPointsBalance}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -613,7 +649,11 @@ export default function Navbar() {
                 "
                 >
                   <span className="sr-only">Open main menu</span>
-                  {isOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Menu className="w-6 h-6" aria-hidden="true" />}
+                  {isOpen ? (
+                    <X className="w-6 h-6" aria-hidden="true" />
+                  ) : (
+                    <Menu className="w-6 h-6" aria-hidden="true" />
+                  )}
                 </button>
               </div>
             </div>
@@ -630,7 +670,9 @@ export default function Navbar() {
                           className={`
                           block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200
                           ${
-                            (item.href === "/" ? pathName === "/" : pathName.includes(item.href))
+                            (item.href === "/"
+                              ? pathName === "/"
+                              : pathName.includes(item.href))
                               ? "text-teal-400 bg-teal-400/10"
                               : "text-gray-300 hover:text-white hover:bg-white/10"
                           }
@@ -785,7 +827,7 @@ export default function Navbar() {
 
                   {/* Mobile User Section */}
                   <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
-                    {/* ✅ Rewards dropdown on mobile */}
+                    {/* Rewards dropdown on mobile */}
                     {userFromDb && user && (
                       <div>
                         <button
@@ -801,18 +843,26 @@ export default function Navbar() {
                           `}
                         >
                           Rewards
-                          <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isRewardsDropdownOpen ? "rotate-180" : ""}`} />
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform duration-300 ${
+                              isRewardsDropdownOpen ? "rotate-180" : ""
+                            }`}
+                          />
                         </button>
 
                         {isRewardsDropdownOpen && (
                           <div className="mt-2 ml-4 space-y-1">
                             <div className="px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 flex items-center justify-between">
                               <span>Affiliate Rewards</span>
-                              <span className="text-gray-200">{affiliateRewardsTotal}</span>
+                              <span className="text-gray-200">
+                                {affiliateRewardsTotal}
+                              </span>
                             </div>
                             <div className="px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 flex items-center justify-between">
                               <span>Daily Rewards</span>
-                              <span className="text-gray-200">{dailyRewardsPointsBalance}</span>
+                              <span className="text-gray-200">
+                                {dailyRewardsPointsBalance}
+                              </span>
                             </div>
                           </div>
                         )}
@@ -836,9 +886,6 @@ export default function Navbar() {
                           >
                             Claims
                           </Button>
-                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-xs text-white bg-gray-900 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                            Submit claim after completing transaction
-                          </div>
                         </div>
 
                         <Button
