@@ -32,22 +32,33 @@ type ClaimResponseData = {
 
 const dailyRewardsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getDailyRewardsStatus: build.query<DailyRewardsStatusData, void>({
+    // ✅ userId used only as cache key; backend still uses token for identity.
+    getDailyRewardsStatus: build.query<DailyRewardsStatusData, string>({
       query: () => ({
         url: "/daily-rewards/status",
         method: "GET",
       }),
-      transformResponse: (response: ApiEnvelope<DailyRewardsStatusData>) => response.data,
-      providesTags: ["user"],
+      transformResponse: (response: ApiEnvelope<DailyRewardsStatusData>) =>
+        response.data,
+
+      // ✅ IMPORTANT: refetch when component mounts (e.g., navigating to /daily-rewards)
+      refetchOnMountOrArgChange: true,
+
+      // optional: reduce stale cache window
+      keepUnusedDataFor: 10,
+
+      providesTags: (_result, _error, userId) => [{ type: "user", id: userId }],
     }),
 
-    claimDailyReward: build.mutation<ClaimResponseData, void>({
+    claimDailyReward: build.mutation<ClaimResponseData, string>({
       query: () => ({
         url: "/daily-rewards/claim",
         method: "POST",
       }),
-      transformResponse: (response: ApiEnvelope<ClaimResponseData>) => response.data,
-      invalidatesTags: ["user"],
+      transformResponse: (response: ApiEnvelope<ClaimResponseData>) =>
+        response.data,
+
+      invalidatesTags: (_result, _error, userId) => [{ type: "user", id: userId }],
     }),
   }),
 });
