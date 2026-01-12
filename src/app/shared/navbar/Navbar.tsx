@@ -91,7 +91,7 @@ export default function Navbar() {
   // Filter nav items based on user email
   const filteredNavItems = navItems.filter((item) => {
     if (item.name === "Edit") {
-      return user?.email === "trobits@protonmail.com";
+      return user?.email === "arreytabeebob@gmail.com";
     }
     return true;
   });
