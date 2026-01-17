@@ -16,19 +16,19 @@ import {
 import CardCarousel from "@/components/HomePages/Affiliate/AffilliateCarousel";
 
 function HomepageArticleSection() {
-    const [article, setArticle] = useState<{ title: string; body: string } | null>(null);
+    const [article, setArticle] = useState<{ title: string; body: string; image?: string } | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch(`https://api.trobits.com/api/v1//homepage-article`)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/homepage-article`)
             .then(async (res) => {
                 
                 if (!res.ok) throw new Error("No article found");
                 return res.json();
             })
             .then((data) => {
-                setArticle({ title: data.title, body: data.body });
+                setArticle({ title: data.title, body: data.body, image: data.image || "" });
                 setLoading(false);
             })
             .catch(() => {
@@ -54,15 +54,34 @@ function HomepageArticleSection() {
     return (
         <div className='bg-gray-900/40 border border-gray-800/50 rounded-2xl p-4 sm:p-6 max-h-[50vh] overflow-auto'>
             <div className="space-y-4">
-                <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
-                    {article.title}
-                </h2>
-                <div className="text-gray-300 space-y-3 text-sm sm:text-base">
-                    {article.body.split(/\n+/).map((para, idx) => (
-                        <p key={idx}>{para}</p>
-                    ))}
-                </div>
-            </div>
+  {/* Header row: Image (square) + Title (right, vertically centered) */}
+  <div className="flex items-center gap-4">
+    {article.image ? (
+<div className="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl border border-gray-700/60 bg-gray-800 overflow-hidden flex-shrink-0">
+        <img
+          src={article.image}
+          alt={article.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    ) : (
+      // Optional placeholder square when no image
+      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl border border-gray-700/60 bg-gray-800/60 flex-shrink-0" />
+    )}
+
+    <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+      {article.title}
+    </h2>
+  </div>
+
+  {/* Body */}
+  <div className="text-gray-300 space-y-3 text-sm sm:text-base">
+    {article.body.split(/\n+/).map((para, idx) => (
+      <p key={idx}>{para}</p>
+    ))}
+  </div>
+</div>
+
         </div>
     );
 }

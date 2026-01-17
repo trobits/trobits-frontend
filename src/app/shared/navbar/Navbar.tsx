@@ -92,6 +92,7 @@ export default function Navbar() {
   const filteredNavItems = navItems.filter((item) => {
     if (item.name === "Edit") {
       return user?.email === "trobits@protonmail.com";
+      // return user?.email === "mian.affananwar@gmail.com";
     }
     return true;
   });
