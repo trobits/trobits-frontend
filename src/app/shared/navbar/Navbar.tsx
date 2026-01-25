@@ -93,6 +93,7 @@ export default function Navbar() {
     if (item.name === "Edit") {
   return (
     user?.email === "arreytabeebob@gmail.com" ||
+    user?.email === "trobits@protonmail.com" ||
     user?.email === "mian.affananwar@gmail.com"
   );
 }
