@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 const MAX_DAYS = 7;
 
 const pointsForDay = (day: number) => {
-  const table = [10, 10, 20, 20, 30, 30, 30];
+  const table = [10, 10, 10, 20, 20, 20, 50];
   const safe = Math.max(1, Math.min(day, 7));
   return table[safe - 1];
 };
